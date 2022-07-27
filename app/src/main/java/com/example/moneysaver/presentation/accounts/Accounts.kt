@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,12 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.data.data_base.test_data.AccountsData
 import com.example.moneysaver.domain.account.Account
-import com.example.moneysaver.presentation.accounts.additional_composes.baselineHeight
+
 import com.example.moneysaver.ui.theme.currencyColor
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Surface
+import androidx.compose.material.*
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
@@ -40,13 +39,19 @@ import androidx.constraintlayout.compose.ConstraintSet
 import com.example.moneysaver.R
 import com.example.moneysaver.ui.theme.currencyColorZero
 import com.example.moneysaver.ui.theme.whiteSurface
+import androidx.compose.foundation.background
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 
 
 @Composable
-fun MainAccountScreen(navigateToCardSettings: (Account) -> Unit, navigateToCardAdder: (Account) -> Unit , navigateToGoalAdder: (Account) -> Unit){
-
-    Column(modifier = Modifier.fillMaxSize().background(whiteSurface)){
-            UpperAccountInfo();
+fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings: (Account) -> Unit, navigateToCardAdder: (Account) -> Unit , navigateToGoalAdder: (Account) -> Unit){
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(whiteSurface)){
+            TopBar()
+            UpperAccountInfo()
             val accounts = remember { AccountsData.accountsList }
             LazyColumn(
                 contentPadding = PaddingValues()
@@ -62,17 +67,61 @@ fun MainAccountScreen(navigateToCardSettings: (Account) -> Unit, navigateToCardA
             Divider( modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp))
             SavingsInfo()
             AddBankAccount(AccountsData.goalAdder,navigateToGoalAdder)
-
+    }
 
     }
 
+@Composable
+fun TopBar(){
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight(0.12f).background(Brush.verticalGradient(
+            colors = listOf(Color(53, 177, 73, 255), Color(28, 182, 84, 255), Color(
+                61,
+                196,
+                158,
+                255
+            )
+            ),
+        )),
+        horizontalArrangement = Arrangement.SpaceBetween){
+
+        IconButton(modifier = Modifier
+            .padding(12.dp, 24.dp, 0.dp, 0.dp)
+            .size(40.dp, 40.dp), onClick = {  }) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                tint = whiteSurface,
+                contentDescription = "Toggle drawer"
+            )
+        }
+
+        Column(modifier = Modifier.fillMaxHeight().padding(8.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = "Filter - Cash", color = whiteSurface, fontWeight = FontWeight.W400 , fontSize = 14.sp)
+            Text(text = ("3423 $"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+        }
+
+        IconButton(modifier = Modifier
+            .padding(0.dp, 24.dp, 12.dp, 0.dp)
+            .size(40.dp, 40.dp), onClick = {  }) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                tint = whiteSurface,
+                contentDescription = "Toggle drawer"
+            )
+        }
+
+    }
 
 }
-
 @Composable
 fun UpperAccountInfo() {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(18.dp,12.dp,18.dp,8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(18.dp, 12.dp, 18.dp, 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
         Text(text = stringResource(R.string.accounts_name_label), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 16.sp)
@@ -83,7 +132,9 @@ fun UpperAccountInfo() {
 @Composable
 fun SavingsInfo() {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(18.dp,12.dp,18.dp,8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(18.dp, 12.dp, 18.dp, 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
         Text(text = stringResource(R.string.savings_accounts), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 16.sp)
@@ -193,6 +244,6 @@ private fun AccountImage(account: Account) {
 
 @Preview
 @Composable
-fun PreviewPuppyItem() {
-    MainAccountScreen(navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
+fun PreviewItem() {
+    MainAccountScreen(onNavigationIconClick = {},navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
 }
