@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MoneySaver</string>
+    <string name="accounts_name_label">BANK ACCOUNTS</string>
+    <string name="savings_accounts">SAVINGS</string>
 </resources>
