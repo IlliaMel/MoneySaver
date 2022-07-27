@@ -43,13 +43,17 @@ import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.ui.draw.shadow
 
 
 @Composable
 fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings: (Account) -> Unit, navigateToCardAdder: (Account) -> Unit , navigateToGoalAdder: (Account) -> Unit){
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(whiteSurface)){
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(whiteSurface)
+        ) {
             TopBar()
             UpperAccountInfo()
             val accounts = remember { AccountsData.accountsList }
@@ -63,27 +67,31 @@ fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings:
                     }
                 )
             }
-            AddBankAccount(AccountsData.accountAdder,navigateToCardAdder)
-            Divider( modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp))
+            AddBankAccount(AccountsData.accountAdder, navigateToCardAdder)
+            Divider(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp))
             SavingsInfo()
-            AddBankAccount(AccountsData.goalAdder,navigateToGoalAdder)
+            AddBankAccount(AccountsData.goalAdder, navigateToGoalAdder)
+        }
     }
 
-    }
 
 @Composable
 fun TopBar(){
     Row(modifier = Modifier
         .fillMaxWidth()
-        .fillMaxHeight(0.12f).background(Brush.verticalGradient(
-            colors = listOf(Color(53, 177, 73, 255), Color(28, 182, 84, 255), Color(
-                61,
-                196,
-                158,
-                255
+        .fillMaxHeight(0.12f)
+        .background(
+            Brush.verticalGradient(
+                colors = listOf(
+                    Color(68, 114, 207, 255),Color(53, 94, 177, 255), Color(50, 56, 170, 255), Color(
+                        93,
+                        47,
+                        165,
+                        255
+                    )
+                ),
             )
-            ),
-        )),
+        ),
         horizontalArrangement = Arrangement.SpaceBetween){
 
         IconButton(modifier = Modifier
@@ -96,7 +104,9 @@ fun TopBar(){
             )
         }
 
-        Column(modifier = Modifier.fillMaxHeight().padding(8.dp),
+        Column(modifier = Modifier
+            .fillMaxHeight()
+            .padding(8.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "Filter - Cash", color = whiteSurface, fontWeight = FontWeight.W400 , fontSize = 14.sp)
@@ -115,6 +125,17 @@ fun TopBar(){
 
     }
 
+    Divider(
+        modifier = Modifier
+            .background(Brush.verticalGradient(
+                colors = listOf(
+                    Color(235, 235, 235, 255), Color(255, 255, 255, 255), Color(247, 247, 247, 255)
+                )))
+            .fillMaxWidth()
+            .height(5.dp)
+            .clip(RoundedCornerShape(3.dp))
+
+    )
 }
 @Composable
 fun UpperAccountInfo() {
