@@ -1,4 +1,10 @@
 package com.example.moneysaver.presentation.transactions
 
-class TransactionsState {
-}
+import com.example.moneysaver.domain.account.Account
+import com.example.moneysaver.domain.transaction.Transaction
+
+data class TransactionsState (
+    val transactionList: List<Transaction> = emptyList(),
+    val startingBalance: Double = 0.0,
+    val endingBalance: Double = 0.0
+)

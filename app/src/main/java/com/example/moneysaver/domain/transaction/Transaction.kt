@@ -1,5 +1,12 @@
-package com.example.moneysaver.domain.account
+package com.example.moneysaver.domain.transaction
 
-class Transaction {
-    val name: String? = null
-}
+import java.util.*
+
+data class Transaction(
+    val sum: Double,
+    val isIncome: Boolean,
+    val category: String,
+    val account: String,
+    val date: Date,
+    val note: String? = null
+)
