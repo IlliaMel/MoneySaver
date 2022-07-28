@@ -11,5 +11,6 @@ data class Account(
     val balance: Double = 0.0,
     val debt: Double = 0.0,
     val goal: Double = 0.0,
-
+    val isForGoal: Boolean = false,
+    val isForDebt: Boolean = false,
 ) : Serializable
