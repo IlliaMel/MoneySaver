@@ -45,12 +45,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.ui.draw.shadow
+import com.example.moneysaver.presentation.TabsForScreens
 import com.example.moneysaver.presentation.transactions.TransactionsViewModel
+import com.example.moneysaver.ui.theme.dividerColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings: (Account) -> Unit,
+fun MainAccountScreen(onTabSelected: (Int) -> Unit ,onNavigationIconClick: () -> Unit, navigateToCardSettings: (Account) -> Unit,
                       navigateToCardAdder: (Account) -> Unit ,
                       navigateToGoalAdder: (Account) -> Unit,
                       viewModel: AccountsViewModel = AccountsViewModel()
@@ -58,9 +61,16 @@ fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings:
 
         viewModel.loadAccounts()
 
+
+
+    Column(
+        Modifier.fillMaxHeight().background(Color.White),
+        verticalArrangement = Arrangement.SpaceBetween) {
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .fillMaxHeight(0.9f)
                 .background(whiteSurface)
         ) {
             TopBar(onNavigationIconClick)
@@ -77,20 +87,26 @@ fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings:
                 )
             }
             AddBankAccount(AccountsData.accountAdder, navigateToCardAdder)
-            Divider(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp))
+            Divider(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp).background(dividerColor))
             SumMoneyInfo(stringResource(R.string.savings_accounts),viewModel.loadSavingsAccountSum(),viewModel.state.currentAccount.currencyType)
             AddBankAccount(AccountsData.goalAdder, navigateToGoalAdder)
+
         }
+
+        TabsForScreens(){
+            onTabSelected(it)
+        }
+
+
+        }
+
+
     }
 
 
 @Composable
 fun TopBar(onNavigationIconClick: () -> Unit){
 
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(
-        color = Color.Transparent
-    )
 
 
     Box(
@@ -118,7 +134,7 @@ fun TopBar(onNavigationIconClick: () -> Unit){
                 horizontalArrangement = Arrangement.SpaceBetween){
                 IconButton(modifier = Modifier
                     .padding(8.dp, 24.dp, 0.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = {onNavigationIconClick}) {
+                    .size(40.dp, 40.dp), onClick = {onNavigationIconClick()}) {
                     Icon(
                         imageVector = Icons.Default.Menu,
                         tint = whiteSurface,
@@ -265,7 +281,7 @@ private fun CustomDivider(){
 
     Row(modifier = Modifier.weight(1f)) {}
 
-    Row(modifier = Modifier.weight(4f)) { Divider( modifier = Modifier.padding(8.dp, 2.dp, 0.dp, 0.dp)) }
+    Row(modifier = Modifier.weight(4f)) { Divider( modifier = Modifier.padding(8.dp, 2.dp, 0.dp, 0.dp).background(dividerColor)) }
     }
 }
 
@@ -294,5 +310,5 @@ private fun AccountImage(account: Account) {
 @Preview
 @Composable
 fun PreviewItem() {
-    MainAccountScreen(onNavigationIconClick = {},navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
+    MainAccountScreen(onTabSelected = {},onNavigationIconClick = {},navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
 }
