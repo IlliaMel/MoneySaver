@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.presentation.TabsForScreens
 import com.example.moneysaver.presentation.accounts.AccountListItem
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
@@ -26,6 +27,7 @@ import java.util.*
 
 @Composable
 fun Transactions(
+    onTabSelected: (Int) -> Unit,
     navigateToTransaction: (Transaction) -> Unit,
     viewModel: TransactionsViewModel = TransactionsViewModel()
 ) {
@@ -34,25 +36,24 @@ fun Transactions(
 
     viewModel.loadTransactions()
 
-    Scaffold(
-        scaffoldState = scaffoldState,
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    // add transaction
-                },
-                backgroundColor = Color.Blue
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add transaction")
+    Column() {
+        Scaffold(
+            modifier = Modifier.fillMaxHeight(0.9f),
+            scaffoldState = scaffoldState,
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        // add transaction
+                    },
+                    backgroundColor = Color.Blue
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add transaction")
+                }
             }
-        }
-    ) {
-
-
+        ) {
             LazyColumn(
                 contentPadding = PaddingValues()
             ) {
-
 
                 item{
                     Row(
@@ -88,14 +89,15 @@ fun Transactions(
                 item {
                     Spacer(modifier = Modifier.height(80.dp))
                 }
-
             }
 
-    }
-}
+        }
 
-@Preview
-@Composable
-fun PreviewTransactions() {
-    Transactions(navigateToTransaction = {})
+
+        TabsForScreens(){
+            onTabSelected(it)
+        }
+    }
+
+
 }

@@ -148,9 +148,8 @@ class MainActivity : ComponentActivity() {
                                 1 -> TabsForScreens(){
                                     selectedTabIndex = it
                                 }
-                                2 -> TabsForScreens(){
-                                    selectedTabIndex = it
-                                }
+                                2 -> Transactions(onTabSelected = { selectedTabIndex = it }, navigateToTransaction = {})
+
                             }
                         }
 
