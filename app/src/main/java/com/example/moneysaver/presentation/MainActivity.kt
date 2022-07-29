@@ -148,8 +148,11 @@ class MainActivity : ComponentActivity() {
                                 1 -> TabsForScreens(){
                                     selectedTabIndex = it
                                 }
-                                2 -> Transactions(onTabSelected = { selectedTabIndex = it }, navigateToTransaction = {})
-
+                                2 -> Transactions(onNavigationIconClick = {
+                                    scope.launch {
+                                        scaffoldState.drawerState.open()
+                                    }
+                                },navigateToTransaction = {})
                             }
                         }
 

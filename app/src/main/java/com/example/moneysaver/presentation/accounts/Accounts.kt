@@ -46,6 +46,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.ui.draw.shadow
 import com.example.moneysaver.presentation.TabsForScreens
+import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.transactions.TransactionsViewModel
 import com.example.moneysaver.ui.theme.dividerColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -70,10 +71,9 @@ fun MainAccountScreen(onTabSelected: (Int) -> Unit ,onNavigationIconClick: () ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.9f)
                 .background(whiteSurface)
         ) {
-            TopBar(onNavigationIconClick)
+            TopBarAccounts(onNavigationIconClick)
             SumMoneyInfo(stringResource(R.string.accounts_name_label),viewModel.loadBankAccountSum(),viewModel.state.currentAccount.currencyType)
             val accounts = remember { AccountsData.accountsList }
             LazyColumn(
@@ -105,10 +105,7 @@ fun MainAccountScreen(onTabSelected: (Int) -> Unit ,onNavigationIconClick: () ->
 
 
 @Composable
-fun TopBar(onNavigationIconClick: () -> Unit){
-
-
-
+fun TopBarAccounts(onNavigationIconClick: () -> Unit){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -171,30 +168,11 @@ fun TopBar(onNavigationIconClick: () -> Unit){
                 }
 
             }
-
-
         }
     }
-
-    Box(
-        modifier = Modifier
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(187, 186, 186, 255),
-                        Color(247, 247, 247, 255),
-                        Color(187, 187, 187, 255)
-                    )
-                )
-            )
-            .fillMaxWidth()
-            .height(5.dp)
-            .clip(RoundedCornerShape(5.dp))
-            .shadow(elevation = 4.dp)
-
-    )
-
+    dividerForTopBar()
 }
+
 
 @Composable
 fun SumMoneyInfo(infoText: String , numberOfMoney: Double , currency:String) {
