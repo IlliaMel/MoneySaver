@@ -54,7 +54,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainAccountScreen(onTabSelected: (Int) -> Unit ,onNavigationIconClick: () -> Unit, navigateToCardSettings: (Account) -> Unit,
+fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings: (Account) -> Unit,
                       navigateToCardAdder: (Account) -> Unit ,
                       navigateToGoalAdder: (Account) -> Unit,
                       viewModel: AccountsViewModel = AccountsViewModel()
@@ -70,12 +70,6 @@ fun MainAccountScreen(onTabSelected: (Int) -> Unit ,onNavigationIconClick: () ->
             .background(whiteSurface)
     ) {
 
-        Column(
-            modifier = Modifier
-                .weight(10f)
-                .fillMaxWidth()
-                .background(whiteSurface)
-        ) {
             TopBarAccounts(onNavigationIconClick)
             SumMoneyInfo(stringResource(R.string.accounts_name_label),viewModel.loadBankAccountSum(),viewModel.state.currentAccount.currencyType)
             val accounts = remember { AccountsData.accountsList }
@@ -95,16 +89,6 @@ fun MainAccountScreen(onTabSelected: (Int) -> Unit ,onNavigationIconClick: () ->
             AddBankAccount(AccountsData.goalAdder, navigateToGoalAdder)
 
         }
-
-
-        Row(modifier = Modifier.weight(1f)) {
-            TabsForScreens(){
-                onTabSelected(it)
-            }
-        }
-
-        }
-
 
     }
 
@@ -293,5 +277,5 @@ private fun AccountImage(account: Account) {
 @Preview
 @Composable
 fun PreviewItem() {
-    MainAccountScreen(onTabSelected = {},onNavigationIconClick = {},navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
+    MainAccountScreen(onNavigationIconClick = {},navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
 }

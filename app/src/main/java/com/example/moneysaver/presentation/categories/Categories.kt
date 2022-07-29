@@ -29,15 +29,10 @@ import com.example.moneysaver.ui.theme.currencyColorZero
 import com.example.moneysaver.ui.theme.whiteSurface
 
 @Composable
-fun Categories(onTabSelected: (Int) -> Unit) {
+fun Categories() {
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(whiteSurface)
-    ) {
 
-    Column(modifier = Modifier.fillMaxSize().weight(10f), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             modifier = Modifier.fillMaxWidth().weight(0.8f).padding(12.dp).border(BorderStroke(2.dp, Color.Red)),
             verticalAlignment = Alignment.Top,
@@ -88,18 +83,8 @@ fun Categories(onTabSelected: (Int) -> Unit) {
         }
     }
 
-        Row(modifier = Modifier.weight(1f)) {
-            TabsForScreens(){
-                onTabSelected(it)
-            }
-        }
-
     }
 
-
-
-
-}
 /*
 
     Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black , fontSize = 15.sp)

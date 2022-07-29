@@ -32,7 +32,6 @@ import com.example.moneysaver.ui.theme.whiteSurface
 
 @Composable
 fun Transactions(
-    onTabSelected: (Int) -> Unit ,
     onNavigationIconClick: () -> Unit,
     navigateToTransaction: (Transaction) -> Unit,
     viewModel: TransactionsViewModel = TransactionsViewModel()
@@ -42,19 +41,12 @@ fun Transactions(
 
     viewModel.loadTransactions()
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(whiteSurface)
-    ) {
-
         Column(
             modifier = Modifier
-                .weight(10f)
                 .fillMaxWidth()
                 .background(whiteSurface)
         ) {
-            TopBarTransactions(onNavigationIconClick = { onNavigationIconClick })
+            TopBarTransactions(onNavigationIconClick = { onNavigationIconClick ()})
             Scaffold(
                 scaffoldState = scaffoldState,
                 floatingActionButton = {
@@ -122,14 +114,6 @@ fun Transactions(
 
             }
         }
-
-        Row(modifier = Modifier.weight(1f)) {
-            TabsForScreens(){
-                onTabSelected(it)
-            }
-        }
-
-    }
  }
 
     @Composable

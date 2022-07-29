@@ -136,27 +136,44 @@ class MainActivity : ComponentActivity() {
                         },
                     ) {
 
-                            when(selectedTabIndex) {
-                                0 -> MainAccountScreen(onTabSelected = {
-                                    selectedTabIndex = it
-                                },
-                                    onNavigationIconClick = {
+
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(whiteSurface)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .weight(10f)
+                                    .fillMaxWidth()
+                                    .background(whiteSurface)
+                            ) {
+                                when (selectedTabIndex) {
+                                    0 -> MainAccountScreen(
+                                        onNavigationIconClick = {
+                                            scope.launch {
+                                                scaffoldState.drawerState.open()
+                                            }
+                                        },
+                                        navigateToCardSettings = {},
+                                        navigateToCardAdder = {},
+                                        navigateToGoalAdder = {})
+                                    1 -> Categories()
+                                    2 -> Transactions(onNavigationIconClick = {
                                         scope.launch {
                                             scaffoldState.drawerState.open()
                                         }
-                                    },
-                                    navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
-                                1 -> Categories(onTabSelected = {
-                                    selectedTabIndex = it
-                                })
-                                2 -> Transactions(onTabSelected = {
-                                    selectedTabIndex = it
-                                },onNavigationIconClick = {
-                                    scope.launch {
-                                        scaffoldState.drawerState.open()
-                                    }
-                                },navigateToTransaction = {})
+                                    }, navigateToTransaction = {})
+                                }
                             }
+                        Row(modifier = Modifier.weight(1f)) {
+                            TabsForScreens(){
+                                selectedTabIndex = it
+                            }
+                        }
+
+                    }
                         }
 
                     }
