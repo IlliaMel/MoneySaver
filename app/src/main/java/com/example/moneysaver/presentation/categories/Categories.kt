@@ -23,13 +23,21 @@ import androidx.compose.ui.unit.sp
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.presentation.TabsForScreens
 import com.example.moneysaver.ui.theme.currencyColor
 import com.example.moneysaver.ui.theme.currencyColorZero
+import com.example.moneysaver.ui.theme.whiteSurface
 
 @Composable
-fun Categories() {
+fun Categories(onTabSelected: (Int) -> Unit) {
 
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(whiteSurface)
+    ) {
+
+    Column(modifier = Modifier.fillMaxSize().weight(10f), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             modifier = Modifier.fillMaxWidth().weight(0.8f).padding(12.dp).border(BorderStroke(2.dp, Color.Red)),
             verticalAlignment = Alignment.Top,
@@ -78,6 +86,14 @@ fun Categories() {
                 CategoriesImage(it)
             }
         }
+    }
+
+        Row(modifier = Modifier.weight(1f)) {
+            TabsForScreens(){
+                onTabSelected(it)
+            }
+        }
+
     }
 
 

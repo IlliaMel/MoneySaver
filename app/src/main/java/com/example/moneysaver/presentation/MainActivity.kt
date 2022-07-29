@@ -30,6 +30,7 @@ import com.example.moneysaver.R
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
 import com.example.moneysaver.presentation.accounts.MainAccountScreen
+import com.example.moneysaver.presentation.categories.Categories
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.ui.theme.MoneySaverTheme
 import com.example.moneysaver.ui.theme.whiteSurface
@@ -145,10 +146,12 @@ class MainActivity : ComponentActivity() {
                                         }
                                     },
                                     navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
-                                1 -> TabsForScreens(){
+                                1 -> Categories(onTabSelected = {
                                     selectedTabIndex = it
-                                }
-                                2 -> Transactions(onNavigationIconClick = {
+                                })
+                                2 -> Transactions(onTabSelected = {
+                                    selectedTabIndex = it
+                                },onNavigationIconClick = {
                                     scope.launch {
                                         scaffoldState.drawerState.open()
                                     }

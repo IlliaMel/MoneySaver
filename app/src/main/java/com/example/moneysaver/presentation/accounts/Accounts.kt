@@ -65,11 +65,14 @@ fun MainAccountScreen(onTabSelected: (Int) -> Unit ,onNavigationIconClick: () ->
 
 
     Column(
-        Modifier.fillMaxHeight().background(Color.White),
-        verticalArrangement = Arrangement.SpaceBetween) {
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(whiteSurface)
+    ) {
 
         Column(
             modifier = Modifier
+                .weight(10f)
                 .fillMaxWidth()
                 .background(whiteSurface)
         ) {
@@ -93,10 +96,12 @@ fun MainAccountScreen(onTabSelected: (Int) -> Unit ,onNavigationIconClick: () ->
 
         }
 
-        TabsForScreens(){
-            onTabSelected(it)
-        }
 
+        Row(modifier = Modifier.weight(1f)) {
+            TabsForScreens(){
+                onTabSelected(it)
+            }
+        }
 
         }
 

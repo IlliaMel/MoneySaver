@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.presentation.TabsForScreens
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
@@ -31,6 +32,7 @@ import com.example.moneysaver.ui.theme.whiteSurface
 
 @Composable
 fun Transactions(
+    onTabSelected: (Int) -> Unit ,
     onNavigationIconClick: () -> Unit,
     navigateToTransaction: (Transaction) -> Unit,
     viewModel: TransactionsViewModel = TransactionsViewModel()
@@ -44,62 +46,89 @@ fun Transactions(
         modifier = Modifier
             .fillMaxWidth()
             .background(whiteSurface)
-    ){
-        TopBarTransactions(onNavigationIconClick = {onNavigationIconClick})
-        Scaffold(
-            scaffoldState = scaffoldState,
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        // add transaction
-                    },
-                    backgroundColor = Color.Blue
-                ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add transaction")
-                }
-            }
+    ) {
+
+        Column(
+            modifier = Modifier
+                .weight(10f)
+                .fillMaxWidth()
+                .background(whiteSurface)
         ) {
-
-
-            LazyColumn(
-                contentPadding = PaddingValues()
+            TopBarTransactions(onNavigationIconClick = { onNavigationIconClick })
+            Scaffold(
+                scaffoldState = scaffoldState,
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
+                            // add transaction
+                        },
+                        backgroundColor = Color.Blue
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add transaction"
+                        )
+                    }
+                }
             ) {
 
-                item{
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(IntrinsicSize.Min)
-                            .background(whiteSurface),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        BalanceField(text = "Starting balance", balance = viewModel.state.startingBalance)
-                        Divider(modifier = Modifier
-                            .background(dividerColor)
-                            .fillMaxHeight()
-                            .width(1.dp))
-                        BalanceField(text = "Ending balance", balance = viewModel.state.endingBalance)
-                    }
-                    Divider(modifier = Modifier.background(dividerColor))
-                }
 
-                items(
-                    items = viewModel.state.transactionList,
-                    itemContent = {
-                        Column {
-                            TransactionItem(transaction = it)
-                            Divider(modifier = Modifier.background(dividerColor))
+                LazyColumn(
+                    Modifier.background(whiteSurface),
+                    contentPadding = PaddingValues()
+                ) {
+
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(IntrinsicSize.Min)
+                                .background(whiteSurface),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            BalanceField(
+                                text = "Starting balance",
+                                balance = viewModel.state.startingBalance
+                            )
+                            Divider(
+                                modifier = Modifier
+                                    .background(dividerColor)
+                                    .fillMaxHeight()
+                                    .width(1.dp)
+                            )
+                            BalanceField(
+                                text = "Ending balance",
+                                balance = viewModel.state.endingBalance
+                            )
                         }
+                        Divider(modifier = Modifier.background(dividerColor))
                     }
-                )
 
-                item {
-                    Spacer(modifier = Modifier.height(80.dp))
+                    items(
+                        items = viewModel.state.transactionList,
+                        itemContent = {
+                            Column {
+                                TransactionItem(transaction = it)
+                                Divider(modifier = Modifier.background(dividerColor))
+                            }
+                        }
+                    )
+
+                    item {
+                        Spacer(modifier = Modifier.height(80.dp))
+                    }
+
                 }
 
             }
-
         }
+
+        Row(modifier = Modifier.weight(1f)) {
+            TabsForScreens(){
+                onTabSelected(it)
+            }
+        }
+
     }
  }
 
