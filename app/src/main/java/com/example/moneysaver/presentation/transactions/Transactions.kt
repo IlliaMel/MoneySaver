@@ -12,14 +12,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.presentation.accounts.AccountListItem
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
+import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
 import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
 import com.example.moneysaver.ui.theme.Purple200
 import org.intellij.lang.annotations.JdkConstants
+import java.util.*
 
 @Composable
 fun Transactions(
@@ -50,6 +53,7 @@ fun Transactions(
                 contentPadding = PaddingValues()
             ) {
 
+
                 item{
                     Row(
                         modifier = Modifier
@@ -63,6 +67,11 @@ fun Transactions(
                             .width(1.dp))
                         BalanceField(text = "Ending balance", balance = viewModel.state.endingBalance)
                     }
+                    Divider()
+                }
+
+                item{
+                    DateBlock(date = Date(2022, 7, 27), balanceChange = 2550.5 )
                     Divider()
                 }
 
@@ -83,4 +92,10 @@ fun Transactions(
             }
 
     }
+}
+
+@Preview
+@Composable
+fun PreviewTransactions() {
+    Transactions(navigateToTransaction = {})
 }

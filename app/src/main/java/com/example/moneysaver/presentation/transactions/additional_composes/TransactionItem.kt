@@ -25,7 +25,7 @@ fun TransactionItem(transaction: Transaction) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp, 8.dp, 0.dp, 8.dp),
+            .padding(8.dp, 1.dp, 0.dp, 1.dp),
         //.background(whiteSurface)
     ) {
         Row(
@@ -50,7 +50,7 @@ fun TransactionItem(transaction: Transaction) {
             Column(
                 modifier = Modifier
                     .weight(4f)
-                    .padding(0.dp, 8.dp, 12.dp, 8.dp)
+                    .padding(0.dp, 4.dp, 12.dp, 2.dp)
                     .fillMaxWidth()
                     .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.SpaceEvenly
@@ -63,7 +63,7 @@ fun TransactionItem(transaction: Transaction) {
                     Text(transaction.category, color = Color.Black, fontSize = 19.sp)
                     val sumText: String = (if(transaction.isIncome) "+" else "-") + "$ " + transaction.sum
                     val color = if(transaction.isIncome) Color.Green else Color.Red
-                    Text(sumText, color = color)
+                    Text(sumText, color = color, fontSize = 19.sp)
                 }
                 Row(
                     modifier = Modifier
@@ -71,8 +71,6 @@ fun TransactionItem(transaction: Transaction) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(transaction.account, color = Color.Gray, fontSize = 17.sp)
-                    val dateText = transaction.date.year.toString()+"."+transaction.date.month.toString()+"."+transaction.date.date.toString()
-                    Text(dateText, color = Color.Gray, fontSize = 17.sp)
                 }
                 (transaction.note)?.let{
                     Text(transaction.note, color = Color.Gray, fontSize = 15.sp)
