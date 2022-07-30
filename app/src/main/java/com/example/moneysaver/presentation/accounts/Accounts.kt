@@ -27,12 +27,7 @@ import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.ui.theme.currencyColor
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Constraints
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -60,7 +55,7 @@ fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings:
                       viewModel: AccountsViewModel = AccountsViewModel()
 ){
 
-        viewModel.loadAccounts()
+    viewModel.loadAccounts()
 
 
 
@@ -70,27 +65,27 @@ fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings:
             .background(whiteSurface)
     ) {
 
-            TopBarAccounts(onNavigationIconClick)
-            SumMoneyInfo(stringResource(R.string.accounts_name_label),viewModel.loadBankAccountSum(),viewModel.state.currentAccount.currencyType)
-            val accounts = remember { AccountsData.accountsList }
-            LazyColumn(
-                contentPadding = PaddingValues()
-            ) {
-                items(
-                    items = accounts,
-                    itemContent = {
-                        AccountListItem(account = it, navigateToCardSettings)
-                    }
-                )
-            }
-            AddBankAccount(AccountsData.accountAdder, navigateToCardAdder)
-            Divider(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp).background(dividerColor))
-            SumMoneyInfo(stringResource(R.string.savings_accounts),viewModel.loadSavingsAccountSum(),viewModel.state.currentAccount.currencyType)
-            AddBankAccount(AccountsData.goalAdder, navigateToGoalAdder)
-
+        TopBarAccounts(onNavigationIconClick)
+        SumMoneyInfo(stringResource(R.string.accounts_name_label),viewModel.loadBankAccountSum(),viewModel.state.currentAccount.currencyType)
+        val accounts = remember { AccountsData.accountsList }
+        LazyColumn(
+            contentPadding = PaddingValues()
+        ) {
+            items(
+                items = accounts,
+                itemContent = {
+                    AccountListItem(account = it, navigateToCardSettings)
+                }
+            )
         }
+        AddBankAccount(AccountsData.accountAdder, navigateToCardAdder)
+        Divider(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp).background(dividerColor))
+        SumMoneyInfo(stringResource(R.string.savings_accounts),viewModel.loadSavingsAccountSum(),viewModel.state.currentAccount.currencyType)
+        AddBankAccount(AccountsData.goalAdder, navigateToGoalAdder)
 
     }
+
+}
 
 
 @Composable
@@ -142,7 +137,7 @@ fun TopBarAccounts(onNavigationIconClick: () -> Unit){
                         .padding(8.dp),
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = stringResource(R.string.accounts_name_label), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                        Text(text = stringResource(R.string.accounts_name_label), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 15.sp)
                     }
                 }
 
@@ -171,9 +166,9 @@ fun SumMoneyInfo(infoText: String , numberOfMoney: Double , currency:String) {
             .padding(16.dp, 12.dp, 18.dp, 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
-        Text(text = infoText, color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 16.sp)
-        if (numberOfMoney != 0.0) Text(text = ("$numberOfMoney $currency"), color = currencyColor, fontWeight = FontWeight.W500 , fontSize = 16.sp)
-        else if (numberOfMoney == 0.0) Text(text = ("0.0 $"), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+        Text(text = infoText, color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 14.sp)
+        if (numberOfMoney != 0.0) Text(text = ("$numberOfMoney $currency"), color = currencyColor, fontWeight = FontWeight.W500 , fontSize = 15.sp)
+        else if (numberOfMoney == 0.0) Text(text = ("0.0 $"), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 15.sp)
     }
 }
 
@@ -187,24 +182,24 @@ fun AddBankAccount(account: Account, navigateToCardAdder: (Account) -> Unit) {
         Row(Modifier.clickable { }, verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,) {
 
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    AccountImage(account)
-                }
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                AccountImage(account)
+            }
 
-                Column(
-                    modifier = Modifier
-                        .weight(4f)
-                        .padding(0.dp, 8.dp, 0.dp, 8.dp)
-                        .fillMaxWidth()
-                        .align(Alignment.CenterVertically),
-                    verticalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black, fontSize = 15.sp)
-                }
+            Column(
+                modifier = Modifier
+                    .weight(4f)
+                    .padding(0.dp, 8.dp, 0.dp, 8.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.CenterVertically),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black, fontSize = 14.sp)
+            }
         }
     }
 
@@ -246,30 +241,30 @@ fun AccountListItem(account: Account, navigateToCardSettings: (Account) -> Unit)
 private fun CustomDivider(){
     Row(modifier = Modifier.fillMaxWidth()){
 
-    Row(modifier = Modifier.weight(1f)) {}
+        Row(modifier = Modifier.weight(1f)) {}
 
-    Row(modifier = Modifier.weight(4f)) { Divider( modifier = Modifier.padding(8.dp, 2.dp, 0.dp, 0.dp).background(dividerColor)) }
+        Row(modifier = Modifier.weight(4f)) { Divider( modifier = Modifier.padding(8.dp, 2.dp, 0.dp, 0.dp).background(dividerColor)) }
     }
 }
 
 
 @Composable
 private fun textForAccount(account: Account, modifier: Modifier = Modifier){
-    Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black , fontSize = 15.sp)
-    Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) , text = (account.balance.toString() + " " + account.currencyType), color = currencyColor, fontWeight = FontWeight.W400 , fontSize = 15.sp)
+    Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black , fontSize = 14.sp)
+    Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) , text = (account.balance.toString() + " " + account.currencyType), color = currencyColor, fontWeight = FontWeight.W400 , fontSize = 14.sp)
 }
 
 
 @Composable
 private fun AccountImage(account: Account) {
-        Image(
+    Image(
         painter = painterResource(id = account.accountImg),
         contentDescription = null,
         contentScale = ContentScale.Fit,
         modifier = Modifier
-            .padding(4.dp)
-            .width(65.dp)
-            .height(42.dp)
+            .padding(2.dp)
+            .width(55.dp)
+            .height(36.dp)
             .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
     )
 }

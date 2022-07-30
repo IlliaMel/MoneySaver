@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.painter.Painter
@@ -159,7 +160,11 @@ class MainActivity : ComponentActivity() {
                                         navigateToCardSettings = {},
                                         navigateToCardAdder = {},
                                         navigateToGoalAdder = {})
-                                    1 -> Categories()
+                                    1 -> Categories(onNavigationIconClick = {
+                                        scope.launch {
+                                            scaffoldState.drawerState.open()
+                                        }
+                                    })
                                     2 -> Transactions(onNavigationIconClick = {
                                         scope.launch {
                                             scaffoldState.drawerState.open()
@@ -208,14 +213,14 @@ fun TabsForScreens(
 
     val inactiveColor = Color(0xFF777777)
     Box(modifier = modifier
-        .fillMaxHeight(1f)
+        .fillMaxHeight()
         .fillMaxWidth()){
 
         TabRow(
             selectedTabIndex = selectedTabIndex,
             backgroundColor = Color.White,
             contentColor = Color.White,
-            modifier = modifier
+            modifier = modifier.shadow(elevation = 5.dp)
         ) {
             imageWithTexts.forEachIndexed { index, item ->
                 Tab(selected = selectedTabIndex == index,
@@ -226,19 +231,19 @@ fun TabsForScreens(
                         onTabSelected(index)
                     }
                 ) {
-                    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
                         Image(
                             painter = item.image,
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
                                 .padding(4.dp)
-                                .width(43.dp)
-                                .height(30.dp)
+                                .width(35.dp)
+                                .height(23.dp)
                                 .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
                         )
                         Text(modifier = Modifier
-                            .padding(4.dp), text = item.text , fontSize = 14.sp ,  color = if(selectedTabIndex == index) Color.Black else inactiveColor)
+                            .padding(2.dp), text = item.text , fontSize = 12.sp ,  color = if(selectedTabIndex == index) Color.Black else inactiveColor)
                     }
 
                 }
