@@ -24,7 +24,7 @@ fun TransactionItem(transaction: Transaction) {
         modifier = Modifier
             .fillMaxWidth()
             .background(whiteSurface)
-            .padding(8.dp, 8.dp, 0.dp, 8.dp),
+            .padding(0.dp, 4.dp, 0.dp, 4.dp),
         //.background(whiteSurface)
     ) {
         Row(
@@ -36,11 +36,11 @@ fun TransactionItem(transaction: Transaction) {
         ) {
 
             Image(
-                painter = painterResource(id = R.drawable.cash),
+                painter = painterResource(id = R.drawable.categories_icn),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .padding(0.dp, 12.dp, 12.dp, 8.dp)
+                    .padding(0.dp, 12.dp, 0.dp, 0.dp)
                     .width(65.dp)
                     .height(42.dp)
                     .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
@@ -59,22 +59,20 @@ fun TransactionItem(transaction: Transaction) {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(transaction.category, color = Color.Black, fontSize = 19.sp)
+                    Text(transaction.category, color = Color.Black, fontSize = 17.sp)
                     val sumText: String = (if(transaction.isIncome) "+" else "-") + "$ " + transaction.sum
                     val color = if(transaction.isIncome) Color.Green else Color.Red
-                    Text(sumText, color = color)
+                    Text(sumText, color = color, fontSize = 15.sp)
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(transaction.account, color = Color.Gray, fontSize = 17.sp)
-                    val dateText = transaction.date.year.toString()+"."+transaction.date.month.toString()+"."+transaction.date.date.toString()
-                    Text(dateText, color = Color.Gray, fontSize = 17.sp)
+                    Text("\uD83D\uDCB3 "+transaction.account, color = Color.Gray, fontSize = 16.sp)
                 }
                 (transaction.note)?.let{
-                    Text(transaction.note, color = Color.Gray, fontSize = 15.sp)
+                    Text(transaction.note, color = Color.Gray, fontSize = 14.sp)
                 }
             }
         }

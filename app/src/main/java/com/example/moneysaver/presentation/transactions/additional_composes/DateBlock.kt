@@ -1,6 +1,7 @@
 package com.example.moneysaver.presentation.transactions.additional_composes
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
@@ -19,6 +20,7 @@ fun DateBlock(date: Date, balanceChange: Double) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(0xffeeeeee))
             .padding(16.dp, 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
