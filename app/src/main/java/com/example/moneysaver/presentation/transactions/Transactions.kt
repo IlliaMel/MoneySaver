@@ -26,9 +26,11 @@ import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.presentation.TabsForScreens
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
+import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
 import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
 import com.example.moneysaver.ui.theme.dividerColor
 import com.example.moneysaver.ui.theme.whiteSurface
+import java.util.*
 
 @Composable
 fun Transactions(
@@ -93,6 +95,11 @@ fun Transactions(
                                 balance = viewModel.state.endingBalance
                             )
                         }
+                        Divider(modifier = Modifier.background(dividerColor))
+                    }
+
+                    item{
+                        DateBlock(date = Date(2022, 7, 27), balanceChange = 2550.5 )
                         Divider(modifier = Modifier.background(dividerColor))
                     }
 
