@@ -1,15 +1,16 @@
 package com.example.moneysaver.presentation.transactions
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.presentation.TabsForScreens
+import com.example.moneysaver.presentation._components.MonthChooser
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
@@ -57,7 +59,7 @@ fun Transactions(
                         onClick = {
                             // add transaction
                         },
-                        backgroundColor = Color.Blue
+                        backgroundColor = Color(0xff5c6bbf)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
@@ -115,7 +117,10 @@ fun Transactions(
                     )
 
                     item {
-                        Spacer(modifier = Modifier.fillMaxWidth().height(80.dp).innerShadow(blur = 4.dp, drawLeft = false, drawRight = false))
+                        Spacer(modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .innerShadow(blur = 4.dp, drawLeft = false, drawRight = false))
                     }
 
                 }
@@ -138,7 +143,7 @@ fun Transactions(
                 modifier = Modifier.matchParentSize()
             )
 
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
@@ -146,8 +151,7 @@ fun Transactions(
 
                 Row(modifier = Modifier
                     .padding(0.dp, 30.dp, 0.dp, 0.dp)
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
+                    .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween){
                     IconButton(modifier = Modifier
                         .padding(8.dp, 24.dp, 0.dp, 0.dp)
@@ -160,34 +164,58 @@ fun Transactions(
                     }
 
                     Column(modifier = Modifier
-                        .fillMaxHeight()
                         .padding(8.dp),
                         verticalArrangement = Arrangement.Top,
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(modifier = Modifier
                             .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - Cash", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
                         Text(text = ("3423 $"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
-
-                        Column(modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(8.dp),
-                            verticalArrangement = Arrangement.Bottom,
-                            horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = stringResource(R.string.accounts_name_label), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
-                        }
                     }
 
                     IconButton(modifier = Modifier
                         .padding(0.dp, 24.dp, 8.dp, 0.dp)
                         .size(40.dp, 40.dp), onClick = {  }) {
                         Icon(
-                            imageVector = Icons.Default.Add,
+                            imageVector = Icons.Default.Search,
                             tint = whiteSurface,
-                            contentDescription = "Toggle drawer"
+                            contentDescription = "Search"
                         )
                     }
 
                 }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 0.dp, 0.dp, 0.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    IconButton(modifier = Modifier
+                        .padding(8.dp, 0.dp, 8.dp, 0.dp)
+                        .size(40.dp, 40.dp), onClick = {  }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            tint = whiteSurface,
+                            contentDescription = "Prev Month"
+                        )
+                    }
+
+                    MonthChooser(Date(2022, 7, 31),);
+
+                    IconButton(modifier = Modifier
+                        .padding(8.dp, 0.dp, 8.dp, 0.dp)
+                        .size(40.dp, 40.dp), onClick = {  }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowForward,
+                            tint = whiteSurface,
+                            contentDescription = "Next Month"
+                        )
+                    }
+                }
+
+
             }
         }
         dividerForTopBar()
