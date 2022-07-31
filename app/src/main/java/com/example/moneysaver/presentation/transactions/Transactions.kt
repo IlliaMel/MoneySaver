@@ -28,6 +28,7 @@ import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
 import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
+import com.example.moneysaver.presentation.transactions.additional_composes.innerShadow
 import com.example.moneysaver.ui.theme.dividerColor
 import com.example.moneysaver.ui.theme.whiteSurface
 import java.util.*
@@ -114,7 +115,7 @@ fun Transactions(
                     )
 
                     item {
-                        Spacer(modifier = Modifier.height(80.dp))
+                        Spacer(modifier = Modifier.fillMaxWidth().height(80.dp).innerShadow(blur = 4.dp, drawLeft = false, drawRight = false))
                     }
 
                 }
