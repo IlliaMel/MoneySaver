@@ -72,7 +72,7 @@ fun TransactionItem(transaction: Transaction) {
                     Text("\uD83D\uDCB3 "+transaction.account, color = Color.Gray, fontSize = 16.sp)
                 }
                 (transaction.note)?.let{
-                    Text(transaction.note, color = Color.Gray, fontSize = 14.sp)
+                    Text(transaction.note, color = Color(0xffababab), fontSize = 14.sp)
                 }
             }
         }

@@ -20,7 +20,7 @@ fun DateBlock(date: Date, balanceChange: Double) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xffeeeeee))
+            .background(Color(0xffececec))
             .padding(16.dp, 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -29,15 +29,15 @@ fun DateBlock(date: Date, balanceChange: Double) {
             modifier = Modifier.fillMaxHeight(),
             verticalAlignment = Alignment.Bottom
         ) {
-            Text(text = date.date.toString(), color = Color.Gray, fontSize = 26.sp, fontWeight = FontWeight.Bold);
+            Text(text = date.date.toString(), color = Color(0xff7d7d7d), fontSize = 26.sp, fontWeight = FontWeight.Bold);
             Column(
                 modifier = Modifier
                     .padding(12.dp, 0.dp, 0.dp, 0.dp)
                     .offset(x = 0.dp, y = (-2).dp),
                 verticalArrangement = Arrangement.Bottom
             ) {
-                Text(text = getNameOfDayByDate(date).uppercase(), color=Color.LightGray, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                Text(text = getNameOfMonthByNumber(date.month).uppercase() + " "+date.year, color = Color.Gray, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(text = getNameOfDayByDate(date).uppercase(), color=Color(0xffababab), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                Text(text = getNameOfMonthByNumber(date.month).uppercase() + " "+date.year, color = Color(0xff7d7d7d), fontSize = 14.sp, fontWeight = FontWeight.Bold)
             }
         }
         Row(
