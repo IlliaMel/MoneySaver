@@ -8,8 +8,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,10 +23,12 @@ import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.presentation._components.MonthChooser
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.ui.theme.currencyColor
 import com.example.moneysaver.ui.theme.currencyColorZero
 import com.example.moneysaver.ui.theme.whiteSurface
+import java.util.*
 
 @Composable
 fun Categories(onNavigationIconClick: () -> Unit) {
@@ -115,7 +116,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
             modifier = Modifier.matchParentSize()
         )
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
@@ -123,8 +124,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
 
             Row(modifier = Modifier
                 .padding(0.dp, 30.dp, 0.dp, 0.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(),
+                .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween){
                 IconButton(modifier = Modifier
                     .padding(8.dp, 24.dp, 0.dp, 0.dp)
@@ -137,37 +137,60 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
                 }
 
                 Column(modifier = Modifier
-                    .fillMaxHeight()
                     .padding(8.dp),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
                         .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - Cash", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
                     Text(text = ("3423 $"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
-
-                    Column(modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(8.dp),
-                        verticalArrangement = Arrangement.Bottom,
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = stringResource(R.string.accounts_name_label), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
-                    }
                 }
 
                 IconButton(modifier = Modifier
                     .padding(0.dp, 24.dp, 8.dp, 0.dp)
                     .size(40.dp, 40.dp), onClick = {  }) {
                     Icon(
-                        imageVector = Icons.Default.Add,
+                        imageVector = Icons.Default.Edit,
                         tint = whiteSurface,
-                        contentDescription = "Toggle drawer"
+                        contentDescription = "Edit"
                     )
                 }
 
             }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 0.dp, 0.dp, 0.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                IconButton(modifier = Modifier
+                    .padding(8.dp, 0.dp, 8.dp, 0.dp)
+                    .size(40.dp, 40.dp), onClick = {  }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        tint = whiteSurface,
+                        contentDescription = "Prev Month"
+                    )
+                }
+
+                MonthChooser(Date(2022, 7, 31),);
+
+                IconButton(modifier = Modifier
+                    .padding(8.dp, 0.dp, 8.dp, 0.dp)
+                    .size(40.dp, 40.dp), onClick = {  }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        tint = whiteSurface,
+                        contentDescription = "Next Month"
+                    )
+                }
+            }
+
+
         }
     }
-    dividerForTopBar()
 }
 
 @Composable
