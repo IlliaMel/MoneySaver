@@ -59,7 +59,7 @@ fun TransactionItem(transaction: Transaction) {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(transaction.category, color = Color.Black, fontSize = 17.sp)
+                    Text(transaction.category.title, color = Color.Black, fontSize = 17.sp)
                     val sumText: String = (if(transaction.isIncome) "+" else "-") + "$ " + transaction.sum
                     val color = if(transaction.isIncome) Color.Green else Color.Red
                     Text(sumText, color = color, fontSize = 15.sp)
@@ -69,7 +69,7 @@ fun TransactionItem(transaction: Transaction) {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("\uD83D\uDCB3 "+transaction.account, color = Color.Gray, fontSize = 16.sp)
+                    Text("\uD83D\uDCB3 "+transaction.account.title, color = Color.Gray, fontSize = 16.sp)
                 }
                 (transaction.note)?.let{
                     Text(transaction.note, color = Color(0xffababab), fontSize = 14.sp)

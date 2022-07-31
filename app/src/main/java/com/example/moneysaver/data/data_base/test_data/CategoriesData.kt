@@ -1,7 +1,6 @@
 package com.example.moneysaver.data.data_base.test_data
 
 import com.example.moneysaver.R
-import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 
 object CategoriesData {
@@ -11,25 +10,45 @@ object CategoriesData {
             categoryImg = R.drawable.categories_icn,
             currencyType = "$",
             title = "Health",
-            spended = 537.53,
+            spent = 537.53,
         ),
         Category(
             categoryImg = R.drawable.categories_icn,
             currencyType = "$",
             title = "Entertainment",
-            spended = 86.0,
+            spent = 86.0,
         ),
         Category(
             categoryImg = R.drawable.categories_icn,
             currencyType = "$",
             title = "Gifts",
-            spended = 0.0,
+            spent = 0.0,
         ),
         Category(
             categoryImg = R.drawable.categories_icn,
             currencyType = "$",
             title = "Family",
-            spended = 137.23,
+            spent = 137.23,
+        ),
+        Category(
+            categoryImg = R.drawable.categories_icn,
+            currencyType = "$",
+            title = "Family",
+            spent = 137.23,
+        ),
+
+        Category(
+            categoryImg = R.drawable.categories_icn,
+            currencyType = "$",
+            title = "Family",
+            spent = 137.23,
+        ),
+
+        Category(
+            categoryImg = R.drawable.categories_icn,
+            currencyType = "$",
+            title = "Family",
+            spent = 137.23,
         ),
 
         )

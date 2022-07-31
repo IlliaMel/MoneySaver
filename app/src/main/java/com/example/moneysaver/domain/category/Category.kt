@@ -7,5 +7,10 @@ data class Category(
     val categoryImg: Int = 0,
     val currencyType: String = "$",
     val title: String,
-    val spended: Double = 0.0,
-) : Serializable
+    val spent: Double = 0.0,
+) : Serializable{
+    
+    override fun toString(): String {
+        return "$categoryImg,$currencyType,$title,$spent"
+    }
+}

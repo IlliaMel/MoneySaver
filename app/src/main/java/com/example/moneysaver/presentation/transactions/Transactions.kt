@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation.transactions
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -11,8 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.presentation.TabsForScreens
@@ -33,17 +34,20 @@ import com.example.moneysaver.presentation.transactions.additional_composes.Tran
 import com.example.moneysaver.presentation.transactions.additional_composes.innerShadow
 import com.example.moneysaver.ui.theme.dividerColor
 import com.example.moneysaver.ui.theme.whiteSurface
+import kotlinx.coroutines.launch
 import java.util.*
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Transactions(
     onNavigationIconClick: () -> Unit,
     navigateToTransaction: (Transaction) -> Unit,
-    viewModel: TransactionsViewModel = TransactionsViewModel()
+    viewModel: TransactionsViewModel = hiltViewModel()
 ) {
+
+
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-
     viewModel.loadTransactions()
 
         Column(
@@ -57,7 +61,8 @@ fun Transactions(
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = {
-                            // add transaction
+                            viewModel.getTransactions()
+                            println(viewModel.state.transactionList.size)
                         },
                         backgroundColor = Color(0xff5c6bbf)
                     ) {

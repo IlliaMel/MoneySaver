@@ -208,10 +208,10 @@ private fun CategoriesImage(category: Category) {
                 .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
         )
         var color = currencyColor
-        if(category.spended == 0.0)
+        if(category.spent == 0.0)
             color = currencyColorZero
 
-        Text(modifier = Modifier.padding(4.dp), fontSize = 13.sp, fontWeight = FontWeight.W500, text = (category.spended.toString() + " " + category.currencyType), color = color)
+        Text(modifier = Modifier.padding(4.dp), fontSize = 13.sp, fontWeight = FontWeight.W500, text = (category.spent.toString() + " " + category.currencyType), color = color)
     }
 
 }

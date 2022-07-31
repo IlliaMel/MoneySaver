@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -7,12 +8,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,14 +31,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
+import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
 import com.example.moneysaver.presentation.accounts.MainAccountScreen
 import com.example.moneysaver.presentation.categories.Categories
+import com.example.moneysaver.presentation.categories.additional_composes.PieStyledScreen
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.ui.theme.MoneySaverTheme
+import com.example.moneysaver.ui.theme.currencyColor
+import com.example.moneysaver.ui.theme.currencyColorZero
 import com.example.moneysaver.ui.theme.whiteSurface
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 /*
 class MainActivity : ComponentActivity() {
@@ -74,7 +82,9 @@ data class ImageWithText(
     val text: String
 )
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -85,6 +95,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MoneySaverTheme {
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -136,9 +147,6 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                     ) {
-
-
-
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -182,11 +190,98 @@ class MainActivity : ComponentActivity() {
                         }
 
                     }
-                }
+
+
+
+                //PieStyledScreen()
+                //CustomTab()
+
+
+            }
             }
         }
     }
+@Composable
+fun CustomTab(){
 
+    val inactiveColor = Color(0xFF777777)
+    Box(modifier = Modifier
+        .fillMaxHeight()
+        .fillMaxWidth()){
+
+        TabRow(
+            selectedTabIndex = 0,
+            backgroundColor = Color.White,
+            contentColor = Color.White,
+            modifier = Modifier.shadow(elevation = 5.dp)
+        ) {
+            Tab (selected = false,
+                    selectedContentColor = Color.Black,
+                    unselectedContentColor = inactiveColor,
+                    onClick = { }
+                ) {
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween) {
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.End,
+                                verticalArrangement = Arrangement.Top
+                            ) {
+                                Image(
+                                    painter = painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .width(44.dp)
+                                        .height(44.dp)
+                                        .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                                )
+                            }
+                            Column() {
+                                Text(
+                                    text = "Зарплата",
+                                    fontWeight = FontWeight.W500,
+                                    color = Color.Black,
+                                    fontSize = 14.sp
+                                )
+                                Text(
+                                    text = "Готівка",
+                                    fontWeight = FontWeight.W500,
+                                    color = currencyColorZero,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+
+                        Column(
+                            modifier = Modifier.weight(2f),
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(0.dp,0.dp,16.dp,24.dp),
+                                text = "+44.4$",
+                                fontWeight = FontWeight.W500,
+                                color = currencyColor,
+                                fontSize = 16.sp
+                            )
+                        }
+
+
+                    }
+
+                }
+        }
+    }
+}
 
 @Composable
 fun TabsForScreens(
