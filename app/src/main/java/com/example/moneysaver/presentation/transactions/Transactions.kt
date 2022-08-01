@@ -48,7 +48,7 @@ fun Transactions(
 
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-   //viewModel.loadTransactions()
+   viewModel.loadTransactions()
     //viewModel.deleteTransactions()
 
         Column(

@@ -41,8 +41,6 @@ class TransactionsViewModel @Inject constructor(
                         transactionList = list
                     )
                 }.launchIn(viewModelScope)
-
-
     }
 
     fun deleteTransactions() {

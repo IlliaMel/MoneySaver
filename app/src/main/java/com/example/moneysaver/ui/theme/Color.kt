@@ -10,6 +10,7 @@ val Teal200 = Color(0xFF03DAC5)
 
 
 val whiteSurface = Color(0xFFFFFFFF)
-val currencyColor = Color(0xFF44A248)
+val currencyColor = Color(0xFF409744)
+val currencyColorSpent = Color(0xFFDD3838)
 val currencyColorZero = Color(0xFF9E9D9D)
 val dividerColor = Color(0xFFE7E7E7)
