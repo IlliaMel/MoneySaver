@@ -6,7 +6,6 @@ import java.util.*
 object TransactionsData {
     val transactionList = listOf(
         Transaction(
-            id = 8,
             sum = 250.5,
             isIncome = false,
             category = CategoriesData.categoriesList.get(0),
@@ -15,7 +14,6 @@ object TransactionsData {
             note = "Bus"
         ),
         Transaction(
-            id = 2,
             sum = 22000.0,
             isIncome = true,
             category = CategoriesData.categoriesList.get(1),

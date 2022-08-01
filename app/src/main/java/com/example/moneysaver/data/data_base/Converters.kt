@@ -8,7 +8,7 @@ import java.util.*
 class Converters {
 
 
-    @TypeConverter
+    /*@TypeConverter
     fun fromStringToUUID(value: String?): UUID? {
         return value?.let { UUID.fromString(it) }
     }
@@ -17,7 +17,7 @@ class Converters {
     fun fromUUIDtoString(uuid: UUID?): String? {
         return uuid?.toString()
     }
-
+*/
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return value?.let { Date(it) }
@@ -36,6 +36,7 @@ class Converters {
         }
         return Category(title = "")
     }
+
 
     @TypeConverter
     fun stringToCategory(category: Category?): String? {

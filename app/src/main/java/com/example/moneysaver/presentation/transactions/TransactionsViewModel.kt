@@ -35,14 +35,19 @@ class TransactionsViewModel @Inject constructor(
     }
 
     fun getTransactions() {
-        viewModelScope.launch {
             repository.getTransactions()
                 .onEach { list ->
                     state = state.copy(
                         transactionList = list
                     )
-                }
-            //repository.deleteAll()
+                }.launchIn(viewModelScope)
+
+
+    }
+
+    fun deleteTransactions() {
+        viewModelScope.launch {
+            repository.deleteAll()
         }
     }
 

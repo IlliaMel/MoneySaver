@@ -10,7 +10,7 @@ class TransactionRepositoryImpl(
 ) : TransactionRepository {
 
 
-    override suspend fun getTransactions(): Flow<List<Transaction>> {
+    override  fun getTransactions(): Flow<List<Transaction>> {
         return dao.getTransactions()
     }
 

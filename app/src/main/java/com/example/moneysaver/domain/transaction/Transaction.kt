@@ -8,8 +8,8 @@ import java.util.*
 
 @Entity
 data class Transaction(
-   // @PrimaryKey val uuid: UUID = UUID.randomUUID(),
-    @PrimaryKey val id: Int = 0,
+    @PrimaryKey val uuid: UUID = UUID.randomUUID(),
+  //  @PrimaryKey val id: Int = 0,
     val sum: Double,
     val isIncome: Boolean,
     val category: Category,

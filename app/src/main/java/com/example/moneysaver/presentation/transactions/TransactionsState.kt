@@ -1,6 +1,6 @@
 package com.example.moneysaver.presentation.transactions
 
-import com.example.moneysaver.domain.account.Account
+
 import com.example.moneysaver.domain.transaction.Transaction
 
 data class TransactionsState (
