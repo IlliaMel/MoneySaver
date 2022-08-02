@@ -1,4 +1,4 @@
-package com.example.moneysaver.data.data_base
+package com.example.moneysaver.data.data_base.transaction_dp
 
 import androidx.room.*
 import com.example.moneysaver.domain.transaction.Transaction

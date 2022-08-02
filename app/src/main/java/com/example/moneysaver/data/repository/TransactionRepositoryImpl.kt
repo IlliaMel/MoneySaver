@@ -1,6 +1,6 @@
 package com.example.moneysaver.data.repository
 
-import com.example.moneysaver.data.data_base.TransactionDao
+import com.example.moneysaver.data.data_base.transaction_dp.TransactionDao
 import com.example.moneysaver.domain.repository.TransactionRepository
 import com.example.moneysaver.domain.transaction.Transaction
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +10,7 @@ class TransactionRepositoryImpl(
 ) : TransactionRepository {
 
 
-    override  fun getTransactions(): Flow<List<Transaction>> {
+    override suspend fun getTransactions(): Flow<List<Transaction>> {
         return dao.getTransactions()
     }
 
@@ -22,7 +22,7 @@ class TransactionRepositoryImpl(
         dao.deleteTransaction(transaction)
     }
 
-    override suspend fun deleteAll() {
+    override suspend fun deleteAllTransaction() {
         dao.deleteAll()
     }
 

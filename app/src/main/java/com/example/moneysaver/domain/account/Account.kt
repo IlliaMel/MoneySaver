@@ -1,9 +1,13 @@
 package com.example.moneysaver.domain.account
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.io.Serializable
 import java.util.*
 
+@Entity
 data class Account(
+    @PrimaryKey val uuid: UUID = UUID.randomUUID(),
     val accountImg: Int = 0,
     val currencyType: String = "$",
     val title: String,
