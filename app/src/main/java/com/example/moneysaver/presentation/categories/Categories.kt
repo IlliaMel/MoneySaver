@@ -1,17 +1,18 @@
 package com.example.moneysaver.presentation.categories
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,109 +30,208 @@ import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.presentation._components.MonthChooser
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.categories.additional_composes.PieSampleData
+import com.example.moneysaver.presentation.categories.additional_composes.TransactionAdder
 import com.example.moneysaver.ui.theme.currencyColor
 import com.example.moneysaver.ui.theme.currencyColorSpent
 import com.example.moneysaver.ui.theme.currencyColorZero
 import com.example.moneysaver.ui.theme.whiteSurface
 import hu.ma.charts.pie.PieChart
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Categories(onNavigationIconClick: () -> Unit) {
 
+    val sheetState = rememberBottomSheetState(
+        initialValue = BottomSheetValue.Collapsed
+    )
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = sheetState
+    )
+    val scope = rememberCoroutineScope()
+
+    var bottomSheetCategory: Category by remember{
+        mutableStateOf(CategoriesData.categoriesList[1])
+    }
+
     TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()})
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
 
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .weight(1f)
-
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetContent = { TransactionAdder(category = bottomSheetCategory)},
+        sheetPeekHeight = 0.dp
         ) {
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(12.dp)
-               // .border(BorderStroke(2.dp, Color.Red))
-                    ,
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            CategoriesImage(CategoriesData.categoriesList.get(0))
-            CategoriesImage(CategoriesData.categoriesList.get(1))
-            CategoriesImage(CategoriesData.categoriesList.get(2))
-            CategoriesImage(CategoriesData.categoriesList.get(3))
-        }
-
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .weight(2f)
-           // .border(BorderStroke(2.dp, Color.Red))
-                ,
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.Center) {
-
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .weight(0.8f), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
-                CategoriesImage(CategoriesData.categoriesList.get(0))
-                CategoriesImage(CategoriesData.categoriesList.get(2))
+        BackHandler(enabled = sheetState.isExpanded) {
+            scope.launch {
+                sheetState.collapse()
             }
+        }
+        
+        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Column(modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .weight(2f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .weight(1f)
 
+            ) {
 
-                ChartContainer(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .animateContentSize(),
-                    spent = "41,1$",
-                    bank = "321,84$"
+                        .weight(1f)
+                        .padding(12.dp)
+                    // .border(BorderStroke(2.dp, Color.Red))
+                    ,
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    PieChart( modifier = Modifier
-                        .padding(4.dp)
-                        ,sliceWidth = 13.dp
-                        ,chartSize = 150.dp
-                        ,data = PieSampleData.get(4)){
+                    CategoriesImage(
+                        category=CategoriesData.categoriesList[0],
+                        modifier=Modifier.clickable {
+                            bottomSheetCategory = CategoriesData.categoriesList[0]
+                            switchBottomSheet(scope, sheetState)
+                        }
+                    )
+                    CategoriesImage(
+                        category=CategoriesData.categoriesList[1],
+                        modifier=Modifier.clickable {
+                            bottomSheetCategory = CategoriesData.categoriesList[1]
+                            switchBottomSheet(scope, sheetState)
+                        }                    )
+                    CategoriesImage(
+                        category=CategoriesData.categoriesList[2],
+                        modifier=Modifier.clickable {
+                            bottomSheetCategory = CategoriesData.categoriesList[2]
+                            switchBottomSheet(scope, sheetState)
+                        }                    )
+                    CategoriesImage(
+                        category=CategoriesData.categoriesList[3],
+                        modifier=Modifier.clickable {
+                            bottomSheetCategory = CategoriesData.categoriesList[3]
+                            switchBottomSheet(scope, sheetState)
+                        }
+                    )
+                }
+
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(2f)
+                    // .border(BorderStroke(2.dp, Color.Red))
+                    ,
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.Center) {
+
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .weight(0.8f), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
+                        CategoriesImage(
+                            category=CategoriesData.categoriesList[0],
+                            modifier=Modifier.clickable {
+                                bottomSheetCategory = CategoriesData.categoriesList[0]
+                                switchBottomSheet(scope, sheetState)
+                            }                        )
+                        CategoriesImage(
+                            category=CategoriesData.categoriesList[2],
+                            modifier=Modifier.clickable {
+                                bottomSheetCategory = CategoriesData.categoriesList[2]
+                                switchBottomSheet(scope, sheetState)
+                            }
+                        )
+                    }
+
+                    Column(modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .weight(2f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+
+
+                        ChartContainer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .animateContentSize(),
+                            spent = "41,1$",
+                            bank = "321,84$"
+                        ) {
+                            PieChart( modifier = Modifier
+                                .padding(4.dp)
+                                ,sliceWidth = 13.dp
+                                ,chartSize = 150.dp
+                                ,data = PieSampleData.get(4)){
+
+                            }
+                        }
 
                     }
+
+                    Column(modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxHeight()
+                        .weight(0.8f), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
+                        CategoriesImage(
+                            category=CategoriesData.categoriesList[0],
+                            modifier=Modifier.clickable {
+                                bottomSheetCategory = CategoriesData.categoriesList[0]
+                                switchBottomSheet(scope, sheetState)
+                            }                        )
+                        CategoriesImage(
+                            category=CategoriesData.categoriesList[2],
+                            modifier=Modifier.clickable {
+                                bottomSheetCategory = CategoriesData.categoriesList[2]
+                                switchBottomSheet(scope, sheetState)
+                            }                        )
+                    }
+
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .weight(1f)
+                        .padding(12.dp)
+                    // .border(BorderStroke(2.dp, Color.Red))
+                    ,verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    CategoriesImage(
+                        category=CategoriesData.categoriesList[0],
+                        modifier=Modifier.clickable {
+                            bottomSheetCategory = CategoriesData.categoriesList[0]
+                            switchBottomSheet(scope, sheetState)
+                        }
+                    )
+                    CategoriesImage(
+                        category=CategoriesData.categoriesList[1],
+                        modifier=Modifier.clickable {
+                            bottomSheetCategory = CategoriesData.categoriesList[1]
+                            switchBottomSheet(scope, sheetState)
+                        }
+                    )
+                    CategoriesImage(
+                        category=CategoriesData.categoriesList[2],
+                        modifier=Modifier.clickable {
+                            bottomSheetCategory = CategoriesData.categoriesList[2]
+                            switchBottomSheet(scope, sheetState)
+                        }
+                    )
+                    CategoriesImage(
+                        category=CategoriesData.categoriesList[3],
+                        modifier=Modifier.clickable {
+                            bottomSheetCategory = CategoriesData.categoriesList[3]
+                            switchBottomSheet(scope, sheetState)
+                        }
+                    )
                 }
 
             }
-
-            Column(modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxHeight()
-                .weight(0.8f), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
-                CategoriesImage(CategoriesData.categoriesList.get(0))
-                CategoriesImage(CategoriesData.categoriesList.get(2))
-            }
-
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .weight(1f)
-                .padding(12.dp)
-               // .border(BorderStroke(2.dp, Color.Red))
-            ,verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            CategoriesImage(CategoriesData.categoriesList.get(0))
-            CategoriesImage(CategoriesData.categoriesList.get(1))
-            CategoriesImage(CategoriesData.categoriesList.get(2))
-            CategoriesImage(CategoriesData.categoriesList.get(3))
-        }
-
         }
     }
 
@@ -250,9 +350,20 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
+private fun switchBottomSheet(scope: CoroutineScope, bottomSheetState: BottomSheetState) {
+    scope.launch {
+        if(bottomSheetState.isCollapsed) {
+            bottomSheetState.expand()
+        } else {
+            bottomSheetState.collapse()
+        }
+    }
+}
+
 @Composable
-private fun CategoriesImage(category: Category) {
-    Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
+private fun CategoriesImage(category: Category,  modifier: Modifier = Modifier) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(modifier = Modifier.padding(4.dp), fontSize = 13.sp, fontWeight = FontWeight.W400, text = category.title, color = Color.Black)
         Image(
             painter = painterResource(id = category.categoryImg),

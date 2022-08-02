@@ -6,12 +6,10 @@ import android.view.View
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -38,9 +36,6 @@ import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
 import com.example.moneysaver.presentation.accounts.MainAccountScreen
 import com.example.moneysaver.presentation.categories.Categories
-import com.example.moneysaver.presentation.categories.additional_composes.ChartContainer
-import com.example.moneysaver.presentation.categories.additional_composes.PieSampleData
-import com.example.moneysaver.presentation.categories.additional_composes.PieSimpleScreen
 import com.example.moneysaver.presentation.categories.additional_composes.PieStyledScreen
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.ui.theme.MoneySaverTheme
@@ -49,7 +44,6 @@ import com.example.moneysaver.ui.theme.currencyColorZero
 import com.example.moneysaver.ui.theme.whiteSurface
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import hu.ma.charts.pie.PieChart
 import kotlinx.coroutines.launch
 /*
 class MainActivity : ComponentActivity() {
@@ -107,7 +101,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
                     //set top bar transparent
                     val systemUiController = rememberSystemUiController()
                     systemUiController.setSystemBarsColor(
@@ -196,13 +189,7 @@ class MainActivity : ComponentActivity() {
                     }
                         }
 
-
-                    //PieSimpleScreen()
-
-
-
                     }
-
 
 
 
