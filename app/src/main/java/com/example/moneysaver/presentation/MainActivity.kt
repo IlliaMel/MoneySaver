@@ -210,11 +210,12 @@ class MainActivity : ComponentActivity() {
                 //PieStyledScreen()
                 //CustomTab()
 
-
+/*
                     ChooseAccountFragmentCompose(
                         normalAccount = {},
                         debtAccount = {},
                         goalAccount = {})
+                */
 
                 }
             }

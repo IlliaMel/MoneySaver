@@ -134,7 +134,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
 
                     Column(modifier = Modifier
                         .fillMaxHeight()
-                        .padding(8.dp),
+                        .padding(8.dp,8.dp,8.dp,16.dp),
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = stringResource(R.string.accounts_name_label), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 15.sp)

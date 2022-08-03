@@ -348,6 +348,8 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
 
         }
     }
+
+    dividerForTopBar()
 }
 
 @OptIn(ExperimentalMaterialApi::class)

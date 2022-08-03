@@ -47,16 +47,16 @@ fun dividerForTopBar(){
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(187, 186, 186, 255),
+                        Color(218, 213, 213, 255),
                         Color(247, 247, 247, 255),
-                        Color(187, 187, 187, 255)
+                        Color(194, 194, 194, 255)
                     )
                 )
             )
             .fillMaxWidth()
             .height(5.dp)
             .clip(RoundedCornerShape(5.dp))
-            .shadow(elevation = 4.dp)
+            .shadow(elevation = 1.dp)
 
     )
 }
