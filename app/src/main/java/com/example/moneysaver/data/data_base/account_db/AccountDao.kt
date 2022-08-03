@@ -20,3 +20,4 @@ interface AccountDao {
     suspend fun deleteAll()
 
 }
+

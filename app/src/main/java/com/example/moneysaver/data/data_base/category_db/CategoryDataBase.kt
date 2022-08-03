@@ -19,3 +19,4 @@ abstract class CategoryDataBase: RoomDatabase() {
         const val DATABASE_NAME = "categories_db"
     }
 }
+

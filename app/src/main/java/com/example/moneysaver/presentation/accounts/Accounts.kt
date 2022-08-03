@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings: (Account) -> Unit,
+fun MainAccountScreen(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> Unit, navigateToCardSettings: (Account) -> Unit,
                       navigateToCardAdder: (Account) -> Unit ,
                       navigateToGoalAdder: (Account) -> Unit,
                       viewModel: AccountsViewModel = AccountsViewModel()
@@ -65,7 +65,7 @@ fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings:
             .background(whiteSurface)
     ) {
 
-        TopBarAccounts(onNavigationIconClick)
+        TopBarAccounts(onAddAccountAction,onNavigationIconClick)
         SumMoneyInfo(stringResource(R.string.accounts_name_label),viewModel.loadBankAccountSum(),viewModel.state.currentAccount.currencyType)
         val accounts = remember { AccountsData.accountsList }
         LazyColumn(
@@ -89,7 +89,7 @@ fun MainAccountScreen(onNavigationIconClick: () -> Unit, navigateToCardSettings:
 
 
 @Composable
-fun TopBarAccounts(onNavigationIconClick: () -> Unit){
+fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> Unit){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -143,7 +143,7 @@ fun TopBarAccounts(onNavigationIconClick: () -> Unit){
 
                 IconButton(modifier = Modifier
                     .padding(0.dp, 24.dp, 8.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = {  }) {
+                    .size(40.dp, 40.dp), onClick = { onAddAccountAction }) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         tint = whiteSurface,
@@ -272,5 +272,5 @@ private fun AccountImage(account: Account) {
 @Preview
 @Composable
 fun PreviewItem() {
-    MainAccountScreen(onNavigationIconClick = {},navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
+    MainAccountScreen(onAddAccountAction = {} , onNavigationIconClick = {},navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
 }

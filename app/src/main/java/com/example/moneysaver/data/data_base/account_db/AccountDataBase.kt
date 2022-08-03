@@ -6,8 +6,6 @@ import androidx.room.TypeConverters
 import com.example.moneysaver.data.data_base.Converters
 import com.example.moneysaver.domain.account.Account
 
-
-
 @Database(
     entities = [Account::class],
     version = 1
@@ -20,3 +18,4 @@ abstract class AccountDataBase: RoomDatabase() {
         const val DATABASE_NAME = "accounts_db"
     }
 }
+

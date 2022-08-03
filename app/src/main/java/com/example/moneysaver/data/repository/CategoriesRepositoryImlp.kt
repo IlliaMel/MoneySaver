@@ -11,7 +11,7 @@ class CategoriesRepositoryImlp(
 ) : CategoriesRepository {
 
 
-    override suspend fun getCategories(): Flow<List<Category>> {
+    override  fun getCategories(): Flow<List<Category>> {
         return dao.getCategories()
     }
 
@@ -29,3 +29,7 @@ class CategoriesRepositoryImlp(
 
 
 }
+
+
+
+

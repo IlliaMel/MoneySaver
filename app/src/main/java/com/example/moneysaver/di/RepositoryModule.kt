@@ -2,6 +2,8 @@ package com.example.moneysaver.di
 
 import android.app.Application
 import androidx.room.Room
+import com.example.moneysaver.data.data_base.account_db.AccountDataBase
+import com.example.moneysaver.data.data_base.category_db.CategoryDataBase
 import com.example.moneysaver.data.data_base.transaction_dp.TransactionDataBase
 import com.example.moneysaver.data.repository.TransactionRepositoryImpl
 import com.example.moneysaver.domain.repository.TransactionRepository
@@ -24,6 +26,27 @@ object RepositoryModule {
             TransactionDataBase.DATABASE_NAME
         ).build()
     }
+
+    @Provides
+    @Singleton
+    fun provideAccountDataBase(app: Application): AccountDataBase {
+        return Room.databaseBuilder(
+            app,
+            AccountDataBase::class.java,
+            AccountDataBase.DATABASE_NAME
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCategoryDataBase(app: Application): CategoryDataBase {
+        return Room.databaseBuilder(
+            app,
+            CategoryDataBase::class.java,
+            CategoryDataBase.DATABASE_NAME
+        ).build()
+    }
+
 
     @Provides
     @Singleton

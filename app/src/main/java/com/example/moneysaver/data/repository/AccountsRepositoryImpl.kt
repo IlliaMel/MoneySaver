@@ -11,7 +11,7 @@ class AccountsRepositoryImpl(
 ) : AccountsRepository {
 
 
-    override suspend fun getAccounts(): Flow<List<Account>> {
+    override fun getAccounts(): Flow<List<Account>> {
         return dao.getAccounts()
     }
 

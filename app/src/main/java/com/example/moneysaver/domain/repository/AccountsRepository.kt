@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AccountsRepository {
 
-    suspend fun getAccounts(): Flow<List<Account>>
+    fun getAccounts(): Flow<List<Account>>
 
     suspend fun insertAccount(account: Account)
 

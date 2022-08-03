@@ -29,7 +29,7 @@ class TransactionsViewModel @Inject constructor(
         }
     }
 
-    fun getTransactions() {
+     fun getTransactions() {
             repository.getTransactions()
                 .onEach { list ->
                     state = state.copy(

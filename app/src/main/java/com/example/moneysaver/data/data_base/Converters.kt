@@ -23,7 +23,7 @@ class Converters {
     fun fromStringToCategory(value: String?): Category? {
         value?.let {
             val strArr = it.split(",")
-            return Category(strArr[0].toInt(),strArr[1],strArr[2],strArr[3].toDouble())
+            return Category(categoryImg = strArr[0].toInt(),currencyType = strArr[1],title = strArr[2],spent = strArr[3].toDouble())
         }
         return Category(title = "")
     }
