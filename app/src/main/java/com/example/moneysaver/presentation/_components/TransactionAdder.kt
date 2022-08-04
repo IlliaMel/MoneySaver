@@ -59,8 +59,8 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAd
                     .weight(1f)
                     .padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "To category", fontSize = 16.sp)
-                Text(text = "Category", fontSize = 16.sp)
+                Text(text = "To Category", fontSize = 16.sp)
+                Text(text = category.title, fontSize = 16.sp)
             }
         }
 
