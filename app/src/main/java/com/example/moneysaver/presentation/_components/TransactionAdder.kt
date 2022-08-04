@@ -1,9 +1,7 @@
 package com.example.moneysaver.presentation.categories.additional_composes
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -20,14 +18,10 @@ import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.presentation.categories.CategoriesViewModel
-import com.example.moneysaver.presentation.transactions.TransactionsViewModel
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.*
 
 @Composable
 fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAdder: ()->Unit) {
-    var sum by remember { mutableStateOf(0.0) }
+    var sumText by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
 
@@ -70,14 +64,23 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAd
 
         Divider()
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(10.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Expense", fontSize = 16.sp)
             TextField(
-                value = sum.toString(),
-                onValueChange = { sum = it.toDouble() },
+                value = sumText,
+                onValueChange = {
+                    sumText = if (it.isEmpty()){
+                        it
+                    } else {
+                        when (it.toDoubleOrNull()) {
+                            null -> sumText //old value
+                            else -> it   //new value
+                        }
+                    }
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 textStyle = LocalTextStyle.current.copy(
@@ -97,7 +100,7 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAd
             textStyle = LocalTextStyle.current.copy(
                 fontSize = 16.sp
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(10.dp)
         )
 
         Divider()
@@ -106,7 +109,7 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAd
                 val transactionAccount = Account(title="TestAccount")
                 val transactionNote: String? = if(note!="") note else null
                 val transaction = Transaction(
-                    sum = sum,
+                    sum = sumText.toDoubleOrNull()?: 0.0,
                     category = category,
                     account = transactionAccount,
                     note = transactionNote
