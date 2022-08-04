@@ -44,14 +44,23 @@ fun Transactions(
     navigateToTransaction: (Transaction) -> Unit,
     viewModel: TransactionsViewModel = hiltViewModel()
 ) {
-
-
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
    viewModel.loadTransactions()
     //viewModel.deleteTransactions()
 
-        Column(
+    val transactionsDateMap = mutableMapOf<Date, MutableList<Transaction>>()
+    for(x in viewModel.state.transactionList) {
+        if(!transactionsDateMap.containsKey(Date(x.date.year, x.date.month, x.date.date)))
+            transactionsDateMap[Date(x.date.year, x.date.month, x.date.date)] = mutableListOf()
+        transactionsDateMap[Date(x.date.year, x.date.month, x.date.date)]?.add(x)
+    }
+    val sortedDateToTransactionMap = transactionsDateMap.toSortedMap(reverseOrder())
+    for(x in sortedDateToTransactionMap.values) {
+        x.sortByDescending { it.date }
+    }
+
+    Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(whiteSurface)
@@ -107,20 +116,23 @@ fun Transactions(
                         Divider(modifier = Modifier.background(dividerColor))
                     }
 
-                    item{
-                        DateBlock(date = Date(2022, 7, 27), balanceChange = 2550.5 )
-                        Divider(modifier = Modifier.background(dividerColor))
-                    }
-
-                    items(
-                        items = viewModel.state.transactionList,
-                        itemContent = {
-                            Column {
-                                TransactionItem(transaction = it)
-                                Divider(modifier = Modifier.background(dividerColor))
-                            }
+                    for(date: Date in sortedDateToTransactionMap.keys) {
+                        item{
+                            DateBlock(date = date, balanceChange = 2550.5 )
+                            Divider(modifier = Modifier.background(dividerColor))
                         }
-                    )
+                        sortedDateToTransactionMap[date]?.let { m ->
+                            items(
+                                items = m.toList(),
+                                itemContent = {
+                                    Column {
+                                        TransactionItem(transaction = it)
+                                        Divider(modifier = Modifier.background(dividerColor))
+                                    }
+                                }
+                            )
+                        }
+                    }
 
                     item {
                         Spacer(modifier = Modifier
