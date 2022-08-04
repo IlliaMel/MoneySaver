@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +58,7 @@ fun Transactions(
     }
     val sortedDateToTransactionMap = transactionsDateMap.toSortedMap(reverseOrder())
     for(x in sortedDateToTransactionMap.values) {
-        x.sortByDescending { it.date }
+        x.sortWith(compareByDescending<Transaction> {it.date}.thenBy { it.sum }.thenBy { it.note }.thenBy { it.category.uuid })
     }
 
     Column(
@@ -117,8 +118,11 @@ fun Transactions(
                     }
 
                     for(date: Date in sortedDateToTransactionMap.keys) {
+                        var dayBalanceChange = 0.0;
+                        for(x in sortedDateToTransactionMap[date]!!)
+                            dayBalanceChange += x.sum
                         item{
-                            DateBlock(date = date, balanceChange = 2550.5 )
+                            DateBlock(date = date, balanceChange = dayBalanceChange )
                             Divider(modifier = Modifier.background(dividerColor))
                         }
                         sortedDateToTransactionMap[date]?.let { m ->
@@ -137,8 +141,10 @@ fun Transactions(
                     item {
                         Spacer(modifier = Modifier
                             .fillMaxWidth()
-                            .height(80.dp)
-                            .innerShadow(blur = 4.dp, drawLeft = false, drawRight = false))
+                            .height(LocalConfiguration.current.screenHeightDp.dp)
+                            .background(Color(0xffececec))
+                            .innerShadow(blur = 4.dp, drawLeft = false, drawRight = false)
+                        )
                     }
 
                 }

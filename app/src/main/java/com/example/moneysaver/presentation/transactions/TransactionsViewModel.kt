@@ -33,7 +33,8 @@ class TransactionsViewModel @Inject constructor(
             repository.getTransactions()
                 .onEach { list ->
                     state = state.copy(
-                        transactionList = list
+                        transactionList = list,
+                        endingBalance = list.sumOf { it.sum }
                     )
                 }.launchIn(viewModelScope)
     }
