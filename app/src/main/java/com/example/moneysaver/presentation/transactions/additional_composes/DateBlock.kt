@@ -49,7 +49,7 @@ fun DateBlock(date: Date, balanceChange: Double) {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Text(text = getNameOfDayByDate(date).uppercase(), color=Color(0xffababab), fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                Text(text = getNameOfMonthByNumber(date.month).uppercase() + " "+date.year, color = Color(0xff7d7d7d), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(text = getNameOfMonthByNumber(date.month).uppercase() + " "+getYear(date), color = Color(0xff7d7d7d), fontSize = 14.sp, fontWeight = FontWeight.Bold)
             }
         }
         Row(
@@ -135,6 +135,10 @@ fun Modifier.innerShadow(
     }
 }
 
+fun getYear(date: Date): Int{
+    return date.year+1900
+}
+
 fun getNameOfMonthByNumber(monthNumber: Int): String {
     return when(monthNumber) {
         0 -> "January"
@@ -144,7 +148,7 @@ fun getNameOfMonthByNumber(monthNumber: Int): String {
         4 -> "May"
         5 -> "June"
         6 -> "July"
-        7 -> "Augusts"
+        7 -> "August"
         8 -> "September"
         9 -> "October"
         19 -> "November"
@@ -156,12 +160,12 @@ fun getNameOfDayByDate(date: Date): String {
     val calendar = Calendar.getInstance()
     calendar.time = date
     return when(calendar[Calendar.DAY_OF_WEEK]) {
-        1 -> "Monday"
-        2 -> "Tuesday"
-        3 -> "Wednesday"
-        4 -> "Thursday"
-        5 -> "Friday"
-        6 -> "Saturday"
-        else -> "Sunday"
+        1 -> "Sunday"
+        2 -> "Monday"
+        3 -> "Tuesday"
+        4 -> "Wednesday"
+        5 -> "Thursday"
+        6 -> "Friday"
+        else -> "Saturday"
     }
 }

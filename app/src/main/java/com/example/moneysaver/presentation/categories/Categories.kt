@@ -67,7 +67,12 @@ fun Categories(
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
-        sheetContent = { TransactionAdder(category = bottomSheetCategory, viewModel=viewModel)},
+        sheetContent = {
+            TransactionAdder(
+                category = bottomSheetCategory,
+                viewModel=viewModel,
+                closeAdder = {scope.launch { sheetState.collapse() }})
+                       },
         sheetPeekHeight = 0.dp
         ) {
 

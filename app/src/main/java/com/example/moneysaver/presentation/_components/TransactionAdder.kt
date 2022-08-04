@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation.categories.additional_composes
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,11 +18,12 @@ import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.presentation.categories.CategoriesViewModel
 import com.example.moneysaver.presentation.transactions.TransactionsViewModel
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
 @Composable
-fun TransactionAdder(category: Category, viewModel: CategoriesViewModel) {
+fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAdder: ()->Unit) {
     var sum by remember { mutableStateOf(0.0) }
     var note by remember { mutableStateOf("") }
 
@@ -103,6 +105,7 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel) {
                     note = transactionNote
                 )
                 viewModel.addTransaction(transaction)
+                closeAdder()
             }) {
                 Text("OK")
             }
