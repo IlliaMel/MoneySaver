@@ -60,8 +60,8 @@ fun TransactionItem(transaction: Transaction) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(transaction.category.title, color = Color.Black, fontSize = 17.sp)
-                    val sumText: String = (if(transaction.isIncome) "+" else "-") + "$ " + transaction.sum
-                    val color = if(transaction.isIncome) Color.Green else Color.Red
+                    val sumText: String = (if(transaction.sum>0) "+" else "-") + "$ " + Math.abs(transaction.sum)
+                    val color = if(transaction.sum>0) Color.Green else Color.Red
                     Text(sumText, color = color, fontSize = 15.sp)
                 }
                 Row(
