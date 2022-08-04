@@ -40,6 +40,7 @@ import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
 import com.example.moneysaver.presentation.accounts.MainAccountScreen
+import com.example.moneysaver.presentation.accounts.additional_composes.EditAccount
 import com.example.moneysaver.presentation.accounts.choose_new_account_fragment.ChooseAccountFragment
 import com.example.moneysaver.presentation.categories.Categories
 import com.example.moneysaver.presentation.categories.additional_composes.ChartContainer
@@ -91,7 +92,7 @@ data class ImageWithText(
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -102,125 +103,113 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MoneySaverTheme {
-
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-
-                    //set top bar transparent
-                    val systemUiController = rememberSystemUiController()
-                    systemUiController.setSystemBarsColor(
-                        color = Color.Transparent
-                    )
-
-                    val scaffoldState = rememberScaffoldState()
-                    val scope = rememberCoroutineScope()
-
-                    var selectedTabIndex by remember {
-                        mutableStateOf(0)
-                    }
-
-
-                    Scaffold(
-                        scaffoldState = scaffoldState,
-                        drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
-                        drawerContent = {
-                            DrawerHeader()
-                            DrawerBody(
-                                items = listOf(
-                                    MenuItem(
-                                        id = "accounts",
-                                        title = "Accounts",
-                                        contentDescription = "Go to accounts menu",
-                                        icon = Icons.Default.AccountCircle
-                                    ),
-                                    MenuItem(
-                                        id = "categories",
-                                        title = "Categories",
-                                        contentDescription = "Go to categories menu",
-                                        icon = Icons.Default.Star
-                                    ),
-                                    MenuItem(
-                                        id = "operations",
-                                        title = "Operations",
-                                        contentDescription = "Go to categories menu",
-                                        icon = Icons.Default.ShoppingCart
-                                    ),
-                                ),
-                                onItemClick = {
-                                    println("Clicked on ${it.title}")
-                                }
-                            )
-                        },
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(whiteSurface)
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .weight(10f)
-                                    .fillMaxWidth()
-                                    .background(whiteSurface)
-                            ) {
-                                when (selectedTabIndex) {
-                                    0 -> MainAccountScreen(
-                                        onAddAccountAction = {
-
-                                        },
-                                        onNavigationIconClick = {
-                                            scope.launch {
-                                                scaffoldState.drawerState.open()
-                                            }
-                                        },
-                                        navigateToCardSettings = {},
-                                        navigateToCardAdder = {},
-                                        navigateToGoalAdder = {})
-                                    1 -> Categories(onNavigationIconClick = {
-                                        scope.launch {
-                                            scaffoldState.drawerState.open()
-                                        }
-                                    })
-                                    2 -> Transactions(onNavigationIconClick = {
-                                        scope.launch {
-                                            scaffoldState.drawerState.open()
-                                        }
-                                    }, navigateToTransaction = {})
-                                }
-                            }
-                        Row(modifier = Modifier.weight(1f)) {
-                            TabsForScreens(){
-                                selectedTabIndex = it
-                            }
-                        }
-
-                    }
-                }
-
-
-                    //PieSimpleScreen()
-            }
-
-
-
-
-                //PieStyledScreen()
-                //CustomTab()
-
-/*
-                    ChooseAccountFragmentCompose(
-                        normalAccount = {},
-                        debtAccount = {},
-                        goalAccount = {})
-                */
-
+                val systemUiController = rememberSystemUiController()
+                systemUiController.setSystemBarsColor(
+                    color = Color.Transparent
+                )
+                    //MainUI()
+                EditAccount()
                 }
             }
         }
     }
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun MainUI(){
+
+    // A surface container using the 'background' color from the theme
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
+    ) {
+        val scaffoldState = rememberScaffoldState()
+        val scope = rememberCoroutineScope()
+
+        var selectedTabIndex by remember {
+            mutableStateOf(0)
+        }
+
+
+        Scaffold(
+            scaffoldState = scaffoldState,
+            drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
+            drawerContent = {
+                DrawerHeader()
+                DrawerBody(
+                    items = listOf(
+                        MenuItem(
+                            id = "accounts",
+                            title = "Accounts",
+                            contentDescription = "Go to accounts menu",
+                            icon = Icons.Default.AccountCircle
+                        ),
+                        MenuItem(
+                            id = "categories",
+                            title = "Categories",
+                            contentDescription = "Go to categories menu",
+                            icon = Icons.Default.Star
+                        ),
+                        MenuItem(
+                            id = "operations",
+                            title = "Operations",
+                            contentDescription = "Go to categories menu",
+                            icon = Icons.Default.ShoppingCart
+                        ),
+                    ),
+                    onItemClick = {
+                        println("Clicked on ${it.title}")
+                    }
+                )
+            },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(whiteSurface)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(10f)
+                        .fillMaxWidth()
+                        .background(whiteSurface)
+                ) {
+                    when (selectedTabIndex) {
+                        0 -> MainAccountScreen(
+                            onAddAccountAction = {
+
+                            },
+                            onNavigationIconClick = {
+                                scope.launch {
+                                    scaffoldState.drawerState.open()
+                                }
+                            },
+                            navigateToCardSettings = {},
+                            navigateToCardAdder = {},
+                            navigateToGoalAdder = {})
+                        1 -> Categories(onNavigationIconClick = {
+                            scope.launch {
+                                scaffoldState.drawerState.open()
+                            }
+                        })
+                        2 -> Transactions(onNavigationIconClick = {
+                            scope.launch {
+                                scaffoldState.drawerState.open()
+                            }
+                        }, navigateToTransaction = {})
+                    }
+                }
+                Row(modifier = Modifier.weight(1f)) {
+                    TabsForScreens(){
+                        selectedTabIndex = it
+                    }
+                }
+
+            }
+        }
+    }
+
+}
 
     @Composable
     fun ChooseAccountFragmentCompose(
@@ -485,9 +474,12 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DefaultPreview() {
         MoneySaverTheme {
+            /*
             ChooseAccountFragmentCompose(
                 normalAccount = {},
                 debtAccount = {},
                 goalAccount = {})
+            */
+
         }
     }
