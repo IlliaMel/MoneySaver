@@ -1,7 +1,10 @@
 package com.example.moneysaver.presentation.categories.additional_composes
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -63,35 +66,33 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAd
         }
 
         Divider()
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Expense", fontSize = 16.sp)
-            TextField(
-                value = sumText,
-                onValueChange = {
-                    sumText = if (it.isEmpty()){
-                        it
-                    } else {
-                        when (it.toDoubleOrNull()) {
-                            null -> sumText //old value
-                            else -> it   //new value
-                        }
+        OutlinedTextField(
+            value = sumText,
+            onValueChange = {
+                sumText = if (it.isEmpty()){
+                    it
+                } else {
+                    when (it.toDoubleOrNull()) {
+                        null -> sumText //old value
+                        else -> it   //new value
                     }
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                textStyle = LocalTextStyle.current.copy(
-                    fontSize = 16.sp
-                ),
-                modifier = Modifier.padding(10.dp)
-            )
-        }
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            placeholder = { Text("Sum") },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 16.sp
+            ),
+            shape = RoundedCornerShape(30.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Black)
+        )
 
         Divider()
-        TextField(
+        OutlinedTextField(
             value = note,
             onValueChange = { note = it },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -100,12 +101,19 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAd
             textStyle = LocalTextStyle.current.copy(
                 fontSize = 16.sp
             ),
-            modifier = Modifier.fillMaxWidth().padding(10.dp)
+            shape = RoundedCornerShape(30.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Black)
         )
 
         Divider()
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            Button(onClick = {
+            Button(
+                shape = RoundedCornerShape(30.dp),
+                colors=ButtonDefaults.buttonColors(backgroundColor = Color(0xff43a0e7)),
+                onClick = {
                 val transactionAccount = Account(title="TestAccount")
                 val transactionNote: String? = if(note!="") note else null
                 val transaction = Transaction(
