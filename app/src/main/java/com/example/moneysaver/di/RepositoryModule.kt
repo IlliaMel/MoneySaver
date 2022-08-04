@@ -5,7 +5,11 @@ import androidx.room.Room
 import com.example.moneysaver.data.data_base.account_db.AccountDataBase
 import com.example.moneysaver.data.data_base.category_db.CategoryDataBase
 import com.example.moneysaver.data.data_base.transaction_dp.TransactionDataBase
+import com.example.moneysaver.data.repository.AccountsRepositoryImpl
+import com.example.moneysaver.data.repository.CategoriesRepositoryImlp
 import com.example.moneysaver.data.repository.TransactionRepositoryImpl
+import com.example.moneysaver.domain.repository.AccountsRepository
+import com.example.moneysaver.domain.repository.CategoriesRepository
 import com.example.moneysaver.domain.repository.TransactionRepository
 import dagger.Module
 import dagger.Provides
@@ -52,5 +56,17 @@ object RepositoryModule {
     @Singleton
     fun provideTransactionRepository(db: TransactionDataBase): TransactionRepository {
         return TransactionRepositoryImpl(db.transactionDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAccountsRepository(db: AccountDataBase): AccountsRepository {
+        return AccountsRepositoryImpl(db.accountDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCategoriesRepository(db: CategoryDataBase): CategoriesRepository {
+        return CategoriesRepositoryImlp(db.categoryDao)
     }
 }
