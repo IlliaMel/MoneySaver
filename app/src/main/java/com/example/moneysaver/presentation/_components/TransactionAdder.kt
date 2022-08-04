@@ -4,12 +4,15 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,6 +29,7 @@ import java.util.*
 fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAdder: ()->Unit) {
     var sum by remember { mutableStateOf(0.0) }
     var note by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
@@ -74,7 +78,8 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAd
             TextField(
                 value = sum.toString(),
                 onValueChange = { sum = it.toDouble() },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 textStyle = LocalTextStyle.current.copy(
                     fontSize = 16.sp
                 ),
@@ -86,6 +91,8 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAd
         TextField(
             value = note,
             onValueChange = { note = it },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
             placeholder = { Text("Notes...") },
             textStyle = LocalTextStyle.current.copy(
                 fontSize = 16.sp
