@@ -9,7 +9,7 @@ object TransactionsData {
             sum = -250.5,
             category = CategoriesData.categoriesList.get(0),
             account = AccountsData.accountsList.get(0),
-            date = Date(2021, 7, 5),
+            date = Date(2021, 6, 5),
             note = "Bus"
         ),
         Transaction(
@@ -22,42 +22,42 @@ object TransactionsData {
             sum = -1205.5,
             category = CategoriesData.categoriesList.get(2),
             account = AccountsData.accountsList.get(0),
-            date = Date(2022, 7, 9),
+            date = Date(2022, 6, 9),
             note = "Some text"
         ),
         Transaction(
             sum = -1205.5,
             category = CategoriesData.categoriesList.get(3),
             account = AccountsData.accountsList.get(0),
-            date = Date(2022, 7, 9),
+            date = Date(2022, 6, 9),
             note = "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum"
         ),
         Transaction(
             sum = -1205.5,
             category = CategoriesData.categoriesList.get(4),
             account = AccountsData.accountsList.get(0),
-            date = Date(2022, 3, 9),
+            date = Date(2022, 6, 9),
             note = "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum"
         ),
         Transaction(
             sum = -1205.5,
             category = CategoriesData.categoriesList.get(5),
             account = AccountsData.accountsList.get(0),
-            date = Date(2022, 7, 7),
+            date = Date(2022, 6, 7),
             note = "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum"
         ),
         Transaction(
             sum = -1205.5,
             category = CategoriesData.categoriesList.get(6),
             account = AccountsData.accountsList.get(0),
-            date = Date(2022, 7, 8),
+            date = Date(2022, 6, 8),
             note = "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum"
         ),
         Transaction(
             sum = -1205.5,
             category = CategoriesData.categoriesList.get(4),
             account = AccountsData.accountsList.get(0),
-            date = Date(2022, 7, 9),
+            date = Date(2022, 6, 9),
             note = "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum"
         )
 

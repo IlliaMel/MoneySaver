@@ -77,11 +77,14 @@ fun MainAccountScreen(onAddAccountAction: () -> Unit, onNavigationIconClick: () 
                     AccountListItem(account = it, navigateToCardSettings)
                 }
             )
+            item {
+                AddBankAccount(AccountsData.accountAdder, navigateToCardAdder)
+                Divider(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp).background(dividerColor))
+                SumMoneyInfo(stringResource(R.string.savings_accounts),viewModel.loadSavingsAccountSum(),viewModel.state.currentAccount.currencyType)
+                AddBankAccount(AccountsData.goalAdder, navigateToGoalAdder)
+            }
         }
-        AddBankAccount(AccountsData.accountAdder, navigateToCardAdder)
-        Divider(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp).background(dividerColor))
-        SumMoneyInfo(stringResource(R.string.savings_accounts),viewModel.loadSavingsAccountSum(),viewModel.state.currentAccount.currencyType)
-        AddBankAccount(AccountsData.goalAdder, navigateToGoalAdder)
+
 
     }
 
@@ -93,7 +96,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.22f)
+            .height(IntrinsicSize.Min)
     ) {
         Image(
             painter = painterResource(R.drawable.bg5),
@@ -134,7 +137,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
 
                     Column(modifier = Modifier
                         .fillMaxHeight()
-                        .padding(8.dp,8.dp,8.dp,16.dp),
+                        .padding(8.dp,8.dp,8.dp,12.dp),
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = stringResource(R.string.accounts_name_label), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 15.sp)

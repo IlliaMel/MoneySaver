@@ -41,10 +41,15 @@ import kotlinx.coroutines.launch
 import java.util.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneysaver.presentation.transactions.TransactionsViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Categories(onNavigationIconClick: () -> Unit) {
+fun Categories(
+    onNavigationIconClick: () -> Unit,
+    viewModel: CategoriesViewModel = hiltViewModel()
+) {
 
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
@@ -62,7 +67,7 @@ fun Categories(onNavigationIconClick: () -> Unit) {
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
-        sheetContent = { TransactionAdder(category = bottomSheetCategory)},
+        sheetContent = { TransactionAdder(category = bottomSheetCategory, viewModel=viewModel)},
         sheetPeekHeight = 0.dp
         ) {
 
@@ -264,7 +269,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.22f)
+            .height(IntrinsicSize.Min)
     ) {
         Image(
             painter = painterResource(R.drawable.bg5),
@@ -317,7 +322,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 0.dp, 0.dp, 0.dp),
+                    .padding(0.dp, 0.dp, 0.dp, 2.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {

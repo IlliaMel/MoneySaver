@@ -13,6 +13,6 @@ data class Transaction(
     val sum: Double,
     val category: Category,
     val account: Account,
-    val date: Date,
+    val date: Date = Calendar.getInstance().time,
     val note: String? = null
 )

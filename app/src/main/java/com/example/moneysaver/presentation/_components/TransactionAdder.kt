@@ -12,10 +12,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.presentation.categories.CategoriesViewModel
+import com.example.moneysaver.presentation.transactions.TransactionsViewModel
+import java.time.LocalDateTime
+import java.util.*
 
 @Composable
-fun TransactionAdder(category: Category) {
+fun TransactionAdder(category: Category, viewModel: CategoriesViewModel) {
     var sum by remember { mutableStateOf(0.0) }
     var note by remember { mutableStateOf("") }
 
@@ -87,7 +93,17 @@ fun TransactionAdder(category: Category) {
 
         Divider()
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                val transactionAccount = Account(title="TestAccount")
+                val transactionNote: String? = if(note!="") note else null
+                val transaction = Transaction(
+                    sum = sum,
+                    category = category,
+                    account = transactionAccount,
+                    note = transactionNote
+                )
+                viewModel.addTransaction(transaction)
+            }) {
                 Text("OK")
             }
         }

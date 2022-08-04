@@ -20,16 +20,7 @@ class TransactionsViewModel @Inject constructor(
     var state by mutableStateOf(TransactionsState())
         private set
 
-
-    fun loadTransactions() {
-        viewModelScope.launch {
-            TransactionsData.transactionList.forEach() {
-                repository.insertTransaction(it)
-           }
-        }
-    }
-
-     fun getTransactions() {
+     fun loadTransactions() {
             repository.getTransactions()
                 .onEach { list ->
                     state = state.copy(

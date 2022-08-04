@@ -72,8 +72,7 @@ fun Transactions(
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = {
-                            viewModel.getTransactions()
-                            println(viewModel.state.transactionList.size)
+
                         },
                         backgroundColor = Color(0xff5c6bbf)
                     ) {
@@ -158,7 +157,7 @@ fun Transactions(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.22f)
+                .height(IntrinsicSize.Min)
         ) {
             Image(
                 painter = painterResource(R.drawable.bg5),
@@ -211,7 +210,7 @@ fun Transactions(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(0.dp, 0.dp, 0.dp, 0.dp),
+                        .padding(0.dp, 0.dp, 0.dp, 2.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
