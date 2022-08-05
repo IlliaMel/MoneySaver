@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.moneysaver.R
 
@@ -41,22 +42,28 @@ fun AppBar(
 
 
 @Composable
-fun dividerForTopBar(){
+fun dividerForTopBar(
+    height : Dp = 5.dp,
+    clip : Dp = 5.dp,
+    shadow : Dp = 1.dp,
+    startColor : Color = Color(218, 213, 213, 255),
+    middleColor : Color = Color(247, 247, 247, 255),
+    endColor : Color = Color(194, 194, 194, 255),
+    ){
     Box(
         modifier = Modifier
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(218, 213, 213, 255),
-                        Color(247, 247, 247, 255),
-                        Color(194, 194, 194, 255)
+                        startColor,
+                        middleColor,
+                        endColor
                     )
                 )
             )
             .fillMaxWidth()
-            .height(5.dp)
-            .clip(RoundedCornerShape(5.dp))
-            .shadow(elevation = 1.dp)
-
+            .height(height)
+            .clip(RoundedCornerShape(clip))
+            .shadow(elevation = shadow)
     )
 }
