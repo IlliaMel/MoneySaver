@@ -68,6 +68,8 @@ fun MainAccountScreen(onAddAccountAction: () -> Unit, onNavigationIconClick: () 
         TopBarAccounts(onAddAccountAction,onNavigationIconClick)
         SumMoneyInfo(stringResource(R.string.accounts_name_label),viewModel.loadBankAccountSum(),viewModel.state.currentAccount.currencyType)
         val accounts = remember { AccountsData.accountsList }
+        val goals = remember { AccountsData.accountsList }
+
         LazyColumn(
             contentPadding = PaddingValues()
         ) {
@@ -80,10 +82,25 @@ fun MainAccountScreen(onAddAccountAction: () -> Unit, onNavigationIconClick: () 
             item {
                 AddBankAccount(AccountsData.accountAdder, navigateToCardAdder)
                 Divider(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp).background(dividerColor))
-                SumMoneyInfo(stringResource(R.string.savings_accounts),viewModel.loadSavingsAccountSum(),viewModel.state.currentAccount.currencyType)
+            }
+        }
+
+        SumMoneyInfo(stringResource(R.string.savings_accounts),viewModel.loadSavingsAccountSum(),viewModel.state.currentAccount.currencyType)
+
+        LazyColumn(
+            contentPadding = PaddingValues()
+        ) {
+            items(
+                items = goals,
+                itemContent = {
+                    AccountListItem(account = it, navigateToCardSettings)
+                }
+            )
+            item {
                 AddBankAccount(AccountsData.goalAdder, navigateToGoalAdder)
             }
         }
+
 
 
     }
@@ -146,7 +163,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
 
                 IconButton(modifier = Modifier
                     .padding(0.dp, 24.dp, 8.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = { onAddAccountAction }) {
+                    .size(40.dp, 40.dp), onClick = { onAddAccountAction ()}) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         tint = whiteSurface,
@@ -182,7 +199,7 @@ fun AddBankAccount(account: Account, navigateToCardAdder: (Account) -> Unit) {
             .fillMaxWidth()
             .padding(8.dp, 8.dp, 0.dp, 8.dp)
     ) {
-        Row(Modifier.clickable { }, verticalAlignment = Alignment.CenterVertically,
+        Row(Modifier.clickable {navigateToCardAdder(account) }, verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,) {
 
             Row(

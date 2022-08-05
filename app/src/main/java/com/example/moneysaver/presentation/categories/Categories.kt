@@ -81,7 +81,7 @@ fun Categories(
             }
         }
         
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = Modifier.fillMaxSize().background(whiteSurface), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
 
             Column(
                 modifier = Modifier

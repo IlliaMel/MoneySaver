@@ -8,6 +8,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.TextFieldDefaults.indicatorLine
@@ -20,10 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -238,7 +243,7 @@ fun TopBarAccounts(
     onAddAccountAction: () -> Unit,
     onCancelIconClick: () -> Unit){
     var text by rememberSaveable { mutableStateOf("Cash") }
-    val interactionSource = remember { MutableInteractionSource() }
+    val focusManager = LocalFocusManager.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -288,6 +293,8 @@ fun TopBarAccounts(
                         Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp)) {
                         Text(modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),text = "Name", color = whiteSurfaceTransparent, fontWeight = FontWeight.W400 , fontSize = 16.sp)
                         TextField(
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                                 modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 18.dp),
                                 textStyle = TextStyle(color = whiteSurface, fontWeight = FontWeight.W400 , fontSize = 24.sp),
                                 value = text,
@@ -312,7 +319,7 @@ fun TopBarAccounts(
                     IconButton(modifier = Modifier
                         .padding(0.dp, 0.dp, 8.dp, 0.dp)
                         .size(40.dp, 40.dp)
-                        .weight(1f), onClick = { onAddAccountAction }) {
+                        .weight(1f), onClick = { onAddAccountAction() }) {
                         Icon(
                             imageVector = Icons.Default.Done,
                             tint = whiteSurface,
