@@ -98,7 +98,7 @@ fun Transactions(
             },
             sheetPeekHeight = 0.dp,
             floatingActionButton = {
-                if(sheetState.isCollapsed) {
+                if(sheetState.isCollapsed && !sheetState.isAnimationRunning) {
                     FloatingActionButton(
                         onClick = {
                             scope.launch {
