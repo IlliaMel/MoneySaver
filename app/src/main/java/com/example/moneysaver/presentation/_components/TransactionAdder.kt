@@ -1,4 +1,4 @@
-package com.example.moneysaver.presentation.categories.additional_composes
+package com.example.moneysaver.presentation._components
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -26,13 +26,10 @@ import com.example.moneysaver.data.data_base.test_data.AccountsData
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
-import com.example.moneysaver.presentation.categories.CategoriesViewModel
-import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
-import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
 import com.example.moneysaver.ui.theme.dividerColor
 
 @Composable
-fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAdder: ()->Unit) {
+fun TransactionAdder(category: Category, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit) {
     var sumText by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
@@ -139,7 +136,7 @@ fun TransactionAdder(category: Category, viewModel: CategoriesViewModel, closeAd
                         account = account,
                         note = transactionNote
                     )
-                    viewModel.addTransaction(transaction)
+                    addTransaction(transaction)
                     closeAdder()
                 }) {
                 Text("OK")

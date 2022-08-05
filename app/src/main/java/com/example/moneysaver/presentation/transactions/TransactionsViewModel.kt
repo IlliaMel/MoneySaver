@@ -9,6 +9,7 @@ import com.example.moneysaver.domain.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.example.moneysaver.domain.transaction.Transaction
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,12 @@ class TransactionsViewModel @Inject constructor(
                         endingBalance = list.sumOf { it.sum }
                     )
                 }.launchIn(viewModelScope)
+    }
+
+    fun addTransaction(transaction: Transaction) {
+        viewModelScope.launch {
+            repository.insertTransaction(transaction)
+        }
     }
 
     fun deleteTransactions() {

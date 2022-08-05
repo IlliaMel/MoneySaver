@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -30,7 +29,7 @@ import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.presentation._components.MonthChooser
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.categories.additional_composes.PieSampleData
-import com.example.moneysaver.presentation.categories.additional_composes.TransactionAdder
+import com.example.moneysaver.presentation._components.TransactionAdder
 import com.example.moneysaver.ui.theme.currencyColor
 import com.example.moneysaver.ui.theme.currencyColorSpent
 import com.example.moneysaver.ui.theme.currencyColorZero
@@ -42,7 +41,6 @@ import java.util.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.moneysaver.presentation.transactions.TransactionsViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -70,9 +68,10 @@ fun Categories(
         sheetContent = {
             TransactionAdder(
                 category = bottomSheetCategory,
-                viewModel=viewModel,
-                closeAdder = {scope.launch { sheetState.collapse() }})
-                       },
+                addTransaction = viewModel::addTransaction,
+                closeAdder = { scope.launch {sheetState.collapse()} }
+            )
+        },
         sheetPeekHeight = 0.dp
         ) {
 

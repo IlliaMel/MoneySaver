@@ -107,8 +107,8 @@ class MainActivity : ComponentActivity() {
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent
                 )
-                    //MainUI()
-                EditAccount()
+                MainUI()
+                //EditAccount()
                 }
             }
         }
