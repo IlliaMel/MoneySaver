@@ -98,22 +98,23 @@ fun Transactions(
             },
             sheetPeekHeight = 0.dp,
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        scope.launch {
-                            scaffoldState.bottomSheetState.expand()
-                        }
-                    },
-                    backgroundColor = Color(0xff5c6bbf)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add transaction"
-                    )
-                }
+                if(sheetState.isCollapsed) {
+                    FloatingActionButton(
+                        onClick = {
+                            scope.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        },
+                        backgroundColor = Color(0xff5c6bbf)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add transaction"
+                        )
+                    }
+                } else Box() {} // no fab when bottom sheet isExpanded
             }
         ) {
-
             BackHandler(enabled = sheetState.isExpanded) {
                 scope.launch {
                     sheetState.collapse()
