@@ -19,6 +19,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -45,84 +47,135 @@ fun TransactionAdder(category: Category, addTransaction: (tr: Transaction)->Unit
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(
+        Column() {
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .clickable { openChoseAccountDialog.value = true }
-                    .padding(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
             ) {
-                Text(text = "From account", fontSize = 16.sp)
-                Text(text = transactionAccount.value.title, fontSize = 16.sp)
-            }
-            Divider(
-                modifier = Modifier
-                    .width(1.dp)
-                    .fillMaxHeight()
-            )
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "To Category", fontSize = 16.sp)
-                Text(text = category.title, fontSize = 16.sp)
-            }
-        }
-
-        Divider()
-        OutlinedTextField(
-            value = sumText,
-            onValueChange = {
-                sumText = if (it.isEmpty()) {
-                    it
-                } else {
-                    when (it.toDoubleOrNull()) {
-                        null -> sumText //old value
-                        else -> it   //new value
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(Color(0xff5c6bc0))
+                        .clickable { openChoseAccountDialog.value = true }
+                        .padding(5.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(text = "From account", fontSize = 14.sp, color=Color.White)
+                            Text(text = transactionAccount.value.title, fontSize = 17.sp, color=Color.White, overflow = TextOverflow.Ellipsis)
+                        }
+                        Image(
+                            painter = painterResource(id = transactionAccount.value.accountImg),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .padding(2.dp)
+                                .width(55.dp)
+                                .height(36.dp)
+                                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                        )
                     }
                 }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-            placeholder = { Text("Sum") },
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 16.sp
-            ),
-            shape = RoundedCornerShape(30.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Black)
-        )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(Color(0xffff4181))
+                        .padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(text = "To category", fontSize = 14.sp, color=Color.White)
+                            Text(text = category.title, fontSize = 17.sp, color=Color.White, overflow = TextOverflow.Ellipsis)
+                        }
+                        Image(
+                            painter = painterResource(id = category.categoryImg),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .padding(2.dp)
+                                .width(36.dp)
+                                .height(36.dp)
+                                .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
+                        )
+                    }
+                }
+            }
 
-        Divider()
-        OutlinedTextField(
-            value = note,
-            onValueChange = { note = it },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-            placeholder = { Text("Notes...") },
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 16.sp
-            ),
-            shape = RoundedCornerShape(30.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Black)
-        )
+            Divider()
+        }
 
-        Divider()
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(modifier = Modifier.padding(2.dp),text = "Expense", color = Color(0xffff4181), fontSize = 14.sp)
+            OutlinedTextField(
+                value = sumText,
+                onValueChange = {
+                    sumText = if (it.isEmpty()) {
+                        it
+                    } else {
+                        when (it.toDoubleOrNull()) {
+                            null -> sumText //old value
+                            else -> it   //new value
+                        }
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                placeholder = { Text(modifier = Modifier.fillMaxWidth(), text = "Sum", textAlign = TextAlign.Center) },
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                ),
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .padding(5.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Black),
+                singleLine = true,
+                maxLines = 1
+            )
+        }
+
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(modifier = Modifier.padding(2.dp),text = "Notes", color = Color(0xffff4181), fontSize = 14.sp)
+            OutlinedTextField(
+                value = note,
+                onValueChange = { note = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                placeholder = { Text(modifier = Modifier.fillMaxWidth(), text = "Text...", textAlign = TextAlign.Center) },
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                ),
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .padding(15.dp, 5.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Black),
+                maxLines = 2
+            )
+        }
+
+
+
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Button(
                 shape = RoundedCornerShape(30.dp),
