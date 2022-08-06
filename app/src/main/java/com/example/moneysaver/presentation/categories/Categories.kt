@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation.categories
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
@@ -9,10 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,8 +36,6 @@ import hu.ma.charts.pie.PieChart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -57,9 +53,7 @@ fun Categories(
     )
     val scope = rememberCoroutineScope()
 
-    var bottomSheetCategory: Category by remember{
-        mutableStateOf(CategoriesData.categoriesList[1])
-    }
+    val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.categoriesList[0]) }
 
     TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()})
 
@@ -67,7 +61,7 @@ fun Categories(
         scaffoldState = scaffoldState,
         sheetContent = {
             TransactionAdder(
-                category = bottomSheetCategory,
+                category = selectedCategory,
                 addTransaction = viewModel::addTransaction,
                 closeAdder = { scope.launch {sheetState.collapse()} }
             )
@@ -103,26 +97,27 @@ fun Categories(
                     CategoriesImage(
                         category=CategoriesData.categoriesList[0],
                         modifier=Modifier.clickable {
-                            bottomSheetCategory = CategoriesData.categoriesList[0]
+                            selectedCategory.value = CategoriesData.categoriesList[0]
                             switchBottomSheet(scope, sheetState)
                         }
                     )
                     CategoriesImage(
                         category=CategoriesData.categoriesList[1],
                         modifier=Modifier.clickable {
-                            bottomSheetCategory = CategoriesData.categoriesList[1]
+                            selectedCategory.value = CategoriesData.categoriesList[1]
+                            Log.d("TAG", ": "+selectedCategory.value?.title)
                             switchBottomSheet(scope, sheetState)
                         }                    )
                     CategoriesImage(
                         category=CategoriesData.categoriesList[2],
                         modifier=Modifier.clickable {
-                            bottomSheetCategory = CategoriesData.categoriesList[2]
+                            selectedCategory.value = CategoriesData.categoriesList[2]
                             switchBottomSheet(scope, sheetState)
                         }                    )
                     CategoriesImage(
                         category=CategoriesData.categoriesList[3],
                         modifier=Modifier.clickable {
-                            bottomSheetCategory = CategoriesData.categoriesList[3]
+                            selectedCategory.value = CategoriesData.categoriesList[3]
                             switchBottomSheet(scope, sheetState)
                         }
                     )
@@ -143,13 +138,13 @@ fun Categories(
                         CategoriesImage(
                             category=CategoriesData.categoriesList[0],
                             modifier=Modifier.clickable {
-                                bottomSheetCategory = CategoriesData.categoriesList[0]
+                                selectedCategory.value = CategoriesData.categoriesList[0]
                                 switchBottomSheet(scope, sheetState)
                             }                        )
                         CategoriesImage(
                             category=CategoriesData.categoriesList[2],
                             modifier=Modifier.clickable {
-                                bottomSheetCategory = CategoriesData.categoriesList[2]
+                                selectedCategory.value = CategoriesData.categoriesList[2]
                                 switchBottomSheet(scope, sheetState)
                             }
                         )
@@ -187,13 +182,13 @@ fun Categories(
                         CategoriesImage(
                             category=CategoriesData.categoriesList[0],
                             modifier=Modifier.clickable {
-                                bottomSheetCategory = CategoriesData.categoriesList[0]
+                                selectedCategory.value = CategoriesData.categoriesList[0]
                                 switchBottomSheet(scope, sheetState)
                             }                        )
                         CategoriesImage(
                             category=CategoriesData.categoriesList[2],
                             modifier=Modifier.clickable {
-                                bottomSheetCategory = CategoriesData.categoriesList[2]
+                                selectedCategory.value = CategoriesData.categoriesList[2]
                                 switchBottomSheet(scope, sheetState)
                             }                        )
                     }
@@ -213,28 +208,28 @@ fun Categories(
                     CategoriesImage(
                         category=CategoriesData.categoriesList[0],
                         modifier=Modifier.clickable {
-                            bottomSheetCategory = CategoriesData.categoriesList[0]
+                            selectedCategory.value = CategoriesData.categoriesList[0]
                             switchBottomSheet(scope, sheetState)
                         }
                     )
                     CategoriesImage(
                         category=CategoriesData.categoriesList[1],
                         modifier=Modifier.clickable {
-                            bottomSheetCategory = CategoriesData.categoriesList[1]
+                            selectedCategory.value = CategoriesData.categoriesList[1]
                             switchBottomSheet(scope, sheetState)
                         }
                     )
                     CategoriesImage(
                         category=CategoriesData.categoriesList[2],
                         modifier=Modifier.clickable {
-                            bottomSheetCategory = CategoriesData.categoriesList[2]
+                            selectedCategory.value = CategoriesData.categoriesList[2]
                             switchBottomSheet(scope, sheetState)
                         }
                     )
                     CategoriesImage(
                         category=CategoriesData.categoriesList[3],
                         modifier=Modifier.clickable {
-                            bottomSheetCategory = CategoriesData.categoriesList[3]
+                            selectedCategory.value = CategoriesData.categoriesList[3]
                             switchBottomSheet(scope, sheetState)
                         }
                     )

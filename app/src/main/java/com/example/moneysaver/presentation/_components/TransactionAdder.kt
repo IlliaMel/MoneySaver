@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation._components
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,18 +26,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.data.data_base.test_data.AccountsData
+import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.ui.theme.dividerColor
 
 @Composable
-fun TransactionAdder(category: Category, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit) {
+fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit) {
     var sumText by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
 
     val openChoseAccountDialog = remember { mutableStateOf(false) }
+    val openChoseCategoryDialog = remember { mutableStateOf(false) }
+
     val transactionAccount = remember { mutableStateOf(AccountsData.accountsList[0]) }
 
     Column(
@@ -88,6 +92,7 @@ fun TransactionAdder(category: Category, addTransaction: (tr: Transaction)->Unit
                     modifier = Modifier
                         .weight(1f)
                         .background(Color(0xffff4181))
+                        .clickable { openChoseCategoryDialog.value = true }
                         .padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
@@ -99,10 +104,10 @@ fun TransactionAdder(category: Category, addTransaction: (tr: Transaction)->Unit
                             horizontalAlignment = Alignment.Start
                         ) {
                             Text(text = "To category", fontSize = 14.sp, color=Color.White)
-                            Text(text = category.title, fontSize = 17.sp, color=Color.White, overflow = TextOverflow.Ellipsis)
+                            Text(text = category.value.title, fontSize = 17.sp, color=Color.White, overflow = TextOverflow.Ellipsis)
                         }
                         Image(
-                            painter = painterResource(id = category.categoryImg),
+                            painter = painterResource(id = category.value.categoryImg),
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
@@ -185,7 +190,7 @@ fun TransactionAdder(category: Category, addTransaction: (tr: Transaction)->Unit
                     val transactionNote: String? = if (note != "") note else null
                     val transaction = Transaction(
                         sum = sumText.toDoubleOrNull() ?: 0.0,
-                        category = category,
+                        category = category.value,
                         account = account,
                         note = transactionNote
                     )
@@ -198,12 +203,12 @@ fun TransactionAdder(category: Category, addTransaction: (tr: Transaction)->Unit
     }
 
     ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = AccountsData.accountsList, transactionAccount = transactionAccount)
-    
+    ChooseTransactionCategoryDialog(openDialog = openChoseCategoryDialog, categoryList = CategoriesData.categoriesList, transactionCategory = category)
 }
 
 
 @Composable
-fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountList: List<Account>, transactionAccount: MutableState<Account>) {
+private fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountList: List<Account>, transactionAccount: MutableState<Account>) {
     if (openDialog.value) {
         Dialog(
             onDismissRequest = {
@@ -248,6 +253,61 @@ fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountLis
                                     val balanceColor = if(it.balance>0) Color.Green else (if(it.balance < 0) Color.Red else Color.Gray)
                                     Text(text = balanceText, color = balanceColor, fontSize = 14.sp)
                                 }
+                            }
+                            Divider(modifier = Modifier.background(dividerColor))
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChooseTransactionCategoryDialog(openDialog: MutableState<Boolean>, categoryList: List<Category>, transactionCategory: MutableState<Category>) {
+    if (openDialog.value) {
+        Dialog(
+            onDismissRequest = {
+                openDialog.value = false
+            }
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .height(350.dp)
+                    .width(300.dp)
+                    .background(Color.White)
+            ) {
+                items(
+                    items = categoryList,
+                    itemContent = {
+                        Column() {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        transactionCategory.value = it
+                                        openDialog.value = false
+                                    }
+                                    .background(
+                                        if (it == transactionCategory.value) Color(
+                                            0xff59aab3
+                                        ) else Color.White
+                                    )
+                                    .padding(10.dp)
+                                ,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painterResource(id = it.categoryImg),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                        .width(55.dp)
+                                        .height(36.dp)
+                                        .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                                )
+                                Text(it.title, fontSize = 16.sp)
                             }
                             Divider(modifier = Modifier.background(dividerColor))
                         }

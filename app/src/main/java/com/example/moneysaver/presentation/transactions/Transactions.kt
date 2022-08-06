@@ -54,7 +54,7 @@ fun Transactions(
     )
     val scope = rememberCoroutineScope()
 
-    var selectedCategory: MutableState<Category?> = remember { mutableStateOf(null) }
+    val selectedCategory: MutableState<Category?> = remember { mutableStateOf(null) }
 
     viewModel.loadTransactions()
     //viewModel.deleteTransactions()
@@ -84,8 +84,9 @@ fun Transactions(
                 if(selectedCategory.value==null) {
                     CategoryChooser(selectedCategory, CategoriesData.categoriesList)
                 } else {
+                    val transactionCategory: MutableState<Category> = remember { mutableStateOf(selectedCategory.value!!) }
                     TransactionAdder(
-                        category = selectedCategory.value?: CategoriesData.categoriesList[0],
+                        category = transactionCategory,
                         addTransaction = viewModel::addTransaction,
                         closeAdder = {
                             scope.launch {
@@ -102,6 +103,7 @@ fun Transactions(
                     FloatingActionButton(
                         onClick = {
                             scope.launch {
+                                selectedCategory.value=null
                                 scaffoldState.bottomSheetState.expand()
                             }
                         },
