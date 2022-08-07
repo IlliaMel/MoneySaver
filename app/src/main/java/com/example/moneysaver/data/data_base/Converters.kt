@@ -34,7 +34,6 @@ class Converters {
         return category.toString()
     }
 
-
     @TypeConverter
     fun fromStringToAccount(value: String?): Account? {
         value?.let {
@@ -42,15 +41,30 @@ class Converters {
             return Account(accountImg = strArr[0].toInt(),
                 currencyType = strArr[1],
                 title = strArr[2],
-                balance = strArr[3].toDouble(),
-                debt = strArr[4].toDouble(),
-                goal = strArr[5].toDouble(),
-                isForGoal = strArr[6].toBoolean(),
-                isForDebt = strArr[7].toBoolean(),
+                description = strArr[3],
+                balance = strArr[4].toDouble(),
+                creditLimit = strArr[5].toDouble(),
+                goal = strArr[6].toDouble(),
+                debt = strArr[7].toDouble(),
+                isForGoal = strArr[8].toBoolean(),
+                isForDebt = strArr[9].toBoolean(),
             )
         }
         return Account(title = "")
     }
+    /*
+
+        val accountImg: Int = R.drawable.cash,
+    val currencyType: String = "$",
+    val title: String,
+    val description: String = "description",
+    val balance: Double = 0.0,
+    val creditLimit: Double = 0.0,
+    val goal: Double = 0.0,
+    val debt: Double = 0.0,
+    val isForGoal: Boolean = false,
+    val isForDebt: Boolean = false,
+     */
 
     @TypeConverter
     fun stringToAccount(account: Account?): String? {

@@ -1,4 +1,5 @@
 package com.example.moneysaver.presentation.accounts.additional_composes
+import android.icu.text.CaseMap
 import android.widget.EditText
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,19 +35,25 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
+import com.example.moneysaver.data.data_base.test_data.AccountsData
+import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.ui.theme.*
 
 @Composable
-fun EditAccount(){
+fun EditAccount(
+    account: Account = AccountsData.accountsList.get(0),
+    onAddAccountAction: (Account) -> Unit,
+    onCancelIconClick: () -> Unit
+){
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .background(gray)
     ) {
-        TopBarAccounts(typeOfAccount= "Edit Account" , onAddAccountAction = { }, onCancelIconClick = {})
-        dividerForTopBar()
+        TopBarAccounts(title = account.title, typeOfAccount= "Edit Account" , onAddAccountAction = {onAddAccountAction(it) }, onCancelIconClick = {onCancelIconClick()})
+       // dividerForTopBar()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -68,19 +75,19 @@ fun EditAccount(){
 
                 accountEditInfoText(
                     upperText = "Type",
-                    bottomText = "Normal",
+                    bottomText = whichTypeOfAccount(account),
                     onAction = {},
                     startPadding = 16.dp,
                     topPadding = 8.dp)
                 accountEditInfoText(
                     upperText = "Currency Type",
-                    bottomText = "USA - $",
+                    bottomText = account.currencyType,
                     onAction = {},
                     startPadding = 16.dp,
                     topPadding = 8.dp)
                 accountEditInfoText(
                     upperText = "Description",
-                    bottomText = "None   ",
+                    bottomText = account.description,
                     onAction = {},
                     startPadding = 16.dp,
                     topPadding = 8.dp)
@@ -113,8 +120,8 @@ fun EditAccount(){
 
                     Text(
                         modifier = Modifier.padding(0.dp, 0.dp, 16.dp, 0.dp),
-                        text = "0 $",
-                        color = Color.Black,
+                        text = if(account.isForDebt)  account.debt.toString() else account.balance.toString(),
+                        color = whichColorOfAccount(account),
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp
                     )
@@ -129,7 +136,7 @@ fun EditAccount(){
                     verticalAlignment = Alignment.CenterVertically){
                     Text(
                         modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
-                        text = "Account Balance",
+                        text = "Credit Limit",
                         color = Color.Black,
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp
@@ -137,7 +144,7 @@ fun EditAccount(){
 
                     Text(
                         modifier = Modifier.padding(0.dp, 0.dp, 16.dp, 0.dp),
-                        text = "0 $",
+                        text = account.creditLimit.toString(),
                         color = Color.Black,
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp
@@ -199,6 +206,24 @@ fun EditAccount(){
     }
 
 }
+
+fun whichTypeOfAccount(account: Account) : String{
+    return if(account.isForDebt)
+        "Dept"
+    else if (account.isForGoal)
+        "Goal"
+    else
+        "Simple"
+}
+
+fun whichColorOfAccount(account: Account) : Color{
+    return if(account.isForDebt)
+         currencyColorSpent
+    else if (account.balance == 0.0)
+        currencyColorZero
+    else
+        currencyColor
+}
 @Composable
 fun accountEditInfoText(
     startPadding : Dp = 8.dp,
@@ -239,10 +264,11 @@ fun accountEditInfoText(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TopBarAccounts(
+    title: String,
     typeOfAccount: String,
-    onAddAccountAction: () -> Unit,
+    onAddAccountAction: (Account) -> Unit,
     onCancelIconClick: () -> Unit){
-    var text by rememberSaveable { mutableStateOf("Cash") }
+    var text by rememberSaveable { mutableStateOf(title) }
     val focusManager = LocalFocusManager.current
     Box(
         modifier = Modifier
@@ -295,7 +321,7 @@ fun TopBarAccounts(
                         TextField(
                                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 18.dp),
+                                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
                                 textStyle = TextStyle(color = whiteSurface, fontWeight = FontWeight.W400 , fontSize = 24.sp),
                                 value = text,
                                 onValueChange = {
@@ -319,7 +345,7 @@ fun TopBarAccounts(
                     IconButton(modifier = Modifier
                         .padding(0.dp, 0.dp, 8.dp, 0.dp)
                         .size(40.dp, 40.dp)
-                        .weight(1f), onClick = { onAddAccountAction() }) {
+                        .weight(1f), onClick = { onAddAccountAction(Account(title = "TEST_ADD")) }) {
                         Icon(
                             imageVector = Icons.Default.Done,
                             tint = whiteSurface,

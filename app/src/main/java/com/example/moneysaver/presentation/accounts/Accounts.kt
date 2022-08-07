@@ -1,9 +1,7 @@
 package com.example.moneysaver.presentation.accounts
 
 import android.view.WindowManager
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
@@ -35,11 +33,13 @@ import androidx.constraintlayout.compose.ConstraintSet
 import com.example.moneysaver.R
 import com.example.moneysaver.ui.theme.currencyColorZero
 import com.example.moneysaver.ui.theme.whiteSurface
-import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.presentation.TabsForScreens
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.transactions.TransactionsViewModel
@@ -49,10 +49,10 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainAccountScreen(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> Unit, navigateToCardSettings: (Account) -> Unit,
-                      navigateToCardAdder: (Account) -> Unit ,
-                      navigateToGoalAdder: (Account) -> Unit,
-                      viewModel: AccountsViewModel = AccountsViewModel()
+fun Accounts(onAddAccountAction: () -> Unit,
+             onNavigationIconClick: () -> Unit,
+             navigateToCardSettings: (Account) -> Unit,
+             viewModel: AccountsViewModel  = hiltViewModel()
 ){
 
     viewModel.loadAccounts()
@@ -63,44 +63,60 @@ fun MainAccountScreen(onAddAccountAction: () -> Unit, onNavigationIconClick: () 
         modifier = Modifier
             .fillMaxWidth()
             .background(whiteSurface)
+
     ) {
 
-        TopBarAccounts(onAddAccountAction,onNavigationIconClick)
+        TopBarAccounts(onAddAccountAction ,onNavigationIconClick)
         SumMoneyInfo(stringResource(R.string.accounts_name_label),viewModel.loadBankAccountSum(),viewModel.state.currentAccount.currencyType)
-        val accounts = remember { AccountsData.accountsList }
-        val goals = remember { AccountsData.accountsList }
 
-        LazyColumn(
-            contentPadding = PaddingValues()
-        ) {
-            items(
-                items = accounts,
-                itemContent = {
-                    AccountListItem(account = it, navigateToCardSettings)
+        val accounts = remember { viewModel.state.accountList }
+        val goals = remember { viewModel.state.goalList }
+
+
+
+
+            LazyColumn(
+                modifier = Modifier.weight(2f),
+                contentPadding = PaddingValues()
+            ) {
+                items(
+                    items = accounts,
+                    itemContent = {
+                        AccountListItem(account = it, navigateToCardSettings)
+                    }
+                )
+                item {
+                    AddBankAccount(AccountsData.accountAdder, navigateToCardSettings)
                 }
-            )
-            item {
-                AddBankAccount(AccountsData.accountAdder, navigateToCardAdder)
-                Divider(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp).background(dividerColor))
             }
-        }
+        Divider(
+            modifier = Modifier
+                .padding(0.dp, 16.dp, 0.dp, 0.dp)
+                .background(dividerColor)
+        )
 
-        SumMoneyInfo(stringResource(R.string.savings_accounts),viewModel.loadSavingsAccountSum(),viewModel.state.currentAccount.currencyType)
+            SumMoneyInfo(
+                stringResource(R.string.savings_accounts),
+                viewModel.loadSavingsAccountSum(),
+                viewModel.state.currentAccount.currencyType
+            )
 
-        LazyColumn(
-            contentPadding = PaddingValues()
-        ) {
-            items(
-                items = goals,
-                itemContent = {
-                    AccountListItem(account = it, navigateToCardSettings)
+
+
+            LazyColumn(
+                modifier = Modifier.weight(1.5f),
+                contentPadding = PaddingValues()
+            ) {
+                items(
+                    items = goals,
+                    itemContent = {
+                        AccountListItem(account = it, navigateToCardSettings)
+                    }
+                )
+                item {
+                    AddBankAccount(AccountsData.goalAdder, navigateToCardSettings)
                 }
-            )
-            item {
-                AddBankAccount(AccountsData.goalAdder, navigateToGoalAdder)
             }
-        }
-
 
 
     }
@@ -154,7 +170,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
 
                     Column(modifier = Modifier
                         .fillMaxHeight()
-                        .padding(8.dp,8.dp,8.dp,12.dp),
+                        .padding(8.dp, 8.dp, 8.dp, 12.dp),
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = stringResource(R.string.accounts_name_label), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 15.sp)
@@ -263,7 +279,9 @@ private fun CustomDivider(){
 
         Row(modifier = Modifier.weight(1f)) {}
 
-        Row(modifier = Modifier.weight(4f)) { Divider( modifier = Modifier.padding(8.dp, 2.dp, 0.dp, 0.dp).background(dividerColor)) }
+        Row(modifier = Modifier.weight(4f)) { Divider( modifier = Modifier
+            .padding(8.dp, 2.dp, 0.dp, 0.dp)
+            .background(dividerColor)) }
     }
 }
 
@@ -292,5 +310,5 @@ private fun AccountImage(account: Account) {
 @Preview
 @Composable
 fun PreviewItem() {
-    MainAccountScreen(onAddAccountAction = {} , onNavigationIconClick = {},navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
+    Accounts(onAddAccountAction = {} , onNavigationIconClick = {},navigateToCardSettings = {})
 }

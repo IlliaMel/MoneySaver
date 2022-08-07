@@ -37,10 +37,13 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentTransaction
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.AccountsData
+import com.example.moneysaver.data.data_base.test_data.AccountsData.deptAccount
+import com.example.moneysaver.data.data_base.test_data.AccountsData.goalAccount
+import com.example.moneysaver.data.data_base.test_data.AccountsData.normalAccount
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
-import com.example.moneysaver.presentation.accounts.MainAccountScreen
+import com.example.moneysaver.presentation.accounts.Accounts
 import com.example.moneysaver.presentation.accounts.additional_composes.ChooseAccountCompose
 import com.example.moneysaver.presentation.accounts.additional_composes.EditAccount
 import com.example.moneysaver.presentation.accounts.choose_new_account_fragment.ChooseAccountFragment
@@ -129,6 +132,11 @@ fun MainUI(){
             mutableStateOf(0)
         }
 
+
+        var chosenAccount by remember {
+            mutableStateOf(AccountsData.accountsList.get(0))
+        }
+
         var setSelectedAccount = remember { mutableStateOf(false) }
 
         Scaffold(
@@ -175,7 +183,7 @@ fun MainUI(){
                         .background(whiteSurface)
                 ) {
                     when (selectedTabIndex) {
-                        0 -> MainAccountScreen(
+                        0 -> Accounts(
                             onAddAccountAction = {
                                 setSelectedAccount.value = true
                             },
@@ -184,9 +192,7 @@ fun MainUI(){
                                     scaffoldState.drawerState.open()
                                 }
                             },
-                            navigateToCardSettings = {selectedTabIndex = 3},
-                            navigateToCardAdder = {selectedTabIndex = 3},
-                            navigateToGoalAdder = {selectedTabIndex = 3})
+                            navigateToCardSettings = {chosenAccount = it; selectedTabIndex = 3},)
                         1 -> Categories(onNavigationIconClick = {
                             scope.launch {
                                 scaffoldState.drawerState.open()
@@ -197,10 +203,11 @@ fun MainUI(){
                                 scaffoldState.drawerState.open()
                             }
                         }, navigateToTransaction = {})
-                        3 -> EditAccount()
+                        3 -> EditAccount(chosenAccount , onAddAccountAction = {AccountsData.accountsList.add(it); selectedTabIndex = 0},
+                            onCancelIconClick = {selectedTabIndex = 0} )
                     }
                 }
-                Row(modifier = Modifier.weight(1f)) {
+                Row(modifier = Modifier.weight(0.8f)) {
                     TabsForScreens(){
                         selectedTabIndex = it
                     }
@@ -209,7 +216,7 @@ fun MainUI(){
             }
         }
 
-        ChooseAccountCompose(openDialog = setSelectedAccount, normalAccount = {} , debtAccount = {} , goalAccount = {})
+        ChooseAccountCompose(openDialog = setSelectedAccount, normalAccount = {setSelectedAccount.value = false ;chosenAccount = normalAccount; selectedTabIndex = 3; } , debtAccount = {setSelectedAccount.value = false ;chosenAccount = deptAccount;selectedTabIndex = 3} , goalAccount = {setSelectedAccount.value = false ;chosenAccount = goalAccount; selectedTabIndex = 3})
     }
 
 }
