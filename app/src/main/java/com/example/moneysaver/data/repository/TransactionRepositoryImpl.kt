@@ -4,6 +4,7 @@ import com.example.moneysaver.data.data_base.transaction_dp.TransactionDao
 import com.example.moneysaver.domain.repository.TransactionRepository
 import com.example.moneysaver.domain.transaction.Transaction
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 class TransactionRepositoryImpl(
     private val dao: TransactionDao
@@ -12,6 +13,10 @@ class TransactionRepositoryImpl(
 
     override fun getTransactions(): Flow<List<Transaction>> {
         return dao.getTransactions()
+    }
+
+    override fun getTransactionsInDateRange(minDate: Date, maxDate: Date): Flow<List<Transaction>> {
+        return dao.getTransactionsInDateRange(minDate, maxDate)
     }
 
     override suspend fun insertTransaction(transaction: Transaction) {

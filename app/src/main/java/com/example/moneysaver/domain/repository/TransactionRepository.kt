@@ -8,10 +8,13 @@ import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 interface TransactionRepository {
 
     fun getTransactions(): Flow<List<Transaction>>
+
+    fun getTransactionsInDateRange(minDate: Date, maxDate: Date): Flow<List<Transaction>>
 
     suspend fun insertTransaction(transaction: Transaction)
 
