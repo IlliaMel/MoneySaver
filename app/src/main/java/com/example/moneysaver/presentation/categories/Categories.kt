@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.category.Category
-import com.example.moneysaver.presentation._components.MonthChooser
+import com.example.moneysaver.presentation._components.DateRangeDisplay
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.categories.additional_composes.PieSampleData
 import com.example.moneysaver.presentation._components.TransactionAdder
@@ -336,7 +336,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
                     )
                 }
 
-                MonthChooser(Date(2022, 7, 31),);
+                DateRangeDisplay(Date(2022, 7, 31), onClick = {});
 
                 IconButton(modifier = Modifier
                     .padding(8.dp, 0.dp, 8.dp, 0.dp)

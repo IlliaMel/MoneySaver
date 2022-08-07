@@ -25,10 +25,7 @@ import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
-import com.example.moneysaver.presentation._components.CategoryChooser
-import com.example.moneysaver.presentation._components.MonthChooser
-import com.example.moneysaver.presentation._components.dividerForTopBar
-import com.example.moneysaver.presentation._components.TransactionAdder
+import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
 import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
@@ -262,36 +259,7 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit) {
 
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 0.dp, 0.dp, 2.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                IconButton(modifier = Modifier
-                    .padding(8.dp, 0.dp, 8.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        tint = whiteSurface,
-                        contentDescription = "Prev Month"
-                    )
-                }
-
-                MonthChooser(Date(2022, 7, 31));
-
-                IconButton(modifier = Modifier
-                    .padding(8.dp, 0.dp, 8.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowForward,
-                        tint = whiteSurface,
-                        contentDescription = "Next Month"
-                    )
-                }
-            }
+            DateRangePicker()
 
 
         }
