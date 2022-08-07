@@ -42,17 +42,25 @@ import com.example.moneysaver.ui.theme.*
 
 @Composable
 fun EditAccount(
+    isEditing: Boolean,
     account: Account = AccountsData.accountsList.get(0),
     onAddAccountAction: (Account) -> Unit,
+    onDeleteAccount: (Account) -> Unit,
     onCancelIconClick: () -> Unit
 ){
+/*
+    var accountType = remember { mutableStateOf(account.type) }
+    var setSelectedAccount = remember { mutableStateOf(false) }
+    var setSelectedAccount = remember { mutableStateOf(false) }
+    */
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .background(gray)
     ) {
-        TopBarAccounts(title = account.title, typeOfAccount= "Edit Account" , onAddAccountAction = {onAddAccountAction(it) }, onCancelIconClick = {onCancelIconClick()})
+
+        TopBarAccounts(title = account.title, typeOfAccount= "Edit Account" , onAddAccountAction = {onAddAccountAction(Account(title = "Simple")) }, onCancelIconClick = {onCancelIconClick()})
        // dividerForTopBar()
         Column(
             modifier = Modifier
@@ -177,7 +185,7 @@ fun EditAccount(
 
             Row(modifier = Modifier
                 .padding(0.dp, 0.dp, 0.dp, 0.dp)
-                .clickable {}
+                .clickable {onDeleteAccount(account)}
                 .shadow(elevation = 1.dp)
                 .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
@@ -266,7 +274,7 @@ fun accountEditInfoText(
 fun TopBarAccounts(
     title: String,
     typeOfAccount: String,
-    onAddAccountAction: (Account) -> Unit,
+    onAddAccountAction: () -> Unit,
     onCancelIconClick: () -> Unit){
     var text by rememberSaveable { mutableStateOf(title) }
     val focusManager = LocalFocusManager.current
@@ -345,7 +353,7 @@ fun TopBarAccounts(
                     IconButton(modifier = Modifier
                         .padding(0.dp, 0.dp, 8.dp, 0.dp)
                         .size(40.dp, 40.dp)
-                        .weight(1f), onClick = { onAddAccountAction(Account(title = "TEST_ADD")) }) {
+                        .weight(1f), onClick = { onAddAccountAction() }) {
                         Icon(
                             imageVector = Icons.Default.Done,
                             tint = whiteSurface,

@@ -15,6 +15,10 @@ class AccountsRepositoryImpl(
         return dao.getAccounts()
     }
 
+    override fun getGoalAccounts(): Flow<List<Account>> {
+        return dao.getGoalAccounts()
+    }
+
     override suspend fun insertAccount(account: Account) {
         return dao.insertAccount(account)
     }

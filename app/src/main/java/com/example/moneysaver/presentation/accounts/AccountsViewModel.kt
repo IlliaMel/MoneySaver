@@ -21,18 +21,36 @@ class AccountsViewModel @Inject constructor(
     private val repository: AccountsRepository,
 ) : ViewModel() {
 
+    init {
+        loadAccounts()
+        loadGoalAccounts()
+    }
+
+
     var state by mutableStateOf(AccountsState())
         private set
 
 
-    fun loadAccounts() {
+    private fun loadAccounts() {
         repository.getAccounts()
             .onEach { list ->
                 state = state.copy(
                     accountList = list,
                 )
             }.launchIn(viewModelScope)
+
+
     }
+
+    fun loadGoalAccounts() {
+        repository.getGoalAccounts()
+            .onEach { list ->
+                state = state.copy(
+                    goalList = list,
+                )
+            }.launchIn(viewModelScope)
+    }
+
 
     fun addAccount(account: Account) {
         viewModelScope.launch {
@@ -44,6 +62,7 @@ class AccountsViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteAccount(account)
         }
+        loadAccounts()
     }
 
     fun loadBankAccountSum() : Double{

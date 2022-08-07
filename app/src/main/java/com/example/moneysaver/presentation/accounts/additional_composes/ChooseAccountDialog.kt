@@ -34,58 +34,7 @@ import com.example.moneysaver.ui.theme.whiteSurface
 
 
 
-@Composable
-fun ChooseAccountCompose(
-    openDialog: MutableState<Boolean>,
-    normalAccount: () -> Unit,
-    debtAccount: () -> Unit,
-    goalAccount: () -> Unit
-) {
-    if (openDialog.value) {
-        Dialog(
 
-            onDismissRequest = {
-                openDialog.value = false
-            }
-        ) {
-
-        Column(modifier = Modifier.padding(24.dp).fillMaxHeight(0.6f).clip(RoundedCornerShape(corner = CornerSize(4.dp))).fillMaxHeight(0.35f).background(
-            whiteSurface
-        ), verticalArrangement = Arrangement.Center) {
-            Row(modifier = Modifier.padding(16.dp,0.dp,0.dp,0.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Start) {
-                Text(
-                    modifier = Modifier.padding(0.dp),
-                    text = "Новий Рахунок",
-                    fontWeight = FontWeight.W500,
-                    color = Color.Black,
-                    fontSize = 16.sp
-                )
-            }
-            Column(modifier = Modifier.padding(18.dp,18.dp,18.dp,0.dp), verticalArrangement = Arrangement.Center) {
-                ChooseAccountElement(
-                    "Звичайний",
-                    "Готівка, Карта ",
-                    painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
-                    normalAccount
-                )
-                ChooseAccountElement(
-                    "Звичайний",
-                    "Кредит, Іпотека",
-                    painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
-                    debtAccount
-                )
-                ChooseAccountElement(
-                    "Накопичення",
-                    "Заощадження, Мета, Ціль",
-                    painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
-                    goalAccount
-                )
-            }
-        }
-    }
-    }
-
-}
 
 @Composable
 fun ChooseAccountElement(

@@ -1,14 +1,13 @@
 package com.example.moneysaver.presentation.accounts
 
 import android.view.WindowManager
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,11 +36,17 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.runtime.*
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.presentation.TabsForScreens
 import com.example.moneysaver.presentation._components.dividerForTopBar
+import com.example.moneysaver.presentation.accounts.additional_composes.ChooseAccountElement
+import com.example.moneysaver.presentation.accounts.additional_composes.EditAccount
 import com.example.moneysaver.presentation.transactions.TransactionsViewModel
 import com.example.moneysaver.ui.theme.dividerColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -49,51 +54,58 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun Accounts(onAddAccountAction: () -> Unit,
-             onNavigationIconClick: () -> Unit,
-             navigateToCardSettings: (Account) -> Unit,
+fun Accounts(onNavigationIconClick: () -> Unit,
              viewModel: AccountsViewModel  = hiltViewModel()
 ){
 
-    viewModel.loadAccounts()
+    var selectedAccountIndex by remember {
+        mutableStateOf(0)
+    }
+
+    var chosenAccount by remember {
+        mutableStateOf(AccountsData.accountsList.get(0))
+    }
+
+    var setSelectedAccount = remember { mutableStateOf(false) }
+
+    var isForEditing = remember { mutableStateOf(false) }
 
 
+    if(selectedAccountIndex == 0) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(whiteSurface)
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(whiteSurface)
+        ) {
 
-    ) {
-
-        TopBarAccounts(onAddAccountAction ,onNavigationIconClick)
-        SumMoneyInfo(stringResource(R.string.accounts_name_label),viewModel.loadBankAccountSum(),viewModel.state.currentAccount.currencyType)
-
-        val accounts = remember { viewModel.state.accountList }
-        val goals = remember { viewModel.state.goalList }
-
-
-
+            TopBarAccounts(onAddAccountAction = { setSelectedAccount.value = true },
+                onNavigationIconClick)
+            SumMoneyInfo(
+                stringResource(R.string.accounts_name_label),
+                viewModel.loadBankAccountSum(),
+                viewModel.state.currentAccount.currencyType
+            )
 
             LazyColumn(
                 modifier = Modifier.weight(2f),
                 contentPadding = PaddingValues()
             ) {
                 items(
-                    items = accounts,
+                    items = viewModel.state.accountList,
                     itemContent = {
-                        AccountListItem(account = it, navigateToCardSettings)
+                        AccountListItem(account = it, navigateToCardSettings = {isForEditing.value = true ; selectedAccountIndex = 1; chosenAccount = it})
                     }
                 )
                 item {
-                    AddBankAccount(AccountsData.accountAdder, navigateToCardSettings)
+                    AddBankAccount(AccountsData.accountAdder, navigateToCardAdder = {selectedAccountIndex = 1; chosenAccount = AccountsData.normalAccount})
                 }
             }
-        Divider(
-            modifier = Modifier
-                .padding(0.dp, 16.dp, 0.dp, 0.dp)
-                .background(dividerColor)
-        )
+            Divider(
+                modifier = Modifier
+                    .padding(0.dp, 16.dp, 0.dp, 0.dp)
+                    .background(dividerColor)
+            )
 
             SumMoneyInfo(
                 stringResource(R.string.savings_accounts),
@@ -108,17 +120,130 @@ fun Accounts(onAddAccountAction: () -> Unit,
                 contentPadding = PaddingValues()
             ) {
                 items(
-                    items = goals,
+                    items = viewModel.state.goalList,
                     itemContent = {
-                        AccountListItem(account = it, navigateToCardSettings)
+                        AccountListItem(account = it, navigateToCardSettings = {isForEditing.value = true ; selectedAccountIndex = 1; chosenAccount = it} )
                     }
                 )
                 item {
-                    AddBankAccount(AccountsData.goalAdder, navigateToCardSettings)
+                    AddBankAccount(AccountsData.goalAdder, navigateToCardAdder = { selectedAccountIndex = 1; chosenAccount = AccountsData.goalAccount})
                 }
             }
 
 
+        }
+    }else if (selectedAccountIndex  == 1) {
+        EditAccount(isForEditing.value,chosenAccount ,
+            onAddAccountAction = {viewModel.addAccount(it); selectedAccountIndex = 0},
+            onDeleteAccount = {viewModel.deleteAccount(it); selectedAccountIndex = 0},
+            onCancelIconClick = {selectedAccountIndex = 0} )
+
+        BackHandler() {
+            selectedAccountIndex = 0
+        }
+    }
+
+
+
+    ChooseAccountCompose (openDialog = setSelectedAccount,
+        normalAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
+            AccountsData.normalAccount;} ,
+        debtAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
+            AccountsData.deptAccount;} ,
+        goalAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
+            AccountsData.goalAccount;})
+
+}
+
+@Composable
+fun ChooseAccountCompose(
+    openDialog: MutableState<Boolean>,
+    normalAccount: () -> Unit,
+    debtAccount: () -> Unit,
+    goalAccount: () -> Unit
+) {
+    if (openDialog.value) {
+        Dialog(
+
+            onDismissRequest = {
+                openDialog.value = false
+            }
+        ) {
+
+            Column(modifier = Modifier
+                .padding(24.dp)
+                .fillMaxHeight(0.6f)
+                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                .fillMaxHeight(0.35f)
+                .background(
+                    whiteSurface
+                ), verticalArrangement = Arrangement.Center) {
+                Row(modifier = Modifier.padding(16.dp,0.dp,0.dp,0.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Start) {
+                    Text(
+                        modifier = Modifier.padding(0.dp),
+                        text = "Новий Рахунок",
+                        fontWeight = FontWeight.W500,
+                        color = Color.Black,
+                        fontSize = 16.sp
+                    )
+                }
+                Column(modifier = Modifier.padding(18.dp,18.dp,18.dp,0.dp), verticalArrangement = Arrangement.Center) {
+                    ChooseAccountElement(
+                        "Звичайний",
+                        "Готівка, Карта ",
+                        painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
+                        normalAccount
+                    )
+                    ChooseAccountElement(
+                        "Звичайний",
+                        "Кредит, Іпотека",
+                        painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
+                        debtAccount
+                    )
+                    ChooseAccountElement(
+                        "Накопичення",
+                        "Заощадження, Мета, Ціль",
+                        painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
+                        goalAccount
+                    )
+                }
+            }
+        }
+    }
+
+}
+
+@Composable
+fun SetAccountCurrencyType(
+    openDialog: MutableState<Boolean>,
+    returnType: (type: String) -> Unit,
+) {
+    if (openDialog.value) {
+        Dialog(
+            onDismissRequest = {
+                openDialog.value = false
+            }
+        ) {
+
+            Column(modifier = Modifier
+                .padding(24.dp)
+                .fillMaxHeight(0.6f)
+                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                .fillMaxHeight(0.35f)
+                .background(
+                    whiteSurface
+                ), verticalArrangement = Arrangement.Center) {
+                Row(modifier = Modifier.padding(16.dp,0.dp,0.dp,0.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Start) {
+                    Text(
+                        modifier = Modifier.padding(0.dp),
+                        text = "Новий Рахунок",
+                        fontWeight = FontWeight.W500,
+                        color = Color.Black,
+                        fontSize = 16.sp
+                    )
+                }
+            }
+        }
     }
 
 }
@@ -259,15 +384,24 @@ fun AccountListItem(account: Account, navigateToCardSettings: (Account) -> Unit)
                 AccountImage(account)
             }
 
+            Row(
+                modifier = Modifier.weight(4f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+
             Column(
                 modifier = Modifier
-                    .weight(4f)
                     .padding(0.dp, 8.dp, 0.dp, 8.dp)
-                    .fillMaxWidth()
                     .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 textForAccount(account = account)
+            }
+
+
+                Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),text = account.description,maxLines = 2,
+                    overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.W400 ,color = currencyColorZero, fontSize = 14.sp)
             }
         }
     }
@@ -310,5 +444,5 @@ private fun AccountImage(account: Account) {
 @Preview
 @Composable
 fun PreviewItem() {
-    Accounts(onAddAccountAction = {} , onNavigationIconClick = {},navigateToCardSettings = {})
+    Accounts(onNavigationIconClick = {})
 }

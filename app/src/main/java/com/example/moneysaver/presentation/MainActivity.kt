@@ -1,59 +1,41 @@
 package com.example.moneysaver.presentation
 
 import android.annotation.SuppressLint
-import android.icu.text.CaseMap
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentTransaction
 import com.example.moneysaver.R
-import com.example.moneysaver.data.data_base.test_data.AccountsData
-import com.example.moneysaver.data.data_base.test_data.AccountsData.deptAccount
-import com.example.moneysaver.data.data_base.test_data.AccountsData.goalAccount
-import com.example.moneysaver.data.data_base.test_data.AccountsData.normalAccount
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
 import com.example.moneysaver.presentation.accounts.Accounts
-import com.example.moneysaver.presentation.accounts.additional_composes.ChooseAccountCompose
-import com.example.moneysaver.presentation.accounts.additional_composes.EditAccount
-import com.example.moneysaver.presentation.accounts.choose_new_account_fragment.ChooseAccountFragment
 import com.example.moneysaver.presentation.categories.Categories
-import com.example.moneysaver.presentation.categories.additional_composes.*
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import hu.ma.charts.pie.PieChart
 import kotlinx.coroutines.launch
 /*
 class MainActivity : ComponentActivity() {
@@ -110,6 +92,8 @@ class MainActivity : ComponentActivity() {
                     color = Color.Transparent
                 )
                 MainUI()
+                var setSelectedAccount = remember { mutableStateOf(true) }
+              // SetAccountCurrencyType( setSelectedAccount, returnType = {})
                 //EditAccount()
                 }
             }
@@ -132,12 +116,6 @@ fun MainUI(){
             mutableStateOf(0)
         }
 
-
-        var chosenAccount by remember {
-            mutableStateOf(AccountsData.accountsList.get(0))
-        }
-
-        var setSelectedAccount = remember { mutableStateOf(false) }
 
         Scaffold(
             scaffoldState = scaffoldState,
@@ -184,15 +162,11 @@ fun MainUI(){
                 ) {
                     when (selectedTabIndex) {
                         0 -> Accounts(
-                            onAddAccountAction = {
-                                setSelectedAccount.value = true
-                            },
                             onNavigationIconClick = {
                                 scope.launch {
                                     scaffoldState.drawerState.open()
                                 }
-                            },
-                            navigateToCardSettings = {chosenAccount = it; selectedTabIndex = 3},)
+                            },)
                         1 -> Categories(onNavigationIconClick = {
                             scope.launch {
                                 scaffoldState.drawerState.open()
@@ -203,8 +177,6 @@ fun MainUI(){
                                 scaffoldState.drawerState.open()
                             }
                         }, navigateToTransaction = {})
-                        3 -> EditAccount(chosenAccount , onAddAccountAction = {AccountsData.accountsList.add(it); selectedTabIndex = 0},
-                            onCancelIconClick = {selectedTabIndex = 0} )
                     }
                 }
                 Row(modifier = Modifier.weight(0.8f)) {
@@ -215,8 +187,6 @@ fun MainUI(){
 
             }
         }
-
-        ChooseAccountCompose(openDialog = setSelectedAccount, normalAccount = {setSelectedAccount.value = false ;chosenAccount = normalAccount; selectedTabIndex = 3; } , debtAccount = {setSelectedAccount.value = false ;chosenAccount = deptAccount;selectedTabIndex = 3} , goalAccount = {setSelectedAccount.value = false ;chosenAccount = goalAccount; selectedTabIndex = 3})
     }
 
 }

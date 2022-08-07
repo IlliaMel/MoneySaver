@@ -103,6 +103,7 @@ fun Transactions(
                                 selectedCategory.value=null
                                 scaffoldState.bottomSheetState.expand()
                             }
+
                         },
                         backgroundColor = Color(0xff5c6bbf)
                     ) {
