@@ -37,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneysaver.presentation._components.DateRangePicker
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -75,7 +76,9 @@ fun Categories(
             }
         }
         
-        Column(modifier = Modifier.fillMaxSize().background(whiteSurface), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(whiteSurface), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
 
             Column(
                 modifier = Modifier
@@ -318,36 +321,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
 
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 0.dp, 0.dp, 2.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                IconButton(modifier = Modifier
-                    .padding(8.dp, 0.dp, 8.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = {  }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        tint = whiteSurface,
-                        contentDescription = "Prev Month"
-                    )
-                }
-
-                DateRangeDisplay(Date(2022, 7, 31), onClick = {});
-
-                IconButton(modifier = Modifier
-                    .padding(8.dp, 0.dp, 8.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = {  }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowForward,
-                        tint = whiteSurface,
-                        contentDescription = "Next Month"
-                    )
-                }
-            }
+            DateRangePicker()
 
 
         }
