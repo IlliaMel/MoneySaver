@@ -43,6 +43,10 @@ fun Transactions(
     navigateToTransaction: (Transaction) -> Unit,
     viewModel: TransactionsViewModel = hiltViewModel()
 ) {
+
+    val minDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().first) }
+    val maxDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().second) }
+
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
     )
@@ -53,7 +57,10 @@ fun Transactions(
 
     val selectedCategory: MutableState<Category?> = remember { mutableStateOf(null) }
 
-    viewModel.loadTransactions()
+    if(minDate.value==null||maxDate.value==null)
+        viewModel.loadTransactions()
+    else
+        viewModel.loadTransactionsBetweenDates(minDate.value!!, maxDate.value!!)
     //viewModel.deleteTransactions()
 
     val transactionsDateMap = mutableMapOf<Date, MutableList<Transaction>>()
@@ -74,7 +81,7 @@ fun Transactions(
             .background(whiteSurface)
     ) {
 
-        TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() })
+        TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() }, minDate = minDate, maxDate = maxDate)
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
             sheetContent = {
@@ -191,7 +198,7 @@ fun Transactions(
 }
 
 @Composable
-fun TopBarTransactions(onNavigationIconClick: () -> Unit) {
+fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -260,7 +267,7 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit) {
 
             }
 
-            DateRangePicker()
+            DateRangePicker(minDate, maxDate)
 
 
         }

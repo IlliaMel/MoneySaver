@@ -12,6 +12,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.moneysaver.domain.transaction.Transaction
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.math.min
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
@@ -29,6 +31,16 @@ class TransactionsViewModel @Inject constructor(
                         endingBalance = list.sumOf { it.sum }
                     )
                 }.launchIn(viewModelScope)
+    }
+
+    fun loadTransactionsBetweenDates(minDate: Date, maxDate: Date) {
+        repository.getTransactionsInDateRange(minDate, maxDate)
+            .onEach { list ->
+                state = state.copy(
+                    transactionList = list,
+                    endingBalance = list.sumOf { it.sum }
+                )
+            }.launchIn(viewModelScope)
     }
 
     fun addTransaction(transaction: Transaction) {

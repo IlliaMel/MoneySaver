@@ -24,10 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.category.Category
-import com.example.moneysaver.presentation._components.DateRangeDisplay
-import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.categories.additional_composes.PieSampleData
-import com.example.moneysaver.presentation._components.TransactionAdder
 import com.example.moneysaver.ui.theme.currencyColor
 import com.example.moneysaver.ui.theme.currencyColorSpent
 import com.example.moneysaver.ui.theme.currencyColorZero
@@ -37,7 +34,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.moneysaver.presentation._components.DateRangePicker
+import com.example.moneysaver.presentation._components.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -45,6 +42,9 @@ fun Categories(
     onNavigationIconClick: () -> Unit,
     viewModel: CategoriesViewModel = hiltViewModel()
 ) {
+
+    val minDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().first) }
+    val maxDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().second) }
 
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
@@ -56,7 +56,7 @@ fun Categories(
 
     val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.categoriesList[0]) }
 
-    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()})
+    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, minDate = minDate, maxDate = maxDate)
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -267,7 +267,7 @@ fun MyChartParent() {
 }
 
 @Composable
-fun TopBarCategories(onNavigationIconClick: () -> Unit){
+fun TopBarCategories(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -321,7 +321,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit){
 
             }
 
-            DateRangePicker()
+            DateRangePicker(minDate, maxDate)
 
 
         }

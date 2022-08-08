@@ -38,13 +38,10 @@ import com.example.moneysaver.ui.theme.whiteSurface
 import java.util.*
 
 @Composable
-fun DateRangePicker() {
+fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) {
     val openChoseDateRangeDialog = remember { mutableStateOf(false) }
     val openSelectRangeSubDialog = remember { mutableStateOf(false) }
     val openPickDateSubDialog = remember { mutableStateOf(false) }
-
-    val startDate = remember { mutableStateOf(getCurrentMonthDates().first) }
-    val endDate = remember { mutableStateOf(getCurrentMonthDates().second) }
 
     Row(
         modifier = Modifier
@@ -64,7 +61,7 @@ fun DateRangePicker() {
             )
         }
 
-        DateRangeDisplay(from = startDate.value, to = endDate.value, onClick = {openChoseDateRangeDialog.value=true});
+        DateRangeDisplay(fromDateState = minDate, toDateState = maxDate, onClick = {openChoseDateRangeDialog.value=true});
 
         IconButton(modifier = Modifier
             .padding(8.dp, 0.dp, 8.dp, 0.dp)
@@ -80,44 +77,70 @@ fun DateRangePicker() {
         openDialog = openChoseDateRangeDialog,
         openSelectRangeSubDialog = openSelectRangeSubDialog,
         openPickDateSubDialog = openPickDateSubDialog,
-        startDate = startDate,
-        endDate = endDate
+        startDate = minDate,
+        endDate = maxDate
     )
     SelectRangeSubDialog(openDialog = openSelectRangeSubDialog)
     DatePickerDialog(
         openDialog = openPickDateSubDialog,
-        startDate = startDate,
-        endDate = endDate)
+        startDate = minDate,
+        endDate = maxDate)
 }
 
 @Composable
-fun DateRangeDisplay(from: Date, to: Date, onClick: ()->Unit) {
-    val startMonthAbr = getNameOfMonthByNumber(from.month).take(3);
-    val endMonthAbr = getNameOfMonthByNumber(to.month).take(3);
+fun DateRangeDisplay(fromDateState: MutableState<Date?>, toDateState: MutableState<Date?>, onClick: ()->Unit) {
+    if(fromDateState.value!=null && toDateState.value!=null) {
+        val from = fromDateState.value!!
+        val to = toDateState.value!!
+        val startMonthAbr = getNameOfMonthByNumber(from.month).take(3);
+        val endMonthAbr = getNameOfMonthByNumber(to.month).take(3);
 
-    Row(
-        modifier = Modifier
-            .height(IntrinsicSize.Min)
-            .clickable { onClick() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(modifier=Modifier.padding(4.dp, 0.dp), imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
-        var dateText = from.date.toString() +" " + startMonthAbr +" " + getYear(from) +" - "+ to.date.toString() +" " + endMonthAbr +" " + getYear(to)
-        if(from.year == to.year &&  from.month == to.month && from.date == to.date)
-            dateText = from.date.toString() +" " + startMonthAbr +" " + getYear(from)
-        Text(
-            text = dateText,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Bold,
-            color= Color.White
-        )
-        Text(
-            text = "▾",
-            modifier=Modifier.padding(4.dp, 0.dp),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color= Color.White
-        )
+        Row(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .clickable { onClick() },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(modifier=Modifier.padding(4.dp, 0.dp), imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
+            var dateText = from.date.toString() +" " + startMonthAbr +" " + getYear(from) +" - "+ to.date.toString() +" " + endMonthAbr +" " + getYear(to)
+            if(from.year == to.year &&  from.month == to.month && from.date == to.date)
+                dateText = from.date.toString() +" " + startMonthAbr +" " + getYear(from)
+            Text(
+                text = dateText,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                color= Color.White
+            )
+            Text(
+                text = "▾",
+                modifier=Modifier.padding(4.dp, 0.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color= Color.White
+            )
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .clickable { onClick() },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(modifier=Modifier.padding(4.dp, 0.dp), imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
+            Text(
+                text = "All time",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                color= Color.White
+            )
+            Text(
+                text = "▾",
+                modifier=Modifier.padding(4.dp, 0.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color= Color.White
+            )
+        }
     }
 
 }
@@ -127,8 +150,8 @@ private fun ChoseDateRangeDialog(
     openDialog: MutableState<Boolean>,
     openSelectRangeSubDialog: MutableState<Boolean>,
     openPickDateSubDialog: MutableState<Boolean>,
-    startDate: MutableState<Date>,
-    endDate: MutableState<Date>
+    startDate: MutableState<Date?>,
+    endDate: MutableState<Date?>
 ) {
     if (openDialog.value) {
         Dialog(
@@ -479,7 +502,7 @@ private fun getCurrentWeekDates(): Pair<Date, Date> {
     return start to end
 }
 
-private fun getCurrentMonthDates(): Pair<Date, Date> {
+fun getCurrentMonthDates(): Pair<Date, Date> {
     val c = Calendar.getInstance()
     val start = Date()
     start.date = 1
@@ -511,16 +534,16 @@ private fun getCurrentYearDates(): Pair<Date, Date> {
 }
 
 @Composable
-fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<Date>, endDate: MutableState<Date>) {
+fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<Date?>, endDate: MutableState<Date?>) {
     if(openDialog.value) {
         Dialog(
             onDismissRequest = {
                 openDialog.value = false
             }
         ) {
-            var year = startDate.value.year
-            var month = startDate.value.month
-            var date = startDate.value.date
+            var year = Date().year
+            var month = Date().month
+            var date = Date().date
             Column(modifier = Modifier.background(Color.White),horizontalAlignment = Alignment.CenterHorizontally) {
                 AndroidView(
                     { CalendarView(it) },
@@ -528,14 +551,14 @@ fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<
                         .wrapContentWidth(),
                     update = { views ->
                         views.setOnDateChangeListener { _, _year, _month, _date ->
-                            year = _year
+                            year = _year - 1900
                             month = _month
                             date = _date
                         }
                     }
                 )
                 Button(onClick = {
-                    pickDate(Date(year-1900, month-1, date),startDate, endDate)
+                    pickDate(Date(year, month, date),startDate, endDate)
                     openDialog.value = false
                 },
                     shape = RoundedCornerShape(30.dp)) {
@@ -547,15 +570,14 @@ fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<
     }
 }
 
-private fun pickDate(setDate: Date, startDate: MutableState<Date>, endDate: MutableState<Date>) {
-    val start = setDate
-    start.hours = 0
-    start.minutes = 0
-    start.seconds = 0
-    val end = setDate
-    end.hours = 23
-    end.minutes = 59
-    end.seconds = 59
-    startDate.value = start
-    endDate.value = end
+private fun pickDate(setDate: Date, startDate: MutableState<Date?>, endDate: MutableState<Date?>) {
+    startDate.value = Date(setDate.year, setDate.month, setDate.date)
+    startDate.value!!.hours = 0
+    startDate.value!!.minutes = 0
+    startDate.value!!.seconds = 0
+    endDate.value = Date(setDate.year, setDate.month, setDate.date)
+    endDate.value!!.hours = 23
+    endDate.value!!.minutes = 59
+    endDate.value!!.seconds = 59
+    Log.d("TAG", "s: "+startDate.value!!+", e: "+endDate.value!!)
 }
