@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import com.example.moneysaver.data.data_base.test_data.AccountsData
 import com.example.moneysaver.domain.account.Account
 
-import com.example.moneysaver.ui.theme.currencyColor
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -30,8 +29,6 @@ import androidx.compose.ui.unit.Constraints
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import com.example.moneysaver.R
-import com.example.moneysaver.ui.theme.currencyColorZero
-import com.example.moneysaver.ui.theme.whiteSurface
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -48,7 +45,7 @@ import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.accounts.additional_composes.ChooseAccountElement
 import com.example.moneysaver.presentation.accounts.additional_composes.EditAccount
 import com.example.moneysaver.presentation.transactions.TransactionsViewModel
-import com.example.moneysaver.ui.theme.dividerColor
+import com.example.moneysaver.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
@@ -68,7 +65,10 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
     var setSelectedAccount = remember { mutableStateOf(false) }
 
+
     var isForEditing = remember { mutableStateOf(false) }
+
+
 
 
     if(selectedAccountIndex == 0) {
@@ -98,7 +98,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
                     }
                 )
                 item {
-                    AddBankAccount(AccountsData.accountAdder, navigateToCardAdder = {selectedAccountIndex = 1; chosenAccount = AccountsData.normalAccount})
+                    AddBankAccount(AccountsData.accountAdder, navigateToCardAdder = {isForEditing.value = false; selectedAccountIndex = 1; chosenAccount = AccountsData.normalAccount})
                 }
             }
             Divider(
@@ -126,7 +126,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
                     }
                 )
                 item {
-                    AddBankAccount(AccountsData.goalAdder, navigateToCardAdder = { selectedAccountIndex = 1; chosenAccount = AccountsData.goalAccount})
+                    AddBankAccount(AccountsData.goalAdder, navigateToCardAdder = { isForEditing.value = false; selectedAccountIndex = 1; chosenAccount = AccountsData.goalAccount})
                 }
             }
 
@@ -213,40 +213,7 @@ fun ChooseAccountCompose(
 
 }
 
-@Composable
-fun SetAccountCurrencyType(
-    openDialog: MutableState<Boolean>,
-    returnType: (type: String) -> Unit,
-) {
-    if (openDialog.value) {
-        Dialog(
-            onDismissRequest = {
-                openDialog.value = false
-            }
-        ) {
 
-            Column(modifier = Modifier
-                .padding(24.dp)
-                .fillMaxHeight(0.6f)
-                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                .fillMaxHeight(0.35f)
-                .background(
-                    whiteSurface
-                ), verticalArrangement = Arrangement.Center) {
-                Row(modifier = Modifier.padding(16.dp,0.dp,0.dp,0.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Start) {
-                    Text(
-                        modifier = Modifier.padding(0.dp),
-                        text = "Новий Рахунок",
-                        fontWeight = FontWeight.W500,
-                        color = Color.Black,
-                        fontSize = 16.sp
-                    )
-                }
-            }
-        }
-    }
-
-}
 
 
 @Composable
@@ -328,8 +295,10 @@ fun SumMoneyInfo(infoText: String , numberOfMoney: Double , currency:String) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
         Text(text = infoText, color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 14.sp)
-        if (numberOfMoney != 0.0) Text(text = ("$numberOfMoney $currency"), color = currencyColor, fontWeight = FontWeight.W500 , fontSize = 15.sp)
-        else if (numberOfMoney == 0.0) Text(text = ("0.0 $"), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 15.sp)
+
+        if (numberOfMoney > 0.0) Text(text = ("$numberOfMoney $currency"), color = currencyColor, fontWeight = FontWeight.W500 , fontSize = 15.sp)
+        else if (numberOfMoney < 0.0) Text(text = ("$numberOfMoney $currency"), color = currencyColorSpent, fontWeight = FontWeight.W500 , fontSize = 15.sp)
+        else Text(text = ("0.0 $"), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 15.sp)
     }
 }
 
@@ -423,7 +392,7 @@ private fun CustomDivider(){
 @Composable
 private fun textForAccount(account: Account, modifier: Modifier = Modifier){
     Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black , fontSize = 14.sp)
-    Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) , text = (account.balance.toString() + " " + account.currencyType), color = currencyColor, fontWeight = FontWeight.W400 , fontSize = 14.sp)
+    Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) , text = if(account.isForDebt) (account.debt.toString() + " " + account.currencyType) else (account.balance.toString() + " " + account.currencyType), color = if(account.isForDebt) currencyColorSpent else if (account.balance > 0) currencyColor else currencyColorZero, fontWeight = FontWeight.W400 , fontSize = 14.sp)
 }
 
 

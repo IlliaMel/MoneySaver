@@ -83,11 +83,9 @@ class AccountsViewModel @Inject constructor(
 
     fun loadSavingsAccountSum() : Double{
         var sum : Double = 0.0
-        state.accountList.let{
+        state.goalList.let{
             it.forEach(){
-                if(it.isForGoal){
                     sum+=it.balance
-                }
             }
         }
         return sum

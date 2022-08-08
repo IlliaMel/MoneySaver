@@ -5,14 +5,30 @@ import com.example.moneysaver.R
 import com.example.moneysaver.domain.account.Account
 import java.util.*
 
+
+data class CurrencyType(
+    val description: String = "USA",
+    val currency: String = "$"
+)
+
 object AccountsData {
+
+    val currencyTypes = mutableListOf(
+        CurrencyType(description = "European Euro" , currency = "€"),
+        CurrencyType(description = "USA Dollar" , currency = "$"),
+        CurrencyType(description = "Ukrainian Hryvnia" , currency = "₴"),
+        CurrencyType(description = "Pound" , currency = "£"),
+        CurrencyType(description = "Yuan" , currency = "¥"),
+    )
+
+
 
     val deptAccount = Account(
         accountImg = R.drawable.cash,
         currencyType = "$",
         title = "Car Dept",
         description = "Dept for the car",
-        debt = 1000.0,
+        debt = 0.0,
         isForDebt = true
     )
 
@@ -21,8 +37,8 @@ object AccountsData {
         currencyType = "$",
         title = "Cash",
         description = "Salary",
-        balance = 1000.0,
-        creditLimit = 1000.0,
+        balance = 0.0,
+        creditLimit = 0.0,
     )
 
     val goalAccount = Account(
@@ -32,7 +48,7 @@ object AccountsData {
         description = "For trip",
         balance = 0.0,
         creditLimit = 0.0,
-        goal = 1000.0,
+        goal = 0.0,
         isForGoal = true
     )
 
