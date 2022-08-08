@@ -80,7 +80,11 @@ fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) 
         startDate = minDate,
         endDate = maxDate
     )
-    SelectRangeSubDialog(openDialog = openSelectRangeSubDialog)
+    SelectRangeSubDialog(
+        openDialog = openSelectRangeSubDialog,
+        startDate = minDate,
+        endDate = maxDate
+    )
     DatePickerDialog(
         openDialog = openPickDateSubDialog,
         startDate = minDate,
@@ -202,6 +206,11 @@ private fun ChoseDateRangeDialog(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
+                            .clickable {
+                                startDate.value = null
+                                endDate.value = null
+                                openDialog.value = false
+                            }
                             .padding(5.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -373,8 +382,16 @@ private fun ChoseDateRangeDialog(
 }
 
 @Composable
-private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>) {
+private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: MutableState<Date?>, endDate: MutableState<Date?>) {
+    val openStartDateDialog = remember { mutableStateOf(false) }
+    val openEndDateDialog = remember { mutableStateOf(false) }
+
     if (openDialog.value) {
+        if(startDate.value==null || endDate.value==null) {
+            startDate.value = getCurrentMonthDates().first
+            endDate.value = getCurrentMonthDates().second
+        }
+
         Dialog(
             onDismissRequest = {
                 openDialog.value = false
@@ -407,6 +424,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>) {
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
+                            .clickable { openStartDateDialog.value=true }
                             .padding(5.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -424,7 +442,9 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>) {
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = "2 Aug 2022", fontSize = 14.sp, color = Color.Gray)
+                        val monthAbr = getNameOfMonthByNumber(startDate.value!!.month).take(3);
+                        val dateText = startDate.value!!.date.toString() +" " + monthAbr +" " + getYear(startDate.value!!)
+                        Text(text = dateText, fontSize = 14.sp, color = Color.Gray)
                     }
                     Divider(modifier = Modifier
                         .width(1.dp)
@@ -433,6 +453,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>) {
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
+                            .clickable { openEndDateDialog.value=true }
                             .padding(5.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -450,7 +471,9 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>) {
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = "7 Aug 2022", fontSize = 14.sp, color = Color.Gray)
+                        val monthAbr = getNameOfMonthByNumber(endDate.value!!.month).take(3);
+                        val dateText = endDate.value!!.date.toString() +" " + monthAbr +" " + getYear(endDate.value!!)
+                        Text(text = dateText, fontSize = 14.sp, color = Color.Gray)
                     }
                 }
 
@@ -470,7 +493,141 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>) {
             }
 
         }
+
+        StartDatePickerDialog(openDialog = openStartDateDialog, startDate = startDate)
+        EndDatePickerDialog(openDialog = openEndDateDialog, endDate = endDate)
     }      
+}
+
+
+@Composable
+fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<Date?>, endDate: MutableState<Date?>) {
+    if(openDialog.value) {
+        Dialog(
+            onDismissRequest = {
+                openDialog.value = false
+            }
+        ) {
+            var year = Date().year
+            var month = Date().month
+            var date = Date().date
+            Column(modifier = Modifier.background(Color.White),horizontalAlignment = Alignment.CenterHorizontally) {
+                AndroidView(
+                    { CalendarView(it) },
+                    modifier = Modifier
+                        .wrapContentWidth(),
+                    update = { views ->
+                        views.setOnDateChangeListener { _, _year, _month, _date ->
+                            year = _year - 1900
+                            month = _month
+                            date = _date
+                        }
+                    }
+                )
+                Button(onClick = {
+                    pickDate(Date(year, month, date),startDate, endDate)
+                    openDialog.value = false
+                },
+                    shape = RoundedCornerShape(30.dp)) {
+                    Text(text = "OK", color = Color.White)
+                }
+            }
+
+        }
+    }
+}
+
+@Composable
+fun StartDatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<Date?>) {
+    if(openDialog.value) {
+        Dialog(
+            onDismissRequest = {
+                openDialog.value = false
+            }
+        ) {
+            var year = if(startDate.value!=null) startDate.value!!.year else Date().year
+            var month = if(startDate.value!=null) startDate.value!!.month else Date().month
+            var date =if(startDate.value!=null) startDate.value!!.date else  Date().date
+            Column(modifier = Modifier.background(Color.White),horizontalAlignment = Alignment.CenterHorizontally) {
+                AndroidView(
+                    { CalendarView(it) },
+                    modifier = Modifier
+                        .wrapContentWidth(),
+                    update = { views ->
+                        views.setOnDateChangeListener { _, _year, _month, _date ->
+                            year = _year - 1900
+                            month = _month
+                            date = _date
+                        }
+                    }
+                )
+                Button(onClick = {
+                    pickStartDate(Date(year, month, date), startDate)
+                    openDialog.value = false
+                },
+                    shape = RoundedCornerShape(30.dp)) {
+                    Text(text = "OK", color = Color.White)
+                }
+            }
+
+        }
+    }
+}
+
+@Composable
+fun EndDatePickerDialog(openDialog: MutableState<Boolean>, endDate: MutableState<Date?>) {
+    if(openDialog.value) {
+        Dialog(
+            onDismissRequest = {
+                openDialog.value = false
+            }
+        ) {
+            var year = if(endDate.value!=null) endDate.value!!.year else Date().year
+            var month = if(endDate.value!=null) endDate.value!!.month else Date().month
+            var date =if(endDate.value!=null) endDate.value!!.date else  Date().date
+            Column(modifier = Modifier.background(Color.White),horizontalAlignment = Alignment.CenterHorizontally) {
+                AndroidView(
+                    { CalendarView(it) },
+                    modifier = Modifier
+                        .wrapContentWidth(),
+                    update = { views ->
+                        views.setOnDateChangeListener { _, _year, _month, _date ->
+                            year = _year - 1900
+                            month = _month
+                            date = _date
+                        }
+                    }
+                )
+                Button(onClick = {
+                    pickEndDate(Date(year, month, date), endDate)
+                    openDialog.value = false
+                },
+                    shape = RoundedCornerShape(30.dp)) {
+                    Text(text = "OK", color = Color.White)
+                }
+            }
+
+        }
+    }
+}
+
+private fun pickStartDate(setDate: Date, startDate: MutableState<Date?>) {
+    startDate.value = Date(setDate.year, setDate.month, setDate.date)
+    startDate.value!!.hours = 0
+    startDate.value!!.minutes = 0
+    startDate.value!!.seconds = 0
+}
+
+private fun pickEndDate(setDate: Date, endDate: MutableState<Date?>) {
+    endDate.value = Date(setDate.year, setDate.month, setDate.date)
+    endDate.value!!.hours = 23
+    endDate.value!!.minutes = 59
+    endDate.value!!.seconds = 59
+}
+
+private fun pickDate(setDate: Date, startDate: MutableState<Date?>, endDate: MutableState<Date?>) {
+    pickStartDate(setDate, startDate)
+    pickEndDate(setDate, endDate)
 }
 
 private fun getCurrentDayDates(): Pair<Date, Date> {
@@ -531,53 +688,4 @@ private fun getCurrentYearDates(): Pair<Date, Date> {
     end.minutes = 59
     end.seconds = 59
     return start to end
-}
-
-@Composable
-fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<Date?>, endDate: MutableState<Date?>) {
-    if(openDialog.value) {
-        Dialog(
-            onDismissRequest = {
-                openDialog.value = false
-            }
-        ) {
-            var year = Date().year
-            var month = Date().month
-            var date = Date().date
-            Column(modifier = Modifier.background(Color.White),horizontalAlignment = Alignment.CenterHorizontally) {
-                AndroidView(
-                    { CalendarView(it) },
-                    modifier = Modifier
-                        .wrapContentWidth(),
-                    update = { views ->
-                        views.setOnDateChangeListener { _, _year, _month, _date ->
-                            year = _year - 1900
-                            month = _month
-                            date = _date
-                        }
-                    }
-                )
-                Button(onClick = {
-                    pickDate(Date(year, month, date),startDate, endDate)
-                    openDialog.value = false
-                },
-                    shape = RoundedCornerShape(30.dp)) {
-                    Text(text = "OK", color = Color.White)
-                }
-            }
-
-        }
-    }
-}
-
-private fun pickDate(setDate: Date, startDate: MutableState<Date?>, endDate: MutableState<Date?>) {
-    startDate.value = Date(setDate.year, setDate.month, setDate.date)
-    startDate.value!!.hours = 0
-    startDate.value!!.minutes = 0
-    startDate.value!!.seconds = 0
-    endDate.value = Date(setDate.year, setDate.month, setDate.date)
-    endDate.value!!.hours = 23
-    endDate.value!!.minutes = 59
-    endDate.value!!.seconds = 59
-    Log.d("TAG", "s: "+startDate.value!!+", e: "+endDate.value!!)
 }
