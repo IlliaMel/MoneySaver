@@ -27,6 +27,7 @@ import com.example.moneysaver.presentation.transactions.additional_composes.getN
 import com.example.moneysaver.presentation.transactions.additional_composes.getYear
 import com.example.moneysaver.ui.theme.whiteSurface
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) {
@@ -44,7 +45,7 @@ fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) 
 
         IconButton(modifier = Modifier
             .padding(8.dp, 0.dp, 8.dp, 0.dp)
-            .size(40.dp, 40.dp), onClick = { }) {
+            .size(40.dp, 40.dp), onClick = { swapDates(startDate = minDate, endDate = maxDate, swapRight = false)}) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 tint = whiteSurface,
@@ -56,7 +57,7 @@ fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) 
 
         IconButton(modifier = Modifier
             .padding(8.dp, 0.dp, 8.dp, 0.dp)
-            .size(40.dp, 40.dp), onClick = { }) {
+            .size(40.dp, 40.dp), onClick = { swapDates(startDate = minDate, endDate = maxDate, swapRight = true)}) {
             Icon(
                 imageVector = Icons.Default.ArrowForward,
                 tint = whiteSurface,
@@ -313,6 +314,11 @@ private fun ChoseDateRangeDialog(
                         modifier = Modifier
                             .weight(1f)
                             .height(IntrinsicSize.Min)
+                            .clickable {
+                                startDate.value = getCurrentYearDates().first
+                                endDate.value = getCurrentYearDates().second
+                                openDialog.value = false
+                            }
                             .padding(5.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -323,11 +329,6 @@ private fun ChoseDateRangeDialog(
                                 .padding(2.dp)
                                 .width(40.dp)
                                 .height(25.dp)
-                                .clickable {
-                                    startDate.value = getCurrentYearDates().first
-                                    endDate.value = getCurrentYearDates().second
-                                    openDialog.value = false
-                                }
                                 .clip(RoundedCornerShape(4.dp))
                                 .background(Color.Gray),
                             textAlign = TextAlign.Center,
@@ -697,4 +698,81 @@ private fun getShortDateRangeString(startDate: Date, endDate: Date): String {
 
 private fun getMonthAbr(date: Date): String {
     return getNameOfMonthByNumber(date.month).take(3);
+}
+
+private fun swapDates(startDate: MutableState<Date?>, endDate: MutableState<Date?>, swapRight: Boolean = true) {
+    if(startDate.value==null || endDate.value==null) return
+
+    val c1 = Calendar.getInstance()
+    c1.time = startDate.value!!
+    val c1Year = c1.get(Calendar.YEAR)
+    val c1Month = c1.get(Calendar.MONTH)
+    val c1Date =c1.get(Calendar.DAY_OF_MONTH)
+
+    val c2 = Calendar.getInstance()
+    c2.time = endDate.value!!
+    val c2Year = c2.get(Calendar.YEAR)
+    val c2Month = c2.get(Calendar.MONTH)
+    val c2Date =c2.get(Calendar.DAY_OF_MONTH)
+
+    var isSwapped = false
+
+    if(c1Year==c2Year) {
+        if(c1Month==c2Month) {
+            if(c1Date==c2Date) {
+                // Add one day
+                if (swapRight) {
+                    c1.add(Calendar.DATE, 1)
+                    c2.add(Calendar.DATE, 1)
+                } else {
+                    c1.add(Calendar.DATE, -1)
+                    c2.add(Calendar.DATE, -1)
+                }
+                isSwapped=true
+            } else if(c1Date==1 && c2Date==c1.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+                // Add one month
+                if (swapRight) {
+                    c1.add(Calendar.DATE, c1.getActualMaximum(Calendar.DAY_OF_MONTH)) //add max of this month
+                    c2.add(Calendar.DATE, c1.getActualMaximum(Calendar.DAY_OF_MONTH)) //add max of next month
+                } else {
+                    c1.add(Calendar.MONTH, -1) //add max of this month
+                    c2.time = c1.time
+                    c2.set(Calendar.DAY_OF_MONTH, c1.getActualMaximum(Calendar.DAY_OF_MONTH))
+                }
+
+                isSwapped=true
+            }
+        } else if(c1Month==0&&c1Date==1&&c2Month==11&&c2Date==31) {
+            // Add one year
+            if (swapRight) {
+                c1.add(Calendar.YEAR, 1)
+                c2.add(Calendar.YEAR, 1)
+            } else {
+                c1.add(Calendar.YEAR, -1)
+                c2.add(Calendar.YEAR, -1)
+            }
+
+            isSwapped=true
+        }
+    }
+
+    if(!isSwapped) {
+        val diff = getDifferenceBetweenCalendarDates(c1, c2)
+        if (swapRight) {
+            c1.add(Calendar.DATE, diff)
+            c2.add(Calendar.DATE, diff)
+        } else {
+            c1.add(Calendar.DATE, -diff)
+            c2.add(Calendar.DATE, -diff)
+        }
+
+    }
+
+    pickStartDate(c1.time, startDate)
+    pickEndDate(c2.time, endDate)
+}
+
+private fun getDifferenceBetweenCalendarDates(c1: Calendar, c2: Calendar): Int {
+    val millionSeconds = c2.timeInMillis - c1.timeInMillis
+    return TimeUnit.MILLISECONDS.toDays(millionSeconds).toInt()
 }
