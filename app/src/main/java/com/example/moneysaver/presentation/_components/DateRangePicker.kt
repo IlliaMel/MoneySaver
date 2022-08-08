@@ -1,13 +1,8 @@
 package com.example.moneysaver.presentation._components
 
-import android.app.DatePickerDialog
-import android.util.Log
 import android.widget.CalendarView
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -22,18 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
-import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.presentation.transactions.additional_composes.getNameOfMonthByNumber
 import com.example.moneysaver.presentation.transactions.additional_composes.getYear
-import com.example.moneysaver.ui.theme.dividerColor
 import com.example.moneysaver.ui.theme.whiteSurface
 import java.util.*
 
@@ -96,8 +87,6 @@ fun DateRangeDisplay(fromDateState: MutableState<Date?>, toDateState: MutableSta
     if(fromDateState.value!=null && toDateState.value!=null) {
         val from = fromDateState.value!!
         val to = toDateState.value!!
-        val startMonthAbr = getNameOfMonthByNumber(from.month).take(3);
-        val endMonthAbr = getNameOfMonthByNumber(to.month).take(3);
 
         Row(
             modifier = Modifier
@@ -106,11 +95,8 @@ fun DateRangeDisplay(fromDateState: MutableState<Date?>, toDateState: MutableSta
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(modifier=Modifier.padding(4.dp, 0.dp), imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
-            var dateText = from.date.toString() +" " + startMonthAbr +" " + getYear(from) +" - "+ to.date.toString() +" " + endMonthAbr +" " + getYear(to)
-            if(from.year == to.year &&  from.month == to.month && from.date == to.date)
-                dateText = from.date.toString() +" " + startMonthAbr +" " + getYear(from)
             Text(
-                text = dateText,
+                text = getShortDateRangeString(from, to),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color= Color.White
@@ -190,7 +176,11 @@ private fun ChoseDateRangeDialog(
                     ) {
                         Icon(imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
                         Text(text = "Select range")
-                        Text(text = "6 Aug 2021 - 7 Aug 2022", fontSize = 14.sp, color = Color.Gray)
+                        val (d1, d2) = getCurrentMonthDates()
+                        var shortRangeText = getShortDateRangeString(d1, d2)
+                        if(startDate.value!=null && endDate!=null)
+                            shortRangeText = getShortDateRangeString(startDate.value!!, endDate.value!!)
+                        Text(text = shortRangeText, fontSize = 14.sp, color = Color.Gray)
                     }
                 }
 
@@ -271,7 +261,9 @@ private fun ChoseDateRangeDialog(
                             color= Color.White
                         )
                         Text(text = "Week")
-                        Text(text = "7 - 13 Aug", fontSize = 14.sp, color = Color.Gray)
+                        val (d1, d2) = getCurrentWeekDates()
+                        val weekShortText = d1.date.toString()+" "+ getMonthAbr(d1)+" - "+d2.date.toString()+" "+ getMonthAbr(d2)
+                        Text(text = weekShortText, fontSize = 14.sp, color = Color.Gray)
                     }
                     Divider(modifier = Modifier
                         .width(1.dp)
@@ -303,7 +295,9 @@ private fun ChoseDateRangeDialog(
                             color= Color.White
                         )
                         Text(text = "Today")
-                        Text(text = "August 7", fontSize = 14.sp, color = Color.Gray)
+                        val d1 = getCurrentDayDates().first
+                        val todayShortText = getNameOfMonthByNumber(d1.month)+" "+d1.date.toString()
+                        Text(text = todayShortText, fontSize = 14.sp, color = Color.Gray)
                     }
                 }
 
@@ -342,7 +336,9 @@ private fun ChoseDateRangeDialog(
                             color= Color.White
                         )
                         Text(text = "Year")
-                        Text(text = "Year 2022", fontSize = 14.sp, color = Color.Gray)
+                        val d1 = Date()
+                        val yearShortText = "Year "+getYear(d1)
+                        Text(text = yearShortText, fontSize = 14.sp, color = Color.Gray)
                     }
                     Divider(modifier = Modifier
                         .width(1.dp)
@@ -373,7 +369,9 @@ private fun ChoseDateRangeDialog(
                             color= Color.White
                         )
                         Text(text = "Month")
-                        Text(text = "August 2022", fontSize = 14.sp, color = Color.Gray)
+                        val d1 = Date()
+                        val monthShortText = getNameOfMonthByNumber(d1.month)+" "+ getYear(d1)
+                        Text(text = monthShortText, fontSize = 14.sp, color = Color.Gray)
                     }
                 }
             }
@@ -442,9 +440,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        val monthAbr = getNameOfMonthByNumber(startDate.value!!.month).take(3);
-                        val dateText = startDate.value!!.date.toString() +" " + monthAbr +" " + getYear(startDate.value!!)
-                        Text(text = dateText, fontSize = 14.sp, color = Color.Gray)
+                        Text(text = getShortDateString(startDate.value!!), fontSize = 14.sp, color = Color.Gray)
                     }
                     Divider(modifier = Modifier
                         .width(1.dp)
@@ -471,9 +467,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        val monthAbr = getNameOfMonthByNumber(endDate.value!!.month).take(3);
-                        val dateText = endDate.value!!.date.toString() +" " + monthAbr +" " + getYear(endDate.value!!)
-                        Text(text = dateText, fontSize = 14.sp, color = Color.Gray)
+                        Text(text = getShortDateString(endDate.value!!), fontSize = 14.sp, color = Color.Gray)
                     }
                 }
 
@@ -688,4 +682,19 @@ private fun getCurrentYearDates(): Pair<Date, Date> {
     end.minutes = 59
     end.seconds = 59
     return start to end
+}
+
+private fun getShortDateString(date: Date): String {
+    return date.date.toString() + " " + getMonthAbr(date) + " " + getYear(date)
+}
+
+private fun getShortDateRangeString(startDate: Date, endDate: Date): String {
+    if(startDate.year==endDate.year&&startDate.month==endDate.month&&startDate.date==endDate.date) {
+        return getShortDateString(startDate)
+    }
+    return getShortDateString(startDate)+" - "+ getShortDateString(endDate)
+}
+
+private fun getMonthAbr(date: Date): String {
+    return getNameOfMonthByNumber(date.month).take(3);
 }
