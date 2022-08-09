@@ -63,7 +63,9 @@ fun EditAccount(
     var setCurrencyTypeChange = remember { mutableStateOf(false) }
     var setDescriptionChange = remember { mutableStateOf(false) }
     var setBalance = remember { mutableStateOf(false) }
-    
+    var setCreditLimit = remember { mutableStateOf(false) }
+
+
     var currencyType =  remember { mutableStateOf(account.currencyType) }
     var description =  remember { mutableStateOf(account.description) }
     var title =  remember { mutableStateOf(account.title) }
@@ -71,6 +73,7 @@ fun EditAccount(
 
     var amountOfDept =  remember { mutableStateOf(account.debt) }
     var amountOfBalance =  remember { mutableStateOf(account.balance) }
+    var amountOfCreditLimit =  remember { mutableStateOf(account.creditLimit) }
 
 
 
@@ -102,13 +105,23 @@ Account(description = description.value,
                     currencyType = currencyType.value,
                     title = it)
  */
-        TopBarAccounts(title = title.value, typeOfAccount= "Edit Account" ,
+
+        TopBarAccounts(title = title.value, typeOfAccount = if(isEditing)  "Edit Account" else  "New Account",
             onAddAccountAction = {onAddAccountAction(
                 if(isEditing){
                     if(type == 1) {
                         Account(
                             uuid = account.uuid,
                             debt = amountOfDept.value,
+                            description = description.value,
+                            currencyType = currencyType.value,
+                            title = it
+                        )
+                    }else if(type == 0) {
+                        Account(
+                            uuid = account.uuid,
+                            creditLimit = amountOfCreditLimit.value,
+                            balance = amountOfBalance.value,
                             description = description.value,
                             currencyType = currencyType.value,
                             title = it
@@ -125,6 +138,7 @@ Account(description = description.value,
                 }else{
                     if(type == 0){
                         Account(
+                            creditLimit = amountOfCreditLimit.value,
                             balance = amountOfBalance.value,
                             description = description.value,
                             currencyType = currencyType.value,
@@ -202,6 +216,16 @@ Account(description = description.value,
                     fontWeight = FontWeight.W500,
                     fontSize = 18.sp
                 )
+
+                var moneyValue: String = ""
+                when(type){
+                    0-> moneyValue = "Credit Limit"
+
+                    1-> moneyValue = "Amount Of Debt"
+
+                    2-> moneyValue = "Main Goal"
+                }
+
                 Row(modifier = Modifier
                     .padding(0.dp, 0.dp, 0.dp, 0.dp)
                     .fillMaxWidth()
@@ -210,7 +234,7 @@ Account(description = description.value,
                     verticalAlignment = Alignment.CenterVertically){
                     Text(
                         modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
-                        text = "Account Balance",
+                        text = moneyValue,
                         color = Color.Black,
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp
@@ -226,29 +250,35 @@ Account(description = description.value,
 
                 }
                 Divider()
-                Row(modifier = Modifier
-                    .padding(0.dp, 0.dp, 0.dp, 0.dp)
-                    .fillMaxWidth()
-                    .clickable {},
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically){
-                    Text(
-                        modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
-                        text = "Credit Limit",
-                        color = Color.Black,
-                        fontWeight = FontWeight.W400,
-                        fontSize = 16.sp
-                    )
 
-                    Text(
-                        modifier = Modifier.padding(0.dp, 0.dp, 16.dp, 0.dp),
-                        text = account.creditLimit.toString(),
-                        color = Color.Black,
-                        fontWeight = FontWeight.W400,
-                        fontSize = 16.sp
-                    )
+                if(type == 0) {
+                    Row(
+                        modifier = Modifier
+                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                            .fillMaxWidth()
+                            .clickable {setCreditLimit.value = true},
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
+                            text = "Credit Limit",
+                            color = Color.Black,
+                            fontWeight = FontWeight.W400,
+                            fontSize = 16.sp
+                        )
+
+                        Text(
+                            modifier = Modifier.padding(0.dp, 0.dp, 16.dp, 0.dp),
+                            text = amountOfCreditLimit.value.toString(),
+                            color = currencyColor,
+                            fontWeight = FontWeight.W400,
+                            fontSize = 16.sp
+                        )
+                    }
                 }
                 Divider()
+               /*
                 Row(modifier = Modifier
                     .padding(0.dp, 0.dp, 0.dp, 0.dp)
                     .fillMaxWidth()
@@ -269,6 +299,7 @@ Account(description = description.value,
                     )
 
                 }
+                */
             }
 
             Box(modifier = Modifier
@@ -305,6 +336,8 @@ Account(description = description.value,
         }
 
     }
+
+    SetAccountBalance(openDialog = setCreditLimit, returnType = {setCreditLimit.value = false; amountOfCreditLimit.value = it.toDouble() })
     SetAccountBalance(openDialog = setBalance, returnType = {setBalance.value = false; if(account.isForDebt) amountOfDept.value = it.toDouble() else amountOfBalance.value = it.toDouble() })
     SetAccountDescription(description = account.description,openDialog = setDescriptionChange, returnType = {setDescriptionChange.value = false; description.value = it })
     SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = {setCurrencyTypeChange.value = false; currencyType.value = it })

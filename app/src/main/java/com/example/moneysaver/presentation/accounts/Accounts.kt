@@ -368,9 +368,21 @@ fun AccountListItem(account: Account, navigateToCardSettings: (Account) -> Unit)
                 textForAccount(account = account)
             }
 
+                Column(
+                    modifier = Modifier
+                        .padding(0.dp, 8.dp, 0.dp, 8.dp),
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),text = account.description,maxLines = 2,
+                        overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.W400 ,color = currencyColorZero, fontSize = 14.sp)
+                    if(!account.isForGoal && !account.isForDebt)
+                    Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),text = account.creditLimit.toString() + " " + account.currencyType,maxLines = 2,
+                        overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.W400 ,color = currencyColor, fontSize = 14.sp)
+                }
 
-                Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),text = account.description,maxLines = 2,
-                    overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.W400 ,color = currencyColorZero, fontSize = 14.sp)
+
+
             }
         }
     }
