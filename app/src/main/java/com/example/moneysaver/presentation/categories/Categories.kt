@@ -189,7 +189,7 @@ fun Categories(
                                 .padding(4.dp)
                                 ,sliceWidth = 13.dp
                                 ,chartSize = 150.dp
-                                ,data = getChartData(viewModel.state.categoriesSums.values.toList())[4]){
+                                ,data = getChartData(viewModel.state.categoriesSums.values.toList().filter { it > 0.0 })[0]){
 
                             }
                         }
