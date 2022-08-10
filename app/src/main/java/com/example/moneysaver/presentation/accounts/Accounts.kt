@@ -36,8 +36,12 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.presentation.TabsForScreens
@@ -64,12 +68,11 @@ fun Accounts(onNavigationIconClick: () -> Unit,
     }
 
     var setSelectedAccount = remember { mutableStateOf(false) }
-
+    var isSelectedFilterAccount = remember { mutableStateOf(false) }
 
     var isForEditing = remember { mutableStateOf(false) }
 
-
-
+    val chosenAccountFilter = remember { mutableStateOf(AccountsData.accountsList[0]) }
 
     if(selectedAccountIndex == 0) {
         Column(
@@ -79,8 +82,9 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
         ) {
 
+
             TopBarAccounts(onAddAccountAction = { setSelectedAccount.value = true },
-                onNavigationIconClick)
+                onNavigationIconClick, onFilterClick = {isSelectedFilterAccount.value = true}, chosenAccountFilter)
             SumMoneyInfo(
                 stringResource(R.string.accounts_name_label),
                 viewModel.loadBankAccountSum(),
@@ -143,7 +147,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
         }
     }
 
-
+    PopUp(openDialog = isSelectedFilterAccount,accountList = viewModel.state.simpleList , chosenAccountFilter = chosenAccountFilter)
 
     ChooseAccountCompose (openDialog = setSelectedAccount,
         normalAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
@@ -154,6 +158,74 @@ fun Accounts(onNavigationIconClick: () -> Unit,
             AccountsData.goalAccount;})
 
 }
+
+
+@Composable
+fun PopUp(openDialog: MutableState<Boolean>,accountList: List<Account>,chosenAccountFilter: MutableState<Account>){
+    if(openDialog.value)
+    Box (){
+
+        Popup(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            alignment = Alignment.TopCenter,
+           // offset = IntOffset(LocalConfiguration.current.screenWidthDp/2 - 210/2 ,LocalConfiguration.current.screenHeightDp/10),
+            properties = PopupProperties()) {
+            ChooseAccount(openDialog = openDialog, accountList = accountList, chosenAccountFilter = chosenAccountFilter)
+        }
+    }
+
+}
+
+@Composable
+private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<Account>, chosenAccountFilter: MutableState<Account>) {
+    LazyColumn(
+        modifier = Modifier
+            .width(210.dp)
+            .width(100.dp)
+            .background(Color.White)
+            .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+    ) {
+        items(
+            items = accountList,
+            itemContent = {
+                Column() {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                openDialog.value = false
+                                chosenAccountFilter.value = it
+                            }
+                            .background(if (it == chosenAccountFilter.value) Color(0xff59aab3) else Color.White)
+                            .padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = it.accountImg),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .padding(4.dp, 2.dp, 12.dp, 2.dp)
+                                .width(42.dp)
+                                .height(31.dp)
+                                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                        )
+                        Column() {
+                            Text(it.title, fontSize = 14.sp)
+                            val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else ""))+"$ "+it.balance
+                            val balanceColor = if(it.balance>0) Color.Green else (if(it.balance < 0) Color.Red else Color.Gray)
+                            Text(text = balanceText, color = balanceColor, fontSize = 12.sp)
+                        }
+                    }
+                    Divider(modifier = Modifier.background(dividerColor))
+                }
+            }
+        )
+    }
+}
+
 
 @Composable
 fun ChooseAccountCompose(
@@ -217,7 +289,10 @@ fun ChooseAccountCompose(
 
 
 @Composable
-fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> Unit){
+fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> Unit, onFilterClick: () -> Unit,chosenAccountFilter: MutableState<Account>){
+
+
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -253,12 +328,13 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
 
                 Column(modifier = Modifier
                     .fillMaxHeight()
-                    .padding(8.dp),
+                    .padding(8.dp)
+                    .clickable{onFilterClick()},
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
-                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - Cash", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                    Text(text = ("3423 $"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - ${chosenAccountFilter.value.title} ▾", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
+                    Text(text = ("${chosenAccountFilter.value.balance.toString()} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
 
                     Column(modifier = Modifier
                         .fillMaxHeight()

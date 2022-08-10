@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface AccountsRepository {
 
+    fun getSimpleAccounts(): Flow<List<Account>>
+
     fun getAccounts(): Flow<List<Account>>
 
     fun getGoalAccounts(): Flow<List<Account>>

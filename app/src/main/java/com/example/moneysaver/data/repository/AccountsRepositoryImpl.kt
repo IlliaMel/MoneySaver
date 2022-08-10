@@ -11,6 +11,11 @@ class AccountsRepositoryImpl(
 ) : AccountsRepository {
 
 
+
+    override fun getSimpleAccounts(): Flow<List<Account>> {
+        return dao.getSimpleAccounts()
+    }
+
     override fun getAccounts(): Flow<List<Account>> {
         return dao.getAccounts()
     }

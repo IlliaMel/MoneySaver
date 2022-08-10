@@ -24,6 +24,7 @@ class AccountsViewModel @Inject constructor(
     init {
         loadAccounts()
         loadGoalAccounts()
+        loadSimpleAccounts()
     }
 
 
@@ -50,6 +51,16 @@ class AccountsViewModel @Inject constructor(
                 )
             }.launchIn(viewModelScope)
     }
+
+    fun loadSimpleAccounts() {
+        repository.getSimpleAccounts()
+            .onEach { list ->
+                state = state.copy(
+                    simpleList = list,
+                )
+            }.launchIn(viewModelScope)
+    }
+
 
 
     fun addAccount(account: Account) {
