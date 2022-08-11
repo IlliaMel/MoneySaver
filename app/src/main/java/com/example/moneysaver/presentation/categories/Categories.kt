@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.categories.additional_composes.SimpleColors
 import hu.ma.charts.legend.data.LegendPosition
@@ -47,6 +48,7 @@ import hu.ma.charts.pie.data.PieChartEntry
 @Composable
 fun Categories(
     onNavigationIconClick: () -> Unit,
+    chosenAccountFilter: MutableState<Account>,
     viewModel: CategoriesViewModel = hiltViewModel()
 ) {
 
@@ -68,7 +70,7 @@ fun Categories(
     else
         viewModel.loadCategoriesDataInDateRange(minDate.value!!, maxDate.value!!)
 
-    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, minDate = minDate, maxDate = maxDate)
+    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -307,7 +309,7 @@ fun MyChartParent() {
 }
 
 @Composable
-fun TopBarCategories(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>){
+fun TopBarCategories(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>,chosenAccountFilter: MutableState<Account>){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -345,8 +347,8 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit, minDate: MutableState<Da
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
-                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - Cash", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                    Text(text = ("3423 $"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
+                    Text(text = ("${chosenAccountFilter.value.balance.toString()} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                 }
 
                 IconButton(modifier = Modifier

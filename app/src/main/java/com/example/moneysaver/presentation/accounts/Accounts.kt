@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun Accounts(onNavigationIconClick: () -> Unit,
+             chosenAccountFilter: MutableState<Account>,
              viewModel: AccountsViewModel  = hiltViewModel()
 ){
 
@@ -72,7 +73,6 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
     var isForEditing = remember { mutableStateOf(false) }
 
-    val chosenAccountFilter = remember { mutableStateOf(AccountsData.accountsList[0]) }
 
     if(selectedAccountIndex == 0) {
         Column(
@@ -147,6 +147,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
         }
     }
 
+
     PopUp(openDialog = isSelectedFilterAccount,accountList = viewModel.state.simpleList , chosenAccountFilter = chosenAccountFilter)
 
     ChooseAccountCompose (openDialog = setSelectedAccount,
@@ -163,19 +164,20 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 @Composable
 fun PopUp(openDialog: MutableState<Boolean>,accountList: List<Account>,chosenAccountFilter: MutableState<Account>){
     if(openDialog.value)
-    Box (){
+        Dialog(
 
-        Popup(
             onDismissRequest = {
                 openDialog.value = false
-            },
-            alignment = Alignment.TopCenter,
-           // offset = IntOffset(LocalConfiguration.current.screenWidthDp/2 - 210/2 ,LocalConfiguration.current.screenHeightDp/10),
-            properties = PopupProperties()) {
-            ChooseAccount(openDialog = openDialog, accountList = accountList, chosenAccountFilter = chosenAccountFilter)
+            }
+        ) {
+            Box( modifier = Modifier.clip(RoundedCornerShape(corner = CornerSize(4.dp)))) {
+                ChooseAccount(
+                    openDialog = openDialog,
+                    accountList = accountList,
+                    chosenAccountFilter = chosenAccountFilter
+                )
+            }
         }
-    }
-
 }
 
 @Composable
@@ -183,7 +185,7 @@ private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<A
     LazyColumn(
         modifier = Modifier
             .width(210.dp)
-            .width(100.dp)
+            .height(220.dp)
             .background(Color.White)
             .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
     ) {
@@ -329,7 +331,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
                 Column(modifier = Modifier
                     .fillMaxHeight()
                     .padding(8.dp)
-                    .clickable{onFilterClick()},
+                    .clickable { onFilterClick() },
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
@@ -501,5 +503,5 @@ private fun AccountImage(account: Account) {
 @Preview
 @Composable
 fun PreviewItem() {
-    Accounts(onNavigationIconClick = {})
+   // Accounts(onNavigationIconClick = {})
 }

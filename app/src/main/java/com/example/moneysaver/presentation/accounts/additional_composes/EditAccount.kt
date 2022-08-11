@@ -219,7 +219,7 @@ Account(description = description.value,
 
                 var moneyValue: String = ""
                 when(type){
-                    0-> moneyValue = "Credit Limit"
+                    0-> moneyValue = "Balance"
 
                     1-> moneyValue = "Amount Of Debt"
 
@@ -651,7 +651,7 @@ fun TopBarAccounts(
                         Icon(
                             imageVector = Icons.Default.Close,
                             tint = whiteSurface,
-                            contentDescription = "Delete button"
+                            contentDescription = "Close button"
                         )
                     }
 

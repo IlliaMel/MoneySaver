@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation
 
+import EditCategory
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
@@ -102,7 +103,9 @@ class MainActivity : ComponentActivity() {
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent
                 )
-                MainUI()
+               // MainUI()
+
+                EditCategory(  isEditing = true, onCancelIconClick = {}  ,onAddCategoryAction = {} , onDeleteCategory = {} )
                // PopUp()
                 var setSelectedAccount = remember { mutableStateOf(true) }
               // SetAccountCurrencyType( setSelectedAccount, returnType = {})
@@ -127,6 +130,8 @@ fun MainUI(){
         var selectedTabIndex by remember {
             mutableStateOf(0)
         }
+
+        val chosenAccountFilter = remember { mutableStateOf(AccountsData.accountsList[0]) }
 
 
         Scaffold(
@@ -178,17 +183,17 @@ fun MainUI(){
                                 scope.launch {
                                     scaffoldState.drawerState.open()
                                 }
-                            },)
+                            },chosenAccountFilter)
                         1 -> Categories(onNavigationIconClick = {
                             scope.launch {
                                 scaffoldState.drawerState.open()
                             }
-                        })
+                        },chosenAccountFilter)
                         2 -> Transactions(onNavigationIconClick = {
                             scope.launch {
                                 scaffoldState.drawerState.open()
                             }
-                        }, navigateToTransaction = {})
+                        }, navigateToTransaction = {},chosenAccountFilter)
                     }
                 }
                 Row(modifier = Modifier.weight(0.8f)) {
