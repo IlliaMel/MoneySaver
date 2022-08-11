@@ -16,6 +16,8 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -278,6 +280,7 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                 ) {
                     if(isSearchOpened.value) {
                         val focusManager = LocalFocusManager.current
+                        val focusRequester = remember { FocusRequester() }
                         OutlinedTextField(
                             value = searchText,
                             onValueChange = {searchText=it},
@@ -293,11 +296,15 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                             ),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(5.dp),
+                                .padding(5.dp)
+                                .focusRequester(focusRequester),
                             colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Transparent, unfocusedBorderColor = Color.Transparent),
                             singleLine = true,
                             maxLines = 1
                         )
+                        LaunchedEffect(Unit) {
+                            focusRequester.requestFocus()
+                        }
                     } else {
                         Text(
                             modifier = Modifier
