@@ -103,9 +103,9 @@ class MainActivity : ComponentActivity() {
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent
                 )
-               // MainUI()
+                MainUI()
 
-                EditCategory(  isEditing = true, onCancelIconClick = {}  ,onAddCategoryAction = {} , onDeleteCategory = {} )
+               // EditCategory(  isEditing = true, onCancelIconClick = {}  ,onAddCategoryAction = {} , onDeleteCategory = {} )
                // PopUp()
                 var setSelectedAccount = remember { mutableStateOf(true) }
               // SetAccountCurrencyType( setSelectedAccount, returnType = {})

@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
+import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.presentation._components.*
@@ -50,6 +51,7 @@ import java.util.*
 fun Transactions(
     onNavigationIconClick: () -> Unit,
     navigateToTransaction: (Transaction) -> Unit,
+    chosenAccountFilter: MutableState<Account>,
     viewModel: TransactionsViewModel = hiltViewModel()
 ) {
 
@@ -96,7 +98,7 @@ fun Transactions(
             .background(whiteSurface)
     ) {
 
-        TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() }, minDate = minDate, maxDate = maxDate, transactionSearchText=transactionSearchText)
+        TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() }, minDate = minDate, maxDate = maxDate, transactionSearchText=transactionSearchText,chosenAccountFilter)
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
             sheetContent = {
@@ -217,7 +219,7 @@ fun filterBySearchRequest(transactions: List<Transaction>, searchRequest: String
 }
 
 @Composable
-fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, transactionSearchText: MutableState<String>) {
+fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, transactionSearchText: MutableState<String>,chosenAccountFilter: MutableState<Account>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -306,20 +308,9 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                             focusRequester.requestFocus()
                         }
                     } else {
-                        Text(
-                            modifier = Modifier
-                                .padding(0.dp, 12.dp, 0.dp, 4.dp),
-                            text = "Filter - Cash",
-                            color = whiteSurface,
-                            fontWeight = FontWeight.W300,
-                            fontSize = 16.sp
-                        )
-                        Text(
-                            text = ("3423 $"),
-                            color = whiteSurface,
-                            fontWeight = FontWeight.W500,
-                            fontSize = 16.sp
-                        )
+                        Text(modifier = Modifier
+                            .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
+                        Text(text = ("${chosenAccountFilter.value.balance.toString()} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                     }
                 }
 
