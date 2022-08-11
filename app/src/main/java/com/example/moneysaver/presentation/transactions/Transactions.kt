@@ -7,6 +7,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -16,8 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,6 +64,8 @@ fun Transactions(
 
     val selectedCategory: MutableState<Category?> = remember { mutableStateOf(null) }
 
+    val transactionSearchText = remember { mutableStateOf("") }
+
     if(minDate.value==null||maxDate.value==null)
         viewModel.loadTransactions()
     else
@@ -64,7 +73,11 @@ fun Transactions(
     //viewModel.deleteTransactions()
 
     val transactionsDateMap = mutableMapOf<Date, MutableList<Transaction>>()
-    for (x in viewModel.state.transactionList) {
+    for (
+        x in
+        if(transactionSearchText.value.isNullOrEmpty()) viewModel.state.transactionList
+        else filterBySearchRequest(viewModel.state.transactionList, transactionSearchText.value
+    )) {
         if (!transactionsDateMap.containsKey(Date(x.date.year, x.date.month, x.date.date)))
             transactionsDateMap[Date(x.date.year, x.date.month, x.date.date)] = mutableListOf()
         transactionsDateMap[Date(x.date.year, x.date.month, x.date.date)]?.add(x)
@@ -81,7 +94,7 @@ fun Transactions(
             .background(whiteSurface)
     ) {
 
-        TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() }, minDate = minDate, maxDate = maxDate)
+        TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() }, minDate = minDate, maxDate = maxDate, transactionSearchText=transactionSearchText)
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
             sheetContent = {
@@ -197,13 +210,21 @@ fun Transactions(
     }
 }
 
+fun filterBySearchRequest(transactions: List<Transaction>, searchRequest: String): List<Transaction> {
+    return transactions.filter { it.note!=null && it.note.lowercase().contains(searchRequest.lowercase()) }
+}
+
 @Composable
-fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>) {
+fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, transactionSearchText: MutableState<String>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
     ) {
+
+        val isSearchOpened = remember { mutableStateOf(false) }
+        var searchText by remember { mutableStateOf("") }
+
         Image(
             painter = painterResource(R.drawable.bg5),
             contentScale = ContentScale.Crop,
@@ -223,14 +244,30 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(modifier = Modifier
-                    .padding(8.dp, 24.dp, 0.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = { onNavigationIconClick() }) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        tint = whiteSurface,
-                        contentDescription = "Toggle drawer"
-                    )
+                if(isSearchOpened.value) {
+                    IconButton(modifier = Modifier
+                        .padding(8.dp, 24.dp, 0.dp, 0.dp)
+                        .size(40.dp, 40.dp), onClick = {
+                            searchText=""
+                            transactionSearchText.value=""
+                            isSearchOpened.value=false
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            tint = whiteSurface,
+                            contentDescription = "Undo search"
+                        )
+                    }
+                } else {
+                    IconButton(modifier = Modifier
+                        .padding(8.dp, 24.dp, 0.dp, 0.dp)
+                        .size(40.dp, 40.dp), onClick = { onNavigationIconClick() }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            tint = whiteSurface,
+                            contentDescription = "Toggle drawer"
+                        )
+                    }
                 }
 
                 Column(
@@ -239,30 +276,57 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(0.dp, 12.dp, 0.dp, 4.dp),
-                        text = "Filter - Cash",
-                        color = whiteSurface,
-                        fontWeight = FontWeight.W300,
-                        fontSize = 16.sp
-                    )
-                    Text(
-                        text = ("3423 $"),
-                        color = whiteSurface,
-                        fontWeight = FontWeight.W500,
-                        fontSize = 16.sp
-                    )
+                    if(isSearchOpened.value) {
+                        val focusManager = LocalFocusManager.current
+                        OutlinedTextField(
+                            value = searchText,
+                            onValueChange = {searchText=it},
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            keyboardActions = KeyboardActions(onSearch = {
+                                focusManager.clearFocus()
+                                transactionSearchText.value = searchText
+                            }),
+                            placeholder = { Text(text = "Search", fontSize = 16.sp, color = Color.LightGray) },
+                            textStyle = LocalTextStyle.current.copy(
+                                fontSize = 16.sp,
+                                color = Color.White
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(5.dp),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Transparent, unfocusedBorderColor = Color.Transparent),
+                            singleLine = true,
+                            maxLines = 1
+                        )
+                    } else {
+                        Text(
+                            modifier = Modifier
+                                .padding(0.dp, 12.dp, 0.dp, 4.dp),
+                            text = "Filter - Cash",
+                            color = whiteSurface,
+                            fontWeight = FontWeight.W300,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            text = ("3423 $"),
+                            color = whiteSurface,
+                            fontWeight = FontWeight.W500,
+                            fontSize = 16.sp
+                        )
+                    }
                 }
 
-                IconButton(modifier = Modifier
-                    .padding(0.dp, 24.dp, 8.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        tint = whiteSurface,
-                        contentDescription = "Search"
-                    )
+                if(!isSearchOpened.value) {
+                    IconButton(modifier = Modifier
+                        .padding(0.dp, 24.dp, 8.dp, 0.dp)
+                        .size(40.dp, 40.dp), onClick = {
+                        isSearchOpened.value=true }) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            tint = whiteSurface,
+                            contentDescription = "Search"
+                        )
+                    }
                 }
 
             }
