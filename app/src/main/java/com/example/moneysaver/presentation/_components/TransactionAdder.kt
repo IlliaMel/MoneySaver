@@ -77,7 +77,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                             Text(text = transactionAccount.value.title, fontSize = 17.sp, color=Color.White, overflow = TextOverflow.Ellipsis)
                         }
                         Image(
-                            painter = painterResource(id = transactionAccount.value.accountImg),
+                            painter = painterResource(id = transactionAccount.value.accountImg.img),
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
@@ -238,7 +238,7 @@ private fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, ac
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Image(
-                                    painter = painterResource(id = it.accountImg),
+                                    painter = painterResource(id = it.accountImg.img),
                                     contentDescription = null,
                                     contentScale = ContentScale.Fit,
                                     modifier = Modifier

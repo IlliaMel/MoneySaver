@@ -303,10 +303,6 @@ fun ChartContainer(
     }
 }
 
-@Composable
-fun MyChartParent() {
-
-}
 
 @Composable
 fun TopBarCategories(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>,chosenAccountFilter: MutableState<Account>){

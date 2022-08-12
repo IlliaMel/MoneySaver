@@ -32,6 +32,7 @@ import com.example.moneysaver.R
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.shadow
@@ -46,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.presentation.TabsForScreens
 import com.example.moneysaver.presentation._components.dividerForTopBar
+import com.example.moneysaver.presentation.accounts.additional_composes.AccountVectorIcon
 import com.example.moneysaver.presentation.accounts.additional_composes.ChooseAccountElement
 import com.example.moneysaver.presentation.accounts.additional_composes.EditAccount
 import com.example.moneysaver.presentation.transactions.TransactionsViewModel
@@ -205,7 +207,7 @@ private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<A
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
-                            painter = painterResource(id = it.accountImg),
+                            painter = painterResource(id = it.accountImg.img),
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
@@ -488,8 +490,9 @@ private fun textForAccount(account: Account, modifier: Modifier = Modifier){
 
 @Composable
 private fun AccountImage(account: Account) {
+    /*
     Image(
-        painter = painterResource(id = account.accountImg),
+        painter = painterResource(id = account.accountImg.img),
         contentDescription = null,
         contentScale = ContentScale.Fit,
         modifier = Modifier
@@ -498,7 +501,26 @@ private fun AccountImage(account: Account) {
             .height(36.dp)
             .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
     )
+*/
+    AccountVectorIcon(modifier = Modifier.padding(8.dp),height = 40.dp , width = 50.dp,accountImg = account.accountImg,onClick = {})
 }
+
+/*
+
+@Composable
+fun AccountVectorIcon(modifier: Modifier = Modifier, accountImg : AccountImg, onClick: () -> Unit, width : Dp = 55.dp,  height : Dp = 45.dp,){
+    Box(modifier = modifier.padding(0.dp, 0.dp, 0.dp, 0.dp).width(width)
+        .height(height).clip(RoundedCornerShape(corner = CornerSize(8.dp))).background(accountImg.externalColor),
+        contentAlignment = Alignment.Center){
+        Icon(modifier = Modifier
+            .clickable{onClick()},
+            imageVector = ImageVector.vectorResource(accountImg.img),
+            tint = accountImg.innerColor,
+            contentDescription = null
+        )
+    }
+}
+ */
 
 @Preview
 @Composable

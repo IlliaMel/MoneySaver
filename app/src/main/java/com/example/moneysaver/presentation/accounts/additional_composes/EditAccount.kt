@@ -8,6 +8,8 @@ import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,10 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -40,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.R
+import com.example.moneysaver.data.data_base.test_data.AccountImg
 import com.example.moneysaver.data.data_base.test_data.AccountsData
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.presentation._components.dividerForTopBar
@@ -74,7 +80,7 @@ fun EditAccount(
     var amountOfDept =  remember { mutableStateOf(account.debt) }
     var amountOfBalance =  remember { mutableStateOf(account.balance) }
     var amountOfCreditLimit =  remember { mutableStateOf(account.creditLimit) }
-
+    var img =  remember { mutableStateOf(account.accountImg) }
 
 
     /*
@@ -106,38 +112,48 @@ Account(description = description.value,
                     title = it)
  */
 
-        TopBarAccounts(title = title.value, typeOfAccount = if(isEditing)  "Edit Account" else  "New Account",
+        TopBarAccounts(accountImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfAccount = if(isEditing)  "Edit Account" else  "New Account",
             onAddAccountAction = {onAddAccountAction(
                 if(isEditing){
                     if(type == 1) {
                         Account(
                             uuid = account.uuid,
+                            accountImg = img.value,
                             debt = amountOfDept.value,
                             description = description.value,
                             currencyType = currencyType.value,
+                            isForDebt = true,
+                            isForGoal = false,
                             title = it
                         )
                     }else if(type == 0) {
                         Account(
                             uuid = account.uuid,
+                            accountImg = img.value,
                             creditLimit = amountOfCreditLimit.value,
                             balance = amountOfBalance.value,
                             description = description.value,
                             currencyType = currencyType.value,
+                            isForDebt = false,
+                            isForGoal = false,
                             title = it
                         )
                     }else {
                         Account(
                             uuid = account.uuid,
+                            accountImg = img.value,
                             balance = amountOfBalance.value,
                             description = description.value,
                             currencyType = currencyType.value,
+                            isForDebt = false,
+                            isForGoal = true,
                             title = it
                         )
                     }
                 }else{
                     if(type == 0){
                         Account(
+                            accountImg = img.value,
                             creditLimit = amountOfCreditLimit.value,
                             balance = amountOfBalance.value,
                             description = description.value,
@@ -146,6 +162,7 @@ Account(description = description.value,
                     }else if (type == 1){
                         Account(
                             debt = amountOfDept.value,
+                            accountImg = img.value,
                             isForDebt = true,
                             description = description.value,
                             currencyType = currencyType.value,
@@ -153,6 +170,7 @@ Account(description = description.value,
                     }else{
                         Account(
                             balance = amountOfBalance.value,
+                            accountImg = img.value,
                             isForGoal = true,
                             description = description.value,
                             currencyType = currencyType.value,
@@ -614,10 +632,15 @@ fun SetAccountCurrencyType(
 fun TopBarAccounts(
     title: String,
     typeOfAccount: String,
+    accountImg: AccountImg,
+    onChangeImg: (AccountImg) -> Unit,
     onAddAccountAction: (String) -> Unit,
     onCancelIconClick: () -> Unit){
     var text by rememberSaveable { mutableStateOf(title) }
     val focusManager = LocalFocusManager.current
+
+    var setAccountImg = remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -647,7 +670,7 @@ fun TopBarAccounts(
                     IconButton(modifier = Modifier
                         .padding(8.dp, 0.dp, 0.dp, 0.dp)
                         .size(40.dp, 40.dp)
-                        .weight(1f), onClick = {onCancelIconClick()}) {
+                        .weight(1.2f), onClick = {onCancelIconClick()}) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             tint = whiteSurface,
@@ -657,8 +680,8 @@ fun TopBarAccounts(
 
                     Column(modifier = Modifier
                         .fillMaxHeight()
-                        .weight(4.5f)
-                        .padding(0.dp, 0.dp, 0.dp, 0.dp),
+                        .weight(3.8f)
+                        .padding(0.dp, 0.dp, 16.dp, 0.dp),
                         horizontalAlignment = Alignment.Start,
                         verticalArrangement = Arrangement.SpaceBetween) {
 
@@ -689,16 +712,19 @@ fun TopBarAccounts(
                     }
 
 
+                    Column(modifier = Modifier.weight(1.2f).fillMaxHeight().padding(0.dp, 0.dp, 13.dp, 0.dp),verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally){
+                        IconButton(modifier = Modifier
+                            .size(35.dp, 35.dp),
+                            onClick = { onAddAccountAction(text) }) {
+                            Icon(
+                                imageVector = Icons.Default.Done,
+                                tint = whiteSurface,
+                                contentDescription = "Apply button"
+                            )
+                        }
 
-                    IconButton(modifier = Modifier
-                        .padding(0.dp, 0.dp, 8.dp, 0.dp)
-                        .size(40.dp, 40.dp)
-                        .weight(1f), onClick = { onAddAccountAction(text) }) {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            tint = whiteSurface,
-                            contentDescription = "Apply button"
-                        )
+                        AccountVectorIcon(modifier =  Modifier.padding(0.dp, 0.dp, 0.dp, 18.dp),accountImg= accountImg , onClick = {setAccountImg.value = true})
+
                     }
 
                 }
@@ -707,4 +733,83 @@ fun TopBarAccounts(
 
         }
     }
+//SetAccountBalance(openDialog = setCreditLimit, returnType = {setCreditLimit.value = false; amountOfCreditLimit.value = it.toDouble() })
+    SetAccountImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; })
 }
+
+@Composable
+fun AccountVectorIcon(modifier: Modifier = Modifier, accountImg : AccountImg, onClick: () -> Unit, width : Dp = 55.dp,  height : Dp = 45.dp,){
+    Box(modifier = modifier.padding(0.dp, 0.dp, 0.dp, 0.dp).width(width)
+        .height(height).clip(RoundedCornerShape(corner = CornerSize(8.dp))).background(accountImg.externalColor),
+        contentAlignment = Alignment.Center){
+        Icon(modifier = Modifier
+            .clickable{onClick()},
+            imageVector = ImageVector.vectorResource(accountImg.img),
+            tint = accountImg.innerColor,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+fun SetAccountImg(
+    openDialog: MutableState<Boolean>,
+    returnType: (img: AccountImg) -> Unit,
+) {
+    if (openDialog.value) {
+        Dialog(
+            onDismissRequest = {
+                openDialog.value = false
+            }
+        ) {
+
+            Column(modifier = Modifier
+                .fillMaxHeight(0.6f)
+                .fillMaxWidth(0.9f)
+                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                .background(
+                    whiteSurface
+                )) {
+                Row(
+                    modifier = Modifier
+                        .padding(0.dp, 4.dp, 0.dp, 4.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Text(modifier = Modifier.padding(0.dp,8.dp,0.dp,4.dp), text = "Choose Account Img", color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 20.sp)
+
+                }
+
+
+                LazyVerticalGrid(
+                    modifier = Modifier.padding(0.dp,0.dp,0.dp,16.dp),
+                    columns = GridCells.Fixed(3),
+                    // content padding
+                    contentPadding = PaddingValues(
+                        start = 12.dp,
+                        top = 16.dp,
+                        end = 12.dp,
+                        bottom = 16.dp
+                    ),
+                    content = {
+                        items(AccountsData.accountImges.size) { index ->
+                            Card(
+                                backgroundColor = AccountsData.accountImges[index].externalColor,
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .width(55.dp).height(45.dp),
+                                elevation = 8.dp,
+                            ) {
+                                AccountVectorIcon(Modifier.padding(8.dp,0.dp,8.dp,0.dp),accountImg = AccountsData.accountImges[index], onClick = {returnType(AccountsData.accountImges[index])})
+                            }
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+}
+
+
