@@ -47,7 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.presentation.TabsForScreens
 import com.example.moneysaver.presentation._components.dividerForTopBar
-import com.example.moneysaver.presentation.accounts.additional_composes.AccountVectorIcon
+import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.accounts.additional_composes.ChooseAccountElement
 import com.example.moneysaver.presentation.accounts.additional_composes.EditAccount
 import com.example.moneysaver.presentation.transactions.TransactionsViewModel
@@ -267,19 +267,19 @@ fun ChooseAccountCompose(
                     ChooseAccountElement(
                         "Звичайний",
                         "Готівка, Карта ",
-                        painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
+                        painterResource(id = AccountsData.accountImges[0].img),
                         normalAccount
                     )
                     ChooseAccountElement(
                         "Звичайний",
                         "Кредит, Іпотека",
-                        painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
+                        painterResource(id = AccountsData.accountImges[0].img),
                         debtAccount
                     )
                     ChooseAccountElement(
                         "Накопичення",
                         "Заощадження, Мета, Ціль",
-                        painterResource(id = CategoriesData.categoriesList.get(0).categoryImg),
+                        painterResource(id = AccountsData.accountImges[0].img),
                         goalAccount
                     )
                 }
@@ -502,7 +502,7 @@ private fun AccountImage(account: Account) {
             .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
     )
 */
-    AccountVectorIcon(modifier = Modifier.padding(8.dp),height = 40.dp , width = 50.dp,accountImg = account.accountImg,onClick = {})
+    VectorIcon(modifier = Modifier.padding(8.dp),height = 40.dp , width = 50.dp, vectorImg = account.accountImg,onClick = {})
 }
 
 /*

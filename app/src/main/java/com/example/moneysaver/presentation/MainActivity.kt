@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation
 
+
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -35,6 +36,7 @@ import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlo
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
 import com.example.moneysaver.presentation.accounts.Accounts
 import com.example.moneysaver.presentation.categories.Categories
+import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -94,8 +96,9 @@ class MainActivity : ComponentActivity() {
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent
                 )
-                MainUI()
 
+               MainUI()
+               // TempCategory()
                // EditCategory(  isEditing = true, onCancelIconClick = {}  ,onAddCategoryAction = {} , onDeleteCategory = {} )
                // PopUp()
                 var setSelectedAccount = remember { mutableStateOf(true) }
@@ -122,7 +125,7 @@ fun MainUI(){
             mutableStateOf(0)
         }
 
-        val chosenAccountFilter = remember { mutableStateOf(AccountsData.accountsList[0]) }
+        val chosenAccountFilter = remember { mutableStateOf(AccountsData.normalAccount) }
 
 
         Scaffold(
@@ -194,95 +197,6 @@ fun MainUI(){
 
 
 
-    @Composable
-    fun CustomTab() {
-
-        val inactiveColor = Color(0xFF777777)
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-        ) {
-
-            TabRow(
-                selectedTabIndex = 0,
-                backgroundColor = Color.White,
-                contentColor = Color.White,
-                modifier = Modifier.shadow(elevation = 5.dp)
-            ) {
-                Tab(selected = false,
-                    selectedContentColor = Color.Black,
-                    unselectedContentColor = inactiveColor,
-                    onClick = { }
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.1f),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(
-                            modifier = Modifier.weight(1f),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceAround
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.End,
-                                verticalArrangement = Arrangement.Top
-                            ) {
-                                Image(
-                                    painter = painterResource(
-                                        id = CategoriesData.categoriesList.get(
-                                            0
-                                        ).categoryImg
-                                    ),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Fit,
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .width(44.dp)
-                                        .height(44.dp)
-                                        .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                                )
-                            }
-                            Column() {
-                                Text(
-                                    text = "Зарплата",
-                                    fontWeight = FontWeight.W500,
-                                    color = Color.Black,
-                                    fontSize = 14.sp
-                                )
-                                Text(
-                                    text = "Готівка",
-                                    fontWeight = FontWeight.W500,
-                                    color = currencyColorZero,
-                                    fontSize = 14.sp
-                                )
-                            }
-                        }
-
-                        Column(
-                            modifier = Modifier.weight(2f),
-                            horizontalAlignment = Alignment.End,
-                            verticalArrangement = Arrangement.Top
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(0.dp, 0.dp, 16.dp, 24.dp),
-                                text = "+44.4$",
-                                fontWeight = FontWeight.W500,
-                                color = currencyColor,
-                                fontSize = 16.sp
-                            )
-                        }
-
-
-                    }
-
-                }
-            }
-        }
-    }
 
     @Composable
     fun TabsForScreens(

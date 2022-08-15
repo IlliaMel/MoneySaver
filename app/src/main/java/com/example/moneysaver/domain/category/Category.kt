@@ -3,13 +3,15 @@ package com.example.moneysaver.domain.category
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.moneysaver.R
+import com.example.moneysaver.data.data_base.test_data.AccountsData
+import com.example.moneysaver.data.data_base.test_data.VectorImg
 import java.io.Serializable
 import java.util.*
 
 @Entity
 data class Category(
     @PrimaryKey val uuid: UUID = UUID.randomUUID(),
-    val categoryImg: Int = R.drawable.categories_icn,
+    val categoryImg: VectorImg = AccountsData.accountImges[0],
     val currencyType: String = "$",
     val title: String,
     val spent: Double = 0.0,

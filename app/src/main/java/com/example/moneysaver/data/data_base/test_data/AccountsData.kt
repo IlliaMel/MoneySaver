@@ -9,7 +9,7 @@ import com.example.moneysaver.domain.account.Account
 import java.io.Serializable
 
 
-data class AccountImg(
+data class VectorImg(
     val img: Int = R.drawable.ic_account_img_1,
     val innerColor: Color =  Color(255, 255, 255, 255),
     val externalColor: Color =  Color(105, 105, 105, 255)
@@ -29,16 +29,16 @@ object AccountsData {
 
 
     val accountImges = mutableListOf(
-        AccountImg(img = R.drawable.ic_account_img_1, externalColor = Color(244, 67, 54, 255)),
-        AccountImg(img = R.drawable.ic_account_img_2, externalColor = Color(233, 30, 99, 255)),
-        AccountImg(img = R.drawable.ic_account_img_3, externalColor = Color(156, 39, 176, 255)),
-        AccountImg(img = R.drawable.ic_account_img_4, externalColor = Color(103, 58, 183, 255)),
-        AccountImg(img = R.drawable.ic_account_img_5, externalColor = Color(63, 81, 181, 255)),
-        AccountImg(img = R.drawable.ic_account_img_6, externalColor = Color(33, 150, 243, 255)),
-        AccountImg(img = R.drawable.ic_account_img_7, externalColor = Color(0, 150, 136, 255)),
-        AccountImg(img = R.drawable.ic_account_img_8, externalColor = Color(76, 175, 80, 255)),
-        AccountImg(img = R.drawable.ic_account_img_9, externalColor = Color(255, 235, 59, 255)),
-        AccountImg(img = R.drawable.ic_account_img_10, externalColor = Color(255, 87, 34, 255)),
+        VectorImg(img = R.drawable.ic_account_img_1, externalColor = Color(244, 67, 54, 255)),
+        VectorImg(img = R.drawable.ic_account_img_2, externalColor = Color(233, 30, 99, 255)),
+        VectorImg(img = R.drawable.ic_account_img_3, externalColor = Color(156, 39, 176, 255)),
+        VectorImg(img = R.drawable.ic_account_img_4, externalColor = Color(103, 58, 183, 255)),
+        VectorImg(img = R.drawable.ic_account_img_5, externalColor = Color(63, 81, 181, 255)),
+        VectorImg(img = R.drawable.ic_account_img_6, externalColor = Color(33, 150, 243, 255)),
+        VectorImg(img = R.drawable.ic_account_img_7, externalColor = Color(0, 150, 136, 255)),
+        VectorImg(img = R.drawable.ic_account_img_8, externalColor = Color(76, 175, 80, 255)),
+        VectorImg(img = R.drawable.ic_account_img_9, externalColor = Color(255, 235, 59, 255)),
+        VectorImg(img = R.drawable.ic_account_img_10, externalColor = Color(255, 87, 34, 255)),
     )
 
     val currencyTypes = mutableListOf(
@@ -52,7 +52,7 @@ object AccountsData {
 
 
     val deptAccount = Account(
-        accountImg = AccountImg(),
+        accountImg = VectorImg(),
         currencyType = "$",
         title = "Car Dept",
         description = "Dept for the car",
@@ -61,7 +61,7 @@ object AccountsData {
     )
 
     val normalAccount = Account(
-        accountImg = AccountImg(),
+        accountImg = VectorImg(),
         currencyType = "$",
         title = "Cash",
         description = "Salary",
@@ -70,7 +70,7 @@ object AccountsData {
     )
 
     val goalAccount = Account(
-        accountImg = AccountImg(),
+        accountImg = VectorImg(),
         currencyType = "$",
         title = "Stash",
         description = "For trip",
@@ -82,29 +82,29 @@ object AccountsData {
 
 
     val accountAdder = Account(
-    accountImg = AccountImg(),
+    accountImg = VectorImg(),
     title = "Add Bank Account",
     )
 
     val goalAdder = Account(
-        accountImg = AccountImg(),
+        accountImg = VectorImg(),
         title = "Add Goal",
     )
     val accountsList = mutableListOf(
         Account(
-            accountImg = AccountImg(),
+            accountImg = VectorImg(),
             currencyType = "$",
             title = "Cash",
             balance = 537.53,
         ),
         Account(
-            accountImg =AccountImg(),
+            accountImg =VectorImg(),
             currencyType = "$",
             title = "Credit Card #1",
             balance = 15267.43,
         ),
         Account(
-            accountImg = AccountImg(),
+            accountImg = VectorImg(),
             currencyType = "$",
             title = "Credit Card #2",
             balance = 1678.63,

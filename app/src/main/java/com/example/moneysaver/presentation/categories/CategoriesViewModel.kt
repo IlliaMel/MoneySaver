@@ -1,11 +1,11 @@
 package com.example.moneysaver.presentation.categories
 
-import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.domain.repository.CategoriesRepository
 import com.example.moneysaver.domain.repository.TransactionRepository
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.presentation.transactions.TransactionsState
@@ -19,10 +19,26 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
     private val repository: TransactionRepository,
+    private val repositoryCategory: CategoriesRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(CategoriesState())
         private set
+
+    init {
+        loadCategories()
+    }
+
+    fun addCategory(category: Category) {
+        viewModelScope.launch {
+            repositoryCategory.insertCategory(category)
+        }
+    }
+    fun deleteCategory(category: Category) {
+        viewModelScope.launch {
+            repositoryCategory.deleteCategory(category)
+        }
+    }
 
     fun addTransaction(transaction: Transaction) {
         viewModelScope.launch {
@@ -30,11 +46,20 @@ class CategoriesViewModel @Inject constructor(
         }
     }
 
+    fun loadCategories() {
+        repositoryCategory.getCategories()
+            .onEach { list ->
+                state = state.copy(
+                    categoriesList = list as MutableList<Category>,
+                )
+            }.launchIn(viewModelScope)
+    }
+
     fun loadCategoriesData() {
 
         repository.getTransactions().onEach { transactions ->
 
-            val categories = CategoriesData.categoriesList
+            val categories = state.categoriesList
             val tempList = mutableMapOf<Category, Double>()
             for(category in categories) {
                 var categorySum = 0.0
@@ -60,7 +85,7 @@ class CategoriesViewModel @Inject constructor(
 
         repository.getTransactionsInDateRange(minDate, maxDate).onEach { transactions ->
 
-            val categories = CategoriesData.categoriesList
+            val categories = state.categoriesList
             val tempList = mutableMapOf<Category, Double>()
             for(category in categories) {
                 var categorySum = 0.0
@@ -79,7 +104,6 @@ class CategoriesViewModel @Inject constructor(
             )
 
         }.launchIn(viewModelScope)
-
     }
 
 }

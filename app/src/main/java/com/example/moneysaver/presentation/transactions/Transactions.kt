@@ -92,16 +92,20 @@ fun Transactions(
             .thenBy { it.category.uuid })
     }
 
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(whiteSurface)
     ) {
-
+        var sheetContentInitClose by remember { mutableStateOf(false) }
         TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() }, minDate = minDate, maxDate = maxDate, transactionSearchText=transactionSearchText,chosenAccountFilter)
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
+
             sheetContent = {
+                if(sheetContentInitClose)
                 if(selectedCategory.value==null) {
                     CategoryChooser(selectedCategory, CategoriesData.categoriesList)
                 } else {
@@ -127,7 +131,7 @@ fun Transactions(
                                 selectedCategory.value=null
                                 scaffoldState.bottomSheetState.expand()
                             }
-
+                            sheetContentInitClose = true
                         },
                         backgroundColor = Color(0xff5c6bbf)
                     ) {

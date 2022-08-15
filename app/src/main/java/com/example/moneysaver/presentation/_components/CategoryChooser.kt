@@ -43,7 +43,7 @@ fun CategoryChooser(selectedCategory: MutableState<Category?>, categories: List<
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
-                        painter = painterResource(id = it.categoryImg),
+                        painter = painterResource(id = it.categoryImg.img),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier

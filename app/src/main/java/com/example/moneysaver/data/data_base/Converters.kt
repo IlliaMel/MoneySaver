@@ -3,7 +3,7 @@ package com.example.moneysaver.data.data_base
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import androidx.room.TypeConverter
-import com.example.moneysaver.data.data_base.test_data.AccountImg
+import com.example.moneysaver.data.data_base.test_data.VectorImg
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import java.lang.Float.valueOf
@@ -27,7 +27,7 @@ class Converters {
     fun fromStringToCategory(value: String?): Category? {
         value?.let {
             val strArr = it.split(",")
-            return Category(categoryImg = strArr[0].toInt(),currencyType = strArr[1],title = strArr[2],spent = strArr[3].toDouble())
+            return Category(categoryImg = VectorImg( strArr[0].toInt(),Color(strArr[1].toInt()),Color(strArr[2].toInt())),currencyType = strArr[3],title = strArr[4],spent = strArr[5].toDouble())
         }
         return Category(title = "")
     }
@@ -37,32 +37,12 @@ class Converters {
     fun stringToCategory(category: Category?): String? {
         return category.toString()
     }
-/*
-    @TypeConverter
-    fun fromStringToAccount(value: String?): Account? {
-        value?.let {
-            val strArr = it.split(",")
-            return Account(accountImg = AccountImg( strArr[0].toInt(),Color(strArr[1].toInt(),strArr[2].toInt(),strArr[3].toInt(),strArr[4].toInt()),Color(strArr[5].toInt(),strArr[6].toInt(),strArr[7].toInt(),strArr[8].toInt())),
-                currencyType = strArr[9],
-                title = strArr[10],
-                description = strArr[11],
-                balance = strArr[12].toDouble(),
-                creditLimit = strArr[13].toDouble(),
-                goal = strArr[14].toDouble(),
-                debt = strArr[15].toDouble(),
-                isForGoal = strArr[16].toBoolean(),
-                isForDebt = strArr[17].toBoolean(),
-            )
-        }
-        return Account(title = "")
-    }
-    */
 
     @TypeConverter
     fun fromStringToAccount(value: String?): Account? {
         value?.let {
             val strArr = it.split(",")
-            return Account(accountImg = AccountImg( strArr[0].toInt(),Color(strArr[1].toInt()),Color(strArr[2].toInt())),
+            return Account(accountImg = VectorImg( strArr[0].toInt(),Color(strArr[1].toInt()),Color(strArr[2].toInt())),
                 currencyType = strArr[3],
                 title = strArr[4],
                 description = strArr[5],
@@ -83,16 +63,16 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromStringToAccountImg(value: String?): AccountImg? {
+    fun fromStringToVectorImg(value: String?): VectorImg? {
         value?.let {
             val strArr = it.split(",")
-            return  AccountImg( strArr[0].toInt(),Color(strArr[1].toInt()),Color(strArr[2].toInt()))
+            return  VectorImg( strArr[0].toInt(),Color(strArr[1].toInt()),Color(strArr[2].toInt()))
         }
-        return AccountImg()
+        return VectorImg()
     }
 
     @TypeConverter
-    fun stringToAccountImg(accountImg: AccountImg?): String? {
+    fun stringToVectorImg(accountImg: VectorImg?): String? {
         return accountImg.toString()
     }
 

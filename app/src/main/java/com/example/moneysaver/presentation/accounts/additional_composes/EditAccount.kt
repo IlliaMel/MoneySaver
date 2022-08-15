@@ -45,8 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.R
-import com.example.moneysaver.data.data_base.test_data.AccountImg
 import com.example.moneysaver.data.data_base.test_data.AccountsData
+import com.example.moneysaver.data.data_base.test_data.VectorImg
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.ui.theme.*
@@ -112,7 +112,7 @@ Account(description = description.value,
                     title = it)
  */
 
-        TopBarAccounts(accountImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfAccount = if(isEditing)  "Edit Account" else  "New Account",
+        TopBarAccounts(vectorImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfAccount = if(isEditing)  "Edit Account" else  "New Account",
             onAddAccountAction = {onAddAccountAction(
                 if(isEditing){
                     if(type == 1) {
@@ -626,14 +626,12 @@ fun SetAccountCurrencyType(
 
 }
 
-
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TopBarAccounts(
     title: String,
     typeOfAccount: String,
-    accountImg: AccountImg,
-    onChangeImg: (AccountImg) -> Unit,
+    vectorImg: VectorImg,
+    onChangeImg: (VectorImg) -> Unit,
     onAddAccountAction: (String) -> Unit,
     onCancelIconClick: () -> Unit){
     var text by rememberSaveable { mutableStateOf(title) }
@@ -723,7 +721,7 @@ fun TopBarAccounts(
                             )
                         }
 
-                        AccountVectorIcon(modifier =  Modifier.padding(0.dp, 0.dp, 0.dp, 18.dp),accountImg= accountImg , onClick = {setAccountImg.value = true})
+                        VectorIcon(modifier =  Modifier.padding(0.dp, 0.dp, 0.dp, 18.dp),vectorImg = vectorImg , onClick = {setAccountImg.value = true})
 
                     }
 
@@ -733,19 +731,17 @@ fun TopBarAccounts(
 
         }
     }
-//SetAccountBalance(openDialog = setCreditLimit, returnType = {setCreditLimit.value = false; amountOfCreditLimit.value = it.toDouble() })
     SetAccountImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; })
 }
 
 @Composable
-fun AccountVectorIcon(modifier: Modifier = Modifier, accountImg : AccountImg, onClick: () -> Unit, width : Dp = 55.dp,  height : Dp = 45.dp,){
+fun VectorIcon(modifier: Modifier = Modifier, modifierIcn: Modifier = Modifier, vectorImg : VectorImg, onClick: () -> Unit, width : Dp = 55.dp,  height : Dp = 45.dp, cornerSize : Dp  = 8.dp){
     Box(modifier = modifier.padding(0.dp, 0.dp, 0.dp, 0.dp).width(width)
-        .height(height).clip(RoundedCornerShape(corner = CornerSize(8.dp))).background(accountImg.externalColor),
+        .height(height).clickable{onClick()}.clip(RoundedCornerShape(corner = CornerSize(cornerSize))).background(vectorImg.externalColor),
         contentAlignment = Alignment.Center){
-        Icon(modifier = Modifier
-            .clickable{onClick()},
-            imageVector = ImageVector.vectorResource(accountImg.img),
-            tint = accountImg.innerColor,
+        Icon(modifier = modifierIcn,
+            imageVector = ImageVector.vectorResource(vectorImg.img),
+            tint = vectorImg.innerColor,
             contentDescription = null
         )
     }
@@ -754,7 +750,7 @@ fun AccountVectorIcon(modifier: Modifier = Modifier, accountImg : AccountImg, on
 @Composable
 fun SetAccountImg(
     openDialog: MutableState<Boolean>,
-    returnType: (img: AccountImg) -> Unit,
+    returnType: (img: VectorImg) -> Unit,
 ) {
     if (openDialog.value) {
         Dialog(
@@ -801,7 +797,7 @@ fun SetAccountImg(
                                     .width(55.dp).height(45.dp),
                                 elevation = 8.dp,
                             ) {
-                                AccountVectorIcon(Modifier.padding(8.dp,0.dp,8.dp,0.dp),accountImg = AccountsData.accountImges[index], onClick = {returnType(AccountsData.accountImges[index])})
+                                VectorIcon(Modifier.padding(8.dp,0.dp,8.dp,0.dp),vectorImg = AccountsData.accountImges[index], onClick = {returnType(AccountsData.accountImges[index])})
                             }
                         }
                     }
