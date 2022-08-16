@@ -75,6 +75,7 @@ fun Transactions(
     else
         viewModel.loadTransactionsBetweenDates(minDate.value!!, maxDate.value!!)
     //viewModel.deleteTransactions()
+    viewModel.loadCategories()
 
     val transactionsDateMap = mutableMapOf<Date, MutableList<Transaction>>()
     for (
@@ -107,7 +108,7 @@ fun Transactions(
             sheetContent = {
                 if(sheetContentInitClose)
                 if(selectedCategory.value==null) {
-                    CategoryChooser(selectedCategory, CategoriesData.categoriesList)
+                    CategoryChooser(selectedCategory, viewModel.state.categoriesList)
                 } else {
                     val transactionCategory: MutableState<Category> = remember { mutableStateOf(selectedCategory.value!!) }
                     TransactionAdder(

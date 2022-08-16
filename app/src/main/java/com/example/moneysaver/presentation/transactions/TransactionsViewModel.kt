@@ -9,6 +9,7 @@ import com.example.moneysaver.domain.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.example.moneysaver.domain.repository.CategoriesRepository
 import com.example.moneysaver.domain.transaction.Transaction
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ import kotlin.math.min
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
     private val repository: TransactionRepository,
+    private val categoriesRepository: CategoriesRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(TransactionsState())
@@ -53,6 +55,15 @@ class TransactionsViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteAllTransaction()
         }
+    }
+
+    fun loadCategories() {
+        categoriesRepository.getCategories()
+            .onEach { list ->
+                state = state.copy(
+                    categoriesList = list
+                )
+            }.launchIn(viewModelScope)
     }
 
 
