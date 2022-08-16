@@ -1,6 +1,5 @@
 package com.example.moneysaver.presentation.categories
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
@@ -30,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.category.Category
-import com.example.moneysaver.presentation.categories.additional_composes.PieSampleData
 import com.example.moneysaver.ui.theme.currencyColor
 import com.example.moneysaver.ui.theme.currencyColorSpent
 import com.example.moneysaver.ui.theme.currencyColorZero
@@ -40,10 +38,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.presentation._components.*
-import com.example.moneysaver.presentation.accounts.additional_composes.EditAccount
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
 import com.example.moneysaver.presentation.categories.additional_composes.SimpleColors
@@ -92,7 +88,8 @@ fun Categories(
                 category = selectedCategory,
                 addTransaction = viewModel::addTransaction,
                 closeAdder = { scope.launch {sheetState.collapse()} },
-                accountList = viewModel.state.accountsList
+                accountsList = viewModel.state.accountsList,
+                categoriesList = viewModel.state.categoriesList
             )
         },
         sheetPeekHeight = 0.dp

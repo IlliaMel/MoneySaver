@@ -1,6 +1,5 @@
 package com.example.moneysaver.presentation._components
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,14 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.data.data_base.test_data.AccountsData
-import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.ui.theme.dividerColor
 
 @Composable
-fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit, accountList: List<Account>) {
+fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit, accountsList: List<Account>, categoriesList: List<Category>) {
     var sumText by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
@@ -202,8 +200,8 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
         }
     }
 
-    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = accountList, transactionAccount = transactionAccount)
-    ChooseTransactionCategoryDialog(openDialog = openChoseCategoryDialog, categoryList = CategoriesData.categoriesList, transactionCategory = category)
+    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = accountsList, transactionAccount = transactionAccount)
+    ChooseTransactionCategoryDialog(openDialog = openChoseCategoryDialog, categoryList = categoriesList, transactionCategory = category)
 }
 
 
