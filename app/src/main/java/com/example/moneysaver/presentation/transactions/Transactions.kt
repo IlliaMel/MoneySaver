@@ -76,6 +76,7 @@ fun Transactions(
         viewModel.loadTransactionsBetweenDates(minDate.value!!, maxDate.value!!)
     //viewModel.deleteTransactions()
     viewModel.loadCategories()
+    viewModel.loadAccounts()
 
     val transactionsDateMap = mutableMapOf<Date, MutableList<Transaction>>()
     for (
@@ -119,7 +120,8 @@ fun Transactions(
                                 sheetState.collapse()
                                 selectedCategory.value=null // reset selected category
                             }
-                        }
+                        },
+                        accountList = viewModel.state.accountsList
                     )
                 }
             },

@@ -80,6 +80,7 @@ fun Categories(
         viewModel.loadCategoriesData()
     else
         viewModel.loadCategoriesDataInDateRange(minDate.value!!, maxDate.value!!)
+    viewModel.loadAccounts()
 
     if(!isAddingCategory){
     TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = {isForEditing = false; isAddingCategory = true}, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
@@ -90,7 +91,8 @@ fun Categories(
             TransactionAdder(
                 category = selectedCategory,
                 addTransaction = viewModel::addTransaction,
-                closeAdder = { scope.launch {sheetState.collapse()} }
+                closeAdder = { scope.launch {sheetState.collapse()} },
+                accountList = viewModel.state.accountsList
             )
         },
         sheetPeekHeight = 0.dp

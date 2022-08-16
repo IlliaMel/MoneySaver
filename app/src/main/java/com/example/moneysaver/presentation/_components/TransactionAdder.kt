@@ -33,7 +33,7 @@ import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.ui.theme.dividerColor
 
 @Composable
-fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit) {
+fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit, accountList: List<Account>) {
     var sumText by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
@@ -202,7 +202,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
         }
     }
 
-    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = AccountsData.accountsList, transactionAccount = transactionAccount)
+    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = accountList, transactionAccount = transactionAccount)
     ChooseTransactionCategoryDialog(openDialog = openChoseCategoryDialog, categoryList = CategoriesData.categoriesList, transactionCategory = category)
 }
 

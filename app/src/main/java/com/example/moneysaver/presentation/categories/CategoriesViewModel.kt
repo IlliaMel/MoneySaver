@@ -3,12 +3,11 @@ package com.example.moneysaver.presentation.categories
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.domain.repository.AccountsRepository
 import com.example.moneysaver.domain.repository.CategoriesRepository
 import com.example.moneysaver.domain.repository.TransactionRepository
 import com.example.moneysaver.domain.transaction.Transaction
-import com.example.moneysaver.presentation.transactions.TransactionsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
     private val repository: TransactionRepository,
-    private val repositoryCategory: CategoriesRepository
+    private val categoriesRepository: CategoriesRepository,
+    private val accountsRepository: AccountsRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(CategoriesState())
@@ -31,12 +31,12 @@ class CategoriesViewModel @Inject constructor(
 
     fun addCategory(category: Category) {
         viewModelScope.launch {
-            repositoryCategory.insertCategory(category)
+            categoriesRepository.insertCategory(category)
         }
     }
     fun deleteCategory(category: Category) {
         viewModelScope.launch {
-            repositoryCategory.deleteCategory(category)
+            categoriesRepository.deleteCategory(category)
         }
     }
 
@@ -47,7 +47,7 @@ class CategoriesViewModel @Inject constructor(
     }
 
     fun loadCategories() {
-        repositoryCategory.getCategories()
+        categoriesRepository.getCategories()
             .onEach { list ->
                 state = state.copy(
                     categoriesList = list as MutableList<Category>,
@@ -104,6 +104,15 @@ class CategoriesViewModel @Inject constructor(
             )
 
         }.launchIn(viewModelScope)
+    }
+
+    fun loadAccounts() {
+        accountsRepository.getAccounts()
+            .onEach { list ->
+                state = state.copy(
+                    accountsList = list
+                )
+            }.launchIn(viewModelScope)
     }
 
 }
