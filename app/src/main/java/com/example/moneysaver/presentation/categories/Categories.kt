@@ -140,10 +140,10 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        modifier = Modifier.clickable {
+                                        onClickCategory = {
                                             selectedCategory.value = viewModel.state.categoriesList[0]
-                                            switchBottomSheet(scope, sheetState)
-                                        },cornerSize =  60.dp)
+                                            switchBottomSheet(scope, sheetState)}
+                                        ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
@@ -159,10 +159,10 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        modifier = Modifier.clickable {
+                                        onClickCategory = {
                                             selectedCategory.value = viewModel.state.categoriesList[4]
-                                            switchBottomSheet(scope, sheetState)
-                                        },cornerSize =  60.dp)
+                                            switchBottomSheet(scope, sheetState)}
+                                        ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
@@ -171,10 +171,10 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        modifier = Modifier.clickable {
+                                        onClickCategory = {
                                             selectedCategory.value = viewModel.state.categoriesList[6]
-                                                    switchBottomSheet(scope, sheetState)
-                                        },cornerSize =  60.dp)
+                                            switchBottomSheet(scope, sheetState)}
+                                        ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
@@ -202,10 +202,10 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        modifier = Modifier.clickable {
+                                        onClickCategory = {
                                             selectedCategory.value = viewModel.state.categoriesList[1]
-                                            switchBottomSheet(scope, sheetState)
-                                        },cornerSize =  60.dp)
+                                            switchBottomSheet(scope, sheetState)}
+                                        ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
@@ -214,10 +214,10 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        modifier = Modifier.clickable {
+                                        onClickCategory = {
                                             selectedCategory.value = viewModel.state.categoriesList[2]
-                                            switchBottomSheet(scope, sheetState)
-                                        },cornerSize =  60.dp)
+                                            switchBottomSheet(scope, sheetState)}
+                                        ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
@@ -273,10 +273,10 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        modifier = Modifier.clickable {
+                                        onClickCategory = {
                                             selectedCategory.value = viewModel.state.categoriesList[3]
-                                            switchBottomSheet(scope, sheetState)
-                                        },cornerSize =  60.dp)
+                                            switchBottomSheet(scope, sheetState)}
+                                        ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
@@ -293,10 +293,10 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        modifier = Modifier.clickable {
+                                        onClickCategory = {
                                             selectedCategory.value = viewModel.state.categoriesList[5]
-                                            switchBottomSheet(scope, sheetState)
-                                        },cornerSize =  60.dp)
+                                            switchBottomSheet(scope, sheetState)}
+                                        ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
@@ -305,10 +305,10 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        modifier = Modifier.clickable {
+                                        onClickCategory = {
                                             selectedCategory.value = viewModel.state.categoriesList[7]
-                                            switchBottomSheet(scope, sheetState)
-                                        },cornerSize =  60.dp)
+                                            switchBottomSheet(scope, sheetState)}
+                                        ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
@@ -334,7 +334,7 @@ fun Categories(
                             // content padding
 
                             content = {
-                                /*
+
                                 if(viewModel.state.categoriesList.size > 8){
                                     for (i in 8 until viewModel.state.categoriesList.size) {
                                         item{
@@ -342,14 +342,14 @@ fun Categories(
                                                 viewModel,
                                                 modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                                 modifierBox = Modifier.padding(4.dp),
-                                                modifier = Modifier.clickable {
+                                                onClickCategory =  {
                                                     selectedCategory.value = viewModel.state.categoriesList[i]
                                                     switchBottomSheet(scope, sheetState)
                                                 },cornerSize =  50.dp)
                                         }
                                     }
                                 }
-                                */
+
                             }
                         )
                     }
@@ -382,14 +382,14 @@ fun getChartData(categoriesSums: List<Double>): List<PieChartData> {
 }
 
 @Composable
-private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier , modifierBox:  Modifier = Modifier, modifier: Modifier = Modifier , cornerSize : Dp = 60.dp) {
-    Column(modifier = modifier.padding(4.dp), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
+private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier , modifierBox:  Modifier = Modifier,onClickCategory : () ->  Unit,  cornerSize : Dp = 60.dp) {
+    Column(modifier = Modifier.clickable{onClickCategory()}.clip(RoundedCornerShape(CornerSize(4.dp))).padding(4.dp), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(modifier = Modifier.padding(2.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 14.sp, fontWeight = FontWeight.W400, text = category.title, color = Color.Black)
         VectorIcon(
             modifierBox,
             modifierVectorImg,
             vectorImg = category.categoryImg,
-            onClick = {},
+            onClick = {onClickCategory()},
             width = 60.dp,
             height = 60.dp,
             cornerSize = cornerSize
