@@ -87,7 +87,7 @@ fun Transactions(
     val sortedDateToTransactionMap = transactionsDateMap.toSortedMap(reverseOrder())
     for (x in sortedDateToTransactionMap.values) {
         x.sortWith(compareByDescending<Transaction> { it.date }.thenBy { it.sum }.thenBy { it.note }
-            .thenBy { it.category.uuid })
+            .thenBy { it.categoryUUID })
     }
 
 
@@ -194,7 +194,8 @@ fun Transactions(
                             items = m.toList(),
                             itemContent = {
                                 Column {
-                                    TransactionItem(transaction = it)
+                                    val categoryName = viewModel.getCategoryNameByUUIID(it.categoryUUID)
+                                    TransactionItem(transaction = it, categoryName=(categoryName?:""))
                                     Divider(modifier = Modifier.background(dividerColor))
                                 }
                             }

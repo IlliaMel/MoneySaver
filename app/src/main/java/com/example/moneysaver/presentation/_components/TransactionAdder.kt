@@ -188,7 +188,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                     val transactionNote: String? = if (note != "") note else null
                     val transaction = Transaction(
                         sum = sumText.toDoubleOrNull() ?: 0.0,
-                        category = category.value,
+                        categoryUUID = category.value.uuid,
                         account = account,
                         note = transactionNote
                     )

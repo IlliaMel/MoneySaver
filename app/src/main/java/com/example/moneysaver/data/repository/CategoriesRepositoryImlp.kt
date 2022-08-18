@@ -4,6 +4,7 @@ import com.example.moneysaver.data.data_base.category_db.CategoryDao
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.repository.CategoriesRepository
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 
 class CategoriesRepositoryImlp(
@@ -13,6 +14,10 @@ class CategoriesRepositoryImlp(
 
     override  fun getCategories(): Flow<List<Category>> {
         return dao.getCategories()
+    }
+
+    override suspend fun getCategoryByUUID(uuid: UUID): Category? {
+        return dao.getCategoryByUUID(uuid)
     }
 
     override suspend fun insertCategory(category: Category) {

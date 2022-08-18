@@ -19,7 +19,7 @@ import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.ui.theme.whiteSurface
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: Transaction, categoryName: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -59,7 +59,7 @@ fun TransactionItem(transaction: Transaction) {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(transaction.category.title, color = Color.Black, fontSize = 17.sp)
+                    Text(categoryName, color = Color.Black, fontSize = 17.sp)
                     val sumText: String = (if(transaction.sum>0) "+" else "-") + "$ " + Math.abs(transaction.sum)
                     val color = if(transaction.sum>0) Color.Green else Color.Red
                     Text(sumText, color = color, fontSize = 15.sp)

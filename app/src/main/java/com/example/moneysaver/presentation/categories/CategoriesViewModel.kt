@@ -64,8 +64,7 @@ class CategoriesViewModel @Inject constructor(
             for(category in categories) {
                 var categorySum = 0.0
                 for(tr in transactions) {
-                    /*TODO: compare with uuid instead of title when categories db will be filled */
-                    if(tr.category.title == category.title) {
+                    if(tr.categoryUUID == category.uuid) {
                         categorySum+=tr.sum
                     }
                 }
@@ -90,8 +89,7 @@ class CategoriesViewModel @Inject constructor(
             for(category in categories) {
                 var categorySum = 0.0
                 for(tr in transactions) {
-                    /*TODO: compare with uuid instead of title when categories db will be filled */
-                    if(tr.category.title == category.title) {
+                    if(tr.categoryUUID == category.uuid) {
                         categorySum+=tr.sum
                     }
                 }
