@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,55 +25,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.AccountsData
-import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.presentation._components.*
+import com.example.moneysaver.presentation._components.navigation_drawer.AlarmService
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
+
 import com.example.moneysaver.presentation.accounts.Accounts
 import com.example.moneysaver.presentation.categories.Categories
-import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-/*
-class MainActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        //show content behind status bar
-        window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        //make status bar transparent
-
-        setContent {
-            MoneySaverTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-
-                    //Transactions(navigateToTransaction = {})
-                    //MainAccountScreen(onNavigationIconClick = {},navigateToCardSettings = {},navigateToCardAdder = {},navigateToGoalAdder = {})
-                    AppBar(){
-
-                    }
-
-                }
-            }
-        }
-    }
-}
-*/
 
 data class ImageWithText(
     val image: Painter,
@@ -81,6 +53,30 @@ data class ImageWithText(
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainActivityViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        installSplashScreen().apply {
+            setKeepVisibleCondition {
+                viewModel.isLoading.value
+            }
+        }
+        setContent {
+            MoneySaverTheme {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Hello World!")
+                }
+            }
+        }
+    }
+}
+/*
+    private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,23 +87,36 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
+
             MoneySaverTheme {
                 val systemUiController = rememberSystemUiController()
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent
                 )
 
-               MainUI()
-               // TempCategory()
-               // EditCategory(  isEditing = true, onCancelIconClick = {}  ,onAddCategoryAction = {} , onDeleteCategory = {} )
-               // PopUp()
-                var setSelectedAccount = remember { mutableStateOf(true) }
-              // SetAccountCurrencyType( setSelectedAccount, returnType = {})
-                //EditAccount()
+                val service = AlarmService(context = applicationContext)
+                service.setAlarm()
+
+
+                MainUI()
+
+
+                /*
+
+                AnimatedSplashScreenTheme {
+                val navController = rememberNavController()
+                SetupNavGraph(navController = navController)
+            }
+                 */
+
                 }
+
             }
         }
-    }
+
+}
+
+*/
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
