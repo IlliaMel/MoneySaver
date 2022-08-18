@@ -78,12 +78,15 @@ fun Categories(
         viewModel.loadCategoriesDataInDateRange(minDate.value!!, maxDate.value!!)
     viewModel.loadAccounts()
 
+    var sheetContentInitClose by remember { mutableStateOf(false) }
+
     if(!isAddingCategory){
     TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = {isForEditing = false; isAddingCategory = true}, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
+            if(sheetContentInitClose)
             TransactionAdder(
                 category = selectedCategory,
                 addTransaction = viewModel::addTransaction,
@@ -94,6 +97,8 @@ fun Categories(
         },
         sheetPeekHeight = 0.dp
         ) {
+
+        if(sheetState.isCollapsed) sheetContentInitClose = true
 
         BackHandler(enabled = sheetState.isExpanded) {
             scope.launch {

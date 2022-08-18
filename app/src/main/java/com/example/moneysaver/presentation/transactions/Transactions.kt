@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -124,6 +125,9 @@ fun Transactions(
             },
             sheetPeekHeight = 0.dp,
             floatingActionButton = {
+
+                if(sheetState.isCollapsed) sheetContentInitClose = true
+
                 if(sheetState.isCollapsed && !sheetState.isAnimationRunning) {
                     FloatingActionButton(
                         onClick = {
@@ -131,7 +135,6 @@ fun Transactions(
                                 selectedCategory.value=null
                                 scaffoldState.bottomSheetState.expand()
                             }
-                            sheetContentInitClose = true
                         },
                         backgroundColor = Color(0xff5c6bbf)
                     ) {
