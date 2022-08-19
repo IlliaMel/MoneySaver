@@ -98,7 +98,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
                 contentPadding = PaddingValues()
             ) {
                 items(
-                    items = viewModel.state.accountList,
+                    items = viewModel.state.debtAndSimpleList,
                     itemContent = {
                         AccountListItem(account = it, navigateToCardSettings = {isForEditing.value = true ; selectedAccountIndex = 1; chosenAccount = it})
                     }
@@ -150,7 +150,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
     }
 
 
-    PopUp(openDialog = isSelectedFilterAccount,accountList = viewModel.state.simpleList , chosenAccountFilter = chosenAccountFilter)
+    PopUp(openDialog = isSelectedFilterAccount,accountList = viewModel.state.allAccountList , chosenAccountFilter = chosenAccountFilter)
 
     ChooseAccountCompose (openDialog = setSelectedAccount,
         normalAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
@@ -203,7 +203,7 @@ private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<A
                                 chosenAccountFilter.value = it
                             }
                             .background(if (it == chosenAccountFilter.value) Color(0xff59aab3) else Color.White)
-                            .padding(10.dp),
+                            .padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
@@ -211,9 +211,9 @@ private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<A
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
-                                .padding(4.dp, 2.dp, 12.dp, 2.dp)
-                                .width(42.dp)
-                                .height(31.dp)
+                                .padding(4.dp, 2.dp, 4.dp, 2.dp)
+                                .width(60.dp)
+                                .height(48.dp)
                                 .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
                         )
                         Column() {
@@ -271,7 +271,7 @@ fun ChooseAccountCompose(
                         normalAccount
                     )
                     ChooseAccountElement(
-                        "Звичайний",
+                        "Борговий",
                         "Кредит, Іпотека",
                         painterResource(id = AccountsData.accountImges[6].img),
                         debtAccount

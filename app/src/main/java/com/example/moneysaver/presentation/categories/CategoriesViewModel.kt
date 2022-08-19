@@ -105,7 +105,7 @@ class CategoriesViewModel @Inject constructor(
     }
 
     fun loadAccounts() {
-        accountsRepository.getAccounts()
+        accountsRepository.getDebtAccounts()
             .onEach { list ->
                 state = state.copy(
                     accountsList = list

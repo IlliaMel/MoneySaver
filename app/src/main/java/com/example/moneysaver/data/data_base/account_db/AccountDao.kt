@@ -10,13 +10,17 @@ import java.util.*
 @Dao
 interface AccountDao {
 
-
+    @Query("SELECT * FROM `account`")
+    fun getAllAccounts(): Flow<List<Account>>
 
     @Query("SELECT * FROM `account` WHERE isForGoal=0 AND isForDebt=0")
     fun getSimpleAccounts(): Flow<List<Account>>
 
     @Query("SELECT * FROM `account` WHERE isForGoal=0")
-    fun getAccounts(): Flow<List<Account>>
+    fun getSimpleAndDeptAccounts(): Flow<List<Account>>
+
+    @Query("SELECT * FROM `account` WHERE isForDebt=0")
+    fun getDebtAccounts(): Flow<List<Account>>
 
     @Query("SELECT * FROM `account` WHERE isForGoal=1")
     fun getGoalAccounts(): Flow<List<Account>>

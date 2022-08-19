@@ -10,14 +10,19 @@ class AccountsRepositoryImpl(
     private val dao: AccountDao
 ) : AccountsRepository {
 
+    override fun getAllAccounts(): Flow<List<Account>> {
+        return dao.getAllAccounts()
+    }
 
-
+    override fun getSimpleAndDeptAccounts(): Flow<List<Account>> {
+        return dao.getSimpleAndDeptAccounts()
+    }
     override fun getSimpleAccounts(): Flow<List<Account>> {
         return dao.getSimpleAccounts()
     }
 
-    override fun getAccounts(): Flow<List<Account>> {
-        return dao.getAccounts()
+    override fun getDebtAccounts(): Flow<List<Account>> {
+        return dao.getDebtAccounts()
     }
 
     override fun getGoalAccounts(): Flow<List<Account>> {

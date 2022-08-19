@@ -69,7 +69,7 @@ class TransactionsViewModel @Inject constructor(
     }
 
     fun loadAccounts() {
-        accountsRepository.getAccounts()
+        accountsRepository.getAllAccounts()
             .onEach { list ->
                 state = state.copy(
                     accountsList = list

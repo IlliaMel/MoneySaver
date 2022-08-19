@@ -22,9 +22,11 @@ class AccountsViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        loadAccounts()
+        loadAllAccounts()
+        loadDebtAccounts()
         loadGoalAccounts()
         loadSimpleAccounts()
+        loadSimpleAndDeptAccounts()
     }
 
 
@@ -32,16 +34,27 @@ class AccountsViewModel @Inject constructor(
         private set
 
 
-    private fun loadAccounts() {
-        repository.getAccounts()
+    private fun loadDebtAccounts() {
+        repository.getDebtAccounts()
             .onEach { list ->
                 state = state.copy(
-                    accountList = list,
+                    debtList = list,
                 )
             }.launchIn(viewModelScope)
 
 
     }
+    private fun loadAllAccounts() {
+        repository.getAllAccounts()
+            .onEach { list ->
+                state = state.copy(
+                    allAccountList = list,
+                )
+            }.launchIn(viewModelScope)
+
+
+    }
+
 
     fun loadGoalAccounts() {
         repository.getGoalAccounts()
@@ -61,6 +74,14 @@ class AccountsViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
+    fun loadSimpleAndDeptAccounts() {
+        repository.getSimpleAndDeptAccounts()
+            .onEach { list ->
+                state = state.copy(
+                    debtAndSimpleList = list,
+                )
+            }.launchIn(viewModelScope)
+    }
 
 
     fun addAccount(account: Account) {
@@ -73,12 +94,16 @@ class AccountsViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteAccount(account)
         }
-        loadAccounts()
+        loadAllAccounts()
+        loadDebtAccounts()
+        loadGoalAccounts()
+        loadSimpleAccounts()
+        loadSimpleAndDeptAccounts()
     }
 
     fun loadBankAccountSum() : Double{
         var sum : Double = 0.0
-        state.accountList.let{
+        state.allAccountList.let{
             it.forEach(){
                 if(!it.isForGoal){
                     if(it.isForDebt){

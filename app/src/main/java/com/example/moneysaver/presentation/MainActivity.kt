@@ -149,7 +149,7 @@ fun MainUI(alarmService: AlarmService){
                         ))
                     ),
                     onItemClick = {
-                        if(it.number == 3){
+                        if(it.number == 2){
                             if(it.switchIsActive)
                                 timeSwitch = true
                             notificationClicked = true
