@@ -58,21 +58,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        installSplashScreen().apply {
-//            setKeepVisibleCondition {
-//                viewModel.isLoading.value
-//            }
-//        }
-//        setContent {
-//            MoneySaverTheme {
-//                Box(
-//                    modifier = Modifier.fillMaxSize(),
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    Text(text = "Hello World!")
-//                }
-//            }
-//        }
+        installSplashScreen().apply {
+            setKeepVisibleCondition {
+                viewModel.isLoading.value
+            }
+        }
         setContent {
             MoneySaverTheme {
                 MainUI()
