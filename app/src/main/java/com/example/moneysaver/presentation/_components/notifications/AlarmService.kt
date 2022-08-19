@@ -1,10 +1,9 @@
-package com.example.moneysaver.presentation._components.navigation_drawer
+package com.example.moneysaver.presentation._components.notifications
 
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.example.moneysaver.presentation._components.AlarmReceiver
 import java.util.*
 
 class  AlarmService(

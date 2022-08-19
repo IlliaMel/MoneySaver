@@ -20,6 +20,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -127,7 +128,7 @@ fun Transactions(
             floatingActionButton = {
 
                 if(sheetState.isCollapsed) sheetContentInitClose = true
-
+//??? !sheetState.isAnimationRunning
                 if(sheetState.isCollapsed && !sheetState.isAnimationRunning) {
                     FloatingActionButton(
                         onClick = {
@@ -143,7 +144,7 @@ fun Transactions(
                             contentDescription = "Add transaction"
                         )
                     }
-                } else Box() {} // no fab when bottom sheet isExpanded
+                }else  Box() {}// no fab when bottom sheet isExpanded
             }
         ) {
             BackHandler(enabled = sheetState.isExpanded) {

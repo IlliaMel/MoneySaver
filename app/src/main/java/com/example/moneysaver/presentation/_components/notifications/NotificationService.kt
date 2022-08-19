@@ -1,4 +1,4 @@
-package com.example.moneysaver.presentation._components
+package com.example.moneysaver.presentation._components.notifications
 
 import android.app.NotificationManager
 import android.app.PendingIntent

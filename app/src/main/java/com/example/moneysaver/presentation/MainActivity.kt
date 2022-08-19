@@ -3,7 +3,6 @@ package com.example.moneysaver.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,13 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.compose.rememberNavController
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.AccountsData
 import com.example.moneysaver.presentation._components.*
-import com.example.moneysaver.presentation._components.navigation_drawer.AlarmService
+
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
+import com.example.moneysaver.presentation._components.time_picker.TimePicker
 
 import com.example.moneysaver.presentation.accounts.Accounts
 import com.example.moneysaver.presentation.categories.Categories
@@ -63,18 +62,6 @@ class MainActivity : ComponentActivity() {
                 viewModel.isLoading.value
             }
         }
-        setContent {
-            MoneySaverTheme {
-                MainUI()
-            }
-        }
-    }
-}
-/*
-    private val viewModel: MainActivityViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
         //delete top bar
         window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
@@ -82,36 +69,21 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
+            val systemUiController = rememberSystemUiController()
+            systemUiController.setSystemBarsColor(
+                color = Color.Transparent
+            )
+/*
+            val service = AlarmService(context = applicationContext)
+            service.setAlarm()*/
 
             MoneySaverTheme {
-                val systemUiController = rememberSystemUiController()
-                systemUiController.setSystemBarsColor(
-                    color = Color.Transparent
-                )
-
-                val service = AlarmService(context = applicationContext)
-                service.setAlarm()
-
-
                 MainUI()
-
-
-                /*
-
-                AnimatedSplashScreenTheme {
-                val navController = rememberNavController()
-                SetupNavGraph(navController = navController)
-            }
-                 */
-
-                }
-
             }
         }
-
+    }
 }
 
-*/
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -132,17 +104,38 @@ fun MainUI(){
         val chosenAccountFilter = remember { mutableStateOf(AccountsData.normalAccount) }
 
 
+        var hoursNotification = remember {
+            mutableStateOf(0)
+        }
+
+        var minutesNotification = remember {
+            mutableStateOf(0)
+        }
+
+        var timeSwitch by remember {
+            mutableStateOf(false)
+        }
+
+        var notificationClicked by remember {
+            mutableStateOf(false)
+        }
+
         Scaffold(
             scaffoldState = scaffoldState,
             drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
             drawerContent = {
                 DrawerHeader()
+                if (notificationClicked){
+                    TimePicker(minutesNotification,hoursNotification)
+                    notificationClicked = false
+                }
+
                 DrawerBody(
                     blocks = listOf(
                         MenuBlock(title = "Settings", items = listOf(
                             MenuItem(title = "Language", description = "Default", icon = Icons.Default.Place),
                             MenuItem(title = "Theme", description = "Light", icon = Icons.Default.Info),
-                            MenuItem(title = "Notifications", description = "20:00", icon = Icons.Default.Notifications, hasSwitch = true)
+                            MenuItem(title = "Notifications", description = "${hoursNotification.value}:${minutesNotification.value}", icon = Icons.Default.Notifications, hasSwitch = true)
                         )),
                         MenuBlock(title = "Block2", items = listOf(
                             MenuItem(title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
@@ -151,7 +144,11 @@ fun MainUI(){
                         ))
                     ),
                     onItemClick = {
-                        Log.d("TAG", "Clicked on ${it.title}")
+                        if(it.title == "Notifications"){
+                            if(it.switchIsActive)
+                                timeSwitch = true
+                            notificationClicked = true
+                        }
                     }
                 )
             },

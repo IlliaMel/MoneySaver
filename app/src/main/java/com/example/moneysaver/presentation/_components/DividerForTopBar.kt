@@ -19,26 +19,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.moneysaver.R
 
-@Composable
-fun AppBar(
-    onNavigationIconClick: () -> Unit
-) {
-    TopAppBar(
-        title = {
-            Text(text = stringResource(id = R.string.app_name))
-        },
-        backgroundColor = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.onPrimary,
-        navigationIcon = {
-            IconButton(onClick = onNavigationIconClick) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Toggle drawer"
-                )
-            }
-        }
-    )
-}
 
 
 @Composable
