@@ -273,13 +273,13 @@ fun ChooseAccountCompose(
                     ChooseAccountElement(
                         "Звичайний",
                         "Кредит, Іпотека",
-                        painterResource(id = AccountsData.accountImges[0].img),
+                        painterResource(id = AccountsData.accountImges[6].img),
                         debtAccount
                     )
                     ChooseAccountElement(
                         "Накопичення",
                         "Заощадження, Мета, Ціль",
-                        painterResource(id = AccountsData.accountImges[0].img),
+                        painterResource(id = AccountsData.accountImges[7].img),
                         goalAccount
                     )
                 }

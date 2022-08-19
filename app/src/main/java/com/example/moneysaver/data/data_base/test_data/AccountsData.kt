@@ -6,13 +6,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.account.Account
+import com.example.moneysaver.ui.theme.externalColorGray
 import java.io.Serializable
 
 
 data class VectorImg(
-    val img: Int = R.drawable.ic_account_img_1,
-    val innerColor: Color =  Color(255, 255, 255, 255),
-    val externalColor: Color =  Color(105, 105, 105, 255)
+    var img: Int = R.drawable.ic_account_img_1,
+    var innerColor: Color =  Color(255, 255, 255, 255),
+    var externalColor: Color =  externalColorGray
 ) : Serializable  {
 
     override fun toString(): String {
@@ -29,16 +30,16 @@ object AccountsData {
 
 
     val accountImges = mutableListOf(
-        VectorImg(img = R.drawable.ic_account_img_1, externalColor = Color(244, 67, 54, 255)),
-        VectorImg(img = R.drawable.ic_account_img_2, externalColor = Color(233, 30, 99, 255)),
-        VectorImg(img = R.drawable.ic_account_img_3, externalColor = Color(156, 39, 176, 255)),
-        VectorImg(img = R.drawable.ic_account_img_4, externalColor = Color(103, 58, 183, 255)),
-        VectorImg(img = R.drawable.ic_account_img_5, externalColor = Color(63, 81, 181, 255)),
-        VectorImg(img = R.drawable.ic_account_img_6, externalColor = Color(33, 150, 243, 255)),
-        VectorImg(img = R.drawable.ic_account_img_7, externalColor = Color(0, 150, 136, 255)),
-        VectorImg(img = R.drawable.ic_account_img_8, externalColor = Color(76, 175, 80, 255)),
-        VectorImg(img = R.drawable.ic_account_img_9, externalColor = Color(255, 235, 59, 255)),
-        VectorImg(img = R.drawable.ic_account_img_10, externalColor = Color(255, 87, 34, 255)),
+        VectorImg(img = R.drawable.ic_account_img_1),
+        VectorImg(img = R.drawable.ic_account_img_2),
+        VectorImg(img = R.drawable.ic_account_img_3),
+        VectorImg(img = R.drawable.ic_account_img_4),
+        VectorImg(img = R.drawable.ic_account_img_5),
+        VectorImg(img = R.drawable.ic_account_img_6),
+        VectorImg(img = R.drawable.ic_account_img_7),
+        VectorImg(img = R.drawable.ic_account_img_8),
+        VectorImg(img = R.drawable.ic_account_img_9),
+        VectorImg(img = R.drawable.ic_account_img_10),
     )
 
     val currencyTypes = mutableListOf(

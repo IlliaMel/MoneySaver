@@ -50,6 +50,8 @@ import com.example.moneysaver.data.data_base.test_data.VectorImg
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.ui.theme.*
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 @Composable
 fun EditAccount(
@@ -247,7 +249,7 @@ Account(description = description.value,
                 Row(modifier = Modifier
                     .padding(0.dp, 0.dp, 0.dp, 0.dp)
                     .fillMaxWidth()
-                    .clickable {setBalance.value = true},
+                    .clickable { setBalance.value = true },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically){
                     Text(
@@ -274,7 +276,7 @@ Account(description = description.value,
                         modifier = Modifier
                             .padding(0.dp, 0.dp, 0.dp, 0.dp)
                             .fillMaxWidth()
-                            .clickable {setCreditLimit.value = true},
+                            .clickable { setCreditLimit.value = true },
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -710,7 +712,10 @@ fun TopBarAccounts(
                     }
 
 
-                    Column(modifier = Modifier.weight(1.2f).fillMaxHeight().padding(0.dp, 0.dp, 13.dp, 0.dp),verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally){
+                    Column(modifier = Modifier
+                        .weight(1.2f)
+                        .fillMaxHeight()
+                        .padding(0.dp, 0.dp, 13.dp, 0.dp),verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally){
                         IconButton(modifier = Modifier
                             .size(35.dp, 35.dp),
                             onClick = { onAddAccountAction(text) }) {
@@ -736,8 +741,13 @@ fun TopBarAccounts(
 
 @Composable
 fun VectorIcon(modifier: Modifier = Modifier, modifierIcn: Modifier = Modifier, vectorImg : VectorImg, onClick: () -> Unit, width : Dp = 55.dp,  height : Dp = 45.dp, cornerSize : Dp  = 8.dp){
-    Box(modifier = modifier.padding(0.dp, 0.dp, 0.dp, 0.dp).width(width)
-        .height(height).clickable{onClick()}.clip(RoundedCornerShape(corner = CornerSize(cornerSize))).background(vectorImg.externalColor),
+    Box(modifier = modifier
+        .padding(0.dp, 0.dp, 0.dp, 0.dp)
+        .width(width)
+        .height(height)
+        .clickable { onClick() }
+        .clip(RoundedCornerShape(corner = CornerSize(cornerSize)))
+        .background(vectorImg.externalColor),
         contentAlignment = Alignment.Center){
         Icon(modifier = modifierIcn,
             imageVector = ImageVector.vectorResource(vectorImg.img),
@@ -752,60 +762,154 @@ fun SetAccountImg(
     openDialog: MutableState<Boolean>,
     returnType: (img: VectorImg) -> Unit,
 ) {
+
+
     if (openDialog.value) {
         Dialog(
             onDismissRequest = {
                 openDialog.value = false
             }
         ) {
-
-            Column(modifier = Modifier
-                .fillMaxHeight(0.6f)
-                .fillMaxWidth(0.9f)
-                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                .background(
-                    whiteSurface
-                )) {
-                Row(
-                    modifier = Modifier
-                        .padding(0.dp, 4.dp, 0.dp, 4.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    Text(modifier = Modifier.padding(0.dp,8.dp,0.dp,4.dp), text = "Choose Account Img", color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 20.sp)
-
-                }
+            var tabIndex by remember { mutableStateOf(0) }
+            val tabData = listOf(
+                "Image",
+                "Color",
+            )
+            val controller = rememberColorPickerController()
+            var chosenVectorImg = remember { mutableStateOf(VectorImg()) }
 
 
-                LazyVerticalGrid(
-                    modifier = Modifier.padding(0.dp,0.dp,0.dp,16.dp),
-                    columns = GridCells.Fixed(3),
-                    // content padding
-                    contentPadding = PaddingValues(
-                        start = 12.dp,
-                        top = 16.dp,
-                        end = 12.dp,
-                        bottom = 16.dp
-                    ),
-                    content = {
-                        items(AccountsData.accountImges.size) { index ->
-                            Card(
-                                backgroundColor = AccountsData.accountImges[index].externalColor,
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .width(55.dp).height(45.dp),
-                                elevation = 8.dp,
-                            ) {
-                                VectorIcon(Modifier.padding(8.dp,0.dp,8.dp,0.dp),vectorImg = AccountsData.accountImges[index], onClick = {returnType(AccountsData.accountImges[index])})
+            if(tabIndex == 0){
+                chosenVectorImg.value.externalColor = externalColorGray
+                Column(modifier = Modifier
+                    .fillMaxHeight(0.6f)
+                    .fillMaxWidth(0.9f)
+                    .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                    .background(
+                        whiteSurface
+                    )) {
+
+                    TabRow(selectedTabIndex = tabIndex,
+                           backgroundColor = Color.White,
+                           contentColor = Color.White,
+                        modifier = Modifier.shadow(elevation = 5.dp)
+                    ) {
+                        tabData.forEachIndexed { index, text ->
+                            Tab(selected = tabIndex == index,
+                                onClick = {
+                                tabIndex = index
+                            }){
+                                Box(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(if (tabIndex == index) inactiveColorTab else Color.White), contentAlignment = Alignment.Center) {
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(12.dp),
+                                        text = text,
+                                        fontSize = 16.sp,
+                                        color = if (tabIndex == index) Color.Black else inactiveColor
+                                    )
+                                }
                             }
                         }
                     }
-                )
+
+                    LazyVerticalGrid(
+                        modifier = Modifier.padding(0.dp,0.dp,0.dp,16.dp),
+                        columns = GridCells.Fixed(3),
+                        // content padding
+                        contentPadding = PaddingValues(
+                            start = 12.dp,
+                            top = 16.dp,
+                            end = 12.dp,
+                            bottom = 16.dp
+                        ),
+                        content = {
+                            items(AccountsData.accountImges.size) { index ->
+                                Card(
+                                    backgroundColor = AccountsData.accountImges[index].externalColor,
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .width(55.dp)
+                                        .height(45.dp),
+                                    elevation = 8.dp,
+                                ) {
+                                    VectorIcon(Modifier.padding(8.dp,0.dp,8.dp,0.dp),vectorImg = AccountsData.accountImges[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = VectorImg(img = AccountsData.accountImges[index].img)})
+                                }
+                            }
+                        }
+                    )
+                }
+            }else if (tabIndex == 1){
+
+                Column(modifier = Modifier
+                    .fillMaxHeight(0.6f)
+                    .fillMaxWidth(0.9f)
+                    .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                    .background(
+                        whiteSurface
+                    )) {
+
+                    TabRow(selectedTabIndex = tabIndex,
+                        backgroundColor = Color.White,
+                        contentColor = Color.White,
+                        modifier = Modifier.shadow(elevation = 5.dp)
+                    ) {
+                        tabData.forEachIndexed { index, text ->
+                            Tab(selected = tabIndex == index,
+                                onClick = {
+                                    tabIndex = index
+                                }){
+                                Box(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(if (tabIndex == index) inactiveColorTab else Color.White), contentAlignment = Alignment.Center) {
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(12.dp),
+                                        text = text,
+                                        fontSize = 16.sp,
+                                        color = if (tabIndex == index) Color.Black else externalColorGray
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+
+                        HsvColorPicker(
+                            modifier = Modifier
+                                .weight(2f)
+                                .height(250.dp)
+                                .padding(8.dp),
+                            controller = controller,
+                        )
+
+
+                        Card(
+                            backgroundColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp)
+                                .width(72.dp)
+                                .height(45.dp),
+                            elevation = 8.dp,
+                        ) {
+                            var vectorImg: VectorImg = chosenVectorImg.value
+                            vectorImg.externalColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value
+                            VectorIcon(Modifier.padding(0.dp,0.dp,0.dp,0.dp), vectorImg = vectorImg, onClick = { returnType(vectorImg)})
+
+                        }
+                    }
+                }
             }
         }
     }
-
 }
-
 

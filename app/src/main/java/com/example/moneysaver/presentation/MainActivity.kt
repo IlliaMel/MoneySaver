@@ -2,6 +2,7 @@ package com.example.moneysaver.presentation
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
@@ -34,6 +35,7 @@ import com.example.moneysaver.presentation._components.*
 
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
+import com.example.moneysaver.presentation._components.notifications.AlarmService
 import com.example.moneysaver.presentation._components.time_picker.TimePicker
 
 import com.example.moneysaver.presentation.accounts.Accounts
@@ -74,11 +76,11 @@ class MainActivity : ComponentActivity() {
                 color = Color.Transparent
             )
 /*
-            val service = AlarmService(context = applicationContext)
-            service.setAlarm()*/
+           */
 
             MoneySaverTheme {
-                MainUI()
+                val service = AlarmService(context = applicationContext)
+                MainUI(service)
             }
         }
     }
@@ -87,7 +89,7 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainUI(){
+fun MainUI(alarmService: AlarmService){
 
     // A surface container using the 'background' color from the theme
     Surface(
@@ -120,6 +122,9 @@ fun MainUI(){
             mutableStateOf(false)
         }
 
+
+        //alarmService.setAlarm(hours = hoursNotification.value,minutes = minutesNotification.value)
+
         Scaffold(
             scaffoldState = scaffoldState,
             drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
@@ -133,18 +138,18 @@ fun MainUI(){
                 DrawerBody(
                     blocks = listOf(
                         MenuBlock(title = "Settings", items = listOf(
-                            MenuItem(title = "Language", description = "Default", icon = Icons.Default.Place),
-                            MenuItem(title = "Theme", description = "Light", icon = Icons.Default.Info),
-                            MenuItem(title = "Notifications", description = "${hoursNotification.value}:${minutesNotification.value}", icon = Icons.Default.Notifications, hasSwitch = true)
+                            MenuItem(number = 0 , title = "Language", description = "Default", icon = Icons.Default.Place),
+                            MenuItem(number = 1 , title = "Theme", description = "Light", icon = Icons.Default.Info),
+                            MenuItem(number = 2 , title = "Notifications", description = "${hoursNotification.value}:${minutesNotification.value}", icon = Icons.Default.Notifications, hasSwitch = true)
                         )),
                         MenuBlock(title = "Block2", items = listOf(
-                            MenuItem(title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
-                            MenuItem(title = "Item22", description = "Desc22", icon = Icons.Default.Edit),
-                            MenuItem(title = "Item23", description = "Desc23", icon = Icons.Default.Edit)
+                            MenuItem(number = 3 , title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
+                            MenuItem(number = 4 , title = "Item22", description = "Desc22", icon = Icons.Default.Edit),
+                            MenuItem(number = 5 , title = "Item23", description = "Desc23", icon = Icons.Default.Edit)
                         ))
                     ),
                     onItemClick = {
-                        if(it.title == "Notifications"){
+                        if(it.number == 3){
                             if(it.switchIsActive)
                                 timeSwitch = true
                             notificationClicked = true
@@ -222,7 +227,7 @@ fun MainUI(){
             )
         )
 
-        val inactiveColor = Color(0xFF777777)
+
         Box(
             modifier = modifier
                 .fillMaxHeight()

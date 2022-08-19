@@ -65,14 +65,16 @@ fun ChooseAccountElement(
             )
         }
 
+
+
         Image(
             painter = img,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .padding(0.dp,8.dp,8.dp,8.dp)
-                .width(40.dp)
-                .height(40.dp)
+                .width(45.dp)
+                .height(45.dp)
                 .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
         )
     }

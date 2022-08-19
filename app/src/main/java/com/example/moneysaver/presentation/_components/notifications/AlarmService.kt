@@ -7,12 +7,10 @@ import android.content.Intent
 import java.util.*
 
 class  AlarmService(
-    private var hours: Int = 12,
-    private var minutes: Int = 0,
     private val context: Context
 ){
 
-    fun setAlarm(){
+    fun setAlarm(hours: Int = 12, minutes: Int = 0){
         var alarmMgr: AlarmManager? = null
 
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
