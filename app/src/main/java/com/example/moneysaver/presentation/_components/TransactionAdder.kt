@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +39,7 @@ import com.example.moneysaver.ui.theme.dividerColor
 fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit, accountsList: List<Account>, categoriesList: List<Category>) {
     var sumText = remember { mutableStateOf("0") }
     var note by remember { mutableStateOf("") }
+    var isSubmitted = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     val openChoseAccountDialog = remember { mutableStateOf(false) }
@@ -129,35 +129,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
 
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(modifier = Modifier.padding(2.dp),text = "Expense", color = Color(0xffff4181), fontSize = 14.sp)
-            OutlinedTextField(
-                value = sumText.value,
-                onValueChange = {
-                    sumText.value = if (it.isEmpty()) {
-                        "0"
-                    } else {
-                        when (it.toDoubleOrNull()) {
-                            null -> sumText.value //old value
-                            else -> it   //new value
-                        }
-                    }
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                textStyle = LocalTextStyle.current.copy(
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center,
-                ),
-                shape = RoundedCornerShape(30.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(5.dp),
-                colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Black),
-                singleLine = true,
-                maxLines = 1
-            )
+            Text(modifier = Modifier.padding(2.dp),text = "$ "+ sumText.value, color = Color(0xffff4181), fontSize = 23.sp, fontWeight = FontWeight.Bold)
         }
 
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -175,36 +147,29 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
+                    .height(80.dp)
                     .padding(15.dp, 5.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Black),
                 maxLines = 2
             )
         }
 
-        Calculator(sumText)
+        Calculator(sumText, isSubmitted)
 
+    }
 
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            Button(
-                shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xff43a0e7)),
-                onClick = {
-                    val account = transactionAccount.value
-                    val transactionNote: String? = if (note != "") note else null
-                    val transaction = Transaction(
-                        sum = sumText.value.toDoubleOrNull() ?: 0.0,
-                        categoryUUID = category.value.uuid,
-                        account = account,
-                        note = transactionNote
-                    )
-                    addTransaction(transaction)
-                    closeAdder()
-                }) {
-                Text("OK")
-            }
-        }
+    if(isSubmitted.value) {
+        val account = transactionAccount.value
+        val transactionNote: String? = if (note != "") note else null
+        val transaction = Transaction(
+            sum = sumText.value.toDoubleOrNull() ?: 0.0,
+            categoryUUID = category.value.uuid,
+            account = account,
+            note = transactionNote
+        )
+        addTransaction(transaction)
+        isSubmitted.value=false
+        closeAdder()
     }
 
     ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = accountsList, transactionAccount = transactionAccount)
@@ -212,13 +177,15 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
 }
 
 @Composable
-private fun Calculator(sumText: MutableState<String>) {
+private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .height(240.dp)) {
         Column(modifier = Modifier.weight(1f)) {
             CalculatorButton(
-                modifier = Modifier.weight(1f).background(Color.LightGray),
+                modifier = Modifier
+                    .weight(1f)
+                    .background(Color.LightGray),
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
@@ -230,7 +197,9 @@ private fun Calculator(sumText: MutableState<String>) {
                 Text(text = "÷", fontSize = 22.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
-                modifier = Modifier.weight(1f).background(Color.LightGray),
+                modifier = Modifier
+                    .weight(1f)
+                    .background(Color.LightGray),
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
@@ -242,7 +211,9 @@ private fun Calculator(sumText: MutableState<String>) {
                 Text(text = "×", fontSize = 22.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
-                modifier = Modifier.weight(1f).background(Color.LightGray),
+                modifier = Modifier
+                    .weight(1f)
+                    .background(Color.LightGray),
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
@@ -254,7 +225,9 @@ private fun Calculator(sumText: MutableState<String>) {
                 Text(text = "-", fontSize = 22.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
-                modifier = Modifier.weight(1f).background(Color.LightGray),
+                modifier = Modifier
+                    .weight(1f)
+                    .background(Color.LightGray),
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
@@ -371,15 +344,21 @@ private fun Calculator(sumText: MutableState<String>) {
         }
         Column(modifier = Modifier.weight(1f)) {
             CalculatorButton(
-                modifier = Modifier.weight(1f).background(Color.LightGray),
+                modifier = Modifier
+                    .weight(1f)
+                    .background(Color.LightGray),
                 onClick = {if(sumText.value.length>1) sumText.value=sumText.value.dropLast(1) else sumText.value="0"}
             ) {
                 Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = null)
             }
-            CalculatorButton(modifier = Modifier.weight(1f).background(Color.LightGray)) { Icon(imageVector = Icons.Default.DateRange, contentDescription = null) }
+            CalculatorButton(modifier = Modifier
+                .weight(1f)
+                .background(Color.LightGray)) { Icon(imageVector = Icons.Default.DateRange, contentDescription = null) }
             if(sumText.value.contains("÷|×|-|\\+".toRegex())) {
                 CalculatorButton(
-                    modifier = Modifier.weight(2f).background(Color(0xff479ad6)),
+                    modifier = Modifier
+                        .weight(2f)
+                        .background(Color(0xff479ad6)),
                     onClick = {sumText.value = evaluateSimpleMathExpr(sumText.value).toCalculatorString()}
                 ) {
                     Text(text = "=", fontSize = 22.sp, fontWeight = FontWeight.Bold, color=Color.White)
@@ -387,8 +366,10 @@ private fun Calculator(sumText: MutableState<String>) {
             }
             else {
                 CalculatorButton(
-                    modifier = Modifier.weight(2f).background(Color(0xff479ad6)),
-                    onClick = {}
+                    modifier = Modifier
+                        .weight(2f)
+                        .background(Color(0xff479ad6)),
+                    onClick = {isSubmitted.value=true}
                 ) {
                     Icon(imageVector = Icons.Default.Check, contentDescription = null, tint=Color.White)
                 }
