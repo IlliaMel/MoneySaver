@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation._components
 
+import android.app.DatePickerDialog
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,12 +35,15 @@ import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
 import com.example.moneysaver.ui.theme.dividerColor
+import java.util.*
 
 @Composable
 fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit, accountsList: List<Account>, categoriesList: List<Category>) {
     var sumText = remember { mutableStateOf("0") }
+    var date: MutableState<Date?> = remember { mutableStateOf(Date()) }
     var note by remember { mutableStateOf("") }
     var isSubmitted = remember { mutableStateOf(false) }
+    val openPickDateDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     val openChoseAccountDialog = remember { mutableStateOf(false) }
@@ -154,7 +158,19 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
             )
         }
 
-        Calculator(sumText, isSubmitted)
+        Calculator(sumText, isSubmitted, openPickDateDialog)
+
+        Row(
+            modifier = Modifier
+                .height(30.dp)
+                .fillMaxWidth()
+                .background(Color.LightGray)
+                .border(BorderStroke(1.dp,  Color(0xff54514d))),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = getShortDateString(date.value?:Date()), color = Color(0xff54514d), fontWeight = FontWeight.Bold, fontSize = 15.sp)
+        }
 
     }
 
@@ -165,6 +181,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
             sum = sumText.value.toDoubleOrNull() ?: 0.0,
             categoryUUID = category.value.uuid,
             account = account,
+            date = date.value?:Date(),
             note = transactionNote
         )
         addTransaction(transaction)
@@ -172,12 +189,13 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
         closeAdder()
     }
 
+    DatePickerDialog(openDialog = openPickDateDialog, startDate = date)
     ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = accountsList, transactionAccount = transactionAccount)
     ChooseTransactionCategoryDialog(openDialog = openChoseCategoryDialog, categoryList = categoriesList, transactionCategory = category)
 }
 
 @Composable
-private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>) {
+private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>, openDatePickerDialog: MutableState<Boolean>) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .height(240.dp)) {
@@ -353,7 +371,11 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
             }
             CalculatorButton(modifier = Modifier
                 .weight(1f)
-                .background(Color.LightGray)) { Icon(imageVector = Icons.Default.DateRange, contentDescription = null) }
+                .background(Color.LightGray),
+                onClick = {openDatePickerDialog.value = true}
+            ) {
+                Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
+            }
             if(sumText.value.contains("÷|×|-|\\+".toRegex())) {
                 CalculatorButton(
                     modifier = Modifier

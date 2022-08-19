@@ -496,7 +496,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
 
 
 @Composable
-fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<Date?>, endDate: MutableState<Date?>) {
+fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<Date?>, endDate: MutableState<Date?> = remember { mutableStateOf(Date())} ) {
     if(openDialog.value) {
         Dialog(
             onDismissRequest = {
@@ -685,7 +685,7 @@ private fun getCurrentYearDates(): Pair<Date, Date> {
     return start to end
 }
 
-private fun getShortDateString(date: Date): String {
+fun getShortDateString(date: Date): String {
     return date.date.toString() + " " + getMonthAbr(date) + " " + getYear(date)
 }
 
