@@ -1,6 +1,7 @@
 package com.example.moneysaver.presentation._components
 
 import android.app.DatePickerDialog
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -186,6 +187,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
         )
         addTransaction(transaction)
         isSubmitted.value=false
+        sumText.value="0"
         closeAdder()
     }
 
@@ -207,8 +209,8 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.contains("÷|×|-|\\+".toRegex()))
-                        sumText.value= evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+                    if(sumText.value.canBeEvaluatedAsMathExpr())
+                        evaluateSumValue(sumText)
                     sumText.value+='÷'
                 }
             ) {
@@ -221,8 +223,8 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.contains("÷|×|-|\\+".toRegex()))
-                        sumText.value= evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+                    if(sumText.value.canBeEvaluatedAsMathExpr())
+                        evaluateSumValue(sumText)
                     sumText.value+='×'
                 }
             ) {
@@ -235,8 +237,8 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.contains("÷|×|-|\\+".toRegex()))
-                        sumText.value= evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+                    if(sumText.value.canBeEvaluatedAsMathExpr())
+                        evaluateSumValue(sumText)
                     sumText.value+='-'
                 }
             ) {
@@ -249,8 +251,8 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.contains("÷|×|-|\\+".toRegex()))
-                        sumText.value= evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+                    if(sumText.value.canBeEvaluatedAsMathExpr())
+                        evaluateSumValue(sumText)
                     sumText.value+='+'
                 }
             ) {
@@ -365,7 +367,10 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
                 modifier = Modifier
                     .weight(1f)
                     .background(Color.LightGray),
-                onClick = {if(sumText.value.length>1) sumText.value=sumText.value.dropLast(1) else sumText.value="0"}
+                onClick = {
+                    if(sumText.value.length>1) sumText.value=sumText.value.dropLast(1) else sumText.value="0"
+                    if(sumText.value=="-") sumText.value="0"
+                }
             ) {
                 Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = null)
             }
@@ -376,12 +381,12 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
             ) {
                 Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
             }
-            if(sumText.value.contains("÷|×|-|\\+".toRegex())) {
+            if(sumText.value.canBeEvaluatedAsMathExpr()) {
                 CalculatorButton(
                     modifier = Modifier
                         .weight(2f)
                         .background(Color(0xff479ad6)),
-                    onClick = {sumText.value = evaluateSimpleMathExpr(sumText.value).toCalculatorString()}
+                    onClick = {evaluateSumValue(sumText)}
                 ) {
                     Text(text = "=", fontSize = 22.sp, fontWeight = FontWeight.Bold, color=Color.White)
                 }
@@ -424,16 +429,39 @@ private fun CalculatorButton(modifier: Modifier = Modifier, onClick: ()->Unit = 
     }
 }
 
+private fun evaluateSumValue(sumText: MutableState<String>) {
+    val numbers = sumText.value.split("÷|×|-|\\+".toRegex())
+    val secondNumber = if(numbers.size>1 && !numbers[1].isNullOrBlank()) numbers[1].toDouble() else numbers[0].toDouble()
+    if(secondNumber!=0.0)
+        sumText.value = evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+}
+
+private fun String.canBeEvaluatedAsMathExpr(): Boolean {
+    if(this.isNullOrEmpty() || !this.contains("÷|×|-|\\+".toRegex())) return false
+
+    if(this.contains("÷|×|-|\\+".toRegex()) && this[0]!='0') return true
+
+    return this.drop(1).contains("÷|×|-|\\+".toRegex())
+}
+
+
 private fun evaluateSimpleMathExpr(mathExprStr: String): Double {
-    val numbers = mathExprStr.split("÷|×|-|\\+".toRegex())
+    val n0IsNegative = mathExprStr[0]=='-'
+
+    val numbers = if(n0IsNegative) mathExprStr.drop(1).split("÷|×|-|\\+".toRegex())
+    else mathExprStr.split("÷|×|-|\\+".toRegex())
+
+    val n0 = if(n0IsNegative) -numbers[0].toDouble() else numbers[0].toDouble()
+    val n1 = if(numbers.size>1 && !numbers[1].isNullOrBlank()) numbers[1].toDouble() else n0
+
     return if(mathExprStr.contains('÷'))
-        numbers[0].toDouble()/numbers[1].toDouble()
+        n0/n1
     else if(mathExprStr.contains('×'))
-        numbers[0].toDouble()*numbers[1].toDouble()
+        n0*n1
     else if(mathExprStr.contains('-'))
-        numbers[0].toDouble()-numbers[1].toDouble()
+        n0-n1
     else
-        numbers[0].toDouble()+numbers[1].toDouble()
+        n0+n1
 }
 
 
