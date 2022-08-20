@@ -1,10 +1,12 @@
 package com.example.moneysaver.presentation._components
 
 import android.app.DatePickerDialog
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -34,6 +37,7 @@ import com.example.moneysaver.data.data_base.test_data.AccountsData
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.ui.theme.dividerColor
 import java.util.*
 
@@ -68,7 +72,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .background(Color(0xff5c6bc0))
+                        .background(transactionAccount.value.accountImg.externalColor)
                         .clickable { openChoseAccountDialog.value = true }
                         .padding(5.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -99,7 +103,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .background(Color(0xffff4181))
+                        .background(category.value.categoryImg.externalColor)
                         .clickable { openChoseCategoryDialog.value = true }
                         .padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -132,18 +136,17 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
         }
 
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(modifier = Modifier.padding(2.dp),text = "Expense", color = Color(0xffff4181), fontSize = 14.sp)
-            Text(modifier = Modifier.padding(2.dp),text = "$ "+ sumText.value, color = Color(0xffff4181), fontSize = 23.sp, fontWeight = FontWeight.Bold)
+            Text(modifier = Modifier.padding(2.dp),text = "Expense", color = category.value.categoryImg.externalColor, fontSize = 16.sp)
+            Text(modifier = Modifier.padding(2.dp),text = "$ "+ sumText.value, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
 
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(modifier = Modifier.padding(2.dp),text = "Notes", color = Color(0xffff4181), fontSize = 14.sp)
             OutlinedTextField(
                 value = note,
                 onValueChange = { note = it },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                placeholder = { Text(modifier = Modifier.fillMaxWidth(), text = "Text...", textAlign = TextAlign.Center) },
+                placeholder = { Text(modifier = Modifier.fillMaxWidth(), text = "Notes...", textAlign = TextAlign.Center) },
                 textStyle = LocalTextStyle.current.copy(
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
@@ -153,12 +156,14 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                     .fillMaxWidth()
                     .height(80.dp)
                     .padding(15.dp, 5.dp),
-                colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Black),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = transactionAccount.value.accountImg.externalColor
+                ),
                 maxLines = 2
             )
         }
 
-        Calculator(sumText, isSubmitted, openPickDateDialog)
+        Calculator(sumText, isSubmitted, openPickDateDialog, focusManager)
 
         Row(
             modifier = Modifier
@@ -186,6 +191,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
         )
         addTransaction(transaction)
         isSubmitted.value=false
+        sumText.value="0"
         closeAdder()
     }
 
@@ -195,66 +201,72 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
 }
 
 @Composable
-private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>, openDatePickerDialog: MutableState<Boolean>) {
+private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>, openDatePickerDialog: MutableState<Boolean>, focusManager: FocusManager) {
     Row(modifier = Modifier
+        .padding(6.dp, 0.dp)
         .fillMaxWidth()
-        .height(240.dp)) {
+        .height(240.dp)
+    ) {
         Column(modifier = Modifier.weight(1f)) {
             CalculatorButton(
                 modifier = Modifier
-                    .weight(1f)
-                    .background(Color.LightGray),
+                    .weight(1f),
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.contains("÷|×|-|\\+".toRegex()))
-                        sumText.value= evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+                    if(sumText.value.canBeEvaluatedAsMathExpr())
+                        evaluateSumValue(sumText)
                     sumText.value+='÷'
-                }
+                },
+                bgColor = Color(0xff939694),
+                focusManager = focusManager
             ) {
-                Text(text = "÷", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "÷", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier
-                    .weight(1f)
-                    .background(Color.LightGray),
+                    .weight(1f),
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.contains("÷|×|-|\\+".toRegex()))
-                        sumText.value= evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+                    if(sumText.value.canBeEvaluatedAsMathExpr())
+                        evaluateSumValue(sumText)
                     sumText.value+='×'
-                }
+                },
+                bgColor = Color(0xff939694),
+                focusManager = focusManager
             ) {
-                Text(text = "×", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "×", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier
-                    .weight(1f)
-                    .background(Color.LightGray),
+                    .weight(1f),
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.contains("÷|×|-|\\+".toRegex()))
-                        sumText.value= evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+                    if(sumText.value.canBeEvaluatedAsMathExpr())
+                        evaluateSumValue(sumText)
                     sumText.value+='-'
-                }
+                },
+                bgColor = Color(0xff939694),
+                focusManager = focusManager
             ) {
-                Text(text = "-", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "-", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier
-                    .weight(1f)
-                    .background(Color.LightGray),
+                    .weight(1f),
                 onClick = {
                     if(sumText.value.last().isMathOperator())
                         sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.contains("÷|×|-|\\+".toRegex()))
-                        sumText.value= evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+                    if(sumText.value.canBeEvaluatedAsMathExpr())
+                        evaluateSumValue(sumText)
                     sumText.value+='+'
-                }
+                },
+                bgColor = Color(0xff939694),
+                focusManager = focusManager
             ) {
-                Text(text = "+", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "+", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
         }
         Column(modifier = Modifier.weight(1f)) {
@@ -263,29 +275,32 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='7'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "7", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "7", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='4'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "4", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "4", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='1'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "1", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "1", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
-            CalculatorButton(modifier = Modifier.weight(1f)) { Text(text = "$", fontSize = 22.sp, fontWeight = FontWeight.Bold) }
+            CalculatorButton(modifier = Modifier.weight(1f), focusManager = focusManager) { Text(text = "$", fontSize = 22.sp, fontWeight = FontWeight.Bold) }
         }
         Column(modifier = Modifier.weight(1f)) {
             CalculatorButton(
@@ -293,36 +308,40 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='8'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "8", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "8", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='5'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "5", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "5", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='2'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "2", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "2", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='0'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "0", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "0", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
         }
         Column(modifier = Modifier.weight(1f)) {
@@ -331,57 +350,67 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='9'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "9", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "9", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='6'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "6", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "6", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
                     if(sumText.value=="0") sumText.value=""
                     sumText.value+='3'
-                }
+                },
+                focusManager = focusManager
             ) {
-                Text(text = "3", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = "3", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
-                onClick = {sumText.value+='.'}
+                onClick = {sumText.value+='.'},
+                focusManager = focusManager
             ) {
-                Text(text = ".", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = ".", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
         }
         Column(modifier = Modifier.weight(1f)) {
             CalculatorButton(
                 modifier = Modifier
-                    .weight(1f)
-                    .background(Color.LightGray),
-                onClick = {if(sumText.value.length>1) sumText.value=sumText.value.dropLast(1) else sumText.value="0"}
+                    .weight(1f),
+                onClick = {
+                    if(sumText.value.length>1) sumText.value=sumText.value.dropLast(1) else sumText.value="0"
+                    if(sumText.value=="-") sumText.value="0"
+                },
+                bgColor = Color(0xff939694),
+                focusManager = focusManager
             ) {
                 Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = null)
             }
             CalculatorButton(modifier = Modifier
-                .weight(1f)
-                .background(Color.LightGray),
-                onClick = {openDatePickerDialog.value = true}
+                .weight(1f),
+                onClick = {openDatePickerDialog.value = true},
+                bgColor = Color(0xff939694),
+                focusManager = focusManager
             ) {
                 Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
             }
-            if(sumText.value.contains("÷|×|-|\\+".toRegex())) {
+            if(sumText.value.canBeEvaluatedAsMathExpr()) {
                 CalculatorButton(
                     modifier = Modifier
-                        .weight(2f)
-                        .background(Color(0xff479ad6)),
-                    onClick = {sumText.value = evaluateSimpleMathExpr(sumText.value).toCalculatorString()}
+                        .weight(2f),
+                    onClick = {evaluateSumValue(sumText)},
+                    bgColor = Color(0xff479ad6),
+                    focusManager = focusManager
                 ) {
                     Text(text = "=", fontSize = 22.sp, fontWeight = FontWeight.Bold, color=Color.White)
                 }
@@ -389,9 +418,10 @@ private fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<
             else {
                 CalculatorButton(
                     modifier = Modifier
-                        .weight(2f)
-                        .background(Color(0xff479ad6)),
-                    onClick = {isSubmitted.value=true}
+                        .weight(2f),
+                    onClick = {isSubmitted.value=true},
+                    bgColor = Color(0xff479ad6),
+                    focusManager = focusManager
                 ) {
                     Icon(imageVector = Icons.Default.Check, contentDescription = null, tint=Color.White)
                 }
@@ -412,28 +442,56 @@ private fun Double.toCalculatorString(): String {
 }
 
 @Composable
-private fun CalculatorButton(modifier: Modifier = Modifier, onClick: ()->Unit = {}, content: @Composable ()-> Unit) {
+private fun CalculatorButton(modifier: Modifier = Modifier, onClick: ()->Unit = {}, bgColor: Color = Color(0xffc8ccc9), focusManager: FocusManager, content: @Composable ()-> Unit) {
     Box(
         modifier = modifier
-            .border(BorderStroke(1.dp, Color.Gray))
+            .padding(2.dp)
+            .clip(CircleShape)
             .fillMaxSize()
-            .clickable { onClick() },
+            .background(bgColor)
+            .clickable {
+                focusManager.clearFocus()
+                onClick()
+                       },
         contentAlignment = Alignment.Center
     ) {
         content()
     }
 }
 
+private fun evaluateSumValue(sumText: MutableState<String>) {
+    val numbers = sumText.value.split("÷|×|-|\\+".toRegex())
+    val secondNumber = if(numbers.size>1 && !numbers[1].isNullOrBlank()) numbers[1].toDouble() else numbers[0].toDouble()
+    if(secondNumber!=0.0)
+        sumText.value = evaluateSimpleMathExpr(sumText.value).toCalculatorString()
+}
+
+private fun String.canBeEvaluatedAsMathExpr(): Boolean {
+    if(this.isNullOrEmpty() || !this.contains("÷|×|-|\\+".toRegex())) return false
+
+    if(this.contains("÷|×|-|\\+".toRegex()) && this[0]!='0') return true
+
+    return this.drop(1).contains("÷|×|-|\\+".toRegex())
+}
+
+
 private fun evaluateSimpleMathExpr(mathExprStr: String): Double {
-    val numbers = mathExprStr.split("÷|×|-|\\+".toRegex())
+    val n0IsNegative = mathExprStr[0]=='-'
+
+    val numbers = if(n0IsNegative) mathExprStr.drop(1).split("÷|×|-|\\+".toRegex())
+    else mathExprStr.split("÷|×|-|\\+".toRegex())
+
+    val n0 = if(n0IsNegative) -numbers[0].toDouble() else numbers[0].toDouble()
+    val n1 = if(numbers.size>1 && !numbers[1].isNullOrBlank()) numbers[1].toDouble() else n0
+
     return if(mathExprStr.contains('÷'))
-        numbers[0].toDouble()/numbers[1].toDouble()
+        n0/n1
     else if(mathExprStr.contains('×'))
-        numbers[0].toDouble()*numbers[1].toDouble()
+        n0*n1
     else if(mathExprStr.contains('-'))
-        numbers[0].toDouble()-numbers[1].toDouble()
+        n0-n1
     else
-        numbers[0].toDouble()+numbers[1].toDouble()
+        n0+n1
 }
 
 
@@ -468,17 +526,8 @@ private fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, ac
                                 ,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Image(
-                                    painter = painterResource(id = it.accountImg.img),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Fit,
-                                    modifier = Modifier
-                                        .padding(2.dp)
-                                        .width(55.dp)
-                                        .height(36.dp)
-                                        .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                                )
-                                Column() {
+                                VectorIcon(height = 40.dp , width = 50.dp, vectorImg = it.accountImg, onClick = {})
+                                Column(modifier = Modifier.padding(8.dp, 0.dp)) {
                                     Text(it.title, fontSize = 16.sp)
                                     val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else ""))+"$ "+it.balance
                                     val balanceColor = if(it.balance>0) Color.Green else (if(it.balance < 0) Color.Red else Color.Gray)
@@ -528,17 +577,8 @@ private fun ChooseTransactionCategoryDialog(openDialog: MutableState<Boolean>, c
                                 ,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Image(
-                                    painter = painterResource(id = it.categoryImg.img),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Fit,
-                                    modifier = Modifier
-                                        .padding(2.dp)
-                                        .width(55.dp)
-                                        .height(36.dp)
-                                        .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                                )
-                                Text(it.title, fontSize = 16.sp)
+                                VectorIcon(height = 40.dp , width = 40.dp, vectorImg = it.categoryImg, onClick = {}, cornerSize = 50.dp)
+                                Text(modifier = Modifier.padding(8.dp, 0.dp), text = it.title, fontSize = 16.sp)
                             }
                             Divider(modifier = Modifier.background(dividerColor))
                         }
