@@ -1,7 +1,7 @@
 package com.example.moneysaver.presentation.categories
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,9 +16,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -29,10 +31,6 @@ import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.domain.category.Category
-import com.example.moneysaver.ui.theme.currencyColor
-import com.example.moneysaver.ui.theme.currencyColorSpent
-import com.example.moneysaver.ui.theme.currencyColorZero
-import com.example.moneysaver.ui.theme.whiteSurface
 import hu.ma.charts.pie.PieChart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -43,6 +41,7 @@ import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
 import com.example.moneysaver.presentation.categories.additional_composes.SimpleColors
+import com.example.moneysaver.ui.theme.*
 import hu.ma.charts.legend.data.LegendPosition
 import hu.ma.charts.pie.data.PieChartData
 import hu.ma.charts.pie.data.PieChartEntry
@@ -70,7 +69,18 @@ fun Categories(
     )
     val scope = rememberCoroutineScope()
 
-    val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.categoriesList[0]) }
+    val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.categoryAdder) }
+
+    //added category adder
+
+    if(!isAddingCategory && !isForEditing) {
+        if (viewModel.state.categoriesList.isNotEmpty() && viewModel.state.categoriesList.last().uuid == CategoriesData.addCategory.uuid) {
+
+        } else
+            viewModel.state.categoriesList.add(CategoriesData.addCategory)
+    }else if(viewModel.state.categoriesList.isNotEmpty() && viewModel.state.categoriesList.last().uuid == CategoriesData.addCategory.uuid)
+        viewModel.state.categoriesList.removeLast()
+
 
     if(minDate.value==null||maxDate.value==null)
         viewModel.loadCategoriesData()
@@ -81,7 +91,8 @@ fun Categories(
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
     if(!isAddingCategory){
-    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = {isForEditing = false; isAddingCategory = true}, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
+    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = {isForEditing =
+        !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -117,13 +128,26 @@ fun Categories(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(LocalConfiguration.current.screenHeightDp.dp)
-                        .background(whiteSurface)
+                        .background(whiteSurface),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
 
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(lightGrayTransparent),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            AnimatedVisibility(visible = isForEditing) {
+                                Text(modifier = Modifier.padding(8.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 16.sp, fontWeight = FontWeight.W400, text = "Choose Category to Edit", color = Color.Black)
+                            }
+                        }
+
                     Row(
                         modifier = Modifier
-                            .weight(2f)
+                            .weight(2.2f)
                             .padding(0.dp)
                     ) {
 
@@ -146,8 +170,17 @@ fun Categories(
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory = {
-                                            selectedCategory.value = viewModel.state.categoriesList[0]
-                                            switchBottomSheet(scope, sheetState)}
+                                            if(viewModel.state.categoriesList.size == 1){
+                                                isAddingCategory = true
+                                                isForEditing = false
+                                            }else {
+                                                selectedCategory.value =
+                                                    viewModel.state.categoriesList[0]
+                                                if(isForEditing)
+                                                    isAddingCategory = true
+                                                else
+                                                    switchBottomSheet(scope, sheetState)
+                                            }}
                                         ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
@@ -164,9 +197,17 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {
-                                            selectedCategory.value = viewModel.state.categoriesList[4]
-                                            switchBottomSheet(scope, sheetState)}
+                                        onClickCategory = {if(viewModel.state.categoriesList.size == 5){
+                                            isAddingCategory = true
+                                            isForEditing = false
+                                        }else {
+                                            selectedCategory.value =
+                                                viewModel.state.categoriesList[4]
+                                            if(isForEditing)
+                                                isAddingCategory = true
+                                            else
+                                                switchBottomSheet(scope, sheetState)
+                                        }}
                                         ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
@@ -176,9 +217,18 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {
-                                            selectedCategory.value = viewModel.state.categoriesList[6]
-                                            switchBottomSheet(scope, sheetState)}
+                                        onClickCategory =  {
+                                            if(viewModel.state.categoriesList.size == 7){
+                                                isAddingCategory = true
+                                                isForEditing = false
+                                            }else {
+                                                selectedCategory.value =
+                                                    viewModel.state.categoriesList[6]
+                                                if(isForEditing)
+                                                    isAddingCategory = true
+                                                else
+                                                    switchBottomSheet(scope, sheetState)
+                                            }}
                                         ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
@@ -207,9 +257,17 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {
-                                            selectedCategory.value = viewModel.state.categoriesList[1]
-                                            switchBottomSheet(scope, sheetState)}
+                                        onClickCategory = {if(viewModel.state.categoriesList.size == 2){
+                                            isAddingCategory = true
+                                            isForEditing = false
+                                        }else {
+                                            selectedCategory.value =
+                                                viewModel.state.categoriesList[1]
+                                            if(isForEditing)
+                                                isAddingCategory = true
+                                            else
+                                                switchBottomSheet(scope, sheetState)
+                                        }}
                                         ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
@@ -219,9 +277,18 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {
-                                            selectedCategory.value = viewModel.state.categoriesList[2]
-                                            switchBottomSheet(scope, sheetState)}
+                                        onClickCategory =  {
+                                            if(viewModel.state.categoriesList.size == 3){
+                                                isAddingCategory = true
+                                                isForEditing = false
+                                            }else {
+                                                selectedCategory.value =
+                                                    viewModel.state.categoriesList[2]
+                                                if(isForEditing)
+                                                    isAddingCategory = true
+                                                else
+                                                    switchBottomSheet(scope, sheetState)
+                                            }}
                                         ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
@@ -278,9 +345,18 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {
-                                            selectedCategory.value = viewModel.state.categoriesList[3]
-                                            switchBottomSheet(scope, sheetState)}
+                                        onClickCategory =  {
+                                            if(viewModel.state.categoriesList.size == 4){
+                                                isAddingCategory = true
+                                                isForEditing = false
+                                            }else {
+                                                selectedCategory.value =
+                                                    viewModel.state.categoriesList[3]
+                                                if(isForEditing)
+                                                    isAddingCategory = true
+                                                else
+                                                    switchBottomSheet(scope, sheetState)
+                                            }}
                                         ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
@@ -298,9 +374,18 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {
-                                            selectedCategory.value = viewModel.state.categoriesList[5]
-                                            switchBottomSheet(scope, sheetState)}
+                                        onClickCategory =  {
+                                            if(viewModel.state.categoriesList.size == 6){
+                                                isAddingCategory = true
+                                                isForEditing = false
+                                            }else {
+                                                selectedCategory.value =
+                                                    viewModel.state.categoriesList[5]
+                                                if(isForEditing)
+                                                    isAddingCategory = true
+                                                else
+                                                    switchBottomSheet(scope, sheetState)
+                                            }}
                                         ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
@@ -310,9 +395,18 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {
-                                            selectedCategory.value = viewModel.state.categoriesList[7]
-                                            switchBottomSheet(scope, sheetState)}
+                                        onClickCategory =  {
+                                            if(viewModel.state.categoriesList.size == 8){
+                                                isAddingCategory = true
+                                                isForEditing = false
+                                            }else {
+                                                selectedCategory.value =
+                                                    viewModel.state.categoriesList[7]
+                                                if(isForEditing)
+                                                    isAddingCategory = true
+                                                else
+                                                    switchBottomSheet(scope, sheetState)
+                                            }}
                                         ,cornerSize =  60.dp)
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
@@ -348,9 +442,17 @@ fun Categories(
                                                 modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                                 modifierBox = Modifier.padding(4.dp),
                                                 onClickCategory =  {
-                                                    selectedCategory.value = viewModel.state.categoriesList[i]
-                                                    switchBottomSheet(scope, sheetState)
-                                                },cornerSize =  50.dp)
+                                                    if(viewModel.state.categoriesList.size == i + 1){
+                                                        isAddingCategory = true
+                                                        isForEditing = false
+                                                    }else {
+                                                        selectedCategory.value =
+                                                            viewModel.state.categoriesList[i]
+                                                        if(isForEditing)
+                                                            isAddingCategory = true
+                                                        else
+                                                            switchBottomSheet(scope, sheetState)
+                                                    }},cornerSize =  50.dp)
                                         }
                                     }
                                 }
@@ -364,7 +466,13 @@ fun Categories(
 
     }
     }else{
-        EditCategory(isForEditing,onAddCategoryAction = {viewModel.addCategory(it); isAddingCategory = false},onDeleteCategory = {viewModel.deleteCategory(it); isAddingCategory = false},onCancelIconClick = {isAddingCategory = false})
+
+        BackHandler() {
+            isForEditing = false
+            isAddingCategory = false
+        }
+
+        EditCategory(isForEditing,category = if(isForEditing) selectedCategory.value else CategoriesData.addCategory ,onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory = false},onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory = false},onCancelIconClick = {isForEditing = false;  isAddingCategory = false})
     }
 
 
@@ -388,7 +496,10 @@ fun getChartData(categoriesSums: List<Double>): List<PieChartData> {
 
 @Composable
 private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier , modifierBox:  Modifier = Modifier,onClickCategory : () ->  Unit,  cornerSize : Dp = 60.dp) {
-    Column(modifier = Modifier.clickable{onClickCategory()}.clip(RoundedCornerShape(CornerSize(4.dp))).padding(4.dp), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = Modifier
+        .clickable { onClickCategory() }
+        .clip(RoundedCornerShape(CornerSize(4.dp)))
+        .padding(4.dp), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(modifier = Modifier.padding(2.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 14.sp, fontWeight = FontWeight.W400, text = category.title, color = Color.Black)
         VectorIcon(
             modifierBox,

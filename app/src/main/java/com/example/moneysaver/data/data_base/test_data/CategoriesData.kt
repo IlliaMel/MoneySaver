@@ -8,7 +8,7 @@ import java.io.Serializable
 
 object CategoriesData {
 
-    val addCategory =  Category(
+    val addCategory = Category(
         categoryImg = VectorImg(img = R.drawable.ic_plus_categ_icn),
         currencyType = "",
         title = "Add Category",
@@ -28,111 +28,11 @@ object CategoriesData {
         VectorImg(img = R.drawable.ic_categ_icn_4, externalColor = Color(255, 87, 34, 255)),
     )
 
-    val categoriesList = listOf(
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-            currencyType = "$",
-            title = "Health",
-            spent = 537.53,
-        ),
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_2),
-            currencyType = "$",
-            title = "Entertainment",
-            spent = 86.0,
-        ),
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_3),
-            currencyType = "$",
-            title = "Gifts",
-            spent = 0.0,
-        ),
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_4),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_5),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
+    var categoryAdder = Category(
+        categoryImg = VectorImg(img = R.drawable.ic_plus_categ_icn),
+        currencyType = "",
+        title = "Add new",
+        spent = 0.0,
+    )
 
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_6),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
-
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_6),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
-
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_6),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
-
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_6),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
-
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_6),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
-
-        Category(
-            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-            currencyType = "$",
-            title = "Family",
-            spent = 137.23,
-        ),
-
-        )
 }
