@@ -119,6 +119,7 @@ fun Transactions(
                         currentTransaction = selectedTransaction.value,
                         category = transactionCategory,
                         addTransaction = viewModel::addTransaction,
+                        deleteTransaction = viewModel::deleteTransaction,
                         closeAdder = {
                             scope.launch {
                                 sheetState.collapse()
