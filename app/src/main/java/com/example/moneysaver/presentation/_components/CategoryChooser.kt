@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 
 @Composable
 fun CategoryChooser(selectedCategory: MutableState<Category?>, categories: List<Category>) {
@@ -42,16 +43,7 @@ fun CategoryChooser(selectedCategory: MutableState<Category?>, categories: List<
                         .padding(5.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(
-                        painter = painterResource(id = it.categoryImg.img),
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .width(50.dp)
-                            .height(50.dp)
-                            .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
-                    )
+                    VectorIcon(height = 60.dp , width = 60.dp, vectorImg = it.categoryImg, onClick = {}, cornerSize = 50.dp)
                     Text(text = it.title, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
             }
