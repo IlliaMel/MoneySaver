@@ -170,9 +170,8 @@ fun Categories(
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory = {
-                                            if(viewModel.state.categoriesList.size == 1){
+                                            if(viewModel.state.categoriesList.size == 1 && !isForEditing){
                                                 isAddingCategory = true
-                                                isForEditing = false
                                             }else {
                                                 selectedCategory.value =
                                                     viewModel.state.categoriesList[0]
@@ -197,9 +196,8 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {if(viewModel.state.categoriesList.size == 5){
+                                        onClickCategory = {if(viewModel.state.categoriesList.size == 5 && !isForEditing){
                                             isAddingCategory = true
-                                            isForEditing = false
                                         }else {
                                             selectedCategory.value =
                                                 viewModel.state.categoriesList[4]
@@ -218,9 +216,8 @@ fun Categories(
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 7){
+                                            if(viewModel.state.categoriesList.size == 7 && !isForEditing){
                                                 isAddingCategory = true
-                                                isForEditing = false
                                             }else {
                                                 selectedCategory.value =
                                                     viewModel.state.categoriesList[6]
@@ -257,9 +254,8 @@ fun Categories(
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {if(viewModel.state.categoriesList.size == 2){
+                                        onClickCategory = {if(viewModel.state.categoriesList.size == 2 && !isForEditing){
                                             isAddingCategory = true
-                                            isForEditing = false
                                         }else {
                                             selectedCategory.value =
                                                 viewModel.state.categoriesList[1]
@@ -278,9 +274,8 @@ fun Categories(
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 3){
+                                            if(viewModel.state.categoriesList.size == 3 && !isForEditing){
                                                 isAddingCategory = true
-                                                isForEditing = false
                                             }else {
                                                 selectedCategory.value =
                                                     viewModel.state.categoriesList[2]
@@ -346,9 +341,8 @@ fun Categories(
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 4){
+                                            if(viewModel.state.categoriesList.size == 4 && !isForEditing){
                                                 isAddingCategory = true
-                                                isForEditing = false
                                             }else {
                                                 selectedCategory.value =
                                                     viewModel.state.categoriesList[3]
@@ -375,9 +369,8 @@ fun Categories(
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 6){
+                                            if(viewModel.state.categoriesList.size == 6 && !isForEditing){
                                                 isAddingCategory = true
-                                                isForEditing = false
                                             }else {
                                                 selectedCategory.value =
                                                     viewModel.state.categoriesList[5]
@@ -396,9 +389,8 @@ fun Categories(
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 8){
+                                            if(viewModel.state.categoriesList.size == 8 && !isForEditing){
                                                 isAddingCategory = true
-                                                isForEditing = false
                                             }else {
                                                 selectedCategory.value =
                                                     viewModel.state.categoriesList[7]
@@ -442,9 +434,8 @@ fun Categories(
                                                 modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                                 modifierBox = Modifier.padding(4.dp),
                                                 onClickCategory =  {
-                                                    if(viewModel.state.categoriesList.size == i + 1){
+                                                    if(viewModel.state.categoriesList.size == i + 1 && !isForEditing){
                                                         isAddingCategory = true
-                                                        isForEditing = false
                                                     }else {
                                                         selectedCategory.value =
                                                             viewModel.state.categoriesList[i]

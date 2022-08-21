@@ -264,7 +264,7 @@ fun TopBarCategoryEdit(
 
         }
     }
-    SetCategoryImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; })
+    SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; } , listOfVectors = CategoriesData.categoryImges , chosenVectorImg = CategoriesData.defaultCategoryVectorImg, idForCategory = true)
 }
 
 @Composable

@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.test_data.AccountsData
+import com.example.moneysaver.data.data_base.test_data.CategoriesData
 import com.example.moneysaver.data.data_base.test_data.VectorImg
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.presentation._components.dividerForTopBar
@@ -61,11 +62,6 @@ fun EditAccount(
     onDeleteAccount: (Account) -> Unit,
     onCancelIconClick: () -> Unit
 ){
-/*
-    var accountType = remember { mutableStateOf(account.type) }
-    var setSelectedAccount = remember { mutableStateOf(false) }
-    var setSelectedAccount = remember { mutableStateOf(false) }
-    */
 
 
     var setCurrencyTypeChange = remember { mutableStateOf(false) }
@@ -107,12 +103,7 @@ fun EditAccount(
             .fillMaxHeight()
             .background(gray)
     ) {
-/*
 
-Account(description = description.value,
-                    currencyType = currencyType.value,
-                    title = it)
- */
 
         TopBarAccounts(vectorImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfAccount = if(isEditing)  "Edit Account" else  "New Account",
             onAddAccountAction = {onAddAccountAction(
@@ -736,7 +727,7 @@ fun TopBarAccounts(
 
         }
     }
-    SetAccountImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; })
+    SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; } , listOfVectors = AccountsData.accountImges, idForCategory = false)
 }
 
 @Composable
@@ -758,9 +749,12 @@ fun VectorIcon(modifier: Modifier = Modifier, modifierIcn: Modifier = Modifier, 
 }
 
 @Composable
-fun SetAccountImg(
+fun SetImg(
     openDialog: MutableState<Boolean>,
     returnType: (img: VectorImg) -> Unit,
+    listOfVectors: MutableList<VectorImg>,
+    chosenVectorImg: VectorImg = VectorImg(),
+    idForCategory: Boolean
 ) {
 
 
@@ -776,7 +770,7 @@ fun SetAccountImg(
                 "Color",
             )
             val controller = rememberColorPickerController()
-            var chosenVectorImg = remember { mutableStateOf(VectorImg()) }
+            var chosenVectorImg = remember { mutableStateOf(chosenVectorImg) }
 
 
             if(tabIndex == 0){
@@ -825,17 +819,23 @@ fun SetAccountImg(
                             bottom = 16.dp
                         ),
                         content = {
-                            items(AccountsData.accountImges.size) { index ->
-                                Card(
-                                    backgroundColor = AccountsData.accountImges[index].externalColor,
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .width(55.dp)
-                                        .height(45.dp),
-                                    elevation = 8.dp,
-                                ) {
-                                    VectorIcon(Modifier.padding(8.dp,0.dp,8.dp,0.dp),vectorImg = AccountsData.accountImges[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = VectorImg(img = AccountsData.accountImges[index].img)})
+                            items(listOfVectors.size) { index ->
+
+                                if(idForCategory){
+                                    VectorIcon(Modifier.padding(8.dp,8.dp,8.dp,8.dp),Modifier.padding(12.dp), vectorImg = CategoriesData.categoryImges[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = VectorImg(img = listOfVectors[index].img)},width = 50.dp , height = 60.dp, cornerSize = 50.dp)
+                                }else{
+                                    Card(
+                                        backgroundColor = listOfVectors[index].externalColor,
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                            .width(55.dp)
+                                            .height(45.dp),
+                                        elevation = 8.dp,
+                                    ) {
+                                        VectorIcon(Modifier.padding(8.dp,0.dp,8.dp,0.dp),vectorImg = listOfVectors[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = VectorImg(img = listOfVectors[index].img)})
+                                    }
                                 }
+
                             }
                         }
                     )
@@ -892,20 +892,29 @@ fun SetAccountImg(
                         )
 
 
-                        Card(
-                            backgroundColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(8.dp)
-                                .width(72.dp)
-                                .height(45.dp),
-                            elevation = 8.dp,
-                        ) {
+
+                        if(idForCategory){
                             var vectorImg: VectorImg = chosenVectorImg.value
                             vectorImg.externalColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value
-                            VectorIcon(Modifier.padding(0.dp,0.dp,0.dp,0.dp), vectorImg = vectorImg, onClick = { returnType(vectorImg)})
+                            VectorIcon(Modifier.padding(8.dp,8.dp,8.dp,8.dp),Modifier.padding(12.dp), vectorImg = vectorImg, onClick = {returnType(vectorImg)},width = 50.dp , height = 60.dp, cornerSize = 50.dp)
+                        }else{
 
+                            Card(
+                                backgroundColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(8.dp)
+                                    .width(72.dp)
+                                    .height(45.dp),
+                                elevation = 8.dp,
+                            ) {
+                                var vectorImg: VectorImg = chosenVectorImg.value
+                                vectorImg.externalColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value
+                                VectorIcon(Modifier.padding(0.dp,0.dp,0.dp,0.dp), vectorImg = vectorImg, onClick = { returnType(vectorImg)})
+                            }
                         }
+
+
                     }
                 }
             }

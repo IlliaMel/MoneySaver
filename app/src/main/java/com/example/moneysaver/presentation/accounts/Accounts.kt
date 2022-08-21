@@ -490,37 +490,8 @@ private fun textForAccount(account: Account, modifier: Modifier = Modifier){
 
 @Composable
 private fun AccountImage(account: Account) {
-    /*
-    Image(
-        painter = painterResource(id = account.accountImg.img),
-        contentDescription = null,
-        contentScale = ContentScale.Fit,
-        modifier = Modifier
-            .padding(2.dp)
-            .width(55.dp)
-            .height(36.dp)
-            .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-    )
-*/
     VectorIcon(modifier = Modifier.padding(8.dp),height = 40.dp , width = 50.dp, vectorImg = account.accountImg,onClick = {})
 }
-
-/*
-
-@Composable
-fun AccountVectorIcon(modifier: Modifier = Modifier, accountImg : AccountImg, onClick: () -> Unit, width : Dp = 55.dp,  height : Dp = 45.dp,){
-    Box(modifier = modifier.padding(0.dp, 0.dp, 0.dp, 0.dp).width(width)
-        .height(height).clip(RoundedCornerShape(corner = CornerSize(8.dp))).background(accountImg.externalColor),
-        contentAlignment = Alignment.Center){
-        Icon(modifier = Modifier
-            .clickable{onClick()},
-            imageVector = ImageVector.vectorResource(accountImg.img),
-            tint = accountImg.innerColor,
-            contentDescription = null
-        )
-    }
-}
- */
 
 @Preview
 @Composable
