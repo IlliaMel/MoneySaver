@@ -82,7 +82,7 @@ fun TransactionEditor(
                     modifier = Modifier
                         .weight(1f)
                         .background(transactionAccount.value.accountImg.externalColor)
-                        .clickable { openChoseAccountDialog.value = true }
+                        .clickable { if(!choiceIsActive.value) openChoseAccountDialog.value = true }
                         .padding(5.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -113,7 +113,7 @@ fun TransactionEditor(
                     modifier = Modifier
                         .weight(1f)
                         .background(category.value.categoryImg.externalColor)
-                        .clickable { openChoseCategoryDialog.value = true }
+                        .clickable { if(!choiceIsActive.value) openChoseCategoryDialog.value = true }
                         .padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
