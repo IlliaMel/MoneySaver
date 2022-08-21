@@ -67,7 +67,7 @@ fun Categories(
     )
     val scope = rememberCoroutineScope()
 
-    val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.categoryAdder) }
+    val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.addCategory) }
 
     //added category adder
 
@@ -250,6 +250,7 @@ fun Categories(
                                 if(viewModel.state.categoriesList.size > 1)
                                     CategoriesVectorImage(viewModel.state.categoriesList[1],
                                         viewModel,
+                                        columnModifier = Modifier.weight(1f),
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory = {if(viewModel.state.categoriesList.size == 2 && !isForEditing){
@@ -269,6 +270,7 @@ fun Categories(
                                 if(viewModel.state.categoriesList.size > 2)
                                     CategoriesVectorImage(viewModel.state.categoriesList[2],
                                         viewModel,
+                                        columnModifier = Modifier.weight(1f),
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
@@ -461,7 +463,7 @@ fun Categories(
             isAddingCategory = false
         }
 
-        EditCategory(isForEditing,category = if(isForEditing) selectedCategory.value else CategoriesData.addCategory ,onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory = false},onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory = false},onCancelIconClick = {isForEditing = false;  isAddingCategory = false})
+        EditCategory(isForEditing,category = if(isForEditing) selectedCategory.value else CategoriesData.defaultCategory ,onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory = false},onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory = false},onCancelIconClick = {isForEditing = false;  isAddingCategory = false})
     }
 
 
@@ -484,8 +486,8 @@ fun getChartData(categoriesList: List<Category>,categoriesSums: List<Double>): L
 }
 
 @Composable
-private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier , modifierBox:  Modifier = Modifier,onClickCategory : () ->  Unit,  cornerSize : Dp = 60.dp) {
-    Column(modifier = Modifier
+private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier , modifierBox:  Modifier = Modifier, columnModifier: Modifier = Modifier,onClickCategory : () ->  Unit,  cornerSize : Dp = 60.dp) {
+    Column(modifier = columnModifier
         .clickable { onClickCategory() }
         .clip(RoundedCornerShape(CornerSize(4.dp)))
         .padding(4.dp), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -495,8 +497,8 @@ private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewM
             modifierVectorImg,
             vectorImg = category.categoryImg,
             onClick = {onClickCategory()},
-            width = 60.dp,
-            height = 60.dp,
+            width = 56.dp,
+            height = 56.dp,
             cornerSize = cornerSize
         )
         var color = currencyColor

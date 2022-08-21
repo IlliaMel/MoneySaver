@@ -797,6 +797,7 @@ fun SetImg(
                         }
                     }
 
+
                     LazyVerticalGrid(
                         modifier = Modifier.padding(0.dp,0.dp,0.dp,16.dp),
                         columns = GridCells.Fixed(3),
@@ -807,6 +808,8 @@ fun SetImg(
                             end = 12.dp,
                             bottom = 16.dp
                         ),
+                        verticalArrangement = Arrangement.SpaceAround,
+                        horizontalArrangement = Arrangement.SpaceAround,
                         content = {
                             items(listOfVectors.size) { index ->
 
@@ -817,7 +820,7 @@ fun SetImg(
                                         backgroundColor = listOfVectors[index].externalColor,
                                         modifier = Modifier
                                             .padding(8.dp)
-                                            .width(55.dp)
+                                            .width(45.dp)
                                             .height(45.dp),
                                         elevation = 8.dp,
                                     ) {
@@ -885,7 +888,7 @@ fun SetImg(
                         if(idForCategory){
                             var vectorImg: VectorImg = chosenVectorImg.value
                             vectorImg.externalColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value
-                            VectorIcon(Modifier.padding(8.dp,8.dp,8.dp,8.dp),Modifier.padding(12.dp), vectorImg = vectorImg, onClick = {returnType(vectorImg)},width = 50.dp , height = 60.dp, cornerSize = 50.dp)
+                            VectorIcon(Modifier.weight(1f).padding(8.dp,8.dp,8.dp,8.dp),Modifier.padding(8.dp), vectorImg = vectorImg, onClick = {returnType(vectorImg)},width = 30.dp , height = 65.dp, cornerSize = 30.dp)
                         }else{
 
                             Card(

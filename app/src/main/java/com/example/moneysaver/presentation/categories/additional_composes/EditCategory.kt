@@ -40,7 +40,7 @@ import com.example.moneysaver.ui.theme.*
 @Composable
 fun EditCategory(
     isEditing: Boolean,
-    category: Category = CategoriesData.addCategory,
+    category: Category = CategoriesData.defaultCategory,
     onAddCategoryAction: (Category) -> Unit,
     onDeleteCategory: (Category) -> Unit,
     onCancelIconClick: () -> Unit
