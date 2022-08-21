@@ -137,23 +137,24 @@ fun Transactions(
 
                 if(sheetState.isCollapsed) sheetContentInitClose = true
 //??? !sheetState.isAnimationRunning
-                if(sheetState.isCollapsed && !sheetState.isAnimationRunning) {
-                    FloatingActionButton(
-                        onClick = {
-                            scope.launch {
-                                selectedCategory.value=null
-                                selectedTransaction.value=null
+                FloatingActionButton(
+                    onClick = {
+                        scope.launch {
+                            selectedCategory.value=null
+                            selectedTransaction.value=null
+                            if(sheetState.isCollapsed && !sheetState.isAnimationRunning)
                                 scaffoldState.bottomSheetState.expand()
-                            }
-                        },
-                        backgroundColor = Color(0xff5c6bbf)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add transaction"
-                        )
-                    }
-                }else  Box() {}// no fab when bottom sheet isExpanded
+                            else
+                                scaffoldState.bottomSheetState.collapse()
+                        }
+                    },
+                    backgroundColor = Color(0xff5c6bbf)
+                ) {
+                    Icon(
+                        imageVector = if(sheetState.isCollapsed && !sheetState.isAnimationRunning) Icons.Default.Add else Icons.Default.ArrowDropDown,
+                        contentDescription = "Add transaction"
+                    )
+                }
             }
         ) {
 
