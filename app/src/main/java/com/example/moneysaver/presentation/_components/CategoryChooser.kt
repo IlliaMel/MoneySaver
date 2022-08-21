@@ -43,7 +43,7 @@ fun CategoryChooser(selectedCategory: MutableState<Category?>, categories: List<
                         .padding(5.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    VectorIcon(height = 60.dp , width = 60.dp, vectorImg = it.categoryImg, onClick = {}, cornerSize = 50.dp)
+                    VectorIcon(height = 60.dp , width = 60.dp, vectorImg = it.categoryImg, onClick = {selectedCategory.value = it}, cornerSize = 50.dp)
                     Text(text = it.title, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
             }
