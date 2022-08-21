@@ -59,6 +59,12 @@ class TransactionsViewModel @Inject constructor(
         }
     }
 
+    fun deleteTransaction(transaction: Transaction) {
+        viewModelScope.launch {
+            repository.deleteTransaction(transaction)
+        }
+    }
+
     fun loadCategories() {
         categoriesRepository.getCategories()
             .onEach { list ->

@@ -11,9 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,10 +37,21 @@ import com.example.moneysaver.ui.theme.dividerColor
 import java.util.*
 
 @Composable
-fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit, accountsList: List<Account>, categoriesList: List<Category>) {
-    var sumText = remember { mutableStateOf("0") }
-    var date: MutableState<Date?> = remember { mutableStateOf(Date()) }
-    var note by remember { mutableStateOf("") }
+fun TransactionEditor(
+    currentTransaction: Transaction? = null,
+    category:  MutableState<Category>,
+    addTransaction: (tr: Transaction)->Unit,
+    deleteTransaction: (tr: Transaction)->Unit = {},
+    closeAdder: ()->Unit, accountsList: List<Account>,
+    categoriesList: List<Category>
+) {
+
+    var choiceIsActive = remember { mutableStateOf(currentTransaction!=null)}
+
+    var sumText = remember { mutableStateOf(currentTransaction?.sum?.toCalculatorString() ?: "0") }
+    var date: MutableState<Date?> = remember { mutableStateOf(currentTransaction?.date ?: Date()) }
+    var note by remember { mutableStateOf(currentTransaction?.note ?: "") }
+    val transactionAccount = remember { mutableStateOf(if(currentTransaction!=null) accountsList.first{it.uuid == currentTransaction.accountUUID} else if(accountsList.isNotEmpty()) accountsList[0] else AccountsData.accountsList[0]) }
     var isSubmitted = remember { mutableStateOf(false) }
     val openPickDateDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -50,13 +59,13 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
     val openChoseAccountDialog = remember { mutableStateOf(false) }
     val openChoseCategoryDialog = remember { mutableStateOf(false) }
 
-    val transactionAccount = remember { mutableStateOf(AccountsData.accountsList[0]) }
+
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xffeeeeee))
-            .height(510.dp),
+            .height(460.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
@@ -70,7 +79,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                     modifier = Modifier
                         .weight(1f)
                         .background(transactionAccount.value.accountImg.externalColor)
-                        .clickable { openChoseAccountDialog.value = true }
+                        .clickable { if(!choiceIsActive.value) openChoseAccountDialog.value = true }
                         .padding(5.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -101,7 +110,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                     modifier = Modifier
                         .weight(1f)
                         .background(category.value.categoryImg.externalColor)
-                        .clickable { openChoseCategoryDialog.value = true }
+                        .clickable { if(!choiceIsActive.value) openChoseCategoryDialog.value = true }
                         .padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
@@ -141,6 +150,7 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
             OutlinedTextField(
                 value = note,
                 onValueChange = { note = it },
+                enabled = !choiceIsActive.value,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 placeholder = { Text(modifier = Modifier.fillMaxWidth(), text = "Notes...", textAlign = TextAlign.Center) },
@@ -150,24 +160,65 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                 ),
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(15.dp, 5.dp),
+                    .width(220.dp)
+                    .height(50.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = transactionAccount.value.accountImg.externalColor
                 ),
-                maxLines = 2
+                maxLines = 1
             )
         }
 
-        Calculator(sumText, isSubmitted, openPickDateDialog, focusManager)
+        if(choiceIsActive.value) {
+            Row(modifier = Modifier
+                .padding(6.dp, 0.dp)
+                .fillMaxWidth()
+                .height(240.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .width(90.dp)
+                        .height(90.dp)
+                        .background(Color(0xffc8ccc9))
+                        .clickable {
+                                    if(currentTransaction!=null)
+                                        deleteTransaction(currentTransaction!!)
+                                    closeAdder()
+                                   },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(modifier = Modifier.width(40.dp).height(40.dp), imageVector = Icons.Filled.Delete, contentDescription = null, tint = Color(0xffe31d0b))
+                    Text(text = "Delete", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                }
+                Column(modifier = Modifier
+                    .clip(CircleShape)
+                    .width(90.dp)
+                    .height(90.dp)
+                    .background(Color(0xffc8ccc9))
+                    .clickable {
+                        choiceIsActive.value = false
+                    },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(modifier = Modifier.width(40.dp).height(40.dp), imageVector = Icons.Filled.Edit, contentDescription = null, tint = Color(0xff0b53e3))
+                    Text(text = "Edit", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+        } else {
+            Calculator(sumText, isSubmitted, openPickDateDialog, focusManager)
+        }
 
         Row(
             modifier = Modifier
                 .height(30.dp)
                 .fillMaxWidth()
                 .background(Color.LightGray)
-                .border(BorderStroke(1.dp,  Color(0xff54514d))),
+                .border(BorderStroke(1.dp, Color(0xff54514d))),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -177,12 +228,18 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
     }
 
     if(isSubmitted.value) {
-        val account = transactionAccount.value
         val transactionNote: String? = if (note != "") note else null
-        val transaction = Transaction(
+        val transaction = if(currentTransaction==null) Transaction(
             sum = sumText.value.toDoubleOrNull() ?: 0.0,
             categoryUUID = category.value.uuid,
-            account = account,
+            accountUUID = transactionAccount.value.uuid,
+            date = date.value?:Date(),
+            note = transactionNote
+        ) else Transaction(
+            uuid=currentTransaction.uuid,
+            sum = sumText.value.toDoubleOrNull() ?: 0.0,
+            categoryUUID = category.value.uuid,
+            accountUUID = transactionAccount.value.uuid,
             date = date.value?:Date(),
             note = transactionNote
         )
@@ -449,7 +506,7 @@ private fun CalculatorButton(modifier: Modifier = Modifier, onClick: ()->Unit = 
             .clickable {
                 focusManager.clearFocus()
                 onClick()
-                       },
+            },
         contentAlignment = Alignment.Center
     ) {
         content()

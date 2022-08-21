@@ -96,7 +96,7 @@ fun Categories(
         scaffoldState = scaffoldState,
         sheetContent = {
             if(sheetContentInitClose)
-            TransactionAdder(
+            TransactionEditor(
                 category = selectedCategory,
                 addTransaction = viewModel::addTransaction,
                 closeAdder = { scope.launch {sheetState.collapse()} },
