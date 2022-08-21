@@ -42,10 +42,11 @@ import com.example.moneysaver.ui.theme.dividerColor
 import java.util.*
 
 @Composable
-fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit, accountsList: List<Account>, categoriesList: List<Category>) {
-    var sumText = remember { mutableStateOf("0") }
-    var date: MutableState<Date?> = remember { mutableStateOf(Date()) }
-    var note by remember { mutableStateOf("") }
+fun TransactionEditor(currentTransaction: Transaction? = null, category:  MutableState<Category>, addTransaction: (tr: Transaction)->Unit, closeAdder: ()->Unit, accountsList: List<Account>, categoriesList: List<Category>) {
+    var sumText = remember { mutableStateOf(currentTransaction?.sum?.toCalculatorString() ?: "0") }
+    var date: MutableState<Date?> = remember { mutableStateOf(currentTransaction?.date ?: Date()) }
+    var note by remember { mutableStateOf(currentTransaction?.note ?: "") }
+    val transactionAccount = remember { mutableStateOf(if(currentTransaction!=null) accountsList.first{it.uuid == currentTransaction.accountUUID} else if(accountsList.isNotEmpty()) accountsList[0] else AccountsData.accountsList[0]) }
     var isSubmitted = remember { mutableStateOf(false) }
     val openPickDateDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -53,13 +54,13 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
     val openChoseAccountDialog = remember { mutableStateOf(false) }
     val openChoseCategoryDialog = remember { mutableStateOf(false) }
 
-    val transactionAccount = remember { mutableStateOf(AccountsData.accountsList[0]) }
+
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xffeeeeee))
-            .height(510.dp),
+            .height(460.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
@@ -153,13 +154,12 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
                 ),
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(15.dp, 5.dp),
+                    .width(220.dp)
+                    .height(50.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = transactionAccount.value.accountImg.externalColor
                 ),
-                maxLines = 2
+                maxLines = 1
             )
         }
 
@@ -180,12 +180,18 @@ fun TransactionAdder(category:  MutableState<Category>, addTransaction: (tr: Tra
     }
 
     if(isSubmitted.value) {
-        val account = transactionAccount.value
         val transactionNote: String? = if (note != "") note else null
-        val transaction = Transaction(
+        val transaction = if(currentTransaction==null) Transaction(
             sum = sumText.value.toDoubleOrNull() ?: 0.0,
             categoryUUID = category.value.uuid,
-            account = account,
+            accountUUID = transactionAccount.value.uuid,
+            date = date.value?:Date(),
+            note = transactionNote
+        ) else Transaction(
+            uuid=currentTransaction.uuid,
+            sum = sumText.value.toDoubleOrNull() ?: 0.0,
+            categoryUUID = category.value.uuid,
+            accountUUID = transactionAccount.value.uuid,
             date = date.value?:Date(),
             note = transactionNote
         )

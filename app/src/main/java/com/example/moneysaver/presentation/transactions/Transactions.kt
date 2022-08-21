@@ -1,10 +1,10 @@
 package com.example.moneysaver.presentation.transactions
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,7 +20,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -44,7 +43,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun Transactions(
     onNavigationIconClick: () -> Unit,
@@ -65,6 +64,8 @@ fun Transactions(
     val scope = rememberCoroutineScope()
 
     val selectedCategory: MutableState<Category?> = remember { mutableStateOf(null) }
+
+    val bottomSheetNeedOpening = remember{ mutableStateOf(false)}
 
     val transactionSearchText = remember { mutableStateOf("") }
 
@@ -92,6 +93,8 @@ fun Transactions(
             .thenBy { it.categoryUUID })
     }
 
+    var selectedTransaction: MutableState<Transaction?> = remember { mutableStateOf(null) }
+
 
 
     Column(
@@ -106,17 +109,21 @@ fun Transactions(
 
             sheetContent = {
                 if(sheetContentInitClose)
-                if(selectedCategory.value==null) {
+                if(selectedCategory.value==null && selectedTransaction.value==null) {
                     CategoryChooser(selectedCategory, viewModel.state.categoriesList)
                 } else {
+                    if(selectedCategory.value==null && selectedTransaction.value!=null)
+                        selectedCategory.value = viewModel.state.categoriesList.first{ it.uuid == selectedTransaction.value!!.categoryUUID}
                     val transactionCategory: MutableState<Category> = remember { mutableStateOf(selectedCategory.value!!) }
-                    TransactionAdder(
+                    TransactionEditor(
+                        currentTransaction = selectedTransaction.value,
                         category = transactionCategory,
                         addTransaction = viewModel::addTransaction,
                         closeAdder = {
                             scope.launch {
                                 sheetState.collapse()
                                 selectedCategory.value=null // reset selected category
+                                selectedTransaction.value=null
                             }
                         },
                         accountsList = viewModel.state.accountsList,
@@ -134,6 +141,7 @@ fun Transactions(
                         onClick = {
                             scope.launch {
                                 selectedCategory.value=null
+                                selectedTransaction.value=null
                                 scaffoldState.bottomSheetState.expand()
                             }
                         },
@@ -147,12 +155,15 @@ fun Transactions(
                 }else  Box() {}// no fab when bottom sheet isExpanded
             }
         ) {
+
             BackHandler(enabled = sheetState.isExpanded) {
                 scope.launch {
                     sheetState.collapse()
                     selectedCategory.value=null
+                    selectedTransaction.value=null
                 }
             }
+
 
             LazyColumn(
                 Modifier.background(whiteSurface),
@@ -199,7 +210,20 @@ fun Transactions(
                             itemContent = {
                                 Column {
                                     val categoryName = viewModel.getCategoryNameByUUIID(it.categoryUUID)
-                                    TransactionItem(transaction = it, categoryName=(categoryName?:""))
+                                    TransactionItem(
+                                        transaction = it,
+                                        categoryName=(categoryName?:""),
+                                        accountName = viewModel.state.accountsList.first{ x -> x.uuid == it.accountUUID}.title,
+                                        vectorImg =viewModel.state.categoriesList.first{ x -> x.uuid == it.categoryUUID}.categoryImg,
+                                        onClick = {
+                                            scope.launch {
+                                                sheetState.collapse()
+                                                selectedCategory.value=null
+                                                selectedTransaction.value = it
+                                                sheetState.expand()
+                                            }
+                                        }
+                                    )
                                     Divider(modifier = Modifier.background(dividerColor))
                                 }
                             }
@@ -207,15 +231,6 @@ fun Transactions(
                     }
                 }
 
-                item {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(LocalConfiguration.current.screenHeightDp.dp)
-                            .background(Color(0xffececec))
-                            .innerShadow(blur = 4.dp, drawLeft = false, drawRight = false)
-                    )
-                }
 
             }
 
@@ -340,8 +355,9 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
 
             DateRangePicker(minDate, maxDate)
 
-
         }
+
     }
     dividerForTopBar()
+
 }

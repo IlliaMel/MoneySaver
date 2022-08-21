@@ -15,41 +15,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
+import com.example.moneysaver.data.data_base.test_data.VectorImg
 import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.ui.theme.whiteSurface
 
 @Composable
-fun TransactionItem(transaction: Transaction, categoryName: String) {
+fun TransactionItem(transaction: Transaction, categoryName: String, accountName: String, vectorImg: VectorImg, onClick: ()->Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(whiteSurface)
+            .clickable { onClick() }
             .padding(0.dp, 4.dp, 0.dp, 4.dp),
         //.background(whiteSurface)
     ) {
         Row(
             modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .clickable { },
+                .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.Center,
         ) {
 
-            Image(
-                painter = painterResource(id = R.drawable.categories_icn),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .padding(0.dp, 12.dp, 0.dp, 0.dp)
-                    .width(65.dp)
-                    .height(42.dp)
-                    .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-            )
+            VectorIcon(modifier = Modifier.padding(4.dp), height = 50.dp , width = 50.dp, vectorImg = vectorImg, onClick = {}, cornerSize = 50.dp)
+
 
             Column(
                 modifier = Modifier
                     .weight(4f)
-                    .padding(0.dp, 8.dp, 12.dp, 8.dp)
+                    .padding(8.dp, 8.dp, 12.dp, 8.dp)
                     .fillMaxWidth()
                     .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.SpaceEvenly
@@ -69,7 +63,7 @@ fun TransactionItem(transaction: Transaction, categoryName: String) {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("\uD83D\uDCB3 "+transaction.account.title, color = Color.Gray, fontSize = 16.sp)
+                    Text("\uD83D\uDCB3 $accountName", color = Color.Gray, fontSize = 16.sp)
                 }
                 (transaction.note)?.let{
                     Text(transaction.note, color = Color(0xffababab), fontSize = 14.sp)

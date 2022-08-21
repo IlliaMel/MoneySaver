@@ -16,11 +16,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -98,7 +96,7 @@ fun Categories(
         scaffoldState = scaffoldState,
         sheetContent = {
             if(sheetContentInitClose)
-            TransactionAdder(
+            TransactionEditor(
                 category = selectedCategory,
                 addTransaction = viewModel::addTransaction,
                 closeAdder = { scope.launch {sheetState.collapse()} },

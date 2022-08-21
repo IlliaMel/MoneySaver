@@ -12,7 +12,7 @@ data class Transaction(
   //  @PrimaryKey val id: Int = 0,
     val sum: Double,
     val categoryUUID: UUID,
-    val account: Account,
+    val accountUUID: UUID,
     val date: Date = Date(),
     val note: String? = null
 )
