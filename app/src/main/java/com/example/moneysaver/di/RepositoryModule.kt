@@ -7,14 +7,18 @@ import com.example.moneysaver.data.data_base.category_db.CategoryDataBase
 import com.example.moneysaver.data.data_base.transaction_dp.TransactionDataBase
 import com.example.moneysaver.data.repository.AccountsRepositoryImpl
 import com.example.moneysaver.data.repository.CategoriesRepositoryImlp
+import com.example.moneysaver.data.repository.CurrencyRepositoryImpl
 import com.example.moneysaver.data.repository.TransactionRepositoryImpl
 import com.example.moneysaver.domain.repository.AccountsRepository
 import com.example.moneysaver.domain.repository.CategoriesRepository
+import com.example.moneysaver.domain.repository.CurrencyRepository
 import com.example.moneysaver.domain.repository.TransactionRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Singleton
 
 @Module
@@ -69,4 +73,18 @@ object RepositoryModule {
     fun provideCategoriesRepository(db: CategoryDataBase): CategoriesRepository {
         return CategoriesRepositoryImlp(db.categoryDao)
     }
+
+
+}
+
+@ExperimentalCoroutinesApi
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule1 {
+
+    @Binds
+    @Singleton
+    abstract fun bindCurrencyRepository(
+        currencyRepositoryImpl: CurrencyRepositoryImpl
+    ): CurrencyRepository
 }

@@ -1,12 +1,10 @@
 package com.example.moneysaver.data.data_base
 
 import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColorInt
 import androidx.room.TypeConverter
-import com.example.moneysaver.data.data_base.test_data.VectorImg
+import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
-import java.lang.Float.valueOf
 import java.util.*
 
 class Converters {

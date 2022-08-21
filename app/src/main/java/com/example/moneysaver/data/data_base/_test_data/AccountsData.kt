@@ -1,7 +1,6 @@
-package com.example.moneysaver.data.data_base.test_data
+package com.example.moneysaver.data.data_base._test_data
 
 
-import android.R.color
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.example.moneysaver.R
@@ -22,8 +21,11 @@ data class VectorImg(
 }
 
 data class CurrencyType(
-    val description: String = "USA",
-    val currency: String = "$"
+    var description: String = "USA",
+    var currency: String = "$",
+    var currencyName: String = "$",
+    var valueInMainCurrency:  Double = 0.0,
+
 )
 
 object AccountsData {
@@ -42,14 +44,22 @@ object AccountsData {
         VectorImg(img = R.drawable.ic_account_img_10),
     )
 
-    val currencyTypes = mutableListOf(
-        CurrencyType(description = "European Euro" , currency = "€"),
-        CurrencyType(description = "USA Dollar" , currency = "$"),
-        CurrencyType(description = "Ukrainian Hryvnia" , currency = "₴"),
-        CurrencyType(description = "Pound" , currency = "£"),
-        CurrencyType(description = "Yuan" , currency = "¥"),
-    )
 
+    var mainCurrency = CurrencyType(description = "European Euro" , currency = "€", currencyName = "EUR", valueInMainCurrency = 1.0)
+
+    val currencyTypes = mutableListOf(
+        CurrencyType(description = "European Euro" , currency = "€", currencyName = "EUR"), // EUR
+        CurrencyType(description = "USA Dollar" , currency = "$", currencyName = "USD"), //USD
+        CurrencyType(description = "Ukrainian Hryvnia" , currency = "₴", currencyName = "UAH"), // UAH
+        CurrencyType(description = "Pound" , currency = "£", currencyName = "GBP"), //GBP
+        CurrencyType(description = "Yuan" , currency = "¥", currencyName = "CNY"), //CNY
+        CurrencyType(description = "UAE Dirham" , currency = "AED", currencyName = "AED"), //AED
+        CurrencyType(description = "Turkish Lira" , currency = "¥", currencyName = "TRY"), //TRY
+        CurrencyType(description = "Bitcoin" , currency = "BTC", currencyName = "BTC"), //BTC
+
+
+
+        )
 
 
     val deptAccount = Account(

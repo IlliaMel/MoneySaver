@@ -2,9 +2,8 @@ package com.example.moneysaver.domain.account
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.moneysaver.R
-import com.example.moneysaver.data.data_base.test_data.AccountsData
-import com.example.moneysaver.data.data_base.test_data.VectorImg
+import com.example.moneysaver.data.data_base._test_data.AccountsData
+import com.example.moneysaver.data.data_base._test_data.VectorImg
 import java.io.Serializable
 import java.util.*
 

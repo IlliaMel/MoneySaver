@@ -2,7 +2,6 @@ package com.example.moneysaver.presentation
 
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
@@ -30,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.moneysaver.R
-import com.example.moneysaver.data.data_base.test_data.AccountsData
+import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.presentation._components.*
 
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
