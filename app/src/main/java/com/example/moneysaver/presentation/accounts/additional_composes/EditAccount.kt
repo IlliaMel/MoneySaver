@@ -595,7 +595,7 @@ fun SetAccountCurrencyType(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
                                 Text(modifier = Modifier.padding(22.dp,4.dp,0.dp,4.dp), text = it.currencyName, color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 18.sp)
-                                Text(modifier = Modifier.padding(0.dp,4.dp,32.dp,4.dp), text = if(it.valueInMainCurrency.toString().length > 6) it.valueInMainCurrency.toString().substring(6)  else it.valueInMainCurrency.toString() , color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 18.sp)
+                                Text(modifier = Modifier.padding(0.dp,4.dp,32.dp,4.dp), text = if(it.valueInMainCurrency.toString().length > 6) it.valueInMainCurrency.toString() else it.valueInMainCurrency.toString() , color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 18.sp)
                             }
                         }
                     )

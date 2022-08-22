@@ -90,7 +90,7 @@ fun Categories(
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
     if(!isAddingCategory){
-    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = {isForEditing =
+    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(viewModel.state.categoriesList.size > 1 || isForEditing) isForEditing =
         !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
 
     BottomSheetScaffold(
@@ -267,7 +267,7 @@ fun Categories(
                                         }}
                                         ,cornerSize =  60.dp)
                                 else{
-                                    Box(modifier = Modifier.fillMaxSize()){}
+                                    Box(modifier = Modifier.weight(1f).fillMaxSize()){}
                                 }
                                 if(viewModel.state.categoriesList.size > 2)
                                     CategoriesVectorImage(viewModel.state.categoriesList[2],
@@ -288,7 +288,7 @@ fun Categories(
                                             }}
                                         ,cornerSize =  60.dp)
                                 else{
-                                    Box(modifier = Modifier.fillMaxSize()){}
+                                    Box(modifier = Modifier.weight(1f).fillMaxSize()){}
                                 }
 
                             }
