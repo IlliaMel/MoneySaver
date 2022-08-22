@@ -10,6 +10,9 @@ import java.util.*
 @Dao
 interface AccountDao {
 
+    @Query("SELECT * FROM `account` WHERE uuid = :uuid")
+    suspend fun getAccountByUUID(uuid: UUID): Account?
+
     @Query("SELECT * FROM `account`")
     fun getAllAccounts(): Flow<List<Account>>
 
