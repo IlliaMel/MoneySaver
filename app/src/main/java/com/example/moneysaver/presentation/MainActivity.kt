@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -136,10 +137,12 @@ fun MainUI(alarmService: AlarmService){
 
                 DrawerBody(
                     blocks = listOf(
-                        MenuBlock(title = "Settings", items = listOf(
-                            MenuItem(number = 0 , title = "Language", description = "Default", icon = Icons.Default.Place),
-                            MenuItem(number = 1 , title = "Theme", description = "Light", icon = Icons.Default.Info),
-                            MenuItem(number = 2 , title = "Notifications", description = "${hoursNotification.value}:${minutesNotification.value}", icon = Icons.Default.Notifications, hasSwitch = true)
+                        MenuBlock(title = stringResource(R.string.settings), items = listOf(
+                            MenuItem(number = 0 , title = stringResource(R.string.language), description = stringResource(
+                                                            R.string.defaultStr), icon = Icons.Default.Place),
+                            MenuItem(number = 1 , title = stringResource(R.string.theme), description = stringResource(
+                                                            R.string.light), icon = Icons.Default.Info),
+                            MenuItem(number = 2 , title = stringResource(R.string.notifications), description = "${hoursNotification.value}:${minutesNotification.value}", icon = Icons.Default.Notifications, hasSwitch = true)
                         )),
                         MenuBlock(title = "Block2", items = listOf(
                             MenuItem(number = 3 , title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
@@ -214,15 +217,15 @@ fun MainUI(alarmService: AlarmService){
         val imageWithTexts = listOf(
             ImageWithText(
                 image = painterResource(id = R.drawable.accounts_img),
-                text = "Accounts"
+                text = stringResource(R.string.accounts)
             ),
             ImageWithText(
                 image = painterResource(id = R.drawable.categories_img),
-                text = "Categories"
+                text = stringResource(R.string.categories)
             ),
             ImageWithText(
                 image = painterResource(id = R.drawable.transactions_img),
-                text = "Transactions"
+                text = stringResource(R.string.transactions)
             )
         )
 

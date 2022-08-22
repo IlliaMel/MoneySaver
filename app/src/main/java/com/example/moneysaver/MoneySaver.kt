@@ -11,11 +11,22 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class MoneySaver: Application(){
 
+    init {
+        instance = this
+    }
+
+    companion object {
+        private var instance: MoneySaver? = null
+
+        fun applicationContext() : Context {
+            return instance!!.applicationContext
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-
-
+        val context: Context = MoneySaver.applicationContext()
     }
 
     private fun createNotificationChannel() {

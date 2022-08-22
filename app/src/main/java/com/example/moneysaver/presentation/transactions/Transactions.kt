@@ -1,7 +1,6 @@
 package com.example.moneysaver.presentation.transactions
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,9 +19,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -36,7 +35,6 @@ import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
 import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
-import com.example.moneysaver.presentation.transactions.additional_composes.innerShadow
 import com.example.moneysaver.ui.theme.dividerColor
 import com.example.moneysaver.ui.theme.whiteSurface
 import kotlinx.coroutines.launch
@@ -152,7 +150,7 @@ fun Transactions(
                 ) {
                     Icon(
                         imageVector = if(sheetState.isCollapsed && !sheetState.isAnimationRunning) Icons.Default.Add else Icons.Default.ArrowDropDown,
-                        contentDescription = "Add transaction"
+                        contentDescription = stringResource(R.string.add_transaction)
                     )
                 }
             }
@@ -181,7 +179,7 @@ fun Transactions(
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         BalanceField(
-                            text = "Starting balance",
+                            text = stringResource(R.string.starting_balance),
                             balance = viewModel.state.startingBalance
                         )
                         Divider(
@@ -191,7 +189,7 @@ fun Transactions(
                                 .width(1.dp)
                         )
                         BalanceField(
-                            text = "Ending balance",
+                            text = stringResource(R.string.ending_balance),
                             balance = viewModel.state.endingBalance
                         )
                     }
@@ -199,7 +197,7 @@ fun Transactions(
                 }
 
                 for (date: Date in sortedDateToTransactionMap.keys) {
-                    var dayBalanceChange = 0.0;
+                    var dayBalanceChange = 0.0
                     for (x in sortedDateToTransactionMap[date]!!)
                         dayBalanceChange += x.sum
                     item {
@@ -285,7 +283,7 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             tint = whiteSurface,
-                            contentDescription = "Undo search"
+                            contentDescription = stringResource(R.string.undo_search)
                         )
                     }
                 } else {
@@ -295,7 +293,7 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                         Icon(
                             imageVector = Icons.Default.Menu,
                             tint = whiteSurface,
-                            contentDescription = "Toggle drawer"
+                            contentDescription = stringResource(R.string.toggle_drawer)
                         )
                     }
                 }
@@ -317,7 +315,7 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                                 focusManager.clearFocus()
                                 transactionSearchText.value = searchText
                             }),
-                            placeholder = { Text(text = "Search", fontSize = 16.sp, color = Color.LightGray) },
+                            placeholder = { Text(text = stringResource(R.string.search), fontSize = 16.sp, color = Color.LightGray) },
                             textStyle = LocalTextStyle.current.copy(
                                 fontSize = 16.sp,
                                 color = Color.White
@@ -335,8 +333,8 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                         }
                     } else {
                         Text(modifier = Modifier
-                            .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                        Text(text = ("${chosenAccountFilter.value.balance.toString()} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                            .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
+                        Text(text = ("${chosenAccountFilter.value.balance} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                     }
                 }
 
@@ -348,7 +346,7 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                         Icon(
                             imageVector = Icons.Default.Search,
                             tint = whiteSurface,
-                            contentDescription = "Search"
+                            contentDescription = stringResource(R.string.search)
                         )
                     }
                 }

@@ -25,12 +25,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.category.Category
@@ -73,7 +75,8 @@ fun EditCategory(
 
          */
 
-        TopBarCategoryEdit(vectorImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfCategory = if(isEditing)  "Edit Category" else  "New Category",
+        TopBarCategoryEdit(vectorImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfCategory = if(isEditing)  stringResource(
+                    R.string.edit_category) else  stringResource(R.string.new_category),
             onAddCategoryAction = {
 
                 onAddCategoryAction(
@@ -97,14 +100,14 @@ fun EditCategory(
 
                 Text(
                     modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
-                    text = "Settings",
+                    text = stringResource(R.string.settings),
                     color = Color.Black,
                     fontWeight = FontWeight.W500,
                     fontSize = 18.sp
                 )
 
                 accountEditInfoText(
-                    upperText = "Currency Type",
+                    upperText = stringResource(R.string.currency_type),
                     bottomText = currencyType.value,
                     onAction = {setCurrencyTypeChange.value = true},
                     startPadding = 16.dp,
@@ -131,12 +134,12 @@ fun EditCategory(
                     .padding(16.dp, 16.dp, 0.dp, 16.dp),
                     imageVector = Icons.Default.Delete,
                     tint = Color.Red,
-                    contentDescription = "Delete button"
+                    contentDescription = stringResource(R.string.delete_button)
                 )
 
                 Text(
                     modifier = Modifier.padding(24.dp, 16.dp, 0.dp, 16.dp),
-                    text = "Delete Category",
+                    text = stringResource(R.string.delete_category),
                     color = Color.Red,
                     fontWeight = FontWeight.W400,
                     fontSize = 16.sp
@@ -199,7 +202,7 @@ fun TopBarCategoryEdit(
                         Icon(
                             imageVector = Icons.Default.Close,
                             tint = whiteSurface,
-                            contentDescription = "Close button"
+                            contentDescription = stringResource(R.string.close_button)
                         )
                     }
 
@@ -213,7 +216,8 @@ fun TopBarCategoryEdit(
                         Text(modifier = Modifier.padding(16.dp, 4.dp, 0.dp, 0.dp) ,text = typeOfCategory, color = whiteSurface, fontWeight = FontWeight.W400 , fontSize = 22.sp)
 
                         Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp)) {
-                            Text(modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),text = "Name", color = whiteSurfaceTransparent, fontWeight = FontWeight.W400 , fontSize = 16.sp)
+                            Text(modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),text = stringResource(
+                                                            R.string.name), color = whiteSurfaceTransparent, fontWeight = FontWeight.W400 , fontSize = 16.sp)
                             TextField(
                                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
@@ -237,14 +241,17 @@ fun TopBarCategoryEdit(
                     }
 
 
-                    Column(modifier = Modifier.weight(1.2f).fillMaxHeight().padding(0.dp, 0.dp, 13.dp, 0.dp),verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally){
+                    Column(modifier = Modifier
+                        .weight(1.2f)
+                        .fillMaxHeight()
+                        .padding(0.dp, 0.dp, 13.dp, 0.dp),verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally){
                         IconButton(modifier = Modifier
                             .size(35.dp, 35.dp),
                             onClick = { onAddCategoryAction(text) }) {
                             Icon(
                                 imageVector = Icons.Default.Done,
                                 tint = whiteSurface,
-                                contentDescription = "Apply button"
+                                contentDescription = stringResource(R.string.apply_button)
                             )
                         }
 
@@ -287,7 +294,7 @@ fun SetCategoryImg(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                 ) {
-                    Text(modifier = Modifier.padding(0.dp,8.dp,0.dp,4.dp), text = "Choose Account Img", color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 20.sp)
+                    Text(modifier = Modifier.padding(0.dp,8.dp,0.dp,4.dp), text = stringResource(R.string.choose_account_img), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 20.sp)
 
                 }
 
