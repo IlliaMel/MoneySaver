@@ -238,7 +238,7 @@ fun ChooseAccountCompose(
                 Row(modifier = Modifier.padding(16.dp,0.dp,0.dp,0.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Start) {
                     Text(
                         modifier = Modifier.padding(0.dp),
-                        text = "Новий Рахунок",
+                        text = stringResource(R.string.new_account),
                         fontWeight = FontWeight.W500,
                         color = Color.Black,
                         fontSize = 16.sp
@@ -246,20 +246,20 @@ fun ChooseAccountCompose(
                 }
                 Column(modifier = Modifier.padding(18.dp,18.dp,18.dp,0.dp), verticalArrangement = Arrangement.Center) {
                     ChooseAccountElement(
-                        "Звичайний",
-                        "Готівка, Карта ",
+                        stringResource(R.string.common),
+                        "${stringResource(R.string.cash)}, ${stringResource(R.string.card)}",
                         painterResource(id = AccountsData.accountImges[0].img),
                         normalAccount
                     )
                     ChooseAccountElement(
-                        "Борговий",
-                        "Кредит, Іпотека",
+                        stringResource(R.string.debt),
+                        "${stringResource(R.string.credit)}, ${stringResource(R.string.mortgage)}",
                         painterResource(id = AccountsData.accountImges[6].img),
                         debtAccount
                     )
                     ChooseAccountElement(
-                        "Накопичення",
-                        "Заощадження, Мета, Ціль",
+                        stringResource(R.string.savings),
+                        "${stringResource(R.string.savings)}, ${stringResource(R.string.goal)}, ${stringResource(R.string.purpose)}",
                         painterResource(id = AccountsData.accountImges[7].img),
                         goalAccount
                     )
@@ -307,7 +307,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
                     Icon(
                         imageVector = Icons.Default.Menu,
                         tint = whiteSurface,
-                        contentDescription = "Toggle drawer"
+                        contentDescription = stringResource(R.string.toggle_drawer)
                     )
                 }
 
@@ -318,8 +318,8 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
-                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - ${chosenAccountFilter.value.title} ▾", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                    Text(text = ("${chosenAccountFilter.value.balance.toString()} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.value.title} ▾", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
+                    Text(text = ("${chosenAccountFilter.value.balance} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
 
                     Column(modifier = Modifier
                         .fillMaxHeight()
@@ -336,7 +336,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
                     Icon(
                         imageVector = Icons.Default.Add,
                         tint = whiteSurface,
-                        contentDescription = "Toggle drawer"
+                        contentDescription = stringResource(R.string.toggle_drawer)
                     )
                 }
 

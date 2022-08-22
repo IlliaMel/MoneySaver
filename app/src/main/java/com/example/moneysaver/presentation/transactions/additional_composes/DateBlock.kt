@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.moneysaver.MoneySaver
+import com.example.moneysaver.R
 import java.util.*
 
 @Composable
@@ -141,18 +143,18 @@ fun getYear(date: Date): Int{
 
 fun getNameOfMonthByNumber(monthNumber: Int): String {
     return when(monthNumber) {
-        0 -> "January"
-        1 -> "February"
-        2 -> "March"
-        3 -> "April"
-        4 -> "May"
-        5 -> "June"
-        6 -> "July"
-        7 -> "August"
-        8 -> "September"
-        9 -> "October"
-        10-> "November"
-        else -> "December"
+        0 -> MoneySaver.applicationContext().getString(R.string.january)
+        1 -> MoneySaver.applicationContext().getString(R.string.february)
+        2 -> MoneySaver.applicationContext().getString(R.string.march)
+        3 -> MoneySaver.applicationContext().getString(R.string.april)
+        4 -> MoneySaver.applicationContext().getString(R.string.may)
+        5 -> MoneySaver.applicationContext().getString(R.string.june)
+        6 -> MoneySaver.applicationContext().getString(R.string.july)
+        7 -> MoneySaver.applicationContext().getString(R.string.august)
+        8 -> MoneySaver.applicationContext().getString(R.string.september)
+        9 -> MoneySaver.applicationContext().getString(R.string.october)
+        10-> MoneySaver.applicationContext().getString(R.string.november)
+        else -> MoneySaver.applicationContext().getString(R.string.december)
     }
 }
 
@@ -160,12 +162,12 @@ fun getNameOfDayByDate(date: Date): String {
     val calendar = Calendar.getInstance()
     calendar.time = date
     return when(calendar[Calendar.DAY_OF_WEEK]) {
-        1 -> "Sunday"
-        2 -> "Monday"
-        3 -> "Tuesday"
-        4 -> "Wednesday"
-        5 -> "Thursday"
-        6 -> "Friday"
-        else -> "Saturday"
+        1 -> MoneySaver.applicationContext().getString(R.string.sunday)
+        2 -> MoneySaver.applicationContext().getString(R.string.monday)
+        3 -> MoneySaver.applicationContext().getString(R.string.tuesday)
+        4 -> MoneySaver.applicationContext().getString(R.string.wednesday)
+        5 -> MoneySaver.applicationContext().getString(R.string.thursday)
+        6 -> MoneySaver.applicationContext().getString(R.string.friday)
+        else -> MoneySaver.applicationContext().getString(R.string.saturday)
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -139,7 +140,8 @@ fun Categories(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             AnimatedVisibility(visible = isForEditing) {
-                                Text(modifier = Modifier.padding(8.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 16.sp, fontWeight = FontWeight.W400, text = "Choose Category to Edit", color = Color.Black)
+                                Text(modifier = Modifier.padding(8.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 16.sp, fontWeight = FontWeight.W400, text = stringResource(
+                                                                    R.string.chose_category_to_edit), color = Color.Black)
                             }
                         }
 
@@ -520,7 +522,8 @@ fun ChartContainer(
     content: @Composable () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxHeight(), verticalArrangement =  Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(modifier = Modifier.padding(8.dp), fontSize = 18.sp, fontWeight = FontWeight.W500, text = "Spending", color = currencyColorZero)
+        Text(modifier = Modifier.padding(8.dp), fontSize = 18.sp, fontWeight = FontWeight.W500, text = stringResource(
+                    R.string.spending), color = currencyColorZero)
         Spacer(modifier = Modifier.requiredSize(chartOffset))
         content()
         Row() {
@@ -562,7 +565,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit, onEditClick: () -> Unit,
                     Icon(
                         imageVector = Icons.Default.Menu,
                         tint = whiteSurface,
-                        contentDescription = "Toggle drawer"
+                        contentDescription = stringResource(R.string.toggle_drawer)
                     )
                 }
 
@@ -571,7 +574,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit, onEditClick: () -> Unit,
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
-                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "Filter - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
+                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
                     Text(text = ("${chosenAccountFilter.value.balance.toString()} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                 }
 
@@ -581,7 +584,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit, onEditClick: () -> Unit,
                     Icon(
                         imageVector = Icons.Default.Edit,
                         tint = whiteSurface,
-                        contentDescription = "Edit"
+                        contentDescription = stringResource(R.string.edit)
                     )
                 }
 

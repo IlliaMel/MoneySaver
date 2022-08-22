@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -95,7 +96,8 @@ fun EditAccount(
     ) {
 
 
-        TopBarAccounts(vectorImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfAccount = if(isEditing)  "Edit Account" else  "New Account",
+        TopBarAccounts(vectorImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfAccount = if(isEditing)  stringResource(
+                    R.string.edit_account) else  stringResource(R.string.new_account),
             onAddAccountAction = {onAddAccountAction(
                 if(isEditing){
                     if(type == 1) {
@@ -177,26 +179,26 @@ fun EditAccount(
 
                 Text(
                     modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
-                    text = "Account",
+                    text = stringResource(R.string.account),
                     color = Color.Black,
                     fontWeight = FontWeight.W500,
                     fontSize = 18.sp
                 )
 
                 accountEditInfoText(
-                    upperText = "Type",
+                    upperText = stringResource(R.string.type),
                     bottomText = whichTypeOfAccount(account),
                     onAction = {},
                     startPadding = 16.dp,
                     topPadding = 8.dp)
                 accountEditInfoText(
-                    upperText = "Currency Type",
+                    upperText = stringResource(R.string.currency_type),
                     bottomText = currencyType.value,
                     onAction = {setCurrencyTypeChange.value = true},
                     startPadding = 16.dp,
                     topPadding = 8.dp)
                 accountEditInfoText(
-                    upperText = "Description",
+                    upperText = stringResource(R.string.description),
                     bottomText = description.value,
                     onAction = {setDescriptionChange.value = true},
                     startPadding = 16.dp,
@@ -220,11 +222,11 @@ fun EditAccount(
 
                 var moneyValue: String = ""
                 when(type){
-                    0-> moneyValue = "Balance"
+                    0-> moneyValue = stringResource(R.string.balance)
 
-                    1-> moneyValue = "Amount Of Debt"
+                    1-> moneyValue = stringResource(R.string.amount_of_debt)
 
-                    2-> moneyValue = "Main Goal"
+                    2-> moneyValue = stringResource(R.string.main_goal)
                 }
 
                 Row(modifier = Modifier
@@ -263,7 +265,7 @@ fun EditAccount(
                     ) {
                         Text(
                             modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
-                            text = "Credit Limit",
+                            text = stringResource(R.string.credit_limit),
                             color = Color.Black,
                             fontWeight = FontWeight.W400,
                             fontSize = 16.sp
@@ -319,12 +321,12 @@ fun EditAccount(
                     .padding(16.dp, 16.dp, 0.dp, 16.dp),
                     imageVector = Icons.Default.Delete,
                     tint = Color.Red,
-                    contentDescription = "Delete button"
+                    contentDescription = stringResource(R.string.delete_button)
                 )
 
                 Text(
                     modifier = Modifier.padding(24.dp, 16.dp, 0.dp, 16.dp),
-                    text = "Delete Account",
+                    text = stringResource(R.string.delete_account),
                     color = Color.Red,
                     fontWeight = FontWeight.W400,
                     fontSize = 16.sp
@@ -499,7 +501,7 @@ fun SetAccountDescription(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
                 ) {
-                    Text(modifier = Modifier.padding(32.dp,0.dp,0.dp,0.dp), text = "Account Description", color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 20.sp)
+                    Text(modifier = Modifier.padding(32.dp,0.dp,0.dp,0.dp), text = stringResource(R.string.account_description), color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 20.sp)
                 }
 
                 TextField(
@@ -542,7 +544,7 @@ fun ButtonWithColor(returnType: (type: String) -> Unit,  text : String){
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.DarkGray))
 
     {
-        Text(text = "  OK  ",color = Color.White)
+        Text(text = "  ${stringResource(R.string.ok)}  ",color = Color.White)
     }
 }
 
@@ -571,7 +573,7 @@ fun SetAccountCurrencyType(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
                 ) {
-                    Text(modifier = Modifier.padding(22.dp,4.dp,0.dp,4.dp), text = "Choose Currency Type", color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 20.sp)
+                    Text(modifier = Modifier.padding(22.dp,4.dp,0.dp,4.dp), text = stringResource(R.string.choose_currency_type), color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 20.sp)
 
                 }
 
@@ -655,7 +657,7 @@ fun TopBarAccounts(
                         Icon(
                             imageVector = Icons.Default.Close,
                             tint = whiteSurface,
-                            contentDescription = "Close button"
+                            contentDescription = stringResource(R.string.close_button)
                         )
                     }
 
@@ -669,7 +671,7 @@ fun TopBarAccounts(
                         Text(modifier = Modifier.padding(16.dp, 4.dp, 0.dp, 0.dp) ,text = typeOfAccount, color = whiteSurface, fontWeight = FontWeight.W400 , fontSize = 22.sp)
 
                         Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp)) {
-                        Text(modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),text = "Name", color = whiteSurfaceTransparent, fontWeight = FontWeight.W400 , fontSize = 16.sp)
+                        Text(modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),text = stringResource(R.string.name), color = whiteSurfaceTransparent, fontWeight = FontWeight.W400 , fontSize = 16.sp)
                         TextField(
                                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
@@ -703,7 +705,7 @@ fun TopBarAccounts(
                             Icon(
                                 imageVector = Icons.Default.Done,
                                 tint = whiteSurface,
-                                contentDescription = "Apply button"
+                                contentDescription = stringResource(R.string.apply_button)
                             )
                         }
 
@@ -756,8 +758,8 @@ fun SetImg(
         ) {
             var tabIndex by remember { mutableStateOf(0) }
             val tabData = listOf(
-                "Image",
-                "Color",
+                stringResource(R.string.image),
+                stringResource(R.string.color),
             )
             val controller = rememberColorPickerController()
             var chosenVectorImg = remember { mutableStateOf(chosenVectorImg) }
@@ -889,7 +891,10 @@ fun SetImg(
                         if(idForCategory){
                             var vectorImg: VectorImg = chosenVectorImg.value
                             vectorImg.externalColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value
-                            VectorIcon(Modifier.weight(1f).padding(8.dp,8.dp,8.dp,8.dp),Modifier.padding(8.dp), vectorImg = vectorImg, onClick = {returnType(vectorImg)},width = 30.dp , height = 65.dp, cornerSize = 30.dp)
+                            VectorIcon(
+                                Modifier
+                                    .weight(1f)
+                                    .padding(8.dp, 8.dp, 8.dp, 8.dp),Modifier.padding(8.dp), vectorImg = vectorImg, onClick = {returnType(vectorImg)},width = 30.dp , height = 65.dp, cornerSize = 30.dp)
                         }else{
 
                             Card(

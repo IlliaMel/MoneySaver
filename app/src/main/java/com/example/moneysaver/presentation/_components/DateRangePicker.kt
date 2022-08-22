@@ -17,12 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import com.example.moneysaver.R
 import com.example.moneysaver.presentation.transactions.additional_composes.getNameOfMonthByNumber
 import com.example.moneysaver.presentation.transactions.additional_composes.getYear
 import com.example.moneysaver.ui.theme.whiteSurface
@@ -49,7 +51,7 @@ fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) 
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 tint = whiteSurface,
-                contentDescription = "Prev"
+                contentDescription = stringResource(R.string.previous)
             )
         }
 
@@ -61,7 +63,7 @@ fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) 
             Icon(
                 imageVector = Icons.Default.ArrowForward,
                 tint = whiteSurface,
-                contentDescription = "Next"
+                contentDescription = stringResource(R.string.next)
             )
         }
     }
@@ -119,7 +121,7 @@ fun DateRangeDisplay(fromDateState: MutableState<Date?>, toDateState: MutableSta
         ) {
             Icon(modifier=Modifier.padding(4.dp, 0.dp), imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
             Text(
-                text = "All time",
+                text = stringResource(R.string.all_time),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color= Color.White
@@ -176,7 +178,7 @@ private fun ChoseDateRangeDialog(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Icon(imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
-                        Text(text = "Select range")
+                        Text(text = stringResource(R.string.select_range))
                         val (d1, d2) = getCurrentMonthDates()
                         var shortRangeText = getShortDateRangeString(d1, d2)
                         if(startDate.value!=null && endDate!=null)
@@ -206,7 +208,7 @@ private fun ChoseDateRangeDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "All time")
+                        Text(text = stringResource(R.string.all_time))
                     }
                     Divider(modifier = Modifier
                         .width(1.dp)
@@ -223,7 +225,7 @@ private fun ChoseDateRangeDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "Select day")
+                        Text(text = stringResource(R.string.select_day))
                     }
                 }
 
@@ -261,7 +263,7 @@ private fun ChoseDateRangeDialog(
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = "Week")
+                        Text(text = stringResource(R.string.Week))
                         val (d1, d2) = getCurrentWeekDates()
                         val weekShortText = d1.date.toString()+" "+ getMonthAbr(d1)+" - "+d2.date.toString()+" "+ getMonthAbr(d2)
                         Text(text = weekShortText, fontSize = 14.sp, color = Color.Gray)
@@ -295,7 +297,7 @@ private fun ChoseDateRangeDialog(
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = "Today")
+                        Text(text = stringResource(R.string.today))
                         val d1 = getCurrentDayDates().first
                         val todayShortText = getNameOfMonthByNumber(d1.month)+" "+d1.date.toString()
                         Text(text = todayShortText, fontSize = 14.sp, color = Color.Gray)
@@ -336,9 +338,9 @@ private fun ChoseDateRangeDialog(
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = "Year")
+                        Text(text = stringResource(R.string.year))
                         val d1 = Date()
-                        val yearShortText = "Year "+getYear(d1)
+                        val yearShortText = "${stringResource(R.string.year)} "+getYear(d1)
                         Text(text = yearShortText, fontSize = 14.sp, color = Color.Gray)
                     }
                     Divider(modifier = Modifier
@@ -369,7 +371,7 @@ private fun ChoseDateRangeDialog(
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = "Month")
+                        Text(text = stringResource(R.string.month))
                         val d1 = Date()
                         val monthShortText = getNameOfMonthByNumber(d1.month)+" "+ getYear(d1)
                         Text(text = monthShortText, fontSize = 14.sp, color = Color.Gray)
@@ -409,7 +411,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Select range", fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.select_range), fontWeight = FontWeight.Bold)
                 }
                 Divider()
 
@@ -429,7 +431,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "From",
+                            text = stringResource(R.string.from),
                             modifier= Modifier
                                 .padding(2.dp)
                                 .width(50.dp)
@@ -456,7 +458,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "To",
+                            text = stringResource(R.string.to),
                             modifier= Modifier
                                 .padding(2.dp)
                                 .width(50.dp)
@@ -482,7 +484,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(onClick = { openDialog.value = false }) {
-                        Text(text = "OK", fontWeight = FontWeight.Bold, color = Color.White)
+                        Text(text = stringResource(R.string.ok), fontWeight = FontWeight.Bold, color = Color.White)
                     }
                 }
             }
@@ -524,7 +526,7 @@ fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<
                     openDialog.value = false
                 },
                     shape = RoundedCornerShape(30.dp)) {
-                    Text(text = "OK", color = Color.White)
+                    Text(text = stringResource(R.string.ok), color = Color.White)
                 }
             }
 
@@ -561,7 +563,7 @@ fun StartDatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableS
                     openDialog.value = false
                 },
                     shape = RoundedCornerShape(30.dp)) {
-                    Text(text = "OK", color = Color.White)
+                    Text(text = stringResource(R.string.ok), color = Color.White)
                 }
             }
 
@@ -598,7 +600,7 @@ fun EndDatePickerDialog(openDialog: MutableState<Boolean>, endDate: MutableState
                     openDialog.value = false
                 },
                     shape = RoundedCornerShape(30.dp)) {
-                    Text(text = "OK", color = Color.White)
+                    Text(text = stringResource(R.string.ok), color = Color.White)
                 }
             }
 

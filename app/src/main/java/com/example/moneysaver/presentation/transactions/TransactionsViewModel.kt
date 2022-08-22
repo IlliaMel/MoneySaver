@@ -8,7 +8,6 @@ import com.example.moneysaver.domain.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
-import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.repository.AccountsRepository
 import com.example.moneysaver.domain.repository.CategoriesRepository
 import com.example.moneysaver.domain.transaction.Transaction
@@ -49,6 +48,24 @@ class TransactionsViewModel @Inject constructor(
 
     fun addTransaction(transaction: Transaction) {
         viewModelScope.launch {
+            // remove previous spending data if transaction isn't new
+            repository.getTransactionByUUID(transaction.uuid)?.let {
+                val transactionAccount = accountsRepository.getAccountByUUID(it.accountUUID)
+                val updatedAccount = transactionAccount!!.copy(
+                    balance = transactionAccount.balance-it.sum
+                )
+                // update account
+                accountsRepository.insertAccount(updatedAccount)
+            }
+
+            // add new spending data
+            val transactionAccount = accountsRepository.getAccountByUUID(transaction.accountUUID)
+            val updatedAccount = transactionAccount!!.copy(
+                balance = transactionAccount.balance+transaction.sum
+            )
+            accountsRepository.insertAccount(updatedAccount)
+
+            // add or update transaction
             repository.insertTransaction(transaction)
         }
     }
@@ -61,6 +78,14 @@ class TransactionsViewModel @Inject constructor(
 
     fun deleteTransaction(transaction: Transaction) {
         viewModelScope.launch {
+            // remove spending data if transaction isn't new
+            val transactionAccount = accountsRepository.getAccountByUUID(transaction.accountUUID)
+            val updatedAccount = transactionAccount!!.copy(
+                balance = transactionAccount.balance+transaction.sum
+            )
+            // update account
+            accountsRepository.insertAccount(updatedAccount)
+
             repository.deleteTransaction(transaction)
         }
     }
