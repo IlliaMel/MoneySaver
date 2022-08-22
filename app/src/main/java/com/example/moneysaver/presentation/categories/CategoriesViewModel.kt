@@ -46,7 +46,7 @@ class CategoriesViewModel @Inject constructor(
             repository.getTransactionByUUID(transaction.uuid)?.let {
                 val transactionAccount = accountsRepository.getAccountByUUID(it.accountUUID)
                 val updatedAccount = transactionAccount!!.copy(
-                    balance = transactionAccount.balance+it.sum
+                    balance = transactionAccount.balance-it.sum
                 )
                 // update account
                 accountsRepository.insertAccount(updatedAccount)
@@ -55,7 +55,7 @@ class CategoriesViewModel @Inject constructor(
             // add new spending data
             val transactionAccount = accountsRepository.getAccountByUUID(transaction.accountUUID)
             val updatedAccount = transactionAccount!!.copy(
-                balance = transactionAccount.balance-transaction.sum
+                balance = transactionAccount.balance+transaction.sum
             )
             accountsRepository.insertAccount(updatedAccount)
 

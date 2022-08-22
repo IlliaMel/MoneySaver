@@ -49,8 +49,7 @@ fun TransactionEditor(
 ) {
 
     var choiceIsActive = remember { mutableStateOf(currentTransaction!=null)}
-
-    var sumText = remember { mutableStateOf(currentTransaction?.sum?.toCalculatorString() ?: "0") }
+    var sumText = remember { mutableStateOf(currentTransaction?.sum?.times(-1)?.toCalculatorString() ?: "0") }
     var date: MutableState<Date?> = remember { mutableStateOf(currentTransaction?.date ?: Date()) }
     var note by remember { mutableStateOf(currentTransaction?.note ?: "") }
     val transactionAccount = remember { mutableStateOf(if(currentTransaction!=null) accountsList.first{it.uuid == currentTransaction.accountUUID} else if(accountsList.isNotEmpty()) accountsList[0] else AccountsData.accountsList[0]) }
@@ -232,14 +231,14 @@ fun TransactionEditor(
     if(isSubmitted.value) {
         val transactionNote: String? = if (note != "") note else null
         val transaction = if(currentTransaction==null) Transaction(
-            sum = sumText.value.toDoubleOrNull() ?: 0.0,
+            sum = (sumText.value.toDoubleOrNull() ?: 0.0) * -1,
             categoryUUID = category.value.uuid,
             accountUUID = transactionAccount.value.uuid,
             date = date.value?:Date(),
             note = transactionNote
         ) else Transaction(
             uuid=currentTransaction.uuid,
-            sum = sumText.value.toDoubleOrNull() ?: 0.0,
+            sum = (sumText.value.toDoubleOrNull() ?: 0.0) * -1,
             categoryUUID = category.value.uuid,
             accountUUID = transactionAccount.value.uuid,
             date = date.value?:Date(),
