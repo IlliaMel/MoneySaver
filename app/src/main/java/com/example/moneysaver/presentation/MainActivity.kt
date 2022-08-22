@@ -2,6 +2,8 @@ package com.example.moneysaver.presentation
 
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
@@ -44,6 +46,8 @@ import com.example.moneysaver.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 data class ImageWithText(
@@ -54,15 +58,58 @@ data class ImageWithText(
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        var isNeedToParseCurrency = false
+    }
+
     private val viewModel: MainActivityViewModel by viewModels()
+
+    private var CURRENCY_PARSED_KEY = "is_currency_parsed"
+    private var CURRENCY_PARSING_DATE_KEY = "currency_parsing_date"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
+
+        val isParsed = sharedPref.getBoolean(CURRENCY_PARSED_KEY, false)
+        val parsingDate = sharedPref.getString(CURRENCY_PARSING_DATE_KEY, "2000-01-01")
+        val isConnectionEnabled = true
+
+        var formattedDate = ""
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            formattedDate = current.format(formatter)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        //takeFromDB
+        // viewModel.isNeedToParseCurrency.value = false
+        //parse
+        //takefromdb
+        // viewModel.isNeedToParseCurrency.value = true
+
+        if(isConnectionEnabled){
+            var d = !isParsed
+            var d3 = parsingDate != formattedDate
+            isNeedToParseCurrency = !isParsed || parsingDate != formattedDate
+        }else{
+            if(isParsed){
+                isNeedToParseCurrency = false
+            }else{
+                //askToTurnInternet
+            }
+        }
+
         installSplashScreen().apply {
             setKeepVisibleCondition {
                 viewModel.isLoading.value
             }
         }
+
+
 
         //delete top bar
         window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
@@ -74,12 +121,18 @@ class MainActivity : ComponentActivity() {
             systemUiController.setSystemBarsColor(
                 color = Color.Transparent
             )
-/*
-           */
 
             MoneySaverTheme {
                 val service = AlarmService(context = applicationContext)
                 MainUI(service)
+
+                if(viewModel.isParsingSucceeded.value){
+                    with (sharedPref.edit()) {
+                        putBoolean(CURRENCY_PARSED_KEY, true)
+                        putString(CURRENCY_PARSING_DATE_KEY, formattedDate)
+                        apply()
+                    }
+                }
             }
         }
     }

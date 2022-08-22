@@ -4,15 +4,10 @@ import android.app.Application
 import androidx.room.Room
 import com.example.moneysaver.data.data_base.account_db.AccountDataBase
 import com.example.moneysaver.data.data_base.category_db.CategoryDataBase
+import com.example.moneysaver.data.data_base.currency_db.CurrencyDataBase
 import com.example.moneysaver.data.data_base.transaction_dp.TransactionDataBase
-import com.example.moneysaver.data.repository.AccountsRepositoryImpl
-import com.example.moneysaver.data.repository.CategoriesRepositoryImlp
-import com.example.moneysaver.data.repository.CurrencyRepositoryImpl
-import com.example.moneysaver.data.repository.TransactionRepositoryImpl
-import com.example.moneysaver.domain.repository.AccountsRepository
-import com.example.moneysaver.domain.repository.CategoriesRepository
-import com.example.moneysaver.domain.repository.CurrencyRepository
-import com.example.moneysaver.domain.repository.TransactionRepository
+import com.example.moneysaver.data.repository.*
+import com.example.moneysaver.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -55,6 +50,23 @@ object RepositoryModule {
         ).build()
     }
 
+    @Provides
+    @Singleton
+    fun provideCurrencyDataBase(app: Application): CurrencyDataBase {
+        return Room.databaseBuilder(
+            app,
+            CurrencyDataBase::class.java,
+            CurrencyDataBase.DATABASE_NAME
+        ).build()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideCurrencyRepository(db: CurrencyDataBase): CurrencyRepository {
+        return CurrencyRepositoryImpl(db.currencyDao)
+    }
+
 
     @Provides
     @Singleton
@@ -80,11 +92,11 @@ object RepositoryModule {
 @ExperimentalCoroutinesApi
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryModule1 {
+abstract class RepositoryCurrencyApiModule {
 
     @Binds
     @Singleton
     abstract fun bindCurrencyRepository(
-        currencyRepositoryImpl: CurrencyRepositoryImpl
-    ): CurrencyRepository
+        currencyApiRepositoryImpl: CurrencyApiRepositoryImpl
+    ): CurrencyApiRepository
 }

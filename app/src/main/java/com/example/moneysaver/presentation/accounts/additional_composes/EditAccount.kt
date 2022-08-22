@@ -30,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.substring
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -581,7 +582,7 @@ fun SetAccountCurrencyType(
                     contentPadding = PaddingValues()
                 ) {
                     items(
-                        items = AccountsData.currencyTypes,
+                        items = AccountsData.currenciesList,
                         itemContent = {
                             Row(
                                 modifier = Modifier
@@ -591,8 +592,8 @@ fun SetAccountCurrencyType(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
-                                Text(modifier = Modifier.padding(22.dp,4.dp,0.dp,4.dp), text = it.description, color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 18.sp)
-                                Text(modifier = Modifier.padding(0.dp,4.dp,32.dp,4.dp), text = it.currency, color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 18.sp)
+                                Text(modifier = Modifier.padding(22.dp,4.dp,0.dp,4.dp), text = it.currencyName, color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 18.sp)
+                                Text(modifier = Modifier.padding(0.dp,4.dp,32.dp,4.dp), text = if(it.valueInMainCurrency.toString().length > 6) it.valueInMainCurrency.toString().substring(6)  else it.valueInMainCurrency.toString() , color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 18.sp)
                             }
                         }
                     )

@@ -1,8 +1,15 @@
 package com.example.moneysaver.domain.repository
 
 import com.example.moneysaver.data.remote.CurrencyDto
+import com.example.moneysaver.domain.currency.Currency
 import com.example.moneysaver.domain.util.Resource
+import kotlinx.coroutines.flow.Flow
+
 
 interface  CurrencyRepository {
-    suspend fun getCurrencyData(base: String, symbols: String) : Resource<CurrencyDto>
+    fun getCurrencyTypes(): Flow<List<Currency>>
+
+    suspend fun insertCurrencyType(currencyType: Currency)
+
+    suspend fun deleteAll()
 }

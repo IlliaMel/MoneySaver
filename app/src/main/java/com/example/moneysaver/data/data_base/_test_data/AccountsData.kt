@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.account.Account
+import com.example.moneysaver.domain.currency.Currency
 import com.example.moneysaver.ui.theme.externalColorGray
 import java.io.Serializable
 
@@ -20,13 +21,7 @@ data class VectorImg(
     }
 }
 
-data class CurrencyType(
-    var description: String = "USA",
-    var currency: String = "$",
-    var currencyName: String = "$",
-    var valueInMainCurrency:  Double = 0.0,
 
-)
 
 object AccountsData {
 
@@ -45,20 +40,19 @@ object AccountsData {
     )
 
 
-    var mainCurrency = CurrencyType(description = "European Euro" , currency = "€", currencyName = "EUR", valueInMainCurrency = 1.0)
+    var mainCurrency = Currency(description = "European Euro" , currency = "€", currencyName = "EUR", valueInMainCurrency = 1.0)
+
+    var currenciesList: List<Currency> = emptyList()
 
     val currencyTypes = mutableListOf(
-        CurrencyType(description = "European Euro" , currency = "€", currencyName = "EUR"), // EUR
-        CurrencyType(description = "USA Dollar" , currency = "$", currencyName = "USD"), //USD
-        CurrencyType(description = "Ukrainian Hryvnia" , currency = "₴", currencyName = "UAH"), // UAH
-        CurrencyType(description = "Pound" , currency = "£", currencyName = "GBP"), //GBP
-        CurrencyType(description = "Yuan" , currency = "¥", currencyName = "CNY"), //CNY
-        CurrencyType(description = "UAE Dirham" , currency = "AED", currencyName = "AED"), //AED
-        CurrencyType(description = "Turkish Lira" , currency = "¥", currencyName = "TRY"), //TRY
-        CurrencyType(description = "Bitcoin" , currency = "BTC", currencyName = "BTC"), //BTC
-
-
-
+        Currency(description = "European Euro" , currency = "€", currencyName = "EUR"), // EUR
+        Currency(description = "USA Dollar" , currency = "$", currencyName = "USD"), //USD
+        Currency(description = "Ukrainian Hryvnia" , currency = "₴", currencyName = "UAH"), // UAH
+        Currency(description = "Pound" , currency = "£", currencyName = "GBP"), //GBP
+        Currency(description = "Yuan" , currency = "¥", currencyName = "CNY"), //CNY
+        Currency(description = "UAE Dirham" , currency = "AED", currencyName = "AED"), //AED
+        Currency(description = "Turkish Lira" , currency = "¥", currencyName = "TRY"), //TRY
+        Currency(description = "Bitcoin" , currency = "BTC", currencyName = "BTC"), //BTC
         )
 
 
