@@ -12,6 +12,8 @@ import java.util.*
 
 interface TransactionRepository {
 
+    suspend fun getTransactionByUUID(uuid: UUID): Transaction?
+
     fun getTransactions(): Flow<List<Transaction>>
 
     fun getTransactionsInDateRange(minDate: Date, maxDate: Date): Flow<List<Transaction>>

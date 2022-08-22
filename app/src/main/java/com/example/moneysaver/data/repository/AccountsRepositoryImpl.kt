@@ -1,14 +1,20 @@
 package com.example.moneysaver.data.repository
 
+import androidx.room.Query
 import com.example.moneysaver.data.data_base.account_db.AccountDao
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.repository.AccountsRepository
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 
 class AccountsRepositoryImpl(
     private val dao: AccountDao
 ) : AccountsRepository {
+
+    override suspend fun getAccountByUUID(uuid: UUID): Account? {
+        return dao.getAccountByUUID(uuid)
+    }
 
     override fun getAllAccounts(): Flow<List<Account>> {
         return dao.getAllAccounts()
