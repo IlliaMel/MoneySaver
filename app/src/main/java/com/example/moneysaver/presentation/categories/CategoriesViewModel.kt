@@ -3,6 +3,7 @@ package com.example.moneysaver.presentation.categories
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.repository.AccountsRepository
 import com.example.moneysaver.domain.repository.CategoriesRepository
@@ -96,6 +97,12 @@ class CategoriesViewModel @Inject constructor(
 
         }.launchIn(viewModelScope)
 
+    }
+
+    fun addingTransactionIsAllowed(): Boolean {
+        return state.accountsList.isNotEmpty()
+                && state.categoriesList.isNotEmpty()
+                && state.categoriesList[0].uuid!= CategoriesData.addCategory.uuid
     }
 
     fun loadCategoriesDataInDateRange(minDate: Date, maxDate: Date) {

@@ -8,6 +8,7 @@ import com.example.moneysaver.domain.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.repository.AccountsRepository
 import com.example.moneysaver.domain.repository.CategoriesRepository
 import com.example.moneysaver.domain.transaction.Transaction
@@ -110,6 +111,12 @@ class TransactionsViewModel @Inject constructor(
 
     fun getCategoryNameByUUIID(uuid: UUID): String? = runBlocking {
         categoriesRepository.getCategoryByUUID(uuid)?.title
+    }
+
+    fun addingTransactionIsAllowed(): Boolean {
+        return state.accountsList.isNotEmpty()
+                && state.categoriesList.isNotEmpty()
+                && state.categoriesList[0].uuid!= CategoriesData.addCategory.uuid
     }
 
 }

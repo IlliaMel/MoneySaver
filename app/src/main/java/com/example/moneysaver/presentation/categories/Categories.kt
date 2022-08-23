@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation.categories
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
@@ -35,11 +36,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
-import com.example.moneysaver.presentation.categories.additional_composes.SimpleColors
+import com.example.moneysaver.presentation.transactions.showNoAccountOrCategoryMessage
 import com.example.moneysaver.ui.theme.*
 import hu.ma.charts.legend.data.LegendPosition
 import hu.ma.charts.pie.data.PieChartData
@@ -177,8 +179,11 @@ fun Categories(
                                                     viewModel.state.categoriesList[0]
                                                 if(isForEditing)
                                                     isAddingCategory = true
-                                                else
-                                                    switchBottomSheet(scope, sheetState)
+                                                else {
+                                                    if(viewModel.addingTransactionIsAllowed())
+                                                        switchBottomSheet(scope, sheetState)
+                                                    else
+                                                        showNoAccountOrCategoryMessage()                                                }
                                             }}
                                         ,cornerSize =  60.dp)
                                 else{
@@ -203,8 +208,11 @@ fun Categories(
                                                 viewModel.state.categoriesList[4]
                                             if(isForEditing)
                                                 isAddingCategory = true
-                                            else
-                                                switchBottomSheet(scope, sheetState)
+                                            else {
+                                                if(viewModel.addingTransactionIsAllowed())
+                                                    switchBottomSheet(scope, sheetState)
+                                                else
+                                                    showNoAccountOrCategoryMessage()                                            }
                                         }}
                                         ,cornerSize =  60.dp)
                                 else{
@@ -223,8 +231,11 @@ fun Categories(
                                                     viewModel.state.categoriesList[6]
                                                 if(isForEditing)
                                                     isAddingCategory = true
-                                                else
-                                                    switchBottomSheet(scope, sheetState)
+                                                else {
+                                                    if(viewModel.addingTransactionIsAllowed())
+                                                        switchBottomSheet(scope, sheetState)
+                                                    else
+                                                        showNoAccountOrCategoryMessage()                                                }
                                             }}
                                         ,cornerSize =  60.dp)
                                 else{
@@ -262,8 +273,11 @@ fun Categories(
                                                 viewModel.state.categoriesList[1]
                                             if(isForEditing)
                                                 isAddingCategory = true
-                                            else
-                                                switchBottomSheet(scope, sheetState)
+                                            else {
+                                                if(viewModel.addingTransactionIsAllowed())
+                                                    switchBottomSheet(scope, sheetState)
+                                                else
+                                                    showNoAccountOrCategoryMessage()                                            }
                                         }}
                                         ,cornerSize =  60.dp)
                                 else{
@@ -283,8 +297,11 @@ fun Categories(
                                                     viewModel.state.categoriesList[2]
                                                 if(isForEditing)
                                                     isAddingCategory = true
-                                                else
-                                                    switchBottomSheet(scope, sheetState)
+                                                else {
+                                                    if(viewModel.addingTransactionIsAllowed())
+                                                        switchBottomSheet(scope, sheetState)
+                                                    else
+                                                        showNoAccountOrCategoryMessage()                                                }
                                             }}
                                         ,cornerSize =  60.dp)
                                 else{
@@ -350,8 +367,11 @@ fun Categories(
                                                     viewModel.state.categoriesList[3]
                                                 if(isForEditing)
                                                     isAddingCategory = true
-                                                else
-                                                    switchBottomSheet(scope, sheetState)
+                                                else {
+                                                    if(viewModel.addingTransactionIsAllowed())
+                                                        switchBottomSheet(scope, sheetState)
+                                                    else
+                                                        showNoAccountOrCategoryMessage()                                                }
                                             }}
                                         ,cornerSize =  60.dp)
                                 else{
@@ -378,8 +398,11 @@ fun Categories(
                                                     viewModel.state.categoriesList[5]
                                                 if(isForEditing)
                                                     isAddingCategory = true
-                                                else
-                                                    switchBottomSheet(scope, sheetState)
+                                                else {
+                                                    if(viewModel.addingTransactionIsAllowed())
+                                                        switchBottomSheet(scope, sheetState)
+                                                    else
+                                                        showNoAccountOrCategoryMessage()                                                }
                                             }}
                                         ,cornerSize =  60.dp)
                                 else{
@@ -398,8 +421,11 @@ fun Categories(
                                                     viewModel.state.categoriesList[7]
                                                 if(isForEditing)
                                                     isAddingCategory = true
-                                                else
-                                                    switchBottomSheet(scope, sheetState)
+                                                else {
+                                                    if(viewModel.addingTransactionIsAllowed())
+                                                        switchBottomSheet(scope, sheetState)
+                                                    else
+                                                        showNoAccountOrCategoryMessage()                                                }
                                             }}
                                         ,cornerSize =  60.dp)
                                 else{
@@ -443,8 +469,11 @@ fun Categories(
                                                             viewModel.state.categoriesList[i]
                                                         if(isForEditing)
                                                             isAddingCategory = true
-                                                        else
-                                                            switchBottomSheet(scope, sheetState)
+                                                        else {
+                                                            if(viewModel.addingTransactionIsAllowed())
+                                                                switchBottomSheet(scope, sheetState)
+                                                            else
+                                                                showNoAccountOrCategoryMessage()                                                        }
                                                     }},cornerSize =  50.dp)
                                         }
                                     }

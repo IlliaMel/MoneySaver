@@ -1,6 +1,7 @@
 package com.example.moneysaver.presentation.transactions
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
@@ -137,16 +139,18 @@ fun Transactions(
 //??? !sheetState.isAnimationRunning
                 FloatingActionButton(
                     onClick = {
-                        scope.launch {
-                            selectedCategory.value=null
-                            selectedTransaction.value=null
-                            if(sheetState.isCollapsed && !sheetState.isAnimationRunning)
-                                scaffoldState.bottomSheetState.expand()
-                            else
-                                scaffoldState.bottomSheetState.collapse()
-                        }
+                        if(viewModel.addingTransactionIsAllowed()) {
+                            scope.launch {
+                                selectedCategory.value=null
+                                selectedTransaction.value=null
+                                if(sheetState.isCollapsed && !sheetState.isAnimationRunning)
+                                    scaffoldState.bottomSheetState.expand()
+                                else
+                                    scaffoldState.bottomSheetState.collapse()
+                            }
+                        } else showNoAccountOrCategoryMessage()
                     },
-                    backgroundColor = Color(0xff5c6bbf)
+                    backgroundColor = if(viewModel.addingTransactionIsAllowed()) Color(0xff5c6bbf) else Color(0xFFADADAB)
                 ) {
                     Icon(
                         imageVector = if(sheetState.isCollapsed && !sheetState.isAnimationRunning) Icons.Default.Add else Icons.Default.ArrowDropDown,
@@ -360,4 +364,8 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
     }
     dividerForTopBar()
 
+}
+
+fun showNoAccountOrCategoryMessage(){
+    Toast.makeText(MoneySaver.applicationContext(), MoneySaver.applicationContext().getString(R.string.no_account_or_category_message), Toast.LENGTH_SHORT).show()
 }
