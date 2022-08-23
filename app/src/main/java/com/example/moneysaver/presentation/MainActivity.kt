@@ -3,6 +3,8 @@ package com.example.moneysaver.presentation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -76,8 +78,9 @@ class MainActivity : ComponentActivity() {
 
         val isParsed = sharedPref.getBoolean(CURRENCY_PARSED_KEY, false)
         val parsingDate = sharedPref.getString(CURRENCY_PARSING_DATE_KEY, "2000-01-01")
-        val isConnectionEnabled = true
-
+        val isConnectionEnabled = isNetworkAvailable(applicationContext)
+        
+        
         var formattedDate = ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val current = LocalDateTime.now()
@@ -86,20 +89,14 @@ class MainActivity : ComponentActivity() {
         } else {
             TODO("VERSION.SDK_INT < O")
         }
-        //takeFromDB
-        // viewModel.isNeedToParseCurrency.value = false
-        //parse
-        //takefromdb
-        // viewModel.isNeedToParseCurrency.value = true
 
         if(isConnectionEnabled){
-            var d = !isParsed
-            var d3 = parsingDate != formattedDate
             isNeedToParseCurrency = !isParsed || parsingDate != formattedDate
         }else{
             if(isParsed){
                 isNeedToParseCurrency = false
             }else{
+                
                 //askToTurnInternet
             }
         }
@@ -109,8 +106,6 @@ class MainActivity : ComponentActivity() {
                 viewModel.isLoading.value
             }
         }
-
-
 
         //delete top bar
         window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
@@ -124,18 +119,56 @@ class MainActivity : ComponentActivity() {
             )
 
             MoneySaverTheme {
-                val service = AlarmService(context = applicationContext)
-                MainUI(service)
+                if (!isConnectionEnabled && !isParsed) {
+                    Box(modifier = Modifier.fillMaxSize().background(lightGrayTransparent), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "PLease turn on internet connection",
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
+                    }
 
-                if(viewModel.isParsingSucceeded.value){
-                    with (sharedPref.edit()) {
-                        putBoolean(CURRENCY_PARSED_KEY, true)
-                        putString(CURRENCY_PARSING_DATE_KEY, formattedDate)
-                        apply()
+                } else {
+                    val service = AlarmService(context = applicationContext)
+                    MainUI(service)
+
+                    if (viewModel.isParsingSucceeded.value) {
+                        with(sharedPref.edit()) {
+                            putBoolean(CURRENCY_PARSED_KEY, true)
+                            putString(CURRENCY_PARSING_DATE_KEY, formattedDate)
+                            apply()
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun isNetworkAvailable(context: Context?): Boolean {
+        if (context == null) return false
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                when {
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
+                        return true
+                    }
+                }
+            }
+        } else {
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
+                return true
+            }
+        }
+        return false
     }
 }
 
