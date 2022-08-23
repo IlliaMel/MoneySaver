@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation._components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -290,8 +291,7 @@ private fun evaluateSumValue(sumText: MutableState<String>) {
 private fun String.canBeEvaluatedAsMathExpr(): Boolean {
     if(this.isNullOrEmpty() || !this.contains("÷|×|-|\\+".toRegex())) return false
 
-    if(this.contains("÷|×|-|\\+".toRegex()) && this[0]!='0') return true
-
+    if(this.contains("÷|×|-|\\+".toRegex()) && this[0]!='-') return true
     return this.drop(1).contains("÷|×|-|\\+".toRegex())
 }
 
