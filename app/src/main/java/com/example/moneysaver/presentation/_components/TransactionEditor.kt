@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation._components
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -60,8 +61,6 @@ fun TransactionEditor(
 
     val openChoseAccountDialog = remember { mutableStateOf(false) }
     val openChoseCategoryDialog = remember { mutableStateOf(false) }
-
-
 
     Column(
         modifier = Modifier

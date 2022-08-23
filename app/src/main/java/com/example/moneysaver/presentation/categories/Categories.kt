@@ -98,7 +98,7 @@ fun Categories(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
-            if(sheetContentInitClose)
+            if(sheetContentInitClose && viewModel.state.accountsList.isNotEmpty())
             TransactionEditor(
                 category = selectedCategory,
                 addTransaction = viewModel::addTransaction,
