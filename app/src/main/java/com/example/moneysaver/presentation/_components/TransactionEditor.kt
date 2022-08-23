@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
+import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.category.Category
 import com.example.moneysaver.domain.transaction.Transaction
@@ -318,7 +319,7 @@ private fun ChooseTransactionCategoryDialog(openDialog: MutableState<Boolean>, c
                     .background(Color.White)
             ) {
                 items(
-                    items = categoryList,
+                    items = categoryList.filter { it.uuid!=CategoriesData.addCategory.uuid },
                     itemContent = {
                         Column() {
                             Row(
