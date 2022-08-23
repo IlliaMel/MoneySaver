@@ -23,6 +23,10 @@ class TransactionRepositoryImpl(
         return dao.getTransactionsByCategoryUUID(categoryUUID)
     }
 
+    override fun getTransactionsByAccountUUID(accountUUID: UUID): Flow<List<Transaction>> {
+        return dao.getTransactionsByAccountUUID(accountUUID)
+    }
+
     override fun getTransactionsInDateRange(minDate: Date, maxDate: Date): Flow<List<Transaction>> {
         return dao.getTransactionsInDateRange(minDate, maxDate)
     }

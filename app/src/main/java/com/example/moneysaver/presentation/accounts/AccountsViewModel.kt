@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moneysaver.domain.account.Account
 import com.example.moneysaver.domain.repository.AccountsRepository
+import com.example.moneysaver.domain.repository.TransactionRepository
+import com.example.moneysaver.domain.transaction.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -15,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsViewModel @Inject constructor(
-    private val repository: AccountsRepository,
+    private val accountsRepository: AccountsRepository,
+    private val transactionRepository: TransactionRepository
 ) : ViewModel() {
 
     init {
@@ -32,7 +35,7 @@ class AccountsViewModel @Inject constructor(
 
 
     private fun loadDebtAccounts() {
-        repository.getDebtAccounts()
+        accountsRepository.getDebtAccounts()
             .onEach { list ->
                 state = state.copy(
                     debtList = list,
@@ -42,7 +45,7 @@ class AccountsViewModel @Inject constructor(
 
     }
     private fun loadAllAccounts() {
-        repository.getAllAccounts()
+        accountsRepository.getAllAccounts()
             .onEach { list ->
                 state = state.copy(
                     allAccountList = list,
@@ -54,7 +57,7 @@ class AccountsViewModel @Inject constructor(
 
 
     fun loadGoalAccounts() {
-        repository.getGoalAccounts()
+        accountsRepository.getGoalAccounts()
             .onEach { list ->
                 state = state.copy(
                     goalList = list,
@@ -63,7 +66,7 @@ class AccountsViewModel @Inject constructor(
     }
 
     fun loadSimpleAccounts() {
-        repository.getSimpleAccounts()
+        accountsRepository.getSimpleAccounts()
             .onEach { list ->
                 state = state.copy(
                     simpleList = list,
@@ -72,7 +75,7 @@ class AccountsViewModel @Inject constructor(
     }
 
     fun loadSimpleAndDeptAccounts() {
-        repository.getSimpleAndDeptAccounts()
+        accountsRepository.getSimpleAndDeptAccounts()
             .onEach { list ->
                 state = state.copy(
                     debtAndSimpleList = list,
@@ -83,13 +86,16 @@ class AccountsViewModel @Inject constructor(
 
     fun addAccount(account: Account) {
         viewModelScope.launch {
-            repository.insertAccount(account)
+            accountsRepository.insertAccount(account)
         }
     }
 
     fun deleteAccount(account: Account) {
         viewModelScope.launch {
-            repository.deleteAccount(account)
+            transactionRepository.getTransactionsByAccountUUID(account.uuid).onEach { list ->
+                for(transaction in list) deleteTransaction(transaction)
+            }.launchIn(viewModelScope)
+            accountsRepository.deleteAccount(account)
         }
         loadAllAccounts()
         loadDebtAccounts()
@@ -123,4 +129,21 @@ class AccountsViewModel @Inject constructor(
         }
         return sum
     }
+
+    fun deleteTransaction(transaction: Transaction) {
+        viewModelScope.launch {
+            // remove spending data if transaction isn't new
+            val transactionAccount = accountsRepository.getAccountByUUID(transaction.accountUUID)
+            transactionAccount?.let {
+                val updatedAccount = transactionAccount!!.copy(
+                    balance = transactionAccount.balance-transaction.sum
+                )
+                // update account
+                accountsRepository.insertAccount(updatedAccount)
+            }
+
+            transactionRepository.deleteTransaction(transaction)
+        }
+    }
+
 }

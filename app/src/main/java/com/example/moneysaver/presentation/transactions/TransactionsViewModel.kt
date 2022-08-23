@@ -81,11 +81,13 @@ class TransactionsViewModel @Inject constructor(
         viewModelScope.launch {
             // remove spending data if transaction isn't new
             val transactionAccount = accountsRepository.getAccountByUUID(transaction.accountUUID)
-            val updatedAccount = transactionAccount!!.copy(
-                balance = transactionAccount.balance-transaction.sum
-            )
-            // update account
-            accountsRepository.insertAccount(updatedAccount)
+            transactionAccount?.let {
+                val updatedAccount = transactionAccount!!.copy(
+                    balance = transactionAccount.balance-transaction.sum
+                )
+                // update account
+                accountsRepository.insertAccount(updatedAccount)
+            }
 
             repository.deleteTransaction(transaction)
         }
