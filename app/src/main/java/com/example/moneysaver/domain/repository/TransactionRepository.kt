@@ -16,6 +16,8 @@ interface TransactionRepository {
 
     fun getTransactions(): Flow<List<Transaction>>
 
+    fun getTransactionsByCategoryUUID(categoryUUID: UUID): Flow<List<Transaction>>
+
     fun getTransactionsInDateRange(minDate: Date, maxDate: Date): Flow<List<Transaction>>
 
     suspend fun insertTransaction(transaction: Transaction)

@@ -82,7 +82,7 @@ class TransactionsViewModel @Inject constructor(
             // remove spending data if transaction isn't new
             val transactionAccount = accountsRepository.getAccountByUUID(transaction.accountUUID)
             val updatedAccount = transactionAccount!!.copy(
-                balance = transactionAccount.balance+transaction.sum
+                balance = transactionAccount.balance-transaction.sum
             )
             // update account
             accountsRepository.insertAccount(updatedAccount)
