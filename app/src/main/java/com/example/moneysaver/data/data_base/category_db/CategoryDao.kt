@@ -1,8 +1,7 @@
 package com.example.moneysaver.data.data_base.category_db
 
 import androidx.room.*
-import com.example.moneysaver.domain.account.Account
-import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.domain.model.Category
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 

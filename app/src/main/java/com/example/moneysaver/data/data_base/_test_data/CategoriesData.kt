@@ -1,7 +1,7 @@
 package com.example.moneysaver.data.data_base._test_data
 
 import com.example.moneysaver.R
-import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.domain.model.Category
 
 object CategoriesData {
 

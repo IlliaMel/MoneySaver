@@ -1,6 +1,5 @@
 package com.example.moneysaver.presentation.categories
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
@@ -30,14 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
-import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.domain.model.Category
 import hu.ma.charts.pie.PieChart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.moneysaver.MoneySaver
-import com.example.moneysaver.domain.account.Account
+import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
@@ -502,7 +500,7 @@ fun Categories(
 
 }
 
-fun getChartData(categoriesList: List<Category>,categoriesSums: List<Double>, sum : Double): List<PieChartData> {
+fun getChartData(categoriesList: List<Category>, categoriesSums: List<Double>, sum : Double): List<PieChartData> {
     return LegendPosition.values().map {
         PieChartData(
 
@@ -520,7 +518,7 @@ fun getChartData(categoriesList: List<Category>,categoriesSums: List<Double>, su
 }
 
 @Composable
-private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier , modifierBox:  Modifier = Modifier, columnModifier: Modifier = Modifier,onClickCategory : () ->  Unit,  cornerSize : Dp = 60.dp) {
+private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier, modifierBox:  Modifier = Modifier, columnModifier: Modifier = Modifier, onClickCategory : () ->  Unit, cornerSize : Dp = 60.dp) {
     Column(modifier = columnModifier
         .clickable { onClickCategory() }
         .clip(RoundedCornerShape(CornerSize(4.dp)))
@@ -643,7 +641,7 @@ private fun switchBottomSheet(scope: CoroutineScope, bottomSheetState: BottomShe
 }
 
 @Composable
-private fun CategoriesImage(category: Category, viewModel: CategoriesViewModel,  modifier: Modifier = Modifier) {
+private fun CategoriesImage(category: Category, viewModel: CategoriesViewModel, modifier: Modifier = Modifier) {
     Column(modifier = modifier, verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(modifier = Modifier.padding(4.dp), fontSize = 13.sp, fontWeight = FontWeight.W400, text = category.title, color = Color.Black)
         Image(

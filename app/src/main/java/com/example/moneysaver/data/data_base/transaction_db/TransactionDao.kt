@@ -1,8 +1,7 @@
-package com.example.moneysaver.data.data_base.transaction_dp
+package com.example.moneysaver.data.data_base.transaction_db
 
 import androidx.room.*
-import com.example.moneysaver.domain.category.Category
-import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.domain.model.Transaction
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 

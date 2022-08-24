@@ -31,7 +31,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.substring
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +39,7 @@ import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
-import com.example.moneysaver.domain.account.Account
+import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.ui.theme.*
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController

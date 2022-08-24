@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.moneysaver.data.data_base.Converters
 
-import com.example.moneysaver.domain.currency.Currency
+import com.example.moneysaver.domain.model.Currency
 
 
 @Database(

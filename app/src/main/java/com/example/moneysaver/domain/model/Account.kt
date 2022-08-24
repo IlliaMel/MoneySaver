@@ -1,4 +1,4 @@
-package com.example.moneysaver.domain.account
+package com.example.moneysaver.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,6 +1,6 @@
 package com.example.moneysaver.presentation.accounts
 
-import com.example.moneysaver.domain.account.Account
+import com.example.moneysaver.domain.model.Account
 
 data class AccountsState(
     val allAccountList: List<Account> = emptyList(),

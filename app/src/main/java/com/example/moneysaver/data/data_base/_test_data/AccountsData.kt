@@ -4,8 +4,8 @@ package com.example.moneysaver.data.data_base._test_data
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.example.moneysaver.R
-import com.example.moneysaver.domain.account.Account
-import com.example.moneysaver.domain.currency.Currency
+import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.ui.theme.externalColorGray
 import java.io.Serializable
 

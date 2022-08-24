@@ -1,10 +1,10 @@
-package com.example.moneysaver.data.data_base.transaction_dp
+package com.example.moneysaver.data.data_base.transaction_db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.moneysaver.data.data_base.Converters
-import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.domain.model.Transaction
 
 @Database(
     entities = [Transaction::class],

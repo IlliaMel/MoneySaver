@@ -35,7 +35,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
-import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.presentation.accounts.additional_composes.*
 import com.example.moneysaver.ui.theme.*
 

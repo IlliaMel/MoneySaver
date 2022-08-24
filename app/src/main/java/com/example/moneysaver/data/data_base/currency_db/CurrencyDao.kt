@@ -1,7 +1,7 @@
 package com.example.moneysaver.data.data_base.currency_db
 
 import androidx.room.*
-import com.example.moneysaver.domain.currency.Currency
+import com.example.moneysaver.domain.model.Currency
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -10,7 +10,7 @@ interface CurrencyDao {
     fun getCurrencyTypes(): Flow<List<Currency>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCurrencyType(currency:Currency)
+    suspend fun insertCurrencyType(currency: Currency)
 
     @Query("DELETE FROM `currency`")
     suspend fun deleteAll()

@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.moneysaver.data.data_base.Converters
-import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.domain.model.Category
 
 
 @Database(

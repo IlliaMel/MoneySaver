@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
-import com.example.moneysaver.domain.account.Account
-import com.example.moneysaver.domain.category.Category
-import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock

@@ -1,9 +1,9 @@
 package com.example.moneysaver.presentation.transactions
 
 
-import com.example.moneysaver.domain.account.Account
-import com.example.moneysaver.domain.category.Category
-import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Transaction
 
 data class TransactionsState (
     val transactionList: List<Transaction> = emptyList(),

@@ -1,6 +1,5 @@
 package com.example.moneysaver.presentation._components
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -33,9 +31,9 @@ import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
-import com.example.moneysaver.domain.account.Account
-import com.example.moneysaver.domain.category.Category
-import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.ui.theme.dividerColor
 import java.util.*

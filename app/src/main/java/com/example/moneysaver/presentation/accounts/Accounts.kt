@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.data.data_base._test_data.AccountsData
-import com.example.moneysaver.domain.account.Account
+import com.example.moneysaver.domain.model.Account
 
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -145,7 +145,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
 
 @Composable
-fun PopUp(openDialog: MutableState<Boolean>,accountList: List<Account>,chosenAccountFilter: MutableState<Account>){
+fun PopUp(openDialog: MutableState<Boolean>, accountList: List<Account>, chosenAccountFilter: MutableState<Account>){
     if(openDialog.value)
         Dialog(
 

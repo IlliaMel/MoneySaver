@@ -1,7 +1,7 @@
 package com.example.moneysaver.presentation.categories
 
-import com.example.moneysaver.domain.account.Account
-import com.example.moneysaver.domain.category.Category
+import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.domain.model.Category
 
 data class CategoriesState(
     val categoriesList: MutableList<Category> = ArrayList(),
