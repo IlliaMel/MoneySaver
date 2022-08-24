@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation._components
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,20 +41,20 @@ import java.util.*
 
 @Composable
 fun TransactionEditor(
-    currentTransaction: Transaction? = null,
+    currentTransaction: MutableState<Transaction?> = mutableStateOf(null),
     category:  MutableState<Category>,
     addTransaction: (tr: Transaction)->Unit,
     deleteTransaction: (tr: Transaction)->Unit = {},
-    closeAdder: ()->Unit, accountsList: List<Account>,
+    closeAdder: ()->Unit,
+    accountsList: List<Account>,
     categoriesList: List<Category>
 ) {
-
-    var choiceIsActive = remember { mutableStateOf(currentTransaction!=null)}
-    var sumText = remember { mutableStateOf(currentTransaction?.sum?.times(-1)?.toCalculatorString() ?: "0") }
-    var date: MutableState<Date?> = remember { mutableStateOf(currentTransaction?.date ?: Date()) }
-    var note by remember { mutableStateOf(currentTransaction?.note ?: "") }
-    val transactionAccount = remember { mutableStateOf(if(currentTransaction!=null) accountsList.first{it.uuid == currentTransaction.accountUUID} else if(accountsList.isNotEmpty()) accountsList[0] else AccountsData.accountsList[0]) }
-    var isSubmitted = remember { mutableStateOf(false) }
+    val choiceIsActive = remember { mutableStateOf(currentTransaction.value!=null)}
+    val sumText = remember { mutableStateOf(currentTransaction.value?.sum?.times(-1)?.toCalculatorString() ?: "0") }
+    val date: MutableState<Date?> = remember { mutableStateOf(currentTransaction.value?.date ?: Date()) }
+    var note by remember { mutableStateOf(currentTransaction.value?.note ?: "") }
+    val transactionAccount = remember { mutableStateOf(if(currentTransaction.value!=null) accountsList.first{it.uuid == currentTransaction.value!!.accountUUID} else if(accountsList.isNotEmpty()) accountsList[0] else AccountsData.accountsList[0]) }
+    val isSubmitted = remember { mutableStateOf(false) }
     val openPickDateDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
@@ -183,8 +184,8 @@ fun TransactionEditor(
                         .height(90.dp)
                         .background(Color(0xffc8ccc9))
                         .clickable {
-                                    if(currentTransaction!=null)
-                                        deleteTransaction(currentTransaction!!)
+                                    if(currentTransaction.value!=null)
+                                        deleteTransaction(currentTransaction.value!!)
                                     closeAdder()
                                    },
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -228,14 +229,14 @@ fun TransactionEditor(
 
     if(isSubmitted.value) {
         val transactionNote: String? = if (note != "") note else null
-        val transaction = if(currentTransaction==null) Transaction(
+        val transaction = if(currentTransaction.value==null) Transaction(
             sum = (sumText.value.toDoubleOrNull() ?: 0.0) * -1,
             categoryUUID = category.value.uuid,
             accountUUID = transactionAccount.value.uuid,
             date = date.value?:Date(),
             note = transactionNote
         ) else Transaction(
-            uuid=currentTransaction.uuid,
+            uuid=currentTransaction.value!!.uuid,
             sum = (sumText.value.toDoubleOrNull() ?: 0.0) * -1,
             categoryUUID = category.value.uuid,
             accountUUID = transactionAccount.value.uuid,

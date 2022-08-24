@@ -1,6 +1,7 @@
 package com.example.moneysaver.presentation.transactions
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -116,7 +117,7 @@ fun Transactions(
                         selectedCategory.value = viewModel.state.categoriesList.first{ it.uuid == selectedTransaction.value!!.categoryUUID}
                     val transactionCategory: MutableState<Category> = remember { mutableStateOf(selectedCategory.value!!) }
                     TransactionEditor(
-                        currentTransaction = selectedTransaction.value,
+                        currentTransaction = selectedTransaction,
                         category = transactionCategory,
                         addTransaction = viewModel::addTransaction,
                         deleteTransaction = viewModel::deleteTransaction,
@@ -166,6 +167,11 @@ fun Transactions(
                     selectedCategory.value=null
                     selectedTransaction.value=null
                 }
+            }
+
+            if(sheetState.isCollapsed) {
+                selectedCategory.value=null
+                selectedTransaction.value=null
             }
 
 
@@ -221,10 +227,13 @@ fun Transactions(
                                         vectorImg =viewModel.state.categoriesList.first{ x -> x.uuid == it.categoryUUID}.categoryImg,
                                         onClick = {
                                             scope.launch {
-                                                sheetState.collapse()
-                                                selectedCategory.value=null
-                                                selectedTransaction.value = it
-                                                sheetState.expand()
+                                                if(sheetState.isExpanded) {
+                                                    sheetState.collapse()
+                                                } else {
+                                                    selectedCategory.value=null
+                                                    selectedTransaction.value = it
+                                                    sheetState.expand()
+                                                }
                                             }
                                         }
                                     )

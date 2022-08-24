@@ -258,7 +258,7 @@ private fun Char.isMathOperator(): Boolean {
 
 fun Double.toCalculatorString(): String {
     var str = String.format("%.2f", this)
-    while(str.length>1 && (str.last()=='0'||str.last()=='.'))
+    while(str.length>1 && str.contains('.') && (str.last()=='0' || str.last()=='.'))
         str = str.dropLast(1)
     return str
 }
