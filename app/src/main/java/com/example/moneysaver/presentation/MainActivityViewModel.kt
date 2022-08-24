@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.remote.CurrencyDto
-import com.example.moneysaver.domain.currency.Currency
-import com.example.moneysaver.domain.repository.CurrencyApiRepository
-import com.example.moneysaver.domain.repository.CurrencyRepository
+import com.example.moneysaver.domain.model.Currency
+import com.example.moneysaver.domain.repository.FinanceRepository
 import com.example.moneysaver.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -22,8 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    private val repositoryApi: CurrencyApiRepository,
-    private val repository: CurrencyRepository
+    private val financeRepository: FinanceRepository
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
@@ -40,11 +38,11 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             var resultData: CurrencyDto? = null
             if(MainActivity.isNeedToParseCurrency){
-                when(val result = repositoryApi.getCurrencyData("USD", "EUR,USD,UAH,GBP,CNY,AED,TRY,BTC")) {
+                when(val result = financeRepository.getCurrencyData("USD", "EUR,USD,UAH,GBP,CNY,AED,TRY,BTC")) {
                     is Resource.Success -> {
                         isParsingSucceeded.value = true
                         resultData = result.data
-                        repository.deleteAll()
+                        financeRepository.deleteAll()
                         putInDbCurrencyData(resultData)
 
                     }
@@ -66,7 +64,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     private fun loadCurrencyData() {
-        repository.getCurrencyTypes()
+        financeRepository.getCurrencyTypes()
             .onEach { list ->
                 state = state.copy(
                     currenciesList = list,
@@ -85,7 +83,7 @@ class MainActivityViewModel @Inject constructor(
                 valueInMainCurrency = it.eUR
             )
         }?.let {
-            repository.insertCurrencyType(
+            financeRepository.insertCurrencyType(
                 it
             )
         }
@@ -98,7 +96,7 @@ class MainActivityViewModel @Inject constructor(
                 valueInMainCurrency = it.uSD
             )
         }?.let {
-            repository.insertCurrencyType(
+            financeRepository.insertCurrencyType(
                 it
             )
         }
@@ -111,7 +109,7 @@ class MainActivityViewModel @Inject constructor(
                 valueInMainCurrency = it.uAH
             )
         }?.let {
-            repository.insertCurrencyType(
+            financeRepository.insertCurrencyType(
                 it
             )
         }
@@ -124,7 +122,7 @@ class MainActivityViewModel @Inject constructor(
                 valueInMainCurrency = it.gBP
             )
         }?.let {
-            repository.insertCurrencyType(
+            financeRepository.insertCurrencyType(
                 it
             )
         }
@@ -137,7 +135,7 @@ class MainActivityViewModel @Inject constructor(
                 valueInMainCurrency = it.cNY
             )
         }?.let {
-            repository.insertCurrencyType(
+            financeRepository.insertCurrencyType(
                 it
             )
         }
@@ -150,7 +148,7 @@ class MainActivityViewModel @Inject constructor(
                 valueInMainCurrency = it.aED
             )
         }?.let {
-            repository.insertCurrencyType(
+            financeRepository.insertCurrencyType(
                 it
             )
         }
@@ -163,7 +161,7 @@ class MainActivityViewModel @Inject constructor(
                 valueInMainCurrency = it.tRY
             )
         }?.let {
-            repository.insertCurrencyType(
+            financeRepository.insertCurrencyType(
                 it
             )
         }
@@ -177,7 +175,7 @@ class MainActivityViewModel @Inject constructor(
                 valueInMainCurrency = it.bTC
             )
         }?.let {
-            repository.insertCurrencyType(
+            financeRepository.insertCurrencyType(
                 it
             )
         }

@@ -5,15 +5,14 @@ import androidx.room.Room
 import com.example.moneysaver.data.data_base.account_db.AccountDataBase
 import com.example.moneysaver.data.data_base.category_db.CategoryDataBase
 import com.example.moneysaver.data.data_base.currency_db.CurrencyDataBase
-import com.example.moneysaver.data.data_base.transaction_dp.TransactionDataBase
+import com.example.moneysaver.data.data_base.transaction_db.TransactionDataBase
+import com.example.moneysaver.data.remote.CurrencyApi
 import com.example.moneysaver.data.repository.*
 import com.example.moneysaver.domain.repository.*
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Singleton
 
 @Module
@@ -63,40 +62,22 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideCurrencyRepository(db: CurrencyDataBase): CurrencyRepository {
-        return CurrencyRepositoryImpl(db.currencyDao)
+    fun provideTransactionRepository(
+        transactionDB: TransactionDataBase,
+        categoryDB: CategoryDataBase,
+        accountDB: AccountDataBase,
+        currencyDB: CurrencyDataBase,
+        currencyApi: CurrencyApi
+    ): FinanceRepository {
+        return FinanceRepositoryImpl(
+            transactionDB.transactionDao,
+            categoryDB.categoryDao,
+            accountDB.accountDao,
+            currencyDB.currencyDao,
+            currencyApi
+        )
     }
 
 
-    @Provides
-    @Singleton
-    fun provideTransactionRepository(db: TransactionDataBase): TransactionRepository {
-        return TransactionRepositoryImpl(db.transactionDao)
-    }
 
-    @Provides
-    @Singleton
-    fun provideAccountsRepository(db: AccountDataBase): AccountsRepository {
-        return AccountsRepositoryImpl(db.accountDao)
-    }
-
-    @Provides
-    @Singleton
-    fun provideCategoriesRepository(db: CategoryDataBase): CategoriesRepository {
-        return CategoriesRepositoryImlp(db.categoryDao)
-    }
-
-
-}
-
-@ExperimentalCoroutinesApi
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoryCurrencyApiModule {
-
-    @Binds
-    @Singleton
-    abstract fun bindCurrencyRepository(
-        currencyApiRepositoryImpl: CurrencyApiRepositoryImpl
-    ): CurrencyApiRepository
 }

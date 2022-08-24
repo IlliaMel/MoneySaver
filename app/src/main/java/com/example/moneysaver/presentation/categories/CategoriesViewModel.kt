@@ -1,15 +1,12 @@
 package com.example.moneysaver.presentation.categories
 
-import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
-import com.example.moneysaver.domain.category.Category
-import com.example.moneysaver.domain.repository.AccountsRepository
-import com.example.moneysaver.domain.repository.CategoriesRepository
-import com.example.moneysaver.domain.repository.TransactionRepository
-import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.repository.FinanceRepository
+import com.example.moneysaver.domain.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,9 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    private val repository: TransactionRepository,
-    private val categoriesRepository: CategoriesRepository,
-    private val accountsRepository: AccountsRepository
+    private val financeRepository: FinanceRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(CategoriesState())
@@ -33,60 +28,60 @@ class CategoriesViewModel @Inject constructor(
 
     fun addCategory(category: Category) {
         viewModelScope.launch {
-            categoriesRepository.insertCategory(category)
+            financeRepository.insertCategory(category)
         }
     }
     fun deleteCategory(category: Category) {
         viewModelScope.launch {
-            repository.getTransactionsByCategoryUUID(category.uuid).onEach { list ->
+            financeRepository.getTransactionsByCategoryUUID(category.uuid).onEach { list ->
                 for(transaction in list) deleteTransaction(transaction)
             }.launchIn(viewModelScope)
-            categoriesRepository.deleteCategory(category)
+            financeRepository.deleteCategory(category)
         }
     }
 
     fun deleteTransaction(transaction: Transaction) {
         viewModelScope.launch {
             // remove spending data if transaction isn't new
-            val transactionAccount = accountsRepository.getAccountByUUID(transaction.accountUUID)
+            val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
             transactionAccount?.let {
                 val updatedAccount = transactionAccount!!.copy(
                     balance = transactionAccount.balance-transaction.sum
                 )
                 // update account
-                accountsRepository.insertAccount(updatedAccount)
+                financeRepository.insertAccount(updatedAccount)
             }
 
-            repository.deleteTransaction(transaction)
+            financeRepository.deleteTransaction(transaction)
         }
     }
 
     fun addTransaction(transaction: Transaction) {
         viewModelScope.launch {
             // remove previous spending data if transaction isn't new
-            repository.getTransactionByUUID(transaction.uuid)?.let {
-                val transactionAccount = accountsRepository.getAccountByUUID(it.accountUUID)
+            financeRepository.getTransactionByUUID(transaction.uuid)?.let {
+                val transactionAccount = financeRepository.getAccountByUUID(it.accountUUID)
                 val updatedAccount = transactionAccount!!.copy(
                     balance = transactionAccount.balance-it.sum
                 )
                 // update account
-                accountsRepository.insertAccount(updatedAccount)
+                financeRepository.insertAccount(updatedAccount)
             }
 
             // add new spending data
-            val transactionAccount = accountsRepository.getAccountByUUID(transaction.accountUUID)
+            val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
             val updatedAccount = transactionAccount!!.copy(
                 balance = transactionAccount.balance+transaction.sum
             )
-            accountsRepository.insertAccount(updatedAccount)
+            financeRepository.insertAccount(updatedAccount)
 
             // add or update transaction
-            repository.insertTransaction(transaction)
+            financeRepository.insertTransaction(transaction)
         }
     }
 
     fun loadCategories() {
-        categoriesRepository.getCategories()
+        financeRepository.getCategories()
             .onEach { list ->
                 state = state.copy(
                     categoriesList = list as MutableList<Category>,
@@ -96,7 +91,7 @@ class CategoriesViewModel @Inject constructor(
 
     fun loadCategoriesData() {
 
-        repository.getTransactions().onEach { transactions ->
+        financeRepository.getTransactions().onEach { transactions ->
 
             val categories = state.categoriesList
             val tempList = mutableMapOf<Category, Double>()
@@ -127,7 +122,7 @@ class CategoriesViewModel @Inject constructor(
 
     fun loadCategoriesDataInDateRange(minDate: Date, maxDate: Date) {
 
-        repository.getTransactionsInDateRange(minDate, maxDate).onEach { transactions ->
+        financeRepository.getTransactionsInDateRange(minDate, maxDate).onEach { transactions ->
 
             val categories = state.categoriesList
             val tempList = mutableMapOf<Category, Double>()
@@ -150,7 +145,7 @@ class CategoriesViewModel @Inject constructor(
     }
 
     fun loadAccounts() {
-        accountsRepository.getAllAccounts()
+        financeRepository.getAllAccounts()
             .onEach { list ->
                 state = state.copy(
                     accountsList = list

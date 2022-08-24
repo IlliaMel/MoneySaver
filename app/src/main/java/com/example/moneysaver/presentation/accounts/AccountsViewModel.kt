@@ -5,10 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moneysaver.domain.account.Account
-import com.example.moneysaver.domain.repository.AccountsRepository
-import com.example.moneysaver.domain.repository.TransactionRepository
-import com.example.moneysaver.domain.transaction.Transaction
+import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.domain.repository.FinanceRepository
+import com.example.moneysaver.domain.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -17,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsViewModel @Inject constructor(
-    private val accountsRepository: AccountsRepository,
-    private val transactionRepository: TransactionRepository
+    private val financeRepository: FinanceRepository
 ) : ViewModel() {
 
     init {
@@ -35,7 +33,7 @@ class AccountsViewModel @Inject constructor(
 
 
     private fun loadDebtAccounts() {
-        accountsRepository.getDebtAccounts()
+        financeRepository.getDebtAccounts()
             .onEach { list ->
                 state = state.copy(
                     debtList = list,
@@ -45,7 +43,7 @@ class AccountsViewModel @Inject constructor(
 
     }
     private fun loadAllAccounts() {
-        accountsRepository.getAllAccounts()
+        financeRepository.getAllAccounts()
             .onEach { list ->
                 state = state.copy(
                     allAccountList = list,
@@ -57,7 +55,7 @@ class AccountsViewModel @Inject constructor(
 
 
     fun loadGoalAccounts() {
-        accountsRepository.getGoalAccounts()
+        financeRepository.getGoalAccounts()
             .onEach { list ->
                 state = state.copy(
                     goalList = list,
@@ -66,7 +64,7 @@ class AccountsViewModel @Inject constructor(
     }
 
     fun loadSimpleAccounts() {
-        accountsRepository.getSimpleAccounts()
+        financeRepository.getSimpleAccounts()
             .onEach { list ->
                 state = state.copy(
                     simpleList = list,
@@ -75,7 +73,7 @@ class AccountsViewModel @Inject constructor(
     }
 
     fun loadSimpleAndDeptAccounts() {
-        accountsRepository.getSimpleAndDeptAccounts()
+        financeRepository.getSimpleAndDeptAccounts()
             .onEach { list ->
                 state = state.copy(
                     debtAndSimpleList = list,
@@ -86,16 +84,16 @@ class AccountsViewModel @Inject constructor(
 
     fun addAccount(account: Account) {
         viewModelScope.launch {
-            accountsRepository.insertAccount(account)
+            financeRepository.insertAccount(account)
         }
     }
 
     fun deleteAccount(account: Account) {
         viewModelScope.launch {
-            transactionRepository.getTransactionsByAccountUUID(account.uuid).onEach { list ->
+            financeRepository.getTransactionsByAccountUUID(account.uuid).onEach { list ->
                 for(transaction in list) deleteTransaction(transaction)
             }.launchIn(viewModelScope)
-            accountsRepository.deleteAccount(account)
+            financeRepository.deleteAccount(account)
         }
         loadAllAccounts()
         loadDebtAccounts()
@@ -133,16 +131,16 @@ class AccountsViewModel @Inject constructor(
     fun deleteTransaction(transaction: Transaction) {
         viewModelScope.launch {
             // remove spending data if transaction isn't new
-            val transactionAccount = accountsRepository.getAccountByUUID(transaction.accountUUID)
+            val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
             transactionAccount?.let {
                 val updatedAccount = transactionAccount!!.copy(
                     balance = transactionAccount.balance-transaction.sum
                 )
                 // update account
-                accountsRepository.insertAccount(updatedAccount)
+                financeRepository.insertAccount(updatedAccount)
             }
 
-            transactionRepository.deleteTransaction(transaction)
+            financeRepository.deleteTransaction(transaction)
         }
     }
 
