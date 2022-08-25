@@ -7,6 +7,8 @@ import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Category
 import java.util.*
 
+import com.example.moneysaver.domain.model.Currency
+
 class Converters {
 
 
@@ -36,6 +38,7 @@ class Converters {
         return category.toString()
     }
 
+    /*
     @TypeConverter
     fun fromStringToAccount(value: String?): Account? {
         value?.let {
@@ -54,6 +57,7 @@ class Converters {
         }
         return Account(title = "")
     }
+    */
 
     @TypeConverter
     fun stringToAccount(account: Account?): String? {
@@ -73,5 +77,21 @@ class Converters {
     fun stringToVectorImg(accountImg: VectorImg?): String? {
         return accountImg.toString()
     }
+
+    @TypeConverter
+    fun stringToCurrency(currency: Currency?): String? {
+        return currency.toString()
+    }
+
+    @TypeConverter
+    fun fromStringToCurrency(value: String?): Currency? {
+        value?.let {
+            val strArr = it.split(",")
+            return  Currency( currencyName = strArr[0],description = strArr[1],currency = strArr[2],valueInMainCurrency = strArr[3].toDouble())
+        }
+        return Currency()
+    }
+
+
 
 }

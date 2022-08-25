@@ -58,7 +58,7 @@ object AccountsData {
 
     val deptAccount = Account(
         accountImg = VectorImg(),
-        currencyType = "$",
+        currencyType = Currency(),
         title = "Car Dept",
         description = "Dept for the car",
         debt = 0.0,
@@ -67,7 +67,7 @@ object AccountsData {
 
     val normalAccount = Account(
         accountImg = VectorImg(),
-        currencyType = "$",
+        currencyType = Currency(),
         title = "Cash",
         description = "Salary",
         balance = 0.0,
@@ -76,7 +76,7 @@ object AccountsData {
 
     val goalAccount = Account(
         accountImg = VectorImg(),
-        currencyType = "$",
+        currencyType = Currency(),
         title = "Stash",
         description = "For trip",
         balance = 0.0,
@@ -98,19 +98,19 @@ object AccountsData {
     val accountsList = mutableListOf(
         Account(
             accountImg = VectorImg(),
-            currencyType = "$",
+            currencyType = Currency(),
             title = "Cash",
             balance = 537.53,
         ),
         Account(
             accountImg =VectorImg(),
-            currencyType = "$",
+            currencyType = Currency(),
             title = "Credit Card #1",
             balance = 15267.43,
         ),
         Account(
             accountImg = VectorImg(),
-            currencyType = "$",
+            currencyType = Currency(),
             title = "Credit Card #2",
             balance = 1678.63,
         ),

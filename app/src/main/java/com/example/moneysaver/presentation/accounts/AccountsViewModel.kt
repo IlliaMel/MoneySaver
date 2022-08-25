@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.repository.FinanceRepository
 import com.example.moneysaver.domain.model.Transaction
@@ -25,6 +26,36 @@ class AccountsViewModel @Inject constructor(
         loadGoalAccounts()
         loadSimpleAccounts()
         loadSimpleAndDeptAccounts()
+
+        loadCurrencyData()
+    }
+
+    private fun loadCurrencyData() {
+        financeRepository.getCurrencyTypes()
+            .onEach { list ->
+                state = state.copy(
+                    currenciesList = list,
+                )
+                AccountsData.currenciesList = list
+            }.launchIn(viewModelScope)
+    }
+
+    fun returnCurrencyValue(which : String , to : String) : Double {
+        var whichFound = state.currenciesList.find { it.currencyName == which }
+        var toFound = state.currenciesList.find { it.currencyName == to }
+        return (toFound?.valueInMainCurrency ?: 1.0) / (whichFound?.valueInMainCurrency ?: 1.0)
+    }
+
+    fun findSum(list: List<Account> , base : String) : Double{
+        var sum = 0.0
+        list.forEach {
+            if(it.isForDebt){
+                sum-=it.debt*returnCurrencyValue(it.currencyType.currencyName,base)
+            }else {
+                sum+=it.debt*returnCurrencyValue(it.currencyType.currencyName,base)
+            }
+        }
+        return sum
     }
 
 

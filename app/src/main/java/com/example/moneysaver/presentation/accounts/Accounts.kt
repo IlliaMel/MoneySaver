@@ -70,8 +70,9 @@ fun Accounts(onNavigationIconClick: () -> Unit,
                 onNavigationIconClick, onFilterClick = {isSelectedFilterAccount.value = true}, chosenAccountFilter)
             SumMoneyInfo(
                 stringResource(R.string.accounts_name_label),
-                viewModel.loadBankAccountSum(),
-                viewModel.state.currentAccount.currencyType
+                5.0
+                /*viewModel.findSum(viewModel.state.debtAndSimpleList,"UAH")*/,
+                ""
             )
 
             LazyColumn(
@@ -96,8 +97,9 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
             SumMoneyInfo(
                 stringResource(R.string.savings_accounts),
-                viewModel.loadSavingsAccountSum(),
-                viewModel.state.currentAccount.currencyType
+                5.0
+                /*viewModel.findSum(viewModel.state.goalList,"UAH")*/,
+                ""
             )
 
 

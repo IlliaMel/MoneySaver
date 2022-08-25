@@ -192,7 +192,7 @@ fun EditAccount(
                     topPadding = 8.dp)
                 accountEditInfoText(
                     upperText = stringResource(R.string.currency_type),
-                    bottomText = currencyType.value,
+                    bottomText = currencyType.value.currency,
                     onAction = {setCurrencyTypeChange.value = true},
                     startPadding = 16.dp,
                     topPadding = 8.dp)
@@ -342,7 +342,7 @@ fun EditAccount(
     SetAccountBalance(openDialog = setCreditLimit, returnType = {setCreditLimit.value = false; amountOfCreditLimit.value = it.toDouble() })
     SetAccountBalance(openDialog = setBalance, returnType = {setBalance.value = false; if(account.isForDebt) amountOfDept.value = it.toDouble() else amountOfBalance.value = it.toDouble() })
     SetAccountDescription(description = account.description,openDialog = setDescriptionChange, returnType = {setDescriptionChange.value = false; description.value = it })
-    SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = {setCurrencyTypeChange.value = false; currencyType.value = it })
+    SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = {setCurrencyTypeChange.value = false; currencyType.value.currency = it })
 
 }
 

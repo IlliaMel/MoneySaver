@@ -6,10 +6,10 @@ import java.io.Serializable
 
 @Entity
 data class Currency(
-    @PrimaryKey val currencyName: String = "USD",
-    val description: String = "",
-    val currency: String = "$",
-    val valueInMainCurrency:  Double = 0.0,
+    @PrimaryKey var currencyName: String = "USD",
+    var description: String = "",
+    var currency: String = "$",
+    var valueInMainCurrency:  Double = 0.0,
 ) : Serializable {
 
     override fun toString(): String {

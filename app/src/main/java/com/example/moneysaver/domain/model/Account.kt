@@ -7,11 +7,12 @@ import com.example.moneysaver.data.data_base._test_data.VectorImg
 import java.io.Serializable
 import java.util.*
 
+
 @Entity
 data class Account(
     @PrimaryKey val uuid: UUID = UUID.randomUUID(),
     val accountImg: VectorImg = AccountsData.accountImges[0],
-    val currencyType: String = "$",
+    val currencyType: Currency = Currency(),
     val title: String,
     val description: String = "description",
     val balance: Double = 0.0,

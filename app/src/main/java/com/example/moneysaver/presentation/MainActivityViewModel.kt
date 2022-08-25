@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moneysaver.data.data_base._test_data.AccountsData
+import com.example.moneysaver.data.data_base._test_data.AccountsData.currenciesList
 import com.example.moneysaver.data.remote.CurrencyDto
 import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.repository.FinanceRepository
@@ -71,6 +72,17 @@ class MainActivityViewModel @Inject constructor(
                 )
                 AccountsData.currenciesList = list
             }.launchIn(viewModelScope)
+    }
+
+    fun returnCurrencyValue(which : String , to : String) : Double {
+        var whichFound = state.currenciesList.find { it.currencyName == which }
+        var toFound = state.currenciesList.find { it.currencyName == to }
+        return (toFound?.valueInMainCurrency ?: 1.0) / (whichFound?.valueInMainCurrency ?: 1.0)
+    }
+
+    fun findSum(){
+
+
     }
 
     private suspend fun putInDbCurrencyData(resultData: CurrencyDto?){
