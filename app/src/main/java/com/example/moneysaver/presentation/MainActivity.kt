@@ -3,6 +3,7 @@ package com.example.moneysaver.presentation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation._components.*
 
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
@@ -130,7 +132,7 @@ class MainActivity : ComponentActivity() {
 
                 } else {
                     val service = AlarmService(context = applicationContext)
-                    MainUI(service)
+                    MainUI(sharedPref,service)
 
                     if (viewModel.isParsingSucceeded.value) {
                         with(sharedPref.edit()) {
@@ -175,9 +177,13 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainUI(alarmService: AlarmService){
+fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService){
 
     // A surface container using the 'background' color from the theme
+
+    var MINUTE_ALARM = "minute_alarm"
+    var HOUR_ALARM = "hour_alarm"
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -193,11 +199,15 @@ fun MainUI(alarmService: AlarmService){
 
 
         var hoursNotification = remember {
-            mutableStateOf(0)
+            mutableStateOf(sharedPref.getInt(HOUR_ALARM, 0))
         }
 
         var minutesNotification = remember {
-            mutableStateOf(0)
+            mutableStateOf(sharedPref.getInt(MINUTE_ALARM, 0))
+        }
+
+        var mainCurrecy = remember {
+            mutableStateOf(Currency())
         }
 
         var timeSwitch by remember {
@@ -217,7 +227,12 @@ fun MainUI(alarmService: AlarmService){
             drawerContent = {
                 DrawerHeader()
                 if (notificationClicked){
-                    TimePicker(minutesNotification,hoursNotification)
+                    TimePicker(TimeParsed = {
+                        with(sharedPref.edit()) {
+                        putInt(MINUTE_ALARM, minutesNotification.value)
+                        putInt(HOUR_ALARM, hoursNotification.value)
+                        apply()
+                    }}, minutesNotification,hoursNotification)
                     notificationClicked = false
                 }
 
@@ -228,12 +243,14 @@ fun MainUI(alarmService: AlarmService){
                                                             R.string.defaultStr), icon = Icons.Default.Place),
                             MenuItem(number = 1 , title = stringResource(R.string.theme), description = stringResource(
                                                             R.string.light), icon = Icons.Default.Info),
-                            MenuItem(number = 2 , title = stringResource(R.string.notifications), description = "${hoursNotification.value}:${minutesNotification.value}", icon = Icons.Default.Notifications, hasSwitch = true)
+                            MenuItem(number = 2 , title = stringResource(R.string.notifications), description = "${hoursNotification.value}:${minutesNotification.value}", icon = Icons.Default.Notifications, hasSwitch = true),
+
+                            MenuItem(number = 3 , title = "Main Currency", description = "${mainCurrecy.value.description} ${mainCurrecy.value.currencyName} (${mainCurrecy.value.currency})", icon = Icons.Default.ShoppingCart)
                         )),
                         MenuBlock(title = "Block2", items = listOf(
-                            MenuItem(number = 3 , title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
-                            MenuItem(number = 4 , title = "Item22", description = "Desc22", icon = Icons.Default.Edit),
-                            MenuItem(number = 5 , title = "Item23", description = "Desc23", icon = Icons.Default.Edit)
+                            MenuItem(number = 4 , title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
+                            MenuItem(number = 5 , title = "Item22", description = "Desc22", icon = Icons.Default.Edit),
+                            MenuItem(number = 6 , title = "Item23", description = "Desc23", icon = Icons.Default.Edit)
                         ))
                     ),
                     onItemClick = {

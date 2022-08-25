@@ -9,7 +9,7 @@ import java.util.*
 
 
 @Composable
-fun TimePicker(minutes: MutableState<Int>, hours: MutableState<Int>){
+fun TimePicker(TimeParsed: () -> Unit,minutes: MutableState<Int>, hours: MutableState<Int>){
 
 
     val mContext = LocalContext.current
@@ -23,6 +23,7 @@ fun TimePicker(minutes: MutableState<Int>, hours: MutableState<Int>){
         {_, mHour : Int, mMinute: Int ->
             hours.value = mHour
             minutes.value = mMinute
+            TimeParsed()
         }, mHour, mMinute, false
     )
     mTimePickerDialog.show()
