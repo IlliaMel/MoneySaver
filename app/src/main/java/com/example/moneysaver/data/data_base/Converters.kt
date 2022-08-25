@@ -22,7 +22,7 @@ class Converters {
     fun dateToTimestamp(date: Date?): Long? {
         return date?.time?.toLong()
     }
-
+/*
     @TypeConverter
     fun fromStringToCategory(value: String?): Category? {
         value?.let {
@@ -31,7 +31,7 @@ class Converters {
         }
         return Category(title = "")
     }
-
+*/
 
     @TypeConverter
     fun stringToCategory(category: Category?): String? {

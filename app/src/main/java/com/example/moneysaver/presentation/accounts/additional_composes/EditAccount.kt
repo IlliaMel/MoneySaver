@@ -35,11 +35,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.ui.theme.*
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -50,7 +52,8 @@ fun EditAccount(
     account: Account = AccountsData.accountsList.get(0),
     onAddAccountAction: (Account) -> Unit,
     onDeleteAccount: (Account) -> Unit,
-    onCancelIconClick: () -> Unit
+    onCancelIconClick: () -> Unit,
+    viewModel: AccountsViewModel = hiltViewModel()
 ){
 
 
@@ -342,7 +345,10 @@ fun EditAccount(
     SetAccountBalance(openDialog = setCreditLimit, returnType = {setCreditLimit.value = false; amountOfCreditLimit.value = it.toDouble() })
     SetAccountBalance(openDialog = setBalance, returnType = {setBalance.value = false; if(account.isForDebt) amountOfDept.value = it.toDouble() else amountOfBalance.value = it.toDouble() })
     SetAccountDescription(description = account.description,openDialog = setDescriptionChange, returnType = {setDescriptionChange.value = false; description.value = it })
-    SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = {setCurrencyTypeChange.value = false; currencyType.value.currency = it })
+    SetAccountCurrencyType(openDialog = setCurrencyTypeChange) { returnType ->
+        setCurrencyTypeChange.value = false;
+        currencyType.value = viewModel.state.currenciesList.find { currency ->  returnType == currency.currencyName }!!
+    }
 
 }
 
@@ -589,7 +595,7 @@ fun SetAccountCurrencyType(
                                 modifier = Modifier
                                     .padding(0.dp, 4.dp, 0.dp, 4.dp)
                                     .fillMaxWidth()
-                                    .clickable { returnType(it.currency) },
+                                    .clickable { returnType(it.currencyName) },
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {

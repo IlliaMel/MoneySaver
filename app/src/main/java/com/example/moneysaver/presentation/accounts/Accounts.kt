@@ -43,6 +43,10 @@ fun Accounts(onNavigationIconClick: () -> Unit,
              viewModel: AccountsViewModel  = hiltViewModel()
 ){
 
+    var baseCurrency by remember {
+        mutableStateOf("UAH")
+    }
+
     var selectedAccountIndex by remember {
         mutableStateOf(0)
     }
@@ -68,11 +72,11 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
             TopBarAccounts(onAddAccountAction = { setSelectedAccount.value = true },
                 onNavigationIconClick, onFilterClick = {isSelectedFilterAccount.value = true}, chosenAccountFilter)
+
             SumMoneyInfo(
                 stringResource(R.string.accounts_name_label),
-                5.0
-                /*viewModel.findSum(viewModel.state.debtAndSimpleList,"UAH")*/,
-                ""
+                viewModel.findSum(viewModel.state.debtAndSimpleList,base = baseCurrency),
+                baseCurrency
             )
 
             LazyColumn(
@@ -97,9 +101,8 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
             SumMoneyInfo(
                 stringResource(R.string.savings_accounts),
-                5.0
-                /*viewModel.findSum(viewModel.state.goalList,"UAH")*/,
-                ""
+                viewModel.findSum(viewModel.state.goalList,baseCurrency),
+                baseCurrency
             )
 
 
@@ -133,7 +136,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
     }
 
 
-    PopUp(openDialog = isSelectedFilterAccount,accountList = viewModel.state.allAccountList , chosenAccountFilter = chosenAccountFilter)
+    PopUp(openDialog = isSelectedFilterAccount,accountList = (if(viewModel.state.allAccountList.isEmpty()) mutableListOf<Account>() else viewModel.state.allAccountList) as MutableList<Account>, chosenAccountFilter = chosenAccountFilter)
 
     ChooseAccountCompose (openDialog = setSelectedAccount,
         normalAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
@@ -147,7 +150,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
 
 @Composable
-fun PopUp(openDialog: MutableState<Boolean>, accountList: List<Account>, chosenAccountFilter: MutableState<Account>){
+fun PopUp(openDialog: MutableState<Boolean>, accountList: MutableList<Account>, chosenAccountFilter: MutableState<Account>){
     if(openDialog.value)
         Dialog(
 
@@ -156,6 +159,7 @@ fun PopUp(openDialog: MutableState<Boolean>, accountList: List<Account>, chosenA
             }
         ) {
             Box( modifier = Modifier.clip(RoundedCornerShape(corner = CornerSize(4.dp)))) {
+
                 ChooseAccount(
                     openDialog = openDialog,
                     accountList = accountList,
@@ -321,7 +325,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
                         .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.value.title} ▾", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                    Text(text = ("${chosenAccountFilter.value.balance} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                    Text(text = ("${chosenAccountFilter.value.balance} ${chosenAccountFilter.value.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
 
                     Column(modifier = Modifier
                         .fillMaxHeight()
@@ -361,7 +365,7 @@ fun SumMoneyInfo(infoText: String , numberOfMoney: Double , currency:String) {
 
         if (numberOfMoney > 0.0) Text(text = ("$numberOfMoney $currency"), color = currencyColor, fontWeight = FontWeight.W500 , fontSize = 15.sp)
         else if (numberOfMoney < 0.0) Text(text = ("$numberOfMoney $currency"), color = currencyColorSpent, fontWeight = FontWeight.W500 , fontSize = 15.sp)
-        else Text(text = ("0.0 $"), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 15.sp)
+        else Text(text = ("0.0 $currency"), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 15.sp)
     }
 }
 
@@ -440,7 +444,7 @@ fun AccountListItem(account: Account, navigateToCardSettings: (Account) -> Unit)
                     Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),text = account.description,maxLines = 2,
                         overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.W400 ,color = currencyColorZero, fontSize = 14.sp)
                     if(!account.isForGoal && !account.isForDebt)
-                    Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),text = account.creditLimit.toString() + " " + account.currencyType,maxLines = 2,
+                    Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),text = account.creditLimit.toString() + " " + account.currencyType.currency,maxLines = 2,
                         overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.W400 ,color = currencyColor, fontSize = 14.sp)
                 }
 
@@ -467,7 +471,7 @@ private fun CustomDivider(){
 @Composable
 private fun textForAccount(account: Account, modifier: Modifier = Modifier){
     Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black , fontSize = 14.sp)
-    Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) , text = if(account.isForDebt) (account.debt.toString() + " " + account.currencyType) else (account.balance.toString() + " " + account.currencyType), color = if(account.isForDebt) currencyColorSpent else if (account.balance > 0) currencyColor else currencyColorZero, fontWeight = FontWeight.W400 , fontSize = 14.sp)
+    Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) , text = if(account.isForDebt) (account.debt.toString() + " " + account.currencyType.currency) else (account.balance.toString() + " " + account.currencyType.currency), color = if(account.isForDebt) currencyColorSpent else if (account.balance > 0) currencyColor else currencyColorZero, fontWeight = FontWeight.W400 , fontSize = 14.sp)
 }
 
 

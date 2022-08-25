@@ -605,7 +605,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit, onEditClick: () -> Unit,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
                         .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                    Text(text = ("${chosenAccountFilter.value.balance.toString()} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                    Text(text = ("${chosenAccountFilter.value.balance.toString()} ${chosenAccountFilter.value.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                 }
 
                 IconButton(modifier = Modifier

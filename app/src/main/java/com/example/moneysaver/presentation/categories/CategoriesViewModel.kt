@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.domain.repository.FinanceRepository
@@ -25,6 +26,17 @@ class CategoriesViewModel @Inject constructor(
 
     init {
         loadCategories()
+        loadCurrencyData()
+    }
+
+    private fun loadCurrencyData() {
+        financeRepository.getCurrencyTypes()
+            .onEach { list ->
+                state = state.copy(
+                    currenciesList = list,
+                )
+                AccountsData.currenciesList = list
+            }.launchIn(viewModelScope)
     }
 
     fun addCategory(category: Category) {

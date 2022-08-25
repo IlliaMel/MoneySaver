@@ -2,19 +2,20 @@ package com.example.moneysaver.data.data_base._test_data
 
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Currency
 
 object CategoriesData {
 
     val addCategory = Category(
         categoryImg = VectorImg(img = R.drawable.ic_plus_categ_icn),
-        currencyType = "",
+        currencyType = "$",
         title = "Add Category",
         spent = 0.0,
     )
 
     val defaultCategory = Category(
         categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-        currencyType = "",
+        currencyType = "$",
         title = "Add Category",
         spent = 0.0,
     )

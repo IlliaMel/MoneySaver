@@ -32,11 +32,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.*
+import com.example.moneysaver.presentation.categories.CategoriesViewModel
 import com.example.moneysaver.ui.theme.*
 
 @Composable
@@ -45,7 +48,8 @@ fun EditCategory(
     category: Category = CategoriesData.defaultCategory,
     onAddCategoryAction: (Category) -> Unit,
     onDeleteCategory: (Category) -> Unit,
-    onCancelIconClick: () -> Unit
+    onCancelIconClick: () -> Unit,
+    viewModel: CategoriesViewModel = hiltViewModel()
 ){
 
 
@@ -154,7 +158,7 @@ fun EditCategory(
     }
 
 
-    SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = {setCurrencyTypeChange.value = false; currencyType.value = it })
+    SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = { returnType -> setCurrencyTypeChange.value = false;   currencyType.value = returnType  /* currencyType.value = viewModel.state.currenciesList.find { currency ->  returnType == currency.currencyName }!!*/ })
 }
 
 @Composable

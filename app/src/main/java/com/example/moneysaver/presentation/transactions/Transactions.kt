@@ -347,7 +347,7 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                     } else {
                         Text(modifier = Modifier
                             .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                        Text(text = ("${chosenAccountFilter.value.balance} ${chosenAccountFilter.value.currencyType}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                        Text(text = ("${chosenAccountFilter.value.balance} ${chosenAccountFilter.value.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                     }
                 }
 

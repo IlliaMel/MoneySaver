@@ -9,8 +9,6 @@ data class AccountsState(
     val debtList: List<Account> = emptyList(),
     val simpleList: List<Account> = emptyList(),
     val goalList: List<Account> = emptyList(),
-
     val currenciesList: List<Currency> = emptyList(),
-
     val currentAccount: Account = Account(title = "Default")
 )

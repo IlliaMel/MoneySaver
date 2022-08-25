@@ -20,6 +20,9 @@ class AccountsViewModel @Inject constructor(
     private val financeRepository: FinanceRepository
 ) : ViewModel() {
 
+    var state by mutableStateOf(AccountsState())
+        private set
+
     init {
         loadAllAccounts()
         loadDebtAccounts()
@@ -46,21 +49,22 @@ class AccountsViewModel @Inject constructor(
         return (toFound?.valueInMainCurrency ?: 1.0) / (whichFound?.valueInMainCurrency ?: 1.0)
     }
 
-    fun findSum(list: List<Account> , base : String) : Double{
+    fun findSum(list: List<Account>, base : String) : Double{
+        returnCurrencyValue("UAH",base)
         var sum = 0.0
         list.forEach {
             if(it.isForDebt){
                 sum-=it.debt*returnCurrencyValue(it.currencyType.currencyName,base)
-            }else {
-                sum+=it.debt*returnCurrencyValue(it.currencyType.currencyName,base)
-            }
+            }else if (it.isForGoal){
+                sum+=it.balance*returnCurrencyValue(it.currencyType.currencyName,base)
+            }else
+                sum+=it.balance*returnCurrencyValue(it.currencyType.currencyName,base)
         }
-        return sum
+        return Math.round(sum * 100) / 100.0
     }
 
 
-    var state by mutableStateOf(AccountsState())
-        private set
+
 
 
     private fun loadDebtAccounts() {
