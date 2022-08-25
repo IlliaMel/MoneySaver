@@ -4,14 +4,18 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import com.example.moneysaver.presentation.MainActivity
 import java.util.*
 
 class  AlarmService(
     private val context: Context
 ){
 
+    private var alarmMgr: AlarmManager? = null
+
     fun setAlarm(hours: Int = 12, minutes: Int = 0){
-        var alarmMgr: AlarmManager? = null
+
+
 
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var alarmIntent: PendingIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
@@ -27,7 +31,7 @@ class  AlarmService(
 
         // With setInexactRepeating(), you have to use one of the AlarmManager interval
         // constants--in this case, AlarmManager.INTERVAL_DAY.
-        alarmMgr.setInexactRepeating(
+        alarmMgr!!.setInexactRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
             AlarmManager.INTERVAL_DAY,

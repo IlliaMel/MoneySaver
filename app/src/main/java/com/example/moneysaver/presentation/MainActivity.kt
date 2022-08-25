@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
 
+
     private var CURRENCY_PARSED_KEY = "is_currency_parsed"
     private var CURRENCY_PARSING_DATE_KEY = "currency_parsing_date"
 
@@ -76,13 +77,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //SharedPref
         val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
 
         val isParsed = sharedPref.getBoolean(CURRENCY_PARSED_KEY, false)
         val parsingDate = sharedPref.getString(CURRENCY_PARSING_DATE_KEY, "2000-01-01")
         val isConnectionEnabled = isNetworkAvailable(applicationContext)
-        
-        
+
+
+        //Formatter of date
         var formattedDate = ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val current = LocalDateTime.now()
@@ -92,29 +95,31 @@ class MainActivity : ComponentActivity() {
             TODO("VERSION.SDK_INT < O")
         }
 
+
+
+        //What to do with parsing currencies
         if(isConnectionEnabled){
             isNeedToParseCurrency = !isParsed || parsingDate != formattedDate
         }else{
             if(isParsed){
                 isNeedToParseCurrency = false
-            }else{
-                
-                //askToTurnInternet
             }
         }
 
+        //Splash Screen
         installSplashScreen().apply {
             setKeepVisibleCondition {
                 viewModel.isLoading.value
             }
         }
 
-        //delete top bar
+        //Delete top bar
         window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 
 
         setContent {
+            //Set top bar Transparent
             val systemUiController = rememberSystemUiController()
             systemUiController.setSystemBarsColor(
                 color = Color.Transparent
@@ -132,7 +137,7 @@ class MainActivity : ComponentActivity() {
 
                 } else {
                     val service = AlarmService(context = applicationContext)
-                    MainUI(sharedPref,service)
+                    MainUI(sharedPref,service,formattedDate)
 
                     if (viewModel.isParsingSucceeded.value) {
                         with(sharedPref.edit()) {
@@ -177,12 +182,15 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService){
+fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedDate : String){
 
     // A surface container using the 'background' color from the theme
 
     var MINUTE_ALARM = "minute_alarm"
     var HOUR_ALARM = "hour_alarm"
+    var LAST_STARTING = "last_starting"
+
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -218,8 +226,16 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService){
             mutableStateOf(false)
         }
 
+        if(sharedPref.getString(LAST_STARTING, "") != formattedDate && timeSwitch)
+            //alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
 
-        //alarmService.setAlarm(hours = hoursNotification.value,minutes = minutesNotification.value)
+
+        //Date of Last Starting
+        with(sharedPref.edit()) {
+            putString(LAST_STARTING, formattedDate)
+            apply()
+        }
+
 
         Scaffold(
             scaffoldState = scaffoldState,
@@ -232,7 +248,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService){
                         putInt(MINUTE_ALARM, minutesNotification.value)
                         putInt(HOUR_ALARM, hoursNotification.value)
                         apply()
-                    }}, minutesNotification,hoursNotification)
+                    }
+                    }, minutesNotification,hoursNotification)
                     notificationClicked = false
                 }
 
@@ -243,7 +260,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService){
                                                             R.string.defaultStr), icon = Icons.Default.Place),
                             MenuItem(number = 1 , title = stringResource(R.string.theme), description = stringResource(
                                                             R.string.light), icon = Icons.Default.Info),
-                            MenuItem(number = 2 , title = stringResource(R.string.notifications), description = "${hoursNotification.value}:${minutesNotification.value}", icon = Icons.Default.Notifications, hasSwitch = true),
+                            MenuItem(number = 2 , title = stringResource(R.string.notifications), description = if(hoursNotification.value == 0) "00" else {hoursNotification.value.toString()} + ":" + if(minutesNotification.value == 0) "00" else {minutesNotification.value.toString()}, icon = Icons.Default.Notifications, hasSwitch = true),
 
                             MenuItem(number = 3 , title = "Main Currency", description = "${mainCurrecy.value.description} ${mainCurrecy.value.currencyName} (${mainCurrecy.value.currency})", icon = Icons.Default.ShoppingCart)
                         )),
