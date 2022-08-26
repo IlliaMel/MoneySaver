@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">MoneySaver</string>
+    <string name="app_name" translatable="false">MoneySaver</string>
     <string name="accounts_name_label">BANK ACCOUNTS</string>
     <string name="savings_accounts">SAVINGS</string>
     <string name="filter">Filter</string>
-    <string name="toggle_drawer">Toggle drawer</string>
+    <string name="toggle_drawer" translatable="false">Toggle drawer</string>
     <string name="common">Common</string>
     <string name="debt">Debt</string>
     <string name="savings">Savings</string>
