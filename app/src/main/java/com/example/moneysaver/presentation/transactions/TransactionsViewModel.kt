@@ -8,6 +8,7 @@ import com.example.moneysaver.domain.repository.FinanceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Transaction
 import kotlinx.coroutines.flow.*
@@ -20,15 +21,18 @@ class TransactionsViewModel @Inject constructor(
     private val financeRepository: FinanceRepository,
 ) : ViewModel() {
 
+    var account by mutableStateOf(AccountsData.allAccountFilter)
+
     var state by mutableStateOf(TransactionsState())
         private set
 
      fun loadTransactions() {
          financeRepository.getTransactions()
                 .onEach { list ->
+                    var resultList = list.filter {  it.accountUUID == account.uuid || (account.isForGoal && account.isForDebt) }
                     state = state.copy(
-                        transactionList = list,
-                        endingBalance = list.sumOf { it.sum }
+                        transactionList = resultList,
+                        endingBalance = resultList.sumOf { it.sum }
                     )
                 }.launchIn(viewModelScope)
     }
@@ -36,9 +40,10 @@ class TransactionsViewModel @Inject constructor(
     fun loadTransactionsBetweenDates(minDate: Date, maxDate: Date) {
         financeRepository.getTransactionsInDateRange(minDate, maxDate)
             .onEach { list ->
+                var resultList = list.filter {  it.accountUUID == account.uuid || (account.isForGoal && account.isForDebt) }
                 state = state.copy(
-                    transactionList = list,
-                    endingBalance = list.sumOf { it.sum }
+                    transactionList = resultList,
+                    endingBalance = resultList.sumOf { it.sum }
                 )
             }.launchIn(viewModelScope)
     }

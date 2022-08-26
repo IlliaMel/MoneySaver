@@ -12,10 +12,10 @@ import java.util.*
 data class Account(
     @PrimaryKey val uuid: UUID = UUID.randomUUID(),
     val accountImg: VectorImg = AccountsData.accountImges[0],
-    val currencyType: Currency = Currency(),
+    var currencyType: Currency = Currency(),
     val title: String,
     val description: String = "description",
-    val balance: Double = 0.0,
+    var balance: Double = 0.0,
     val creditLimit: Double = 0.0,
     val goal: Double = 0.0,
     val debt: Double = 0.0,

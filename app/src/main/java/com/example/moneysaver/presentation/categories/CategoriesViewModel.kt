@@ -21,6 +21,8 @@ class CategoriesViewModel @Inject constructor(
     private val financeRepository: FinanceRepository
 ) : ViewModel() {
 
+    var account by mutableStateOf(AccountsData.allAccountFilter)
+
     var state by mutableStateOf(CategoriesState())
         private set
 
@@ -111,6 +113,7 @@ class CategoriesViewModel @Inject constructor(
             for(category in categories) {
                 var categorySum = 0.0
                 for(tr in transactions) {
+                    if(tr.accountUUID == account.uuid || (account.isForGoal && account.isForDebt))
                     if(tr.categoryUUID == category.uuid) {
                         categorySum-=tr.sum
                     }
@@ -142,6 +145,7 @@ class CategoriesViewModel @Inject constructor(
             for(category in categories) {
                 var categorySum = 0.0
                 for(tr in transactions) {
+                    if(tr.accountUUID == account.uuid || (account.isForGoal && account.isForDebt))
                     if(tr.categoryUUID == category.uuid) {
                         categorySum-=tr.sum
                     }

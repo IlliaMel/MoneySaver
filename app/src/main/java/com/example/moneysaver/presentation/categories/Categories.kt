@@ -80,6 +80,7 @@ fun Categories(
     }else if(viewModel.state.categoriesList.isNotEmpty() && viewModel.state.categoriesList.last().uuid == CategoriesData.addCategory.uuid)
         viewModel.state.categoriesList.removeLast()
 
+    viewModel.account = chosenAccountFilter.value
 
     if(minDate.value==null||maxDate.value==null)
         viewModel.loadCategoriesData()
