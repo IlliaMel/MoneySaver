@@ -85,6 +85,17 @@ object AccountsData {
         isForGoal = true
     )
 
+    val allAccountFilter = Account(
+        accountImg = VectorImg(),
+        currencyType = Currency(),
+        title = "All Accounts",
+        description = "",
+        balance = 0.0,
+        creditLimit = 0.0,
+        goal = 0.0,
+        isForGoal = true,
+        isForDebt = true
+    )
 
     val accountAdder = Account(
     accountImg = VectorImg(),

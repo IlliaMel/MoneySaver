@@ -70,6 +70,8 @@ fun Transactions(
 
     val transactionSearchText = remember { mutableStateOf("") }
 
+    viewModel.account = chosenAccountFilter.value
+
     if(minDate.value==null||maxDate.value==null)
         viewModel.loadTransactions()
     else

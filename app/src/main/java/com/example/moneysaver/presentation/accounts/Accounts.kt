@@ -30,6 +30,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.accounts.additional_composes.ChooseAccountElement
@@ -44,7 +45,7 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 ){
 
     var baseCurrency by remember {
-        mutableStateOf("UAH")
+        mutableStateOf(Currency(currency = "₴", currencyName = "UAH"))
     }
 
     var selectedAccountIndex by remember {
@@ -75,8 +76,8 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
             SumMoneyInfo(
                 stringResource(R.string.accounts_name_label),
-                viewModel.findSum(viewModel.state.debtAndSimpleList,base = baseCurrency),
-                baseCurrency
+                viewModel.findSum(viewModel.state.debtAndSimpleList,base = baseCurrency.currencyName),
+                baseCurrency.currencyName
             )
 
             LazyColumn(
@@ -101,8 +102,8 @@ fun Accounts(onNavigationIconClick: () -> Unit,
 
             SumMoneyInfo(
                 stringResource(R.string.savings_accounts),
-                viewModel.findSum(viewModel.state.goalList,baseCurrency),
-                baseCurrency
+                viewModel.findSum(viewModel.state.goalList,baseCurrency.currencyName),
+                baseCurrency.currencyName
             )
 
 
@@ -136,7 +137,11 @@ fun Accounts(onNavigationIconClick: () -> Unit,
     }
 
 
-    PopUp(openDialog = isSelectedFilterAccount,accountList = (if(viewModel.state.allAccountList.isEmpty()) mutableListOf<Account>() else viewModel.state.allAccountList) as MutableList<Account>, chosenAccountFilter = chosenAccountFilter)
+    var filterAccounts = (if(viewModel.state.allAccountList.isEmpty()) mutableListOf<Account>() else viewModel.state.allAccountList as MutableList<Account>)
+    if(filterAccounts.isNotEmpty() && filterAccounts.get(0).uuid != AccountsData.allAccountFilter.uuid )
+        filterAccounts.add(0,AccountsData.allAccountFilter)
+
+    PopUp(openDialog = isSelectedFilterAccount, accountList = filterAccounts, chosenAccountFilter = chosenAccountFilter)
 
     ChooseAccountCompose (openDialog = setSelectedAccount,
         normalAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
@@ -205,8 +210,8 @@ private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<A
                         )
                         Column() {
                             Text(it.title, fontSize = 14.sp)
-                            val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else ""))+"$ "+it.balance
-                            val balanceColor = if(it.balance>0) Color.Green else (if(it.balance < 0) Color.Red else Color.Gray)
+                            val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else ""))+"${it.currencyType.currency} "+it.balance
+                            val balanceColor = if(it.balance>0) currencyColor else (if(it.balance < 0) currencyColorSpent else currencyColorZero)
                             Text(text = balanceText, color = balanceColor, fontSize = 12.sp)
                         }
                     }

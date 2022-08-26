@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.domain.model.Currency
@@ -45,6 +46,7 @@ import com.example.moneysaver.presentation._components.notifications.AlarmServic
 import com.example.moneysaver.presentation._components.time_picker.TimePicker
 
 import com.example.moneysaver.presentation.accounts.Accounts
+import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.categories.Categories
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.ui.theme.*
@@ -182,7 +184,7 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedDate : String){
+fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedDate : String,accountsViewModel: AccountsViewModel  = hiltViewModel()){
 
     // A surface container using the 'background' color from the theme
 
@@ -203,8 +205,14 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             mutableStateOf(0)
         }
 
-        val chosenAccountFilter = remember { mutableStateOf(AccountsData.normalAccount) }
+        var baseCurrency by remember {
+            mutableStateOf(Currency(currency = "₴", currencyName = "UAH"))
+        }
 
+        val chosenAccountFilter = remember { mutableStateOf(AccountsData.allAccountFilter) }
+
+        AccountsData.allAccountFilter.balance = accountsViewModel.findSum(accountsViewModel.state.allAccountList,baseCurrency.currencyName)
+        AccountsData.allAccountFilter.currencyType = baseCurrency
 
         var hoursNotification = remember {
             mutableStateOf(sharedPref.getInt(HOUR_ALARM, 0))
