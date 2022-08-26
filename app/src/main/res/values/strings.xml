@@ -51,16 +51,16 @@
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
     <string name="currency_type">Currency Type</string>
-    <string name="delete_button">Delete button</string>
+    <string name="delete_button" translatable="false">Delete button</string>
     <string name="delete_category">Delete Category</string>
-    <string name="close_button">Close button</string>
+    <string name="close_button" translatable="false">Close button</string>
     <string name="name">Name</string>
-    <string name="apply_button">Apply button</string>
+    <string name="apply_button" translatable="false">Apply button</string>
     <string name="choose_account_img">Choose Account Img</string>
     <string name="edit_category">Edit Category</string>
     <string name="new_category">New Category</string>
     <string name="account_description">Account Description</string>
-    <string name="ok">OK</string>
+    <string name="ok" translatable="false">OK</string>
     <string name="choose_currency_type">Choose Currency Type</string>
     <string name="image">Image</string>
     <string name="color">Color</string>
@@ -77,8 +77,8 @@
     <string name="month">Month</string>
     <string name="from">From</string>
     <string name="to">To</string>
-    <string name="previous">Prev</string>
-    <string name="next">Next</string>
+    <string name="previous" translatable="false">Prev</string>
+    <string name="next" translatable="false">Next</string>
     <string name="all_time">All time</string>
     <string name="select_day">Select day</string>
     <string name="Week">Week</string>
