@@ -184,14 +184,16 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedDate : String,accountsViewModel: AccountsViewModel  = hiltViewModel()){
+fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedDate : String,
+           accountsViewModel: AccountsViewModel  = hiltViewModel(),
+           viewModel: MainActivityViewModel  = hiltViewModel()){
 
     // A surface container using the 'background' color from the theme
 
     var MINUTE_ALARM = "minute_alarm"
     var HOUR_ALARM = "hour_alarm"
     var LAST_STARTING = "last_starting"
-
+    var MAIN_CURRENCY = "main_currency"
 
 
     Surface(
@@ -222,8 +224,9 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             mutableStateOf(sharedPref.getInt(MINUTE_ALARM, 0))
         }
 
-        var mainCurrecy = remember {
+        var mainCurrency = remember {
             mutableStateOf(Currency())
+            //viewModel.state.currenciesList.find { it.currencyName == sharedPref.getString(MAIN_CURRENCY, "USD") }
         }
 
         var timeSwitch by remember {
@@ -233,6 +236,11 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         var notificationClicked by remember {
             mutableStateOf(false)
         }
+
+        var mainCurrencyClicked by remember {
+            mutableStateOf(false)
+        }
+
 
         if(sharedPref.getString(LAST_STARTING, "") != formattedDate && timeSwitch)
             //alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
@@ -259,6 +267,9 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                     }
                     }, minutesNotification,hoursNotification)
                     notificationClicked = false
+                }else if (mainCurrencyClicked){
+
+
                 }
 
                 DrawerBody(
@@ -270,7 +281,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                                             R.string.light), icon = Icons.Default.Info),
                             MenuItem(number = 2 , title = stringResource(R.string.notifications), description = if(hoursNotification.value == 0) "00" else {hoursNotification.value.toString()} + ":" + if(minutesNotification.value == 0) "00" else {minutesNotification.value.toString()}, icon = Icons.Default.Notifications, hasSwitch = true),
 
-                            MenuItem(number = 3 , title = "Main Currency", description = "${mainCurrecy.value.description} ${mainCurrecy.value.currencyName} (${mainCurrecy.value.currency})", icon = Icons.Default.ShoppingCart)
+                            MenuItem(number = 3 , title = "Main Currency", description = "${mainCurrency.value!!.description} ${mainCurrency.value!!.currencyName} (${mainCurrency.value!!.currency})", icon = Icons.Default.ShoppingCart)
                         )),
                         MenuBlock(title = "Block2", items = listOf(
                             MenuItem(number = 4 , title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
@@ -283,6 +294,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                             if(it.switchIsActive)
                                 timeSwitch = true
                             notificationClicked = true
+                        }else if (it.number == 3){
+                            mainCurrencyClicked = true
                         }
                     }
                 )

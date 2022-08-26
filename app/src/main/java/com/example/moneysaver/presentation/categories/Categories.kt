@@ -326,7 +326,7 @@ fun Categories(
                                 ) {
                                     var listOfSums = viewModel.state.categoriesSums.values.toList()
                                     val sum = if(listOfSums.isNotEmpty()) listOfSums.reduce { x, y -> x + y } else 0.0
-                                    val list =   getChartData(viewModel.state.categoriesList,if(sum == 0.0) listOf(1.0) else listOfSums.filter { it > 0.0 },sum = sum)[0]
+                                    val list =  getChartData(viewModel.state.categoriesList,if(sum == 0.0) listOf(1.0) else listOfSums.filter { it > 0.0 },sum = sum)[0]
                                     PieChart(
                                         modifier = Modifier,
                                         sliceWidth = 13.dp,
@@ -512,7 +512,7 @@ fun getChartData(categoriesList: List<Category>, categoriesSums: List<Double>, s
                 )
             },
             legendPosition = it,
-            colors = if(sum == 0.0) listOf(CategoriesData.addCategory.categoryImg.externalColor) else categoriesList.mapIndexed { idx, value -> value.categoryImg.externalColor},
+            colors = if(sum == 0.0) listOf(CategoriesData.addCategory.categoryImg.externalColor) else categoriesList/*.filter { it.spent != 0.0 }*/.mapIndexed { idx, value -> value.categoryImg.externalColor},
             legendShape = CircleShape,
         )
     }
