@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.presentation.MainActivity.Companion.isCategoriesParsed
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
@@ -90,9 +91,12 @@ fun Categories(
 
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
-    if(!isAddingCategory){
+   if(!isCategoriesParsed){
+       CircularProgressIndicator()
+    }   else if(!isAddingCategory){
     TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(viewModel.state.categoriesList.size > 1 || isForEditing) isForEditing =
         !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
+
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -326,7 +330,13 @@ fun Categories(
                                 ) {
                                     var listOfSums = viewModel.state.categoriesSums.values.toList()
                                     val sum = if(listOfSums.isNotEmpty()) listOfSums.reduce { x, y -> x + y } else 0.0
-                                    val list =  getChartData(viewModel.state.categoriesList,if(sum == 0.0) listOf(1.0) else listOfSums.filter { it > 0.0 },sum = sum)[0]
+                                    if(listOfSums.isNotEmpty() && viewModel.state.categoriesList.isNotEmpty())
+                                    viewModel.state.categoriesList.forEachIndexed {index, element ->
+                                        if(index == listOfSums.size)
+                                            return@forEachIndexed
+                                        element.spent = listOfSums.get(index)
+                                    }
+                                   val list =  getChartData(viewModel.state.categoriesList,if(sum == 0.0) listOf(1.0) else listOfSums.filter { it != 0.0 },sum = sum)[0]
                                     PieChart(
                                         modifier = Modifier,
                                         sliceWidth = 13.dp,
@@ -512,7 +522,7 @@ fun getChartData(categoriesList: List<Category>, categoriesSums: List<Double>, s
                 )
             },
             legendPosition = it,
-            colors = if(sum == 0.0) listOf(CategoriesData.addCategory.categoryImg.externalColor) else categoriesList/*.filter { it.spent != 0.0 }*/.mapIndexed { idx, value -> value.categoryImg.externalColor},
+        colors = if(sum == 0.0) listOf(CategoriesData.addCategory.categoryImg.externalColor) else categoriesList.filter { it.spent != 0.0 }.mapIndexed { idx, value -> value.categoryImg.externalColor},
             legendShape = CircleShape,
         )
     }

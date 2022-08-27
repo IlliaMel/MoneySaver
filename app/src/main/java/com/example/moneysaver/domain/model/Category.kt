@@ -13,7 +13,7 @@ data class Category(
     val categoryImg: VectorImg = AccountsData.accountImges[0],
     val currencyType: String = "$",
     val title: String,
-    val spent: Double = 0.0,
+    var spent: Double = 0.0,
 ) : Serializable{
     
     override fun toString(): String {

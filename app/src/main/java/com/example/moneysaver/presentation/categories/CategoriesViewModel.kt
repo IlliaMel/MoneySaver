@@ -9,6 +9,7 @@ import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.domain.repository.FinanceRepository
 import com.example.moneysaver.domain.model.Transaction
+import com.example.moneysaver.presentation.MainActivity.Companion.isCategoriesParsed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,6 +22,8 @@ class CategoriesViewModel @Inject constructor(
     private val financeRepository: FinanceRepository
 ) : ViewModel() {
 
+
+
     var account by mutableStateOf(AccountsData.allAccountFilter)
 
     var state by mutableStateOf(CategoriesState())
@@ -29,6 +32,7 @@ class CategoriesViewModel @Inject constructor(
     init {
         loadCategories()
         loadCurrencyData()
+        isCategoriesParsed = true
     }
 
     private fun loadCurrencyData() {

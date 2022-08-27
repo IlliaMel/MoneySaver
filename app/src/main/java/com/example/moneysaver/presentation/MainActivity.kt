@@ -67,6 +67,7 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         var isNeedToParseCurrency = false
+        var isCategoriesParsed = false
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
