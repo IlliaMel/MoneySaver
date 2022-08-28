@@ -53,15 +53,10 @@ class MainActivityViewModel @Inject constructor(
                 }
             }
 
-
-            val f = 3
             loadCurrencyData()
-
             delay(400)
             _isLoading.value = false
         }
-
-
     }
 
     private fun loadCurrencyData() {
@@ -80,10 +75,6 @@ class MainActivityViewModel @Inject constructor(
         return (toFound?.valueInMainCurrency ?: 1.0) / (whichFound?.valueInMainCurrency ?: 1.0)
     }
 
-    fun findSum(){
-
-
-    }
 
     private suspend fun putInDbCurrencyData(resultData: CurrencyDto?){
 

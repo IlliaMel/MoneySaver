@@ -36,10 +36,12 @@ import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.presentation.MainActivity
 import com.example.moneysaver.presentation.MainActivity.Companion.isCategoriesParsed
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
+import com.example.moneysaver.presentation.categories.additional_composes.SimpleColors
 import com.example.moneysaver.presentation.transactions.showNoAccountOrCategoryMessage
 import com.example.moneysaver.ui.theme.*
 import hu.ma.charts.legend.data.LegendPosition
@@ -53,6 +55,7 @@ fun Categories(
     chosenAccountFilter: MutableState<Account>,
     viewModel: CategoriesViewModel = hiltViewModel()
 ) {
+
 
     val minDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().first) }
     val maxDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().second) }
@@ -72,32 +75,35 @@ fun Categories(
     val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.addCategory) }
 
     //added category adder
-
-    if(!isAddingCategory && !isForEditing) {
-        if (viewModel.state.categoriesList.isNotEmpty() && viewModel.state.categoriesList.last().uuid == CategoriesData.addCategory.uuid) {
-
-        } else
-            viewModel.state.categoriesList.add(CategoriesData.addCategory)
-    }else if(viewModel.state.categoriesList.isNotEmpty() && viewModel.state.categoriesList.last().uuid == CategoriesData.addCategory.uuid)
-        viewModel.state.categoriesList.removeLast()
-
-    viewModel.account = chosenAccountFilter.value
-
     if(minDate.value==null||maxDate.value==null)
         viewModel.loadCategoriesData()
     else
         viewModel.loadCategoriesDataInDateRange(minDate.value!!, maxDate.value!!)
+
+
+    var categories  = viewModel.state.categoriesList
+    var categoriesWithAdder  = viewModel.getListWithAdderCategory(isAddingCategory,isForEditing)
+
+
+    viewModel.account = chosenAccountFilter.value
+
+
     viewModel.loadAccounts()
 
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
-   if(!isCategoriesParsed){
-       CircularProgressIndicator()
-    }   else if(!isAddingCategory){
-    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(viewModel.state.categoriesList.size > 1 || isForEditing) isForEditing =
+
+
+ if(!isAddingCategory){
+    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categories.size > 1 || isForEditing) isForEditing =
         !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
 
+   /*  if(!isCategoriesParsed){
+         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+             CircularProgressIndicator(modifier = Modifier.size(100.dp))
+         }
 
+     } else*/if(true) {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
@@ -169,17 +175,16 @@ fun Categories(
                                 verticalArrangement = Arrangement.SpaceAround,
 
                                 ) {
-                                if(viewModel.state.categoriesList.isNotEmpty())
-                                    CategoriesVectorImage(viewModel.state.categoriesList[0],
+                                if(categoriesWithAdder.isNotEmpty())
+                                    CategoriesVectorImage(categoriesWithAdder[0],
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory = {
-                                            if(viewModel.state.categoriesList.size == 1 && !isForEditing){
+                                            if(categoriesWithAdder.size == 1 && !isForEditing){
                                                 isAddingCategory = true
                                             }else {
-                                                selectedCategory.value =
-                                                    viewModel.state.categoriesList[0]
+                                                selectedCategory.value = categoriesWithAdder[0]
                                                 if(isForEditing)
                                                     isAddingCategory = true
                                                 else {
@@ -199,16 +204,16 @@ fun Categories(
                                 verticalArrangement = Arrangement.SpaceAround
 
                             ) {
-                                if(viewModel.state.categoriesList.size > 4)
-                                    CategoriesVectorImage(viewModel.state.categoriesList[4],
+                                if(categoriesWithAdder.size > 4)
+                                    CategoriesVectorImage(categoriesWithAdder[4],
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {if(viewModel.state.categoriesList.size == 5 && !isForEditing){
+                                        onClickCategory = {if(categoriesWithAdder.size == 5 && !isForEditing){
                                             isAddingCategory = true
                                         }else {
                                             selectedCategory.value =
-                                                viewModel.state.categoriesList[4]
+                                                categoriesWithAdder[4]
                                             if(isForEditing)
                                                 isAddingCategory = true
                                             else {
@@ -221,17 +226,17 @@ fun Categories(
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
-                                if(viewModel.state.categoriesList.size > 6)
-                                    CategoriesVectorImage(viewModel.state.categoriesList[6],
+                                if(categoriesWithAdder.size > 6)
+                                    CategoriesVectorImage(categoriesWithAdder[6],
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 7 && !isForEditing){
+                                            if(categoriesWithAdder.size == 7 && !isForEditing){
                                                 isAddingCategory = true
                                             }else {
                                                 selectedCategory.value =
-                                                    viewModel.state.categoriesList[6]
+                                                    categoriesWithAdder[6]
                                                 if(isForEditing)
                                                     isAddingCategory = true
                                                 else {
@@ -263,17 +268,17 @@ fun Categories(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
 
-                                if(viewModel.state.categoriesList.size > 1)
-                                    CategoriesVectorImage(viewModel.state.categoriesList[1],
+                                if(categoriesWithAdder.size > 1)
+                                    CategoriesVectorImage(categoriesWithAdder[1],
                                         viewModel,
                                         columnModifier = Modifier.weight(1f),
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
-                                        onClickCategory = {if(viewModel.state.categoriesList.size == 2 && !isForEditing){
+                                        onClickCategory = {if(categoriesWithAdder.size == 2 && !isForEditing){
                                             isAddingCategory = true
                                         }else {
                                             selectedCategory.value =
-                                                viewModel.state.categoriesList[1]
+                                                categoriesWithAdder[1]
                                             if(isForEditing)
                                                 isAddingCategory = true
                                             else {
@@ -286,18 +291,18 @@ fun Categories(
                                 else{
                                     Box(modifier = Modifier.weight(1f).fillMaxSize()){}
                                 }
-                                if(viewModel.state.categoriesList.size > 2)
-                                    CategoriesVectorImage(viewModel.state.categoriesList[2],
+                                if(categoriesWithAdder.size > 2)
+                                    CategoriesVectorImage(categoriesWithAdder[2],
                                         viewModel,
                                         columnModifier = Modifier.weight(1f),
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 3 && !isForEditing){
+                                            if(categoriesWithAdder.size == 3 && !isForEditing){
                                                 isAddingCategory = true
                                             }else {
                                                 selectedCategory.value =
-                                                    viewModel.state.categoriesList[2]
+                                                    categoriesWithAdder[2]
                                                 if(isForEditing)
                                                     isAddingCategory = true
                                                 else {
@@ -328,15 +333,9 @@ fun Categories(
                                     spent = "0.0$",
                                     bank = "0.0$"
                                 ) {
-                                    var listOfSums = viewModel.state.categoriesSums.values.toList()
-                                    val sum = if(listOfSums.isNotEmpty()) listOfSums.reduce { x, y -> x + y } else 0.0
-                                    if(listOfSums.isNotEmpty() && viewModel.state.categoriesList.isNotEmpty())
-                                    viewModel.state.categoriesList.forEachIndexed {index, element ->
-                                        if(index == listOfSums.size)
-                                            return@forEachIndexed
-                                        element.spent = listOfSums.get(index)
-                                    }
-                                   val list =  getChartData(viewModel.state.categoriesList,if(sum == 0.0) listOf(1.0) else listOfSums.filter { it != 0.0 },sum = sum)[0]
+
+                                    var iSAllZero = viewModel.ifAllCategoriesIsZero()
+                                    val list =  getChartData(categories,iSAllZero)[0]
                                     PieChart(
                                         modifier = Modifier,
                                         sliceWidth = 13.dp,
@@ -365,17 +364,17 @@ fun Categories(
                                 verticalArrangement = Arrangement.SpaceAround
 
                             ) {
-                                if(viewModel.state.categoriesList.size > 3)
-                                    CategoriesVectorImage(viewModel.state.categoriesList[3],
+                                if(categoriesWithAdder.size > 3)
+                                    CategoriesVectorImage(categoriesWithAdder[3],
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 4 && !isForEditing){
+                                            if(categoriesWithAdder.size == 4 && !isForEditing){
                                                 isAddingCategory = true
                                             }else {
                                                 selectedCategory.value =
-                                                    viewModel.state.categoriesList[3]
+                                                    categoriesWithAdder[3]
                                                 if(isForEditing)
                                                     isAddingCategory = true
                                                 else {
@@ -396,17 +395,17 @@ fun Categories(
                                 horizontalAlignment = Alignment.CenterHorizontally
 
                             ) {
-                                if(viewModel.state.categoriesList.size > 5)
-                                    CategoriesVectorImage(viewModel.state.categoriesList[5],
+                                if(categoriesWithAdder.size > 5)
+                                    CategoriesVectorImage(categoriesWithAdder[5],
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 6 && !isForEditing){
+                                            if(categoriesWithAdder.size == 6 && !isForEditing){
                                                 isAddingCategory = true
                                             }else {
                                                 selectedCategory.value =
-                                                    viewModel.state.categoriesList[5]
+                                                    categoriesWithAdder[5]
                                                 if(isForEditing)
                                                     isAddingCategory = true
                                                 else {
@@ -419,17 +418,17 @@ fun Categories(
                                 else{
                                     Box(modifier = Modifier.fillMaxSize()){}
                                 }
-                                if(viewModel.state.categoriesList.size > 7)
-                                    CategoriesVectorImage(viewModel.state.categoriesList[7],
+                                if(categoriesWithAdder.size > 7)
+                                    CategoriesVectorImage(categoriesWithAdder[7],
                                         viewModel,
                                         modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                         modifierBox = Modifier.padding(4.dp),
                                         onClickCategory =  {
-                                            if(viewModel.state.categoriesList.size == 8 && !isForEditing){
+                                            if(categoriesWithAdder.size == 8 && !isForEditing){
                                                 isAddingCategory = true
                                             }else {
                                                 selectedCategory.value =
-                                                    viewModel.state.categoriesList[7]
+                                                    categoriesWithAdder[7]
                                                 if(isForEditing)
                                                     isAddingCategory = true
                                                 else {
@@ -458,33 +457,33 @@ fun Categories(
                             modifier = Modifier
                                 .padding(0.dp, 0.dp, 0.dp, 0.dp),
                             columns = GridCells.Fixed(4),
-                            userScrollEnabled = viewModel.state.categoriesList.size > 15,
+                            userScrollEnabled = categoriesWithAdder.size > 15,
                             verticalArrangement = Arrangement.SpaceAround,
                             horizontalArrangement = Arrangement.SpaceAround,
                             // content padding
 
                             content = {
 
-                                if(viewModel.state.categoriesList.size > 8){
-                                    for (i in 8 until viewModel.state.categoriesList.size) {
+                                if(categoriesWithAdder.size > 8){
+                                    for (i in 8 until categoriesWithAdder.size) {
                                         item{
-                                            CategoriesVectorImage(viewModel.state.categoriesList[i],
+                                            CategoriesVectorImage(categoriesWithAdder[i],
                                                 viewModel,
                                                 modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                                 modifierBox = Modifier.padding(4.dp),
                                                 onClickCategory =  {
-                                                    if(viewModel.state.categoriesList.size == i + 1 && !isForEditing){
+                                                    if(categoriesWithAdder.size == i + 1 && !isForEditing){
                                                         isAddingCategory = true
                                                     }else {
                                                         selectedCategory.value =
-                                                            viewModel.state.categoriesList[i]
+                                                            categoriesWithAdder[i]
                                                         if(isForEditing)
                                                             isAddingCategory = true
                                                         else {
                                                             if(viewModel.addingTransactionIsAllowed())
                                                                 switchBottomSheet(scope, sheetState)
                                                             else
-                                                                showNoAccountOrCategoryMessage()                                                        }
+                                                                showNoAccountOrCategoryMessage()  }
                                                     }},cornerSize =  50.dp)
                                         }
                                     }
@@ -498,6 +497,7 @@ fun Categories(
         }
 
     }
+     }
     }else{
 
         BackHandler() {
@@ -508,24 +508,27 @@ fun Categories(
         EditCategory(isForEditing,category = if(isForEditing) selectedCategory.value else CategoriesData.defaultCategory ,onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory = false},onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory = false},onCancelIconClick = {isForEditing = false;  isAddingCategory = false})
     }
 
-
 }
 
-fun getChartData(categoriesList: List<Category>, categoriesSums: List<Double>, sum : Double): List<PieChartData> {
-    return LegendPosition.values().map {
+fun getChartData(categoriesList: List<Category>, iSAllZero : Boolean): List<PieChartData> {
+    return  listOf(
         PieChartData(
-
-            entries = categoriesSums.mapIndexed { idx, value ->
+            entries = if(!iSAllZero)
+                categoriesList.filter { it.spent != 0.0 }.mapIndexed { idx, value ->
                 PieChartEntry(
-                    value = value.toFloat(),
-                    label = AnnotatedString(com.example.moneysaver.presentation.categories.additional_composes.Categories[idx])
+                    value = value.spent.toFloat(),
+                    label = AnnotatedString("")
                 )
-            },
-            legendPosition = it,
-        colors = if(sum == 0.0) listOf(CategoriesData.addCategory.categoryImg.externalColor) else categoriesList.filter { it.spent != 0.0 }.mapIndexed { idx, value -> value.categoryImg.externalColor},
+            }
+            else listOf(PieChartEntry(
+                value = 1f,
+                label = AnnotatedString("")
+            )),
+            legendPosition = LegendPosition.values().last(),
+            colors = if(iSAllZero || categoriesList.isEmpty()) listOf(CategoriesData.addCategory.categoryImg.externalColor) else categoriesList.filter { it.spent != 0.0 }.mapIndexed { idx, value -> value.categoryImg.externalColor},
             legendShape = CircleShape,
-        )
-    }
+        ))
+
 }
 
 @Composable
@@ -545,11 +548,12 @@ private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewM
             cornerSize = cornerSize
         )
         var color = currencyColor
-        val categorySum = viewModel.state.categoriesSums[category]
-        if(categorySum == 0.0)
+        if(category.spent == 0.0)
             color = currencyColorZero
+        else if(category.spent < 0.0)
+            color = currencyColorSpent
 
-        Text(modifier = Modifier.padding(2.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 14.sp, fontWeight = FontWeight.W500, text = (categorySum.toString() + " " + category.currencyType), color = color)
+        Text(modifier = Modifier.padding(2.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 14.sp, fontWeight = FontWeight.W500, text = (category.spent.toString() + " " + category.currencyType), color = color)
     }
 
 }

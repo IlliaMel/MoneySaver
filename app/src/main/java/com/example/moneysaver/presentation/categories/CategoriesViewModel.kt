@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.repository.FinanceRepository
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivity.Companion.isCategoriesParsed
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -32,7 +34,6 @@ class CategoriesViewModel @Inject constructor(
     init {
         loadCategories()
         loadCurrencyData()
-        isCategoriesParsed = true
     }
 
     private fun loadCurrencyData() {
@@ -86,7 +87,6 @@ class CategoriesViewModel @Inject constructor(
                 // update account
                 financeRepository.insertAccount(updatedAccount)
             }
-
             // add new spending data
             val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
             val updatedAccount = transactionAccount!!.copy(
@@ -98,6 +98,18 @@ class CategoriesViewModel @Inject constructor(
             financeRepository.insertTransaction(transaction)
         }
     }
+    fun getListWithAdderCategory(isAddingCategory : Boolean, isForEditing : Boolean) : List<Category> {
+        var list = state.categoriesList.toMutableList()
+        if(!isAddingCategory && !isForEditing) {
+            if (list.isNotEmpty() && list.last().uuid == CategoriesData.addCategory.uuid) {
+
+            } else
+                list.add(CategoriesData.addCategory)
+        }else if(list.isNotEmpty() && list.last().uuid == CategoriesData.addCategory.uuid)
+            list.removeLast()
+
+        return list.toList()
+    }
 
     fun loadCategories() {
         financeRepository.getCategories()
@@ -107,31 +119,33 @@ class CategoriesViewModel @Inject constructor(
                 )
             }.launchIn(viewModelScope)
     }
+    fun ifAllCategoriesIsZero() : Boolean{
+        state.categoriesList.forEach{
+            if(it.spent != 0.0)
+                return false
+        }
+        return true
+    }
 
     fun loadCategoriesData() {
-
         financeRepository.getTransactions().onEach { transactions ->
-
             val categories = state.categoriesList
-            val tempList = mutableMapOf<Category, Double>()
             for(category in categories) {
-                var categorySum = 0.0
+                category.spent = 0.0
                 for(tr in transactions) {
                     if(tr.accountUUID == account.uuid || (account.isForGoal && account.isForDebt))
-                    if(tr.categoryUUID == category.uuid) {
-                        categorySum-=tr.sum
+                        if(tr.categoryUUID == category.uuid) {
+                            category.spent-=tr.sum
                     }
                 }
-                tempList[category] = categorySum
             }
-
             state = state.copy(
                 categoriesList = categories,
-                categoriesSums = tempList
             )
-
+          //  if(!isCategoriesParsed)
+         //       delay(100)
+        //    isCategoriesParsed = true
         }.launchIn(viewModelScope)
-
     }
 
     fun addingTransactionIsAllowed(): Boolean {
@@ -141,27 +155,23 @@ class CategoriesViewModel @Inject constructor(
     }
 
     fun loadCategoriesDataInDateRange(minDate: Date, maxDate: Date) {
-
         financeRepository.getTransactionsInDateRange(minDate, maxDate).onEach { transactions ->
-
             val categories = state.categoriesList
-            val tempList = mutableMapOf<Category, Double>()
             for(category in categories) {
-                var categorySum = 0.0
+                category.spent = 0.0
                 for(tr in transactions) {
                     if(tr.accountUUID == account.uuid || (account.isForGoal && account.isForDebt))
-                    if(tr.categoryUUID == category.uuid) {
-                        categorySum-=tr.sum
+                        if(tr.categoryUUID == category.uuid) {
+                            category.spent-=tr.sum
                     }
                 }
-                tempList[category] = categorySum
             }
-
             state = state.copy(
                 categoriesList = categories,
-                categoriesSums = tempList
             )
-
+        //    if(!isCategoriesParsed)
+       //         delay(100)
+        //    isCategoriesParsed = true
         }.launchIn(viewModelScope)
     }
 
