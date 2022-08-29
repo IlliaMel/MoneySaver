@@ -324,12 +324,12 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                             scope.launch {
                                 scaffoldState.drawerState.open()
                             }
-                        },chosenAccountFilter)
+                        },chosenAccountFilter,viewModel)
                         2 -> Transactions(onNavigationIconClick = {
                             scope.launch {
                                 scaffoldState.drawerState.open()
                             }
-                        }, navigateToTransaction = {},chosenAccountFilter)
+                        }, navigateToTransaction = {},chosenAccountFilter,viewModel)
                     }
                 }
                 Row(modifier = Modifier.weight(0.8f)) {

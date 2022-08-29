@@ -32,6 +32,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation.MainActivity
+import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.accounts.additional_composes.ChooseAccountElement
@@ -40,9 +41,10 @@ import com.example.moneysaver.ui.theme.*
 
 
 @Composable
-fun Accounts(onNavigationIconClick: () -> Unit,
-             chosenAccountFilter: MutableState<Account>,
-             viewModel: AccountsViewModel  = hiltViewModel()
+fun Accounts(
+    onNavigationIconClick: () -> Unit,
+    chosenAccountFilter: MutableState<Account>,
+    viewModel: AccountsViewModel = hiltViewModel(),
 ){
 
 

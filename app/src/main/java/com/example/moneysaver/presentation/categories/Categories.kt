@@ -38,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.presentation.MainActivity
 import com.example.moneysaver.presentation.MainActivity.Companion.isCategoriesParsed
+import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
@@ -53,7 +54,8 @@ import hu.ma.charts.pie.data.PieChartEntry
 fun Categories(
     onNavigationIconClick: () -> Unit,
     chosenAccountFilter: MutableState<Account>,
-    viewModel: CategoriesViewModel = hiltViewModel()
+    //viewModel: CategoriesViewModel = hiltViewModel(),
+    viewModel: MainActivityViewModel,
 ) {
 
 
@@ -74,6 +76,12 @@ fun Categories(
 
     val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.addCategory) }
 
+    viewModel.account = chosenAccountFilter.value
+    viewModel.loadAccounts()
+
+    var categories  = viewModel.state.categoriesList
+    var categoriesWithAdder  = viewModel.getListWithAdderCategory(isAddingCategory,isForEditing)
+
     //added category adder
     if(minDate.value==null||maxDate.value==null)
         viewModel.loadCategoriesData()
@@ -81,21 +89,13 @@ fun Categories(
         viewModel.loadCategoriesDataInDateRange(minDate.value!!, maxDate.value!!)
 
 
-    var categories  = viewModel.state.categoriesList
-    var categoriesWithAdder  = viewModel.getListWithAdderCategory(isAddingCategory,isForEditing)
-
-
-    viewModel.account = chosenAccountFilter.value
-
-
-    viewModel.loadAccounts()
 
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
 
 
  if(!isAddingCategory){
-    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categories.size > 1 || isForEditing) isForEditing =
+    TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categoriesWithAdder.size > 1 || isForEditing) isForEditing =
         !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
 
    /*  if(!isCategoriesParsed){
@@ -532,7 +532,7 @@ fun getChartData(categoriesList: List<Category>, iSAllZero : Boolean): List<PieC
 }
 
 @Composable
-private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier, modifierBox:  Modifier = Modifier, columnModifier: Modifier = Modifier, onClickCategory : () ->  Unit, cornerSize : Dp = 60.dp) {
+private fun CategoriesVectorImage(category: Category, viewModel: MainActivityViewModel, modifierVectorImg:  Modifier = Modifier, modifierBox:  Modifier = Modifier, columnModifier: Modifier = Modifier, onClickCategory : () ->  Unit, cornerSize : Dp = 60.dp) {
     Column(modifier = columnModifier
         .clickable { onClickCategory() }
         .clip(RoundedCornerShape(CornerSize(4.dp)))

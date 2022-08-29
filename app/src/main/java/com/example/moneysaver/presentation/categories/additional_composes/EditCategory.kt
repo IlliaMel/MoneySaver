@@ -49,7 +49,6 @@ fun EditCategory(
     onAddCategoryAction: (Category) -> Unit,
     onDeleteCategory: (Category) -> Unit,
     onCancelIconClick: () -> Unit,
-    viewModel: CategoriesViewModel = hiltViewModel()
 ){
 
 
