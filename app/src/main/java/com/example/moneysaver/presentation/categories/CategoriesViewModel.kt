@@ -141,6 +141,7 @@ class CategoriesViewModel @Inject constructor(
             }
             state = state.copy(
                 categoriesList = categories,
+                selectedAccount = account
             )
           //  if(!isCategoriesParsed)
          //       delay(100)
@@ -168,6 +169,7 @@ class CategoriesViewModel @Inject constructor(
             }
             state = state.copy(
                 categoriesList = categories,
+                selectedAccount = account
             )
         //    if(!isCategoriesParsed)
        //         delay(100)
