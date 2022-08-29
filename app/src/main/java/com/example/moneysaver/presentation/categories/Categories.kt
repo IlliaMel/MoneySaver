@@ -113,7 +113,9 @@ fun Categories(
                 addTransaction = viewModel::addTransaction,
                 closeAdder = { scope.launch {sheetState.collapse()} },
                 accountsList = viewModel.state.accountsList,
-                categoriesList = viewModel.state.categoriesList
+                categoriesList = viewModel.state.categoriesList,
+                minDate = minDate,
+                maxDate = maxDate
             )
         },
         sheetPeekHeight = 0.dp
