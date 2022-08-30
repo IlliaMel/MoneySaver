@@ -45,13 +45,10 @@ fun Accounts(
     onNavigationIconClick: () -> Unit,
     chosenAccountFilter: MutableState<Account>,
     viewModel: AccountsViewModel = hiltViewModel(),
+    baseCurrency: Currency,
 ){
 
 
-
-    var baseCurrency by remember {
-        mutableStateOf(Currency(currency = "₴", currencyName = "UAH"))
-    }
 
     var selectedAccountIndex by remember {
         mutableStateOf(0)

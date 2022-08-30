@@ -157,7 +157,7 @@ fun EditCategory(
     }
 
 
-    SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = { returnType -> setCurrencyTypeChange.value = false;   currencyType.value = returnType  /* currencyType.value = viewModel.state.currenciesList.find { currency ->  returnType == currency.currencyName }!!*/ })
+    SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = { returnType -> setCurrencyTypeChange.value = false;   currencyType.value = returnType.currency  /* currencyType.value = viewModel.state.currenciesList.find { currency ->  returnType == currency.currencyName }!!*/ })
 }
 
 @Composable

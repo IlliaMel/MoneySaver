@@ -37,6 +37,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
+import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation._components.*
 
@@ -47,6 +48,7 @@ import com.example.moneysaver.presentation._components.time_picker.TimePicker
 
 import com.example.moneysaver.presentation.accounts.Accounts
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
+import com.example.moneysaver.presentation.accounts.additional_composes.SetAccountCurrencyType
 import com.example.moneysaver.presentation.categories.Categories
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.ui.theme.*
@@ -208,8 +210,19 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             mutableStateOf(0)
         }
 
+        var baseCurrencyString by remember {
+            mutableStateOf(sharedPref.getString(MAIN_CURRENCY, Currency(currency = "₴", currencyName = "UAH").toString()))
+        }
+
         var baseCurrency by remember {
-            mutableStateOf(Currency(currency = "₴", currencyName = "UAH"))
+            mutableStateOf(
+                if(baseCurrencyString != null){
+                    var arr = baseCurrencyString!!.split(",")
+                    Currency(arr[0],arr[1],arr[2],arr[3].toDouble())
+                }else{
+                    Currency(currency = "₴", currencyName = "UAH")
+                }
+            )
         }
 
         val chosenAccountFilter = remember { mutableStateOf(AccountsData.allAccountFilter) }
@@ -225,11 +238,6 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             mutableStateOf(sharedPref.getInt(MINUTE_ALARM, 0))
         }
 
-        var mainCurrency = remember {
-            mutableStateOf(Currency())
-            //viewModel.state.currenciesList.find { it.currencyName == sharedPref.getString(MAIN_CURRENCY, "USD") }
-        }
-
         var timeSwitch by remember {
             mutableStateOf(false)
         }
@@ -238,10 +246,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             mutableStateOf(false)
         }
 
-        var mainCurrencyClicked by remember {
-            mutableStateOf(false)
-        }
-
+        var mainCurrencyClicked = remember { mutableStateOf(false) }
 
         if(sharedPref.getString(LAST_STARTING, "") != formattedDate && timeSwitch)
             //alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
@@ -268,9 +273,17 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                     }
                     }, minutesNotification,hoursNotification)
                     notificationClicked = false
-                }else if (mainCurrencyClicked){
+                }
+
+                SetAccountCurrencyType(openDialog = mainCurrencyClicked) { returnType ->
+                    mainCurrencyClicked.value = false
 
 
+                    baseCurrency = viewModel.state.currenciesList.find { currency ->  returnType == currency }!!
+                    with(sharedPref.edit()) {
+                        putString(MAIN_CURRENCY, baseCurrency.toString())
+                        apply()
+                    }
                 }
 
                 DrawerBody(
@@ -282,7 +295,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                                             R.string.light), icon = Icons.Default.Info),
                             MenuItem(number = 2 , title = stringResource(R.string.notifications), description = if(hoursNotification.value == 0) "00" else {hoursNotification.value.toString()} + ":" + if(minutesNotification.value == 0) "00" else {minutesNotification.value.toString()}, icon = Icons.Default.Notifications, hasSwitch = true),
 
-                            MenuItem(number = 3 , title = "Main Currency", description = "${mainCurrency.value!!.description} ${mainCurrency.value!!.currencyName} (${mainCurrency.value!!.currency})", icon = Icons.Default.ShoppingCart)
+                            MenuItem(number = 3 , title = "Main Currency", description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart)
                         )),
                         MenuBlock(title = "Block2", items = listOf(
                             MenuItem(number = 4 , title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
@@ -296,7 +309,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                 timeSwitch = true
                             notificationClicked = true
                         }else if (it.number == 3){
-                            mainCurrencyClicked = true
+                            mainCurrencyClicked.value = true
                         }
                     }
                 )
@@ -319,17 +332,17 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                 scope.launch {
                                     scaffoldState.drawerState.open()
                                 }
-                            },chosenAccountFilter)
+                            },chosenAccountFilter,baseCurrency = baseCurrency)
                         1 -> Categories(onNavigationIconClick = {
                             scope.launch {
                                 scaffoldState.drawerState.open()
                             }
-                        },chosenAccountFilter,viewModel)
+                        },chosenAccountFilter,viewModel,baseCurrency = baseCurrency)
                         2 -> Transactions(onNavigationIconClick = {
                             scope.launch {
                                 scaffoldState.drawerState.open()
                             }
-                        }, navigateToTransaction = {},chosenAccountFilter,viewModel)
+                        }, navigateToTransaction = {},chosenAccountFilter,viewModel,baseCurrency = baseCurrency)
                     }
                 }
                 Row(modifier = Modifier.weight(0.8f)) {

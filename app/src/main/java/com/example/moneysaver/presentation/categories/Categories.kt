@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation.MainActivity
 import com.example.moneysaver.presentation.MainActivity.Companion.isCategoriesParsed
 import com.example.moneysaver.presentation.MainActivityViewModel
@@ -56,6 +57,7 @@ fun Categories(
     chosenAccountFilter: MutableState<Account>,
     //viewModel: CategoriesViewModel = hiltViewModel(),
     viewModel: MainActivityViewModel,
+    baseCurrency: Currency,
 ) {
 
 

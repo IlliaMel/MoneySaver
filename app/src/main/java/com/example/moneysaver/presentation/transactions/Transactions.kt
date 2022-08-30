@@ -33,6 +33,7 @@ import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.*
@@ -51,7 +52,8 @@ fun Transactions(
     onNavigationIconClick: () -> Unit,
     navigateToTransaction: (Transaction) -> Unit,
     chosenAccountFilter: MutableState<Account>,
-    viewModel: MainActivityViewModel
+    viewModel: MainActivityViewModel,
+    baseCurrency: Currency,
 ) {
 
     val minDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().first) }

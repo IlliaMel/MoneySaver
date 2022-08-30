@@ -41,6 +41,7 @@ import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Account
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.ui.theme.*
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
@@ -347,7 +348,7 @@ fun EditAccount(
     SetAccountDescription(description = account.description,openDialog = setDescriptionChange, returnType = {setDescriptionChange.value = false; description.value = it })
     SetAccountCurrencyType(openDialog = setCurrencyTypeChange) { returnType ->
         setCurrencyTypeChange.value = false;
-        currencyType.value = viewModel.state.currenciesList.find { currency ->  returnType == currency.currencyName }!!
+        currencyType.value = viewModel.state.currenciesList.find { currency ->  returnType == currency }!!
     }
 
 }
@@ -556,7 +557,7 @@ fun ButtonWithColor(returnType: (type: String) -> Unit,  text : String){
 @Composable
 fun SetAccountCurrencyType(
     openDialog: MutableState<Boolean>,
-    returnType: (type: String) -> Unit,
+    returnType: (type: Currency) -> Unit,
 ) {
     if (openDialog.value) {
         Dialog(
@@ -593,27 +594,22 @@ fun SetAccountCurrencyType(
                         itemContent = {
                             Row(
                                 modifier = Modifier
-                                    .padding(0.dp, 4.dp, 0.dp, 4.dp)
+                                    .padding(16.dp, 4.dp, 0.dp, 4.dp)
                                     .fillMaxWidth()
-                                    .clickable { returnType(it.currencyName) },
+                                    .clickable { returnType(it) },
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
-                                Text(modifier = Modifier.padding(22.dp,4.dp,0.dp,4.dp), text = it.currencyName, color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 18.sp)
-                                Text(modifier = Modifier.padding(0.dp,4.dp,32.dp,4.dp), text = if(it.valueInMainCurrency.toString().length > 6) it.valueInMainCurrency.toString() else it.valueInMainCurrency.toString() , color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 18.sp)
+                                Text(modifier = Modifier.weight(2f).padding(16.dp,0.dp,0.dp,0.dp), text = it.description, color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                                Text(modifier = Modifier.weight(1f).padding(0.dp,0.dp,0.dp,0.dp), text = it.currencyName + "(" + it.currency + ")" , color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                             }
                         }
                     )
 
                 }
             }
-
-
-
-
         }
     }
-
 }
 
 @Composable
