@@ -570,6 +570,30 @@ fun ChartContainer(
     chartOffset: Dp = 0.dp,
     content: @Composable () -> Unit,
 ) {
+    var isSpendings = true
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        content()
+        Text(modifier = Modifier.padding(0.dp,0.dp,0.dp,32.dp), fontSize = 16.sp, fontWeight = FontWeight.W500,
+            text = if (isSpendings) stringResource(R.string.spending) else  stringResource(R.string.spending), color = Color.Black)
+
+        Column(modifier = Modifier.padding(0.dp,32.dp,0.dp,0.dp), verticalArrangement =  Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    modifier = Modifier.padding(0.dp,16.dp,0.dp,0.dp),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.W400,
+                    text = if(isSpendings) spent else bank ,
+                    color = currencyColorSpent
+                )
+                Text(
+                    modifier = Modifier.padding(0.dp,2.dp,0.dp,0.dp),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W400,
+                    text = if(isSpendings) bank else spent,
+                    color =  if(isSpendings) Color(red = currencyColor.red, blue = currencyColor.blue, green = currencyColor.green, alpha = 0.8f) else Color(red = currencyColorSpent.red, blue = currencyColorSpent.blue, green = currencyColorSpent.green, alpha = 0.8f)
+                )
+        }
+    }
+    /*
     Column(modifier = modifier.fillMaxHeight(), verticalArrangement =  Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
         Text(modifier = Modifier.padding(8.dp), fontSize = 18.sp, fontWeight = FontWeight.W500, text = stringResource(
                     R.string.spending), color = currencyColorZero)
@@ -581,6 +605,7 @@ fun ChartContainer(
         }
 
     }
+    */
 }
 
 
