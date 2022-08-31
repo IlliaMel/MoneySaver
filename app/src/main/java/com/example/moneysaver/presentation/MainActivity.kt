@@ -337,7 +337,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                             scope.launch {
                                 scaffoldState.drawerState.open()
                             }
-                        },chosenAccountFilter,viewModel,baseCurrency = baseCurrency)
+                        },chosenAccountFilter,baseCurrency = baseCurrency)
                         2 -> Transactions(onNavigationIconClick = {
                             scope.launch {
                                 scaffoldState.drawerState.open()

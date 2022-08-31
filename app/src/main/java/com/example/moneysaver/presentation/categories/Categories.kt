@@ -55,8 +55,8 @@ import hu.ma.charts.pie.data.PieChartEntry
 fun Categories(
     onNavigationIconClick: () -> Unit,
     chosenAccountFilter: MutableState<Account>,
-    //viewModel: CategoriesViewModel = hiltViewModel(),
-    viewModel: MainActivityViewModel,
+    viewModel: CategoriesViewModel = hiltViewModel(),
+    //viewModel: MainActivityViewModel,
     baseCurrency: Currency,
 ) {
 
@@ -536,7 +536,7 @@ fun getChartData(categoriesList: List<Category>, iSAllZero : Boolean): List<PieC
 }
 
 @Composable
-private fun CategoriesVectorImage(category: Category, viewModel: MainActivityViewModel, modifierVectorImg:  Modifier = Modifier, modifierBox:  Modifier = Modifier, columnModifier: Modifier = Modifier, onClickCategory : () ->  Unit, cornerSize : Dp = 60.dp) {
+private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier, modifierBox:  Modifier = Modifier, columnModifier: Modifier = Modifier, onClickCategory : () ->  Unit, cornerSize : Dp = 60.dp) {
     Column(modifier = columnModifier
         .clickable { onClickCategory() }
         .clip(RoundedCornerShape(CornerSize(4.dp)))
