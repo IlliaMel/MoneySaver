@@ -12,6 +12,7 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -326,24 +327,27 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                         .fillMaxWidth()
                         .background(whiteSurface)
                 ) {
-                    when (selectedTabIndex) {
-                        0 -> Accounts(
-                            onNavigationIconClick = {
+                    Crossfade(targetState = selectedTabIndex) { selectedTabIndex ->
+                        when (selectedTabIndex) {
+                            0 -> Accounts(
+                                onNavigationIconClick = {
+                                    scope.launch {
+                                        scaffoldState.drawerState.open()
+                                    }
+                                },chosenAccountFilter,baseCurrency = baseCurrency)
+                            1 -> Categories(onNavigationIconClick = {
                                 scope.launch {
                                     scaffoldState.drawerState.open()
                                 }
                             },chosenAccountFilter,baseCurrency = baseCurrency)
-                        1 -> Categories(onNavigationIconClick = {
-                            scope.launch {
-                                scaffoldState.drawerState.open()
-                            }
-                        },chosenAccountFilter,baseCurrency = baseCurrency)
-                        2 -> Transactions(onNavigationIconClick = {
-                            scope.launch {
-                                scaffoldState.drawerState.open()
-                            }
-                        }, navigateToTransaction = {},chosenAccountFilter,viewModel,baseCurrency = baseCurrency)
+                            2 -> Transactions(onNavigationIconClick = {
+                                scope.launch {
+                                    scaffoldState.drawerState.open()
+                                }
+                            }, navigateToTransaction = {},chosenAccountFilter,viewModel,baseCurrency = baseCurrency)
+                        }
                     }
+
                 }
                 Row(modifier = Modifier.weight(0.8f)) {
                     TabsForScreens(){
