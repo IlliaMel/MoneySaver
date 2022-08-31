@@ -146,7 +146,7 @@ class CategoriesViewModel @Inject constructor(
                                 spend += tr.sum * returnCurrencyValue(state.accountsList.find { it.uuid == tr.accountUUID }?.currencyType!!.currencyName, base )
                             }else
                                 earned += tr.sum * returnCurrencyValue(state.accountsList.find { it.uuid == tr.accountUUID }?.currencyType!!.currencyName, base )
-                            category.spent += tr.sum * returnCurrencyValue(/*categories.find { it.uuid == tr.categoryUUID }?.currencyType!!*/ base, base )
+                            category.spent += Math.round(100 * tr.sum * returnCurrencyValue(state.accountsList.find { it.uuid == tr.accountUUID }?.currencyType!!.currencyName,state.categoriesList.find { it.uuid == tr.categoryUUID }?.currencyType!!.currencyName)) / 100.0
                     }
                 }
             }

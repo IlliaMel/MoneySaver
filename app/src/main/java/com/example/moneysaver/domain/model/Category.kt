@@ -11,7 +11,7 @@ import java.util.*
 data class Category(
     @PrimaryKey val uuid: UUID = UUID.randomUUID(),
     val categoryImg: VectorImg = AccountsData.accountImges[0],
-    val currencyType: String = "$",
+    var currencyType: Currency = Currency(),
     val title: String,
     var spent: Double = 0.0,
 ) : Serializable{

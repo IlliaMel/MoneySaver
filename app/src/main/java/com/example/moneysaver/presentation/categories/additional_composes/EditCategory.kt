@@ -111,7 +111,7 @@ fun EditCategory(
 
                 accountEditInfoText(
                     upperText = stringResource(R.string.currency_type),
-                    bottomText = currencyType.value,
+                    bottomText = currencyType.value.currency,
                     onAction = {setCurrencyTypeChange.value = true},
                     startPadding = 16.dp,
                     topPadding = 8.dp)
@@ -157,7 +157,7 @@ fun EditCategory(
     }
 
 
-    SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = { returnType -> setCurrencyTypeChange.value = false;   currencyType.value = returnType.currency  /* currencyType.value = viewModel.state.currenciesList.find { currency ->  returnType == currency.currencyName }!!*/ })
+    SetAccountCurrencyType(openDialog = setCurrencyTypeChange, returnType = { returnType -> setCurrencyTypeChange.value = false;   currencyType.value = returnType  /* currencyType.value = viewModel.state.currenciesList.find { currency ->  returnType == currency.currencyName }!!*/ })
 }
 
 @Composable

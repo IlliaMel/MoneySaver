@@ -8,14 +8,14 @@ object CategoriesData {
 
     val addCategory = Category(
         categoryImg = VectorImg(img = R.drawable.ic_plus_categ_icn),
-        currencyType = "$",
+        currencyType = Currency(),
         title = "Add Category",
         spent = 0.0,
     )
 
     val defaultCategory = Category(
         categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
-        currencyType = "$",
+        currencyType = Currency(),
         title = "Add Category",
         spent = 0.0,
     )

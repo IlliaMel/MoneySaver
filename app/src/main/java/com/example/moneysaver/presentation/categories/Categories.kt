@@ -555,7 +555,7 @@ private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewM
         else if(category.spent < 0.0)
             color = currencyColorSpent
 
-        Text(modifier = Modifier.padding(2.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 14.sp, fontWeight = FontWeight.W500, text = (category.spent.toString() + " " + category.currencyType), color = color)
+        Text(modifier = Modifier.padding(2.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 14.sp, fontWeight = FontWeight.W500, text = (category.spent.toString() + " " + category.currencyType.currency), color = color)
     }
 
 }
