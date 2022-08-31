@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moneysaver.data.data_base._test_data.AccountsData
+import com.example.moneysaver.data.data_base._test_data.AccountsData.accountsList
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.domain.model.Currency
@@ -127,21 +128,33 @@ class CategoriesViewModel @Inject constructor(
         return true
     }
 
-    fun loadCategoriesData() {
-        financeRepository.getTransactions().onEach { transactions ->
+
+
+    fun loadCategoriesDataInDateRange(minDate: Date, maxDate: Date,  base : String) {
+        (if(minDate==null||maxDate==null) financeRepository.getTransactionsInDateRange(minDate, maxDate) else financeRepository.getTransactions()).onEach { transactions ->
             val categories = state.categoriesList
+            var earned = 0.0
+            var spend = 0.0
             for(category in categories) {
                 category.spent = 0.0
                 for(tr in transactions) {
                     if(tr.accountUUID == account.uuid || (account.isForGoal && account.isForDebt))
                         if(tr.categoryUUID == category.uuid) {
-                            category.spent-=tr.sum
+                            if(accountsList.isNotEmpty())
+                            if(tr.sum < 0){
+                                var d = state.accountsList
+                                spend += tr.sum * returnCurrencyValue(state.accountsList.find { it.uuid == tr.accountUUID }?.currencyType!!.currencyName, base )
+                            }else
+                                earned += tr.sum * returnCurrencyValue(state.accountsList.find { it.uuid == tr.accountUUID }?.currencyType!!.currencyName, base )
+                            category.spent += tr.sum * returnCurrencyValue(/*categories.find { it.uuid == tr.categoryUUID }?.currencyType!!*/ base, base )
                     }
                 }
             }
             state = state.copy(
                 categoriesList = categories,
-                selectedAccount = account
+                selectedAccount = account,
+                spend = Math.round(spend * 100) / 100.0,
+                earned = Math.round(earned * 100) / 100.0
             )
           //  if(!isCategoriesParsed)
          //       delay(100)
@@ -149,32 +162,16 @@ class CategoriesViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    fun returnCurrencyValue(which : String , to : String) : Double {
+        var whichFound = state.currenciesList.find { it.currencyName == which }
+        var toFound = state.currenciesList.find { it.currencyName == to }
+        return (toFound?.valueInMainCurrency ?: 1.0) / (whichFound?.valueInMainCurrency ?: 1.0)
+    }
+
     fun addingTransactionIsAllowed(): Boolean {
         return state.accountsList.isNotEmpty()
                 && state.categoriesList.isNotEmpty()
                 && state.categoriesList[0].uuid!= CategoriesData.addCategory.uuid
-    }
-
-    fun loadCategoriesDataInDateRange(minDate: Date, maxDate: Date) {
-        financeRepository.getTransactionsInDateRange(minDate, maxDate).onEach { transactions ->
-            val categories = state.categoriesList
-            for(category in categories) {
-                category.spent = 0.0
-                for(tr in transactions) {
-                    if(tr.accountUUID == account.uuid || (account.isForGoal && account.isForDebt))
-                        if(tr.categoryUUID == category.uuid) {
-                            category.spent-=tr.sum
-                    }
-                }
-            }
-            state = state.copy(
-                categoriesList = categories,
-                selectedAccount = account
-            )
-        //    if(!isCategoriesParsed)
-       //         delay(100)
-        //    isCategoriesParsed = true
-        }.launchIn(viewModelScope)
     }
 
     fun loadAccounts() {

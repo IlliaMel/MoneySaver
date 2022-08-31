@@ -85,10 +85,8 @@ fun Categories(
     var categoriesWithAdder  = viewModel.getListWithAdderCategory(isAddingCategory,isForEditing)
 
     //added category adder
-    if(minDate.value==null||maxDate.value==null)
-        viewModel.loadCategoriesData()
-    else
-        viewModel.loadCategoriesDataInDateRange(minDate.value!!, maxDate.value!!)
+
+    viewModel.loadCategoriesDataInDateRange(minDate.value!!, maxDate.value!!, base = baseCurrency.currencyName)
 
 
 
@@ -334,8 +332,8 @@ fun Categories(
                                     modifier = Modifier
                                         .background(whiteSurface)
                                         .animateContentSize(),
-                                    spent = "0.0$",
-                                    bank = "0.0$"
+                                    spent = viewModel.state.spend.toString() + baseCurrency.currency,
+                                    earned = viewModel.state.earned.toString() + baseCurrency.currency
                                 ) {
 
                                     var iSAllZero = viewModel.ifAllCategoriesIsZero()
@@ -566,7 +564,7 @@ private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewM
 fun ChartContainer(
     modifier: Modifier = Modifier,
     spent: String,
-    bank: String,
+    earned: String,
     chartOffset: Dp = 0.dp,
     content: @Composable () -> Unit,
 ) {
@@ -581,14 +579,14 @@ fun ChartContainer(
                     modifier = Modifier.padding(0.dp,16.dp,0.dp,0.dp),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.W400,
-                    text = if(isSpendings) spent else bank ,
+                    text = if(isSpendings) spent else earned ,
                     color = currencyColorSpent
                 )
                 Text(
                     modifier = Modifier.padding(0.dp,2.dp,0.dp,0.dp),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.W400,
-                    text = if(isSpendings) bank else spent,
+                    text = if(isSpendings) earned else spent,
                     color =  if(isSpendings) Color(red = currencyColor.red, blue = currencyColor.blue, green = currencyColor.green, alpha = 0.8f) else Color(red = currencyColorSpent.red, blue = currencyColorSpent.blue, green = currencyColorSpent.green, alpha = 0.8f)
                 )
         }

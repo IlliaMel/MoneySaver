@@ -91,6 +91,15 @@ class MainActivityViewModel @Inject constructor(
         return (toFound?.valueInMainCurrency ?: 1.0) / (whichFound?.valueInMainCurrency ?: 1.0)
     }
 
+   fun isCurrencyDbEmpty() : Boolean{
+        var result = false
+       financeRepository.getCurrencyTypes()
+           .onEach { list ->
+               result = list.isEmpty()
+           }.launchIn(viewModelScope)
+       return result
+    }
+
 
     private suspend fun putInDbCurrencyData(resultData: CurrencyDto?){
 

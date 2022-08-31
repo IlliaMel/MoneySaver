@@ -50,7 +50,6 @@ class AccountsViewModel @Inject constructor(
     }
 
     fun findSum(list: List<Account>, base : String) : Double{
-        returnCurrencyValue("UAH",base)
         var sum = 0.0
         list.forEach {
             if(it.isForDebt){
