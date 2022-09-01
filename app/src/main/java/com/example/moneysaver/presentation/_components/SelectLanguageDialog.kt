@@ -38,7 +38,12 @@ val languageList = listOf("Default", "Albanian","Arabic", "Armenian", "Azerbaija
     "Swedish", "Turkish","Ukrainian")
 
 @Composable
-fun SelectLanguageDialog(openDialog: MutableState<Boolean>, appLanguage: MutableState<String?>, sharedPref: SharedPreferences) {
+fun SelectLanguageDialog(
+    openDialog: MutableState<Boolean>,
+    appLanguage: MutableState<String?>,
+    sharedPref: SharedPreferences,
+    restartApp: () -> Unit
+    ) {
     if (openDialog.value) {
         val selectedValue = remember { mutableStateOf(languageList[0]) }
 
@@ -94,11 +99,12 @@ fun SelectLanguageDialog(openDialog: MutableState<Boolean>, appLanguage: Mutable
                 Button(
                     modifier = Modifier.padding(12.dp),
                     onClick = {
-                    appLanguage.value = selectedValue.value
-                    var editor = sharedPref.edit()
-                    editor.putString(MainActivity.APP_LANGUAGE,selectedValue.value)
-                    editor.commit()
-                }) {
+                        appLanguage.value = selectedValue.value
+                        var editor = sharedPref.edit()
+                        editor.putString(MainActivity.APP_LANGUAGE,selectedValue.value)
+                        editor.commit()
+                        restartApp()
+                    }) {
                     Text("Save")
                 }
             }
