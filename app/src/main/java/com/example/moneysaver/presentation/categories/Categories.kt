@@ -37,13 +37,9 @@ import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Currency
-import com.example.moneysaver.presentation.MainActivity
-import com.example.moneysaver.presentation.MainActivity.Companion.isCategoriesParsed
-import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.presentation.categories.additional_composes.EditCategory
-import com.example.moneysaver.presentation.categories.additional_composes.SimpleColors
 import com.example.moneysaver.presentation.transactions.showNoAccountOrCategoryMessage
 import com.example.moneysaver.ui.theme.*
 import hu.ma.charts.legend.data.LegendPosition
@@ -56,7 +52,6 @@ fun Categories(
     onNavigationIconClick: () -> Unit,
     chosenAccountFilter: MutableState<Account>,
     viewModel: CategoriesViewModel = hiltViewModel(),
-    //viewModel: MainActivityViewModel,
     baseCurrency: Currency,
 ) {
 
@@ -86,7 +81,7 @@ fun Categories(
 
     //added category adder
 
-    viewModel.loadCategoriesDataInDateRange(minDate.value!!, maxDate.value!!, base = baseCurrency.currencyName)
+    viewModel.loadCategoriesDataInDateRange(minDate.value, maxDate.value, base = baseCurrency.currencyName)
 
 
 
@@ -99,12 +94,6 @@ fun Categories(
         TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categoriesWithAdder.size > 1 || isForEditing) isForEditing =
             !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
 
-        /*  if(!isCategoriesParsed){
-              Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                  CircularProgressIndicator(modifier = Modifier.size(100.dp))
-              }
-
-          } else*/if(true) {
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
             sheetContent = {
@@ -334,7 +323,8 @@ fun Categories(
                                             .background(whiteSurface)
                                             .animateContentSize(),
                                         spent = viewModel.state.spend.toString() + baseCurrency.currency,
-                                        earned = viewModel.state.earned.toString() + baseCurrency.currency
+                                        earned = viewModel.state.earned.toString() + baseCurrency.currency,
+                                        isSpendings = true
                                     ) {
 
                                         var iSAllZero = viewModel.ifAllCategoriesIsZero()
@@ -501,7 +491,6 @@ fun Categories(
 
         }
     }
-     }
     }else{
 
         BackHandler() {
@@ -567,10 +556,10 @@ fun ChartContainer(
     modifier: Modifier = Modifier,
     spent: String,
     earned: String,
+    isSpendings : Boolean,
     chartOffset: Dp = 0.dp,
     content: @Composable () -> Unit,
 ) {
-    var isSpendings = true
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         content()
         Text(modifier = Modifier.padding(0.dp,0.dp,0.dp,32.dp), fontSize = 16.sp, fontWeight = FontWeight.W500,
@@ -593,19 +582,6 @@ fun ChartContainer(
                 )
         }
     }
-    /*
-    Column(modifier = modifier.fillMaxHeight(), verticalArrangement =  Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(modifier = Modifier.padding(8.dp), fontSize = 18.sp, fontWeight = FontWeight.W500, text = stringResource(
-                    R.string.spending), color = currencyColorZero)
-        Spacer(modifier = Modifier.requiredSize(chartOffset))
-        content()
-        Row() {
-            Text(modifier = Modifier.padding(8.dp), fontSize = 15.sp, fontWeight = FontWeight.W400, text = bank, color = currencyColorSpent)
-            Text(modifier = Modifier.padding(8.dp), fontSize = 15.sp, fontWeight = FontWeight.W400, text = spent, color = currencyColor)
-        }
-
-    }
-    */
 }
 
 

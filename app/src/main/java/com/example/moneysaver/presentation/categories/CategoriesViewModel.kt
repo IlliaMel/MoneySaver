@@ -1,6 +1,5 @@
 package com.example.moneysaver.presentation.categories
 
-import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,14 +7,12 @@ import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.AccountsData.accountsList
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Category
-import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.repository.FinanceRepository
 import com.example.moneysaver.domain.model.Transaction
-import com.example.moneysaver.presentation.MainActivity.Companion.isCategoriesParsed
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -116,7 +113,9 @@ class CategoriesViewModel @Inject constructor(
         financeRepository.getCategories()
             .onEach { list ->
                 state = state.copy(
-                    categoriesList = list as MutableList<Category>,
+                    categoriesList = list,
+                    spend = 0.0,
+                    earned = 0.0
                 )
             }.launchIn(viewModelScope)
     }
@@ -130,8 +129,13 @@ class CategoriesViewModel @Inject constructor(
 
 
 
-    fun loadCategoriesDataInDateRange(minDate: Date, maxDate: Date,  base : String) {
-        (if(minDate==null||maxDate==null) financeRepository.getTransactionsInDateRange(minDate, maxDate) else financeRepository.getTransactions()).onEach { transactions ->
+
+    fun loadCategoriesDataInDateRange(minDate: Date?, maxDate: Date?, base: String) {
+
+        (if(minDate!=null||maxDate!=null)
+            financeRepository.getTransactionsInDateRange(minDate!!, maxDate!!)
+        else
+            financeRepository.getTransactions()).onEach { transactions ->
             val categories = state.categoriesList
             var earned = 0.0
             var spend = 0.0
@@ -142,7 +146,6 @@ class CategoriesViewModel @Inject constructor(
                         if(tr.categoryUUID == category.uuid) {
                             if(accountsList.isNotEmpty())
                             if(tr.sum < 0){
-                                var d = state.accountsList
                                 spend += tr.sum * returnCurrencyValue(state.accountsList.find { it.uuid == tr.accountUUID }?.currencyType!!.currencyName, base )
                             }else
                                 earned += tr.sum * returnCurrencyValue(state.accountsList.find { it.uuid == tr.accountUUID }?.currencyType!!.currencyName, base )
