@@ -8,6 +8,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -40,6 +41,7 @@ import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Currency
+import com.example.moneysaver.presentation.MainActivity.Companion.APP_LANGUAGE
 import com.example.moneysaver.presentation._components.*
 
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
@@ -71,6 +73,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         var isNeedToParseCurrency = false
         var isCategoriesParsed = false
+        val APP_LANGUAGE = "app_language"
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
@@ -133,7 +136,9 @@ class MainActivity : ComponentActivity() {
 
             MoneySaverTheme {
                 if (!isConnectionEnabled && !isParsed && !viewModel.isCurrencyDbEmpty()) {
-                    Box(modifier = Modifier.fillMaxSize().background(lightGrayTransparent), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .background(lightGrayTransparent), contentAlignment = Alignment.Center) {
                         Text(
                             text = "PLease turn on internet connection",
                             fontSize = 20.sp,
@@ -231,6 +236,10 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         AccountsData.allAccountFilter.balance = accountsViewModel.findSum(accountsViewModel.state.allAccountList,baseCurrency.currencyName)
         AccountsData.allAccountFilter.currencyType = baseCurrency
 
+        var appLanguage = remember {
+            mutableStateOf(sharedPref.getString(APP_LANGUAGE, "Default"))
+        }
+
         var hoursNotification = remember {
             mutableStateOf(sharedPref.getInt(HOUR_ALARM, 0))
         }
@@ -258,6 +267,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             putString(LAST_STARTING, formattedDate)
             apply()
         }
+
+        val openSelectLanguageDialog = remember { mutableStateOf(false) }
 
 
         Scaffold(
@@ -290,8 +301,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                 DrawerBody(
                     blocks = listOf(
                         MenuBlock(title = stringResource(R.string.settings), items = listOf(
-                            MenuItem(number = 0 , title = stringResource(R.string.language), description = stringResource(
-                                                            R.string.defaultStr), icon = Icons.Default.Place),
+                            MenuItem(number = 0 , title = stringResource(R.string.language), description = if(appLanguage.value!=null) appLanguage.value!! else stringResource(
+                                R.string.defaultStr), icon = Icons.Default.Place),
                             MenuItem(number = 1 , title = stringResource(R.string.theme), description = stringResource(
                                                             R.string.light), icon = Icons.Default.Info),
                             MenuItem(number = 2 , title = stringResource(R.string.notifications), description = if(hoursNotification.value == 0) "00" else {hoursNotification.value.toString()} + ":" + if(minutesNotification.value == 0) "00" else {minutesNotification.value.toString()}, icon = Icons.Default.Notifications, hasSwitch = true),
@@ -305,12 +316,18 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                         ))
                     ),
                     onItemClick = {
-                        if(it.number == 2){
-                            if(it.switchIsActive)
-                                timeSwitch = true
-                            notificationClicked = true
-                        }else if (it.number == 3){
-                            mainCurrencyClicked.value = true
+                        when (it.number) {
+                            0 -> {
+                                openSelectLanguageDialog.value = true
+                            }
+                            2 -> {
+                                if(it.switchIsActive)
+                                    timeSwitch = true
+                                notificationClicked = true
+                            }
+                            3 -> {
+                                mainCurrencyClicked.value = true
+                            }
                         }
                     }
                 )
@@ -357,6 +374,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
 
             }
         }
+
+        SelectLanguageDialog(openDialog = openSelectLanguageDialog, appLanguage = appLanguage, sharedPref = sharedPref)
     }
 
 }
