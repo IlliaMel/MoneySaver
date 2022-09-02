@@ -10,6 +10,9 @@ interface CategoryDao {
     @Query("SELECT * FROM `category`")
     fun getCategories(): Flow<List<Category>>
 
+    @Query("SELECT * FROM `category` WHERE isForSpendings = :isForSpendings")
+    fun getCategories(isForSpendings: Boolean): Flow<List<Category>>
+
     @Query("SELECT * FROM `category` WHERE uuid = :uuid")
     suspend fun getCategoryByUUID(uuid: UUID): Category?
 

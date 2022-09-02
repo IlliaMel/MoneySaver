@@ -97,7 +97,7 @@ class CategoriesViewModel @Inject constructor(
         }
     }
     fun getListWithAdderCategory(isAddingCategory : Boolean, isForEditing : Boolean) : List<Category> {
-        var list = state.categoriesList.toMutableList()
+        var list = state.categoriesList.filter { it.isForSpendings == state.isForSpendings }.toMutableList()
         if(!isAddingCategory && !isForEditing) {
             if (list.isNotEmpty() && list.last().uuid == CategoriesData.addCategory.uuid) {
 
@@ -119,8 +119,9 @@ class CategoriesViewModel @Inject constructor(
                 )
             }.launchIn(viewModelScope)
     }
+
     fun ifAllCategoriesIsZero() : Boolean{
-        state.categoriesList.forEach{
+        state.categoriesList.filter { it.isForSpendings == state.isForSpendings }.forEach{
             if(it.spent != 0.0)
                 return false
         }

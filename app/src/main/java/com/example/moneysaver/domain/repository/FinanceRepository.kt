@@ -32,6 +32,8 @@ interface FinanceRepository {
     // Categories
     fun getCategories(): Flow<List<Category>>
 
+    fun getCategories(isForSpendings: Boolean): Flow<List<Category>>
+
     suspend fun getCategoryByUUID(uuid: UUID): Category?
 
     suspend fun insertCategory(category: Category)

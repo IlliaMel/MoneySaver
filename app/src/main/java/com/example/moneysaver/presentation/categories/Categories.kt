@@ -76,7 +76,7 @@ fun Categories(
     viewModel.account = chosenAccountFilter.value
     viewModel.loadAccounts()
 
-    var categories  = viewModel.state.categoriesList
+    var categories  = viewModel.state.categoriesList.filter { it.isForSpendings == viewModel.state.isForSpendings }
     var categoriesWithAdder  = viewModel.getListWithAdderCategory(isAddingCategory,isForEditing)
 
     //added category adder
@@ -87,7 +87,12 @@ fun Categories(
 
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
-
+    if(isForEditing){
+        BackHandler() {
+            isForEditing = false
+            isAddingCategory = false
+        }
+    }
 
  if(!isAddingCategory){
     Column() {
@@ -103,7 +108,7 @@ fun Categories(
                         addTransaction = viewModel::addTransaction,
                         closeAdder = { scope.launch {sheetState.collapse()} },
                         accountsList = viewModel.state.accountsList,
-                        categoriesList = viewModel.state.categoriesList,
+                        categoriesList = categories,
                         minDate = minDate,
                         maxDate = maxDate
                     )
@@ -321,10 +326,12 @@ fun Categories(
                                     com.example.moneysaver.presentation.categories.ChartContainer(
                                         modifier = Modifier
                                             .background(whiteSurface)
-                                            .animateContentSize(),
+                                            .animateContentSize().clickable {
+                                                viewModel.state.isForSpendings = !viewModel.state.isForSpendings
+                                                viewModel.loadCategories()},
                                         spent = viewModel.state.spend.toString() + baseCurrency.currency,
                                         earned = viewModel.state.earned.toString() + baseCurrency.currency,
-                                        isSpendings = true
+                                        isSpendings = viewModel.state.isForSpendings
                                     ) {
 
                                         var iSAllZero = viewModel.ifAllCategoriesIsZero()
@@ -385,7 +392,6 @@ fun Categories(
                                     modifier = Modifier
                                         .weight(2f),
                                     verticalArrangement = Arrangement.SpaceAround,
-                                    horizontalAlignment = Alignment.CenterHorizontally
 
                                 ) {
                                     if(categoriesWithAdder.size > 5)
@@ -412,7 +418,8 @@ fun Categories(
                                         Box(modifier = Modifier.fillMaxSize()){}
                                     }
                                     if(categoriesWithAdder.size > 7)
-                                        CategoriesVectorImage(categoriesWithAdder[7],
+                                        CategoriesVectorImage(
+                                            categoriesWithAdder[7],
                                             viewModel,
                                             modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                             modifierBox = Modifier.padding(4.dp),
@@ -432,7 +439,7 @@ fun Categories(
                                                 }}
                                             ,cornerSize =  60.dp)
                                     else{
-                                        Box(modifier = Modifier.fillMaxSize()){}
+                                        Box(modifier = Modifier.weight(1f)){}
                                     }
                                 }
 
@@ -526,6 +533,7 @@ fun getChartData(categoriesList: List<Category>, iSAllZero : Boolean): List<PieC
 
 @Composable
 private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewModel, modifierVectorImg:  Modifier = Modifier, modifierBox:  Modifier = Modifier, columnModifier: Modifier = Modifier, onClickCategory : () ->  Unit, cornerSize : Dp = 60.dp) {
+
     Column(modifier = columnModifier
         .clickable { onClickCategory() }
         .clip(RoundedCornerShape(CornerSize(4.dp)))
@@ -560,10 +568,10 @@ fun ChartContainer(
     chartOffset: Dp = 0.dp,
     content: @Composable () -> Unit,
 ) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         content()
         Text(modifier = Modifier.padding(0.dp,0.dp,0.dp,32.dp), fontSize = 16.sp, fontWeight = FontWeight.W500,
-            text = if (isSpendings) stringResource(R.string.spending) else  stringResource(R.string.spending), color = Color.Black)
+            text = if (isSpendings) stringResource(R.string.spending) else  stringResource(R.string.earning), color = Color.Black)
 
         Column(modifier = Modifier.padding(0.dp,32.dp,0.dp,0.dp), verticalArrangement =  Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
@@ -571,7 +579,7 @@ fun ChartContainer(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.W400,
                     text = if(isSpendings) spent else earned ,
-                    color = currencyColorSpent
+                    color = if(isSpendings) currencyColorSpent else currencyColor
                 )
                 Text(
                     modifier = Modifier.padding(0.dp,2.dp,0.dp,0.dp),
