@@ -1,6 +1,5 @@
 package com.example.moneysaver.presentation._components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.roundToInt
 
 @Composable
 fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>, openDatePickerDialog: MutableState<Boolean>, focusManager: FocusManager) {
@@ -257,7 +257,7 @@ private fun Char.isMathOperator(): Boolean {
 }
 
 fun Double.toCalculatorString(): String {
-    var str = String.format("%.2f", this)
+    var str = ((this * 100.0).roundToInt() / 100.0).toString()
     while(str.length>1 && str.contains('.') && (str.last()=='0' || str.last()=='.'))
         str = str.dropLast(1)
     return str
