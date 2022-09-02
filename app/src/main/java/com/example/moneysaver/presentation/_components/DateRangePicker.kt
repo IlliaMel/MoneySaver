@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation._components
 
+import android.content.Context
 import android.widget.CalendarView
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -99,7 +101,7 @@ fun DateRangeDisplay(fromDateState: MutableState<Date?>, toDateState: MutableSta
         ) {
             Icon(modifier=Modifier.padding(4.dp, 0.dp), imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
             Text(
-                text = getShortDateRangeString(from, to),
+                text = getShortDateRangeString(from, to, LocalContext.current),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color= Color.White
@@ -180,9 +182,9 @@ private fun ChoseDateRangeDialog(
                         Icon(imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
                         Text(text = stringResource(R.string.select_range))
                         val (d1, d2) = getCurrentMonthDates()
-                        var shortRangeText = getShortDateRangeString(d1, d2)
+                        var shortRangeText = getShortDateRangeString(d1, d2, LocalContext.current)
                         if(startDate.value!=null && endDate!=null)
-                            shortRangeText = getShortDateRangeString(startDate.value!!, endDate.value!!)
+                            shortRangeText = getShortDateRangeString(startDate.value!!, endDate.value!!, LocalContext.current)
                         Text(text = shortRangeText, fontSize = 14.sp, color = Color.Gray)
                     }
                 }
@@ -265,7 +267,7 @@ private fun ChoseDateRangeDialog(
                         )
                         Text(text = stringResource(R.string.Week))
                         val (d1, d2) = getCurrentWeekDates()
-                        val weekShortText = d1.date.toString()+" "+ getMonthAbr(d1)+" - "+d2.date.toString()+" "+ getMonthAbr(d2)
+                        val weekShortText = d1.date.toString()+" "+ getMonthAbr(d1, LocalContext.current)+" - "+d2.date.toString()+" "+ getMonthAbr(d2, LocalContext.current)
                         Text(text = weekShortText, fontSize = 14.sp, color = Color.Gray)
                     }
                     Divider(modifier = Modifier
@@ -299,7 +301,7 @@ private fun ChoseDateRangeDialog(
                         )
                         Text(text = stringResource(R.string.today))
                         val d1 = getCurrentDayDates().first
-                        val todayShortText = getNameOfMonthByNumber(d1.month)+" "+d1.date.toString()
+                        val todayShortText = getNameOfMonthByNumber(d1.month, LocalContext.current)+" "+d1.date.toString()
                         Text(text = todayShortText, fontSize = 14.sp, color = Color.Gray)
                     }
                 }
@@ -373,7 +375,7 @@ private fun ChoseDateRangeDialog(
                         )
                         Text(text = stringResource(R.string.month))
                         val d1 = Date()
-                        val monthShortText = getNameOfMonthByNumber(d1.month)+" "+ getYear(d1)
+                        val monthShortText = getNameOfMonthByNumber(d1.month, LocalContext.current)+" "+ getYear(d1)
                         Text(text = monthShortText, fontSize = 14.sp, color = Color.Gray)
                     }
                 }
@@ -443,7 +445,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = getShortDateString(startDate.value!!), fontSize = 14.sp, color = Color.Gray)
+                        Text(text = getShortDateString(startDate.value!!, LocalContext.current), fontSize = 14.sp, color = Color.Gray)
                     }
                     Divider(modifier = Modifier
                         .width(1.dp)
@@ -470,7 +472,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = getShortDateString(endDate.value!!), fontSize = 14.sp, color = Color.Gray)
+                        Text(text = getShortDateString(endDate.value!!, LocalContext.current), fontSize = 14.sp, color = Color.Gray)
                     }
                 }
 
@@ -687,19 +689,19 @@ private fun getCurrentYearDates(): Pair<Date, Date> {
     return start to end
 }
 
-fun getShortDateString(date: Date): String {
-    return date.date.toString() + " " + getMonthAbr(date) + " " + getYear(date)
+fun getShortDateString(date: Date, context: Context): String {
+    return date.date.toString() + " " + getMonthAbr(date, context) + " " + getYear(date)
 }
 
-private fun getShortDateRangeString(startDate: Date, endDate: Date): String {
+private fun getShortDateRangeString(startDate: Date, endDate: Date, context: Context): String {
     if(startDate.year==endDate.year&&startDate.month==endDate.month&&startDate.date==endDate.date) {
-        return getShortDateString(startDate)
+        return getShortDateString(startDate, context)
     }
-    return getShortDateString(startDate)+" - "+ getShortDateString(endDate)
+    return getShortDateString(startDate, context)+" - "+ getShortDateString(endDate, context)
 }
 
-private fun getMonthAbr(date: Date): String {
-    return getNameOfMonthByNumber(date.month).take(3);
+private fun getMonthAbr(date: Date, context: Context): String {
+    return getNameOfMonthByNumber(date.month, context).take(3);
 }
 
 private fun swapDates(startDate: MutableState<Date?>, endDate: MutableState<Date?>, swapRight: Boolean = true) {
