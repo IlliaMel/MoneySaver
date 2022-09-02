@@ -201,50 +201,60 @@ fun Categories(
                                     verticalArrangement = Arrangement.SpaceAround
 
                                 ) {
-                                    if(categoriesWithAdder.size > 4)
-                                        CategoriesVectorImage(categoriesWithAdder[4],
-                                            viewModel,
-                                            modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
-                                            modifierBox = Modifier.padding(4.dp),
-                                            onClickCategory = {if(categoriesWithAdder.size == 5 && !isForEditing){
-                                                isAddingCategory = true
-                                            }else {
-                                                selectedCategory.value =
-                                                    categoriesWithAdder[4]
-                                                if(isForEditing)
-                                                    isAddingCategory = true
-                                                else {
-                                                    if(viewModel.addingTransactionIsAllowed())
-                                                        switchBottomSheet(scope, sheetState)
-                                                    else
-                                                        showNoAccountOrCategoryMessage()                                            }
-                                            }}
-                                            ,cornerSize =  60.dp)
-                                    else{
-                                        Box(modifier = Modifier.fillMaxSize()){}
-                                    }
-                                    if(categoriesWithAdder.size > 6)
-                                        CategoriesVectorImage(categoriesWithAdder[6],
-                                            viewModel,
-                                            modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
-                                            modifierBox = Modifier.padding(4.dp),
-                                            onClickCategory =  {
-                                                if(categoriesWithAdder.size == 7 && !isForEditing){
+                                    Column(
+                                        modifier = Modifier.weight(1f),
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        if(categoriesWithAdder.size > 4)
+                                            CategoriesVectorImage(categoriesWithAdder[4],
+                                                viewModel,
+                                                modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
+                                                modifierBox = Modifier.padding(4.dp),
+                                                onClickCategory = {if(categoriesWithAdder.size == 5 && !isForEditing){
                                                     isAddingCategory = true
                                                 }else {
                                                     selectedCategory.value =
-                                                        categoriesWithAdder[6]
+                                                        categoriesWithAdder[4]
                                                     if(isForEditing)
                                                         isAddingCategory = true
                                                     else {
                                                         if(viewModel.addingTransactionIsAllowed())
                                                             switchBottomSheet(scope, sheetState)
                                                         else
-                                                            showNoAccountOrCategoryMessage()                                                }
+                                                            showNoAccountOrCategoryMessage()                                            }
                                                 }}
-                                            ,cornerSize =  60.dp)
-                                    else{
-                                        Box(modifier = Modifier.fillMaxSize()){}
+                                                ,cornerSize =  60.dp)
+                                        else{
+                                            Box(modifier = Modifier.fillMaxSize()){}
+                                        }
+                                    }
+                                    Column(
+                                        modifier = Modifier.weight(1f),
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        if(categoriesWithAdder.size > 6)
+                                            CategoriesVectorImage(categoriesWithAdder[6],
+                                                viewModel,
+                                                modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
+                                                modifierBox = Modifier.padding(4.dp),
+                                                onClickCategory =  {
+                                                    if(categoriesWithAdder.size == 7 && !isForEditing){
+                                                        isAddingCategory = true
+                                                    }else {
+                                                        selectedCategory.value =
+                                                            categoriesWithAdder[6]
+                                                        if(isForEditing)
+                                                            isAddingCategory = true
+                                                        else {
+                                                            if(viewModel.addingTransactionIsAllowed())
+                                                                switchBottomSheet(scope, sheetState)
+                                                            else
+                                                                showNoAccountOrCategoryMessage()                                                }
+                                                    }}
+                                                ,cornerSize =  60.dp)
+                                        else{
+                                            Box(modifier = Modifier.fillMaxSize()){}
+                                        }
                                     }
                                 }
                             }
@@ -286,7 +296,9 @@ fun Categories(
                                             }}
                                             ,cornerSize =  60.dp)
                                     else{
-                                        Box(modifier = Modifier.weight(1f).fillMaxSize()){}
+                                        Box(modifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxSize()){}
                                     }
                                     if(categoriesWithAdder.size > 2)
                                         CategoriesVectorImage(categoriesWithAdder[2],
@@ -310,7 +322,9 @@ fun Categories(
                                                 }}
                                             ,cornerSize =  60.dp)
                                     else{
-                                        Box(modifier = Modifier.weight(1f).fillMaxSize()){}
+                                        Box(modifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxSize()){}
                                     }
 
                                 }
@@ -326,9 +340,12 @@ fun Categories(
                                     com.example.moneysaver.presentation.categories.ChartContainer(
                                         modifier = Modifier
                                             .background(whiteSurface)
-                                            .animateContentSize().clickable {
-                                                viewModel.state.isForSpendings = !viewModel.state.isForSpendings
-                                                viewModel.loadCategories()},
+                                            .animateContentSize()
+                                            .clickable {
+                                                viewModel.state.isForSpendings =
+                                                    !viewModel.state.isForSpendings
+                                                viewModel.loadCategories()
+                                            },
                                         spent = viewModel.state.spend.toString() + baseCurrency.currency,
                                         earned = viewModel.state.earned.toString() + baseCurrency.currency,
                                         isSpendings = viewModel.state.isForSpendings
@@ -385,7 +402,7 @@ fun Categories(
                                                 }}
                                             ,cornerSize =  60.dp)
                                     else{
-                                        Box(modifier = Modifier.fillMaxSize()){}
+                                        Box(modifier = Modifier.weight(1f)){}
                                     }
                                 }
                                 Column(
@@ -394,52 +411,62 @@ fun Categories(
                                     verticalArrangement = Arrangement.SpaceAround,
 
                                 ) {
-                                    if(categoriesWithAdder.size > 5)
-                                        CategoriesVectorImage(categoriesWithAdder[5],
-                                            viewModel,
-                                            modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
-                                            modifierBox = Modifier.padding(4.dp),
-                                            onClickCategory =  {
-                                                if(categoriesWithAdder.size == 6 && !isForEditing){
-                                                    isAddingCategory = true
-                                                }else {
-                                                    selectedCategory.value =
-                                                        categoriesWithAdder[5]
-                                                    if(isForEditing)
+                                    Column(
+                                        modifier = Modifier.weight(1f),
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        if(categoriesWithAdder.size > 5)
+                                            CategoriesVectorImage(categoriesWithAdder[5],
+                                                viewModel,
+                                                modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
+                                                modifierBox = Modifier.padding(4.dp),
+                                                onClickCategory =  {
+                                                    if(categoriesWithAdder.size == 6 && !isForEditing){
                                                         isAddingCategory = true
-                                                    else {
-                                                        if(viewModel.addingTransactionIsAllowed())
-                                                            switchBottomSheet(scope, sheetState)
-                                                        else
-                                                            showNoAccountOrCategoryMessage()                                                }
-                                                }}
-                                            ,cornerSize =  60.dp)
-                                    else{
-                                        Box(modifier = Modifier.fillMaxSize()){}
+                                                    }else {
+                                                        selectedCategory.value =
+                                                            categoriesWithAdder[5]
+                                                        if(isForEditing)
+                                                            isAddingCategory = true
+                                                        else {
+                                                            if(viewModel.addingTransactionIsAllowed())
+                                                                switchBottomSheet(scope, sheetState)
+                                                            else
+                                                                showNoAccountOrCategoryMessage()                                                }
+                                                    }}
+                                                ,cornerSize =  60.dp)
+                                        else{
+                                            Box(modifier = Modifier.fillMaxSize()){}
+                                        }
                                     }
-                                    if(categoriesWithAdder.size > 7)
-                                        CategoriesVectorImage(
-                                            categoriesWithAdder[7],
-                                            viewModel,
-                                            modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
-                                            modifierBox = Modifier.padding(4.dp),
-                                            onClickCategory =  {
-                                                if(categoriesWithAdder.size == 8 && !isForEditing){
-                                                    isAddingCategory = true
-                                                }else {
-                                                    selectedCategory.value =
-                                                        categoriesWithAdder[7]
-                                                    if(isForEditing)
+                                    Column(
+                                        modifier = Modifier.weight(1f),
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        if(categoriesWithAdder.size > 7)
+                                            CategoriesVectorImage(
+                                                categoriesWithAdder[7],
+                                                viewModel,
+                                                modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
+                                                modifierBox = Modifier.padding(4.dp),
+                                                onClickCategory =  {
+                                                    if(categoriesWithAdder.size == 8 && !isForEditing){
                                                         isAddingCategory = true
-                                                    else {
-                                                        if(viewModel.addingTransactionIsAllowed())
-                                                            switchBottomSheet(scope, sheetState)
-                                                        else
-                                                            showNoAccountOrCategoryMessage()                                                }
-                                                }}
-                                            ,cornerSize =  60.dp)
-                                    else{
-                                        Box(modifier = Modifier.weight(1f)){}
+                                                    }else {
+                                                        selectedCategory.value =
+                                                            categoriesWithAdder[7]
+                                                        if(isForEditing)
+                                                            isAddingCategory = true
+                                                        else {
+                                                            if(viewModel.addingTransactionIsAllowed())
+                                                                switchBottomSheet(scope, sheetState)
+                                                            else
+                                                                showNoAccountOrCategoryMessage()                                                }
+                                                    }}
+                                                ,cornerSize =  60.dp)
+                                        else{
+                                            Box(modifier = Modifier.weight(1f)){}
+                                        }
                                     }
                                 }
 
