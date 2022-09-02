@@ -155,8 +155,8 @@ fun Categories(
 
                         Row(
                             modifier = Modifier
-                                .weight(2.2f)
-                                .padding(0.dp)
+                                .weight(1.8f)
+                                .padding(0.dp,12.dp,0.dp,0.dp)
                         ) {
 
                             Column(
