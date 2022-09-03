@@ -20,3 +20,7 @@ val dividerColor = Color(0xFFE7E7E7)
 val inactiveColor = Color(0xFF777777)
 val inactiveColorTab = Color(0x8EBBBBBB)
 val externalColorGray = Color(105, 105, 105, 255)
+
+val calculatorButton = Color(236, 236, 236, 225)
+val calculatorButtonNumbers = Color(255, 255, 255, 221)
+val calculatorBorderColor = Color(209, 209, 209, 212)

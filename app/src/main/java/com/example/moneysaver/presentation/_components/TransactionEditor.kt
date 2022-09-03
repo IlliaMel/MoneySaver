@@ -40,6 +40,8 @@ import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
+import com.example.moneysaver.ui.theme.calculatorBorderColor
+import com.example.moneysaver.ui.theme.calculatorButton
 import com.example.moneysaver.ui.theme.dividerColor
 import java.util.*
 import kotlin.math.min
@@ -72,7 +74,7 @@ fun TransactionEditor(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xffeeeeee))
-            .height(460.dp),
+            .height(520.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
@@ -155,9 +157,9 @@ fun TransactionEditor(
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(modifier = Modifier.padding(4.dp),text = if(category.value.isForSpendings) stringResource(R.string.expense) else stringResource(
                             R.string.income), color = category.value.categoryImg.externalColor, fontSize = 16.sp)
-            Text(modifier = Modifier.padding(2.dp),text = category.value.currencyType.currency + " " + sumText.value, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + category.value.currencyType.currency, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
-
+        Divider()
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             OutlinedTextField(
                 value = note,
@@ -170,16 +172,17 @@ fun TransactionEditor(
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
                 ),
-                shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
                     .width(220.dp)
                     .height(50.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = transactionAccount.value.accountImg.externalColor
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedBorderColor = Color.Transparent
                 ),
                 maxLines = 1
             )
         }
+        Divider()
 
         if(choiceIsActive.value) {
             Row(modifier = Modifier
@@ -222,15 +225,15 @@ fun TransactionEditor(
                 }
             }
         } else {
-            Calculator(sumText, isSubmitted, openPickDateDialog, focusManager)
+            Calculator(category , sumText, isSubmitted, openPickDateDialog, focusManager)
         }
 
         Row(
             modifier = Modifier
                 .height(30.dp)
                 .fillMaxWidth()
-                .background(Color.LightGray)
-                .border(BorderStroke(1.dp, Color(0xff54514d))),
+                .background(calculatorButton)
+                .border(BorderStroke(1.dp, calculatorBorderColor)),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {

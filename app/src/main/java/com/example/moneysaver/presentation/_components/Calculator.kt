@@ -1,6 +1,7 @@
 package com.example.moneysaver.presentation._components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -20,14 +21,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.ui.theme.*
 import kotlin.math.roundToInt
 
 @Composable
-fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>, openDatePickerDialog: MutableState<Boolean>, focusManager: FocusManager) {
+fun Calculator(category:  MutableState<Category>, sumText: MutableState<String>, isSubmitted: MutableState<Boolean>, openDatePickerDialog: MutableState<Boolean>, focusManager: FocusManager) {
     Row(modifier = Modifier
-        .padding(6.dp, 0.dp)
+      //  .padding(6.dp, 0.dp)
         .fillMaxWidth()
-        .height(240.dp)
+        .height(320.dp)
     ) {
         Column(modifier = Modifier.weight(1f)) {
             CalculatorButton(
@@ -40,7 +43,7 @@ fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>
                         evaluateSumValue(sumText)
                     sumText.value+='÷'
                 },
-                bgColor = Color(0xff939694),
+                bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
                 Text(text = "÷", fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -55,7 +58,7 @@ fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>
                         evaluateSumValue(sumText)
                     sumText.value+='×'
                 },
-                bgColor = Color(0xff939694),
+                bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
                 Text(text = "×", fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -70,7 +73,7 @@ fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>
                         evaluateSumValue(sumText)
                     sumText.value+='-'
                 },
-                bgColor = Color(0xff939694),
+                bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
                 Text(text = "-", fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -85,7 +88,7 @@ fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>
                         evaluateSumValue(sumText)
                     sumText.value+='+'
                 },
-                bgColor = Color(0xff939694),
+                bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
                 Text(text = "+", fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -213,7 +216,7 @@ fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>
                     if(sumText.value.length>1) sumText.value=sumText.value.dropLast(1) else sumText.value="0"
                     if(sumText.value=="-") sumText.value="0"
                 },
-                bgColor = Color(0xff939694),
+                bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
                 Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = null)
@@ -221,7 +224,7 @@ fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>
             CalculatorButton(modifier = Modifier
                 .weight(1f),
                 onClick = {openDatePickerDialog.value = true},
-                bgColor = Color(0xff939694),
+                bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
                 Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
@@ -231,7 +234,7 @@ fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>
                     modifier = Modifier
                         .weight(2f),
                     onClick = {evaluateSumValue(sumText)},
-                    bgColor = Color(0xff479ad6),
+                    bgColor = category.value.categoryImg.externalColor,
                     focusManager = focusManager
                 ) {
                     Text(text = "=", fontSize = 22.sp, fontWeight = FontWeight.Bold, color= Color.White)
@@ -242,7 +245,7 @@ fun Calculator(sumText: MutableState<String>, isSubmitted: MutableState<Boolean>
                     modifier = Modifier
                         .weight(2f),
                     onClick = {isSubmitted.value=true},
-                    bgColor = Color(0xff479ad6),
+                    bgColor = category.value.categoryImg.externalColor,
                     focusManager = focusManager
                 ) {
                     Icon(imageVector = Icons.Default.Check, contentDescription = null, tint= Color.White)
@@ -264,11 +267,12 @@ fun Double.toCalculatorString(): String {
 }
 
 @Composable
-private fun CalculatorButton(modifier: Modifier = Modifier, onClick: ()->Unit = {}, bgColor: Color = Color(0xffc8ccc9), focusManager: FocusManager, content: @Composable ()-> Unit) {
+private fun CalculatorButton(modifier: Modifier = Modifier, onClick: ()->Unit = {}, bgColor: Color = calculatorButtonNumbers, focusManager: FocusManager, content: @Composable ()-> Unit) {
     Box(
         modifier = modifier
-            .padding(2.dp)
-            .clip(CircleShape)
+           .padding(0.1.dp)
+          //  .clip(CircleShape)
+            .border(0.3.dp,calculatorBorderColor)
             .fillMaxSize()
             .background(bgColor)
             .clickable {
