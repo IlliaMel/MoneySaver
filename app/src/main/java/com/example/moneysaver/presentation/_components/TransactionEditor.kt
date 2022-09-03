@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,11 +48,13 @@ fun TransactionEditor(
     deleteTransaction: (tr: Transaction)->Unit = {},
     closeAdder: ()->Unit,
     accountsList: List<Account>,
-    categoriesList: List<Category>
+    categoriesList: List<Category>,
+    minDate: MutableState<Date?>,
+    maxDate: MutableState<Date?>
 ) {
     val choiceIsActive = remember { mutableStateOf(currentTransaction.value!=null)}
     val sumText = remember { mutableStateOf(currentTransaction.value?.sum?.times(-1)?.toCalculatorString() ?: "0") }
-    val date: MutableState<Date?> = remember { mutableStateOf(currentTransaction.value?.date ?: Date()) }
+    val date: MutableState<Date?> = remember { mutableStateOf(currentTransaction.value?.date ?: defaultDateInRange(minDate, maxDate)) }
     var note by remember { mutableStateOf(currentTransaction.value?.note ?: "") }
     val transactionAccount = remember { mutableStateOf(if(currentTransaction.value!=null) accountsList.first{it.uuid == currentTransaction.value!!.accountUUID} else if(accountsList.isNotEmpty()) accountsList[0] else AccountsData.accountsList[0]) }
     val isSubmitted = remember { mutableStateOf(false) }
@@ -222,7 +225,7 @@ fun TransactionEditor(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = getShortDateString(date.value?:Date()), color = Color(0xff54514d), fontWeight = FontWeight.Bold, fontSize = 15.sp)
+            Text(text = getShortDateString(date.value?:Date(), LocalContext.current), color = Color(0xff54514d), fontWeight = FontWeight.Bold, fontSize = 15.sp)
         }
 
     }
@@ -252,6 +255,14 @@ fun TransactionEditor(
     DatePickerDialog(openDialog = openPickDateDialog, startDate = date)
     ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = accountsList, transactionAccount = transactionAccount)
     ChooseTransactionCategoryDialog(openDialog = openChoseCategoryDialog, categoryList = categoriesList, transactionCategory = category)
+}
+
+private fun defaultDateInRange(minDate: MutableState<Date?>, maxDate: MutableState<Date?>): Date {
+    val currentDate = Date()
+    if(minDate.value==null || maxDate.value==null) return currentDate
+    if(minDate.value!!<currentDate && maxDate.value!!>currentDate) return currentDate
+    if(minDate.value!!>currentDate) return minDate.value!!
+    return maxDate.value!!
 }
 
 

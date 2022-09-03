@@ -49,7 +49,6 @@ fun EditCategory(
     onAddCategoryAction: (Category) -> Unit,
     onDeleteCategory: (Category) -> Unit,
     onCancelIconClick: () -> Unit,
-    viewModel: CategoriesViewModel = hiltViewModel()
 ){
 
 
@@ -78,7 +77,7 @@ fun EditCategory(
             onAddAccountAction = {onAddAccountAction(
 
          */
-
+        val checkedState = remember { mutableStateOf(true) }
         TopBarCategoryEdit(vectorImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfCategory = if(isEditing)  stringResource(
                     R.string.edit_category) else  stringResource(R.string.new_category),
             onAddCategoryAction = {
@@ -87,7 +86,7 @@ fun EditCategory(
                     if(isEditing)
                         Category(uuid = category.uuid,categoryImg = img.value,currencyType = currencyType.value , title = it)
                     else
-                        Category(categoryImg = img.value,currencyType = currencyType.value , title = it)
+                        Category(categoryImg = img.value,currencyType = currencyType.value , title = it, isForSpendings = checkedState.value)
 
                 )}, onCancelIconClick = {onCancelIconClick()},)
         // dividerForTopBar()
@@ -100,7 +99,7 @@ fun EditCategory(
         ) {
 
 
-            Column(modifier = Modifier.shadow(elevation = 1.dp)) {
+            Column(modifier = Modifier.shadow(elevation = 0.dp)) {
 
                 Text(
                     modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
@@ -112,7 +111,7 @@ fun EditCategory(
 
                 accountEditInfoText(
                     upperText = stringResource(R.string.currency_type),
-                    bottomText = currencyType.value,
+                    bottomText = currencyType.value.currency,
                     onAction = {setCurrencyTypeChange.value = true},
                     startPadding = 16.dp,
                     topPadding = 8.dp)
@@ -125,6 +124,37 @@ fun EditCategory(
 
 
             Divider()
+
+            if(!isEditing){
+                Row(modifier = Modifier
+                    .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                    .fillMaxWidth()
+                    .shadow(elevation = 0.dp)
+                    .clickable {},
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically){
+                    Text(
+                        modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
+                        text = "Is for Spending",
+                        color = Color.Black,
+                        fontWeight = FontWeight.W400,
+                        fontSize = 16.sp
+                    )
+
+                    Switch(
+                        checked = checkedState.value,
+                        onCheckedChange = { checkedState.value = it }
+                    )
+
+                }
+                Divider()
+
+                Box(modifier = Modifier
+                    .background(gray)
+                    .height(15.dp)
+                    .fillMaxWidth())
+            }
+
 
 
             Row(modifier = Modifier
@@ -148,7 +178,6 @@ fun EditCategory(
                     fontWeight = FontWeight.W400,
                     fontSize = 16.sp
                 )
-
 
             }
 

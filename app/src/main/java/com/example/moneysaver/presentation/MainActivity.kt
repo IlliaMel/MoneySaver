@@ -3,6 +3,7 @@ package com.example.moneysaver.presentation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -12,6 +13,7 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -35,26 +37,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.domain.model.Currency
-import com.example.moneysaver.presentation._components.*
-
+import com.example.moneysaver.presentation.MainActivity.Companion.APP_LANGUAGE
+import com.example.moneysaver.presentation._components.DrawerBody
+import com.example.moneysaver.presentation._components.DrawerHeader
+import com.example.moneysaver.presentation._components.SelectLanguageDialog
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
 import com.example.moneysaver.presentation._components.notifications.AlarmService
 import com.example.moneysaver.presentation._components.time_picker.TimePicker
-
 import com.example.moneysaver.presentation.accounts.Accounts
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
+import com.example.moneysaver.presentation.accounts.additional_composes.SetAccountCurrencyType
 import com.example.moneysaver.presentation.categories.Categories
 import com.example.moneysaver.presentation.transactions.Transactions
-import com.example.moneysaver.ui.theme.*
+import com.example.moneysaver.ui.theme.MoneySaverTheme
+import com.example.moneysaver.ui.theme.inactiveColor
+import com.example.moneysaver.ui.theme.lightGrayTransparent
+import com.example.moneysaver.ui.theme.whiteSurface
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 data class ImageWithText(
@@ -65,9 +74,15 @@ data class ImageWithText(
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    init {
+        instance = this
+    }
+
     companion object {
+        var instance: MainActivity? = null
         var isNeedToParseCurrency = false
         var isCategoriesParsed = false
+        val APP_LANGUAGE = "app_language"
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
@@ -82,6 +97,12 @@ class MainActivity : ComponentActivity() {
 
         //SharedPref
         val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
+
+        val lang = sharedPref.getString(APP_LANGUAGE, "Default")
+        if(lang!=null) {
+            if(lang == "Default") setLanguage(Locale.getDefault().language)
+            else setLanguage(languageToLanguageCode(lang))
+        }
 
         val isParsed = sharedPref.getBoolean(CURRENCY_PARSED_KEY, false)
         val parsingDate = sharedPref.getString(CURRENCY_PARSING_DATE_KEY, "2000-01-01")
@@ -129,8 +150,10 @@ class MainActivity : ComponentActivity() {
             )
 
             MoneySaverTheme {
-                if (!isConnectionEnabled && !isParsed) {
-                    Box(modifier = Modifier.fillMaxSize().background(lightGrayTransparent), contentAlignment = Alignment.Center) {
+                if (!isConnectionEnabled && !isParsed && !viewModel.isCurrencyDbEmpty()) {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .background(lightGrayTransparent), contentAlignment = Alignment.Center) {
                         Text(
                             text = "PLease turn on internet connection",
                             fontSize = 20.sp,
@@ -152,6 +175,25 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    fun restartApp() {
+        val intent = Intent(this, MainActivity::class.java)
+        this.startActivity(intent)
+        finishAffinity()
+    }
+
+    fun setLanguage(languageCode: String) {
+        val config = resources.configuration
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            config.setLocale(locale)
+        else
+            config.locale = locale
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            createConfigurationContext(config)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 
     private fun isNetworkAvailable(context: Context?): Boolean {
@@ -208,8 +250,19 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             mutableStateOf(0)
         }
 
+        var baseCurrencyString by remember {
+            mutableStateOf(sharedPref.getString(MAIN_CURRENCY, Currency(currency = "₴", currencyName = "UAH").toString()))
+        }
+
         var baseCurrency by remember {
-            mutableStateOf(Currency(currency = "₴", currencyName = "UAH"))
+            mutableStateOf(
+                if(baseCurrencyString != null){
+                    var arr = baseCurrencyString!!.split(",")
+                    Currency(arr[0],arr[1],arr[2],arr[3].toDouble())
+                }else{
+                    Currency(currency = "₴", currencyName = "UAH")
+                }
+            )
         }
 
         val chosenAccountFilter = remember { mutableStateOf(AccountsData.allAccountFilter) }
@@ -217,17 +270,16 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         AccountsData.allAccountFilter.balance = accountsViewModel.findSum(accountsViewModel.state.allAccountList,baseCurrency.currencyName)
         AccountsData.allAccountFilter.currencyType = baseCurrency
 
+        var appLanguage = remember {
+            mutableStateOf(sharedPref.getString(APP_LANGUAGE, "Default"))
+        }
+
         var hoursNotification = remember {
             mutableStateOf(sharedPref.getInt(HOUR_ALARM, 0))
         }
 
         var minutesNotification = remember {
             mutableStateOf(sharedPref.getInt(MINUTE_ALARM, 0))
-        }
-
-        var mainCurrency = remember {
-            mutableStateOf(Currency())
-            //viewModel.state.currenciesList.find { it.currencyName == sharedPref.getString(MAIN_CURRENCY, "USD") }
         }
 
         var timeSwitch by remember {
@@ -238,10 +290,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             mutableStateOf(false)
         }
 
-        var mainCurrencyClicked by remember {
-            mutableStateOf(false)
-        }
-
+        var mainCurrencyClicked = remember { mutableStateOf(false) }
 
         if(sharedPref.getString(LAST_STARTING, "") != formattedDate && timeSwitch)
             //alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
@@ -252,6 +301,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             putString(LAST_STARTING, formattedDate)
             apply()
         }
+
+        val openSelectLanguageDialog = remember { mutableStateOf(false) }
 
 
         Scaffold(
@@ -268,21 +319,29 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                     }
                     }, minutesNotification,hoursNotification)
                     notificationClicked = false
-                }else if (mainCurrencyClicked){
+                }
+
+                SetAccountCurrencyType(openDialog = mainCurrencyClicked) { returnType ->
+                    mainCurrencyClicked.value = false
 
 
+                    baseCurrency = viewModel.state.currenciesList.find { currency ->  returnType == currency }!!
+                    with(sharedPref.edit()) {
+                        putString(MAIN_CURRENCY, baseCurrency.toString())
+                        apply()
+                    }
                 }
 
                 DrawerBody(
                     blocks = listOf(
                         MenuBlock(title = stringResource(R.string.settings), items = listOf(
-                            MenuItem(number = 0 , title = stringResource(R.string.language), description = stringResource(
-                                                            R.string.defaultStr), icon = Icons.Default.Place),
+                            MenuItem(number = 0 , title = stringResource(R.string.language), description = if(appLanguage.value!=null) appLanguage.value!! else stringResource(
+                                R.string.defaultStr), icon = Icons.Default.Place),
                             MenuItem(number = 1 , title = stringResource(R.string.theme), description = stringResource(
                                                             R.string.light), icon = Icons.Default.Info),
                             MenuItem(number = 2 , title = stringResource(R.string.notifications), description = if(hoursNotification.value == 0) "00" else {hoursNotification.value.toString()} + ":" + if(minutesNotification.value == 0) "00" else {minutesNotification.value.toString()}, icon = Icons.Default.Notifications, hasSwitch = true),
 
-                            MenuItem(number = 3 , title = "Main Currency", description = "${mainCurrency.value!!.description} ${mainCurrency.value!!.currencyName} (${mainCurrency.value!!.currency})", icon = Icons.Default.ShoppingCart)
+                            MenuItem(number = 3 , title = "Main Currency", description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart)
                         )),
                         MenuBlock(title = "Block2", items = listOf(
                             MenuItem(number = 4 , title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
@@ -291,12 +350,18 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                         ))
                     ),
                     onItemClick = {
-                        if(it.number == 2){
-                            if(it.switchIsActive)
-                                timeSwitch = true
-                            notificationClicked = true
-                        }else if (it.number == 3){
-                            mainCurrencyClicked = true
+                        when (it.number) {
+                            0 -> {
+                                openSelectLanguageDialog.value = true
+                            }
+                            2 -> {
+                                if(it.switchIsActive)
+                                    timeSwitch = true
+                                notificationClicked = true
+                            }
+                            3 -> {
+                                mainCurrencyClicked.value = true
+                            }
                         }
                     }
                 )
@@ -313,24 +378,27 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                         .fillMaxWidth()
                         .background(whiteSurface)
                 ) {
-                    when (selectedTabIndex) {
-                        0 -> Accounts(
-                            onNavigationIconClick = {
+                    Crossfade(targetState = selectedTabIndex) { selectedTabIndex ->
+                        when (selectedTabIndex) {
+                            0 -> Accounts(
+                                onNavigationIconClick = {
+                                    scope.launch {
+                                        scaffoldState.drawerState.open()
+                                    }
+                                },chosenAccountFilter,baseCurrency = baseCurrency)
+                            1 -> Categories(onNavigationIconClick = {
                                 scope.launch {
                                     scaffoldState.drawerState.open()
                                 }
-                            },chosenAccountFilter)
-                        1 -> Categories(onNavigationIconClick = {
-                            scope.launch {
-                                scaffoldState.drawerState.open()
-                            }
-                        },chosenAccountFilter)
-                        2 -> Transactions(onNavigationIconClick = {
-                            scope.launch {
-                                scaffoldState.drawerState.open()
-                            }
-                        }, navigateToTransaction = {},chosenAccountFilter)
+                            },chosenAccountFilter,baseCurrency = baseCurrency)
+                            2 -> Transactions(onNavigationIconClick = {
+                                scope.launch {
+                                    scaffoldState.drawerState.open()
+                                }
+                            }, navigateToTransaction = {},chosenAccountFilter,viewModel,baseCurrency = baseCurrency)
+                        }
                     }
+
                 }
                 Row(modifier = Modifier.weight(0.8f)) {
                     TabsForScreens(){
@@ -340,6 +408,13 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
 
             }
         }
+
+        SelectLanguageDialog(
+            openDialog = openSelectLanguageDialog,
+            appLanguage = appLanguage,
+            sharedPref = sharedPref,
+            restartApp = {MainActivity.instance!!.restartApp()}
+        )
     }
 
 }
@@ -441,3 +516,48 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
 
         }
     }
+
+fun languageToLanguageCode(language: String): String {
+    return when(language) {
+        "Albanian" -> "sq"
+        "Arabic" -> "ar"
+        "Armenian" -> "hy"
+        "Azerbaijani" -> "az"
+        "Bosnian" -> "bs"
+        "Bulgarian" -> "bg"
+        "Chinese" -> "zh"
+        "Croatian" -> "hr"
+        "Czech" -> "cs"
+        "Danish" -> "da"
+        "English" -> "en"
+        "Esperanto" -> "eo"
+        "Estonian" -> "et"
+        "Filipino" -> "tl"
+        "Finnish" -> "fi"
+        "French" -> "fr"
+        "Georgian" -> "ka"
+        "German" -> "de"
+        "Greek" -> "el"
+        "Icelandic" -> "is"
+        "Indonesian" -> "id"
+        "Irish" -> "ga"
+        "Italian" -> "it"
+        "Japanese" -> "ja"
+        "Kazakh" -> "kk"
+        "Korean" -> "ko"
+        "Latvian" -> "lv"
+        "Mongolian" -> "mn"
+        "Norwegian" -> "no"
+        "Persian" -> "fa"
+        "Polish" -> "pl"
+        "Portuguese" -> "pt"
+        "Serbian" -> "sr"
+        "Slovak" -> "sk"
+        "Slovenian" -> "sl"
+        "Swedish" -> "sv"
+        "Turkish" -> "tr"
+        "Ukrainian" -> "uk"
+        else -> "en"
+    }
+
+}

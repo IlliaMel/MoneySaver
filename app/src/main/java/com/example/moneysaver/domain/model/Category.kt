@@ -11,12 +11,13 @@ import java.util.*
 data class Category(
     @PrimaryKey val uuid: UUID = UUID.randomUUID(),
     val categoryImg: VectorImg = AccountsData.accountImges[0],
-    val currencyType: String = "$",
+    var currencyType: Currency = Currency(),
     val title: String,
+    val isForSpendings: Boolean = true,
     var spent: Double = 0.0,
 ) : Serializable{
     
     override fun toString(): String {
-        return "$categoryImg,$currencyType,$title,$spent"
+        return "$categoryImg,$currencyType,$isForSpendings,$title,$spent"
     }
 }

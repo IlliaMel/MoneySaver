@@ -62,6 +62,10 @@ class FinanceRepositoryImpl(
         return categoryDao.getCategories()
     }
 
+    override fun getCategories(isForSpendings: Boolean): Flow<List<Category>> {
+        return categoryDao.getCategories(isForSpendings)
+    }
+
     override suspend fun getCategoryByUUID(uuid: UUID): Category? {
         return categoryDao.getCategoryByUUID(uuid)
     }

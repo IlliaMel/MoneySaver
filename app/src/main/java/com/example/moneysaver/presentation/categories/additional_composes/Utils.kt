@@ -27,22 +27,6 @@ import hu.ma.charts.table.data.TableEntry
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
-val Categories = listOf(
-    "Teams",
-    "Locations",
-    "Devices",
-    "People",
-    "Laptops",
-    "Titles",
-    "Flowers",
-    "Bugs",
-    "Windows",
-    "Screens",
-    "Colors",
-    "Bottles",
-    "Cars",
-    "Tricks",
-)
 
 val SimpleColors = listOf(
     Color(149, 207, 115, 255),
@@ -66,7 +50,7 @@ internal val PieSampleData = LegendPosition.values().map {
         entries = listOf(430f, 240f, 140f, 60f, 888f).mapIndexed { idx, value ->
             PieChartEntry(
                 value = value,
-                label = AnnotatedString(Categories[idx])
+                label = AnnotatedString("")
             )
         },
         legendPosition = it,

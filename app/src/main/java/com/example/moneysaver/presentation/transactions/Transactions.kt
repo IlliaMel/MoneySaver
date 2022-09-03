@@ -33,7 +33,9 @@ import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.model.Transaction
+import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
@@ -50,7 +52,8 @@ fun Transactions(
     onNavigationIconClick: () -> Unit,
     navigateToTransaction: (Transaction) -> Unit,
     chosenAccountFilter: MutableState<Account>,
-    viewModel: TransactionsViewModel = hiltViewModel()
+    viewModel: MainActivityViewModel,
+    baseCurrency: Currency,
 ) {
 
     val minDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().first) }
@@ -131,7 +134,9 @@ fun Transactions(
                             }
                         },
                         accountsList = viewModel.state.accountsList,
-                        categoriesList = viewModel.state.categoriesList
+                        categoriesList = viewModel.state.categoriesList,
+                        minDate = minDate,
+                        maxDate = maxDate
                     )
                 }
             },
