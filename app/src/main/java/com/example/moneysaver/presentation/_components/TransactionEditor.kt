@@ -18,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.graphics.ColorUtils
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
@@ -39,6 +42,7 @@ import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.ui.theme.dividerColor
 import java.util.*
+import kotlin.math.min
 
 @Composable
 fun TransactionEditor(
@@ -94,8 +98,10 @@ fun TransactionEditor(
                         Column(
                             horizontalAlignment = Alignment.Start
                         ) {
-                            Text(text = stringResource(R.string.from_account), fontSize = 14.sp, color=Color.White)
-                            Text(text = transactionAccount.value.title, fontSize = 17.sp, color=Color.White, overflow = TextOverflow.Ellipsis)
+                            val saturation = transactionAccount.value.accountImg.externalColor.getSaturation()
+                            val color = if (saturation>0.5f) Color.White else Color.Black
+                            Text(text = stringResource(R.string.from_account), fontSize = 14.sp, color=color)
+                            Text(text = transactionAccount.value.title, fontSize = 17.sp, color=color, overflow = TextOverflow.Ellipsis)
                         }
                         Image(
                             painter = painterResource(id = transactionAccount.value.accountImg.img),
@@ -124,8 +130,10 @@ fun TransactionEditor(
                         Column(
                             horizontalAlignment = Alignment.Start
                         ) {
-                            Text(text = stringResource(R.string.to_category), fontSize = 14.sp, color=Color.White)
-                            Text(text = category.value.title, fontSize = 17.sp, color=Color.White, overflow = TextOverflow.Ellipsis)
+                            val saturation = category.value.categoryImg.externalColor.getSaturation()
+                            val color = if (saturation>0.5f) Color.White else Color.Black
+                            Text(text = stringResource(R.string.to_category), fontSize = 14.sp, color=color)
+                            Text(text = category.value.title, fontSize = 17.sp, color=color, overflow = TextOverflow.Ellipsis)
                         }
                         Image(
                             painter = painterResource(id = category.value.categoryImg.img),
@@ -263,6 +271,14 @@ private fun defaultDateInRange(minDate: MutableState<Date?>, maxDate: MutableSta
     if(minDate.value!!<currentDate && maxDate.value!!>currentDate) return currentDate
     if(minDate.value!!>currentDate) return minDate.value!!
     return maxDate.value!!
+}
+
+/**
+ * @return value between 0.0 and 1.0
+ */
+private fun Color.getSaturation(): Float {
+    val minValue = min(min(this.red, this.green), this.blue)
+    return 1f - (minValue/1f)
 }
 
 
