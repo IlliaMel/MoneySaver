@@ -153,8 +153,9 @@ fun TransactionEditor(
         }
 
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(modifier = Modifier.padding(2.dp),text = stringResource(R.string.expense), color = category.value.categoryImg.externalColor, fontSize = 16.sp)
-            Text(modifier = Modifier.padding(2.dp),text = "$ "+ sumText.value, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text(modifier = Modifier.padding(4.dp),text = if(category.value.isForSpendings) stringResource(R.string.expense) else stringResource(
+                            R.string.income), color = category.value.categoryImg.externalColor, fontSize = 16.sp)
+            Text(modifier = Modifier.padding(2.dp),text = category.value.currencyType.currency + " " + sumText.value, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
 
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -241,14 +242,14 @@ fun TransactionEditor(
     if(isSubmitted.value) {
         val transactionNote: String? = if (note != "") note else null
         val transaction = if(currentTransaction.value==null) Transaction(
-            sum = (sumText.value.toDoubleOrNull() ?: 0.0) * -1,
+            sum = (sumText.value.toDoubleOrNull() ?: 0.0) * if(category.value.isForSpendings) -1 else 1,
             categoryUUID = category.value.uuid,
             accountUUID = transactionAccount.value.uuid,
             date = date.value?:Date(),
             note = transactionNote
         ) else Transaction(
             uuid=currentTransaction.value!!.uuid,
-            sum = (sumText.value.toDoubleOrNull() ?: 0.0) * -1,
+            sum = (sumText.value.toDoubleOrNull() ?: 0.0) * if(category.value.isForSpendings) -1 else 1,
             categoryUUID = category.value.uuid,
             accountUUID = transactionAccount.value.uuid,
             date = date.value?:Date(),

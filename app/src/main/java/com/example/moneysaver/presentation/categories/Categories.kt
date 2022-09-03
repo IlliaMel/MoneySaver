@@ -83,8 +83,6 @@ fun Categories(
 
     viewModel.loadCategoriesDataInDateRange(minDate.value, maxDate.value, base = baseCurrency.currencyName)
 
-
-
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
     if(isForEditing){
@@ -93,7 +91,6 @@ fun Categories(
             isAddingCategory = false
         }
     }
-
  if(!isAddingCategory){
     Column() {
         TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categoriesWithAdder.size > 1 || isForEditing) isForEditing =
@@ -364,9 +361,7 @@ fun Categories(
                                         }
                                     }
                                 }
-
                             }
-
 
                             Column(
                                 modifier = Modifier
@@ -469,8 +464,6 @@ fun Categories(
                                         }
                                     }
                                 }
-
-
                             }
                         }
 
@@ -515,17 +508,16 @@ fun Categories(
                                             }
                                         }
                                     }
-
                                 }
                             )
                         }
                     }
                 }
             }
-
         }
-    }
-    }else{
+     }
+ }
+         else{
 
         BackHandler() {
             isForEditing = false
