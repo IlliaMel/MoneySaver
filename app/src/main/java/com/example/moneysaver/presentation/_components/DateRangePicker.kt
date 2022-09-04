@@ -763,11 +763,11 @@ private fun swapDates(startDate: MutableState<Date?>, endDate: MutableState<Date
     if(!isSwapped) {
         val diff = getDifferenceBetweenCalendarDates(c1, c2)
         if (swapRight) {
-            c1.add(Calendar.DATE, diff)
-            c2.add(Calendar.DATE, diff)
+            c1.add(Calendar.DATE, (diff+1))
+            c2.add(Calendar.DATE, (diff+1))
         } else {
-            c1.add(Calendar.DATE, -diff)
-            c2.add(Calendar.DATE, -diff)
+            c1.add(Calendar.DATE, -(diff+1))
+            c2.add(Calendar.DATE, -(diff+1))
         }
 
     }
