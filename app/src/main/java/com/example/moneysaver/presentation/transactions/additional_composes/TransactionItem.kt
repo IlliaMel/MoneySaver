@@ -7,31 +7,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Transaction
+import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
+import com.example.moneysaver.ui.theme.currencyColor
+import com.example.moneysaver.ui.theme.currencyColorSpent
+import com.example.moneysaver.ui.theme.currencyColorZero
 import com.example.moneysaver.ui.theme.whiteSurface
+import kotlin.math.abs
 
 @Composable
-fun TransactionItem(transaction: Transaction, categoryName: String, accountName: String, vectorImg: VectorImg, onClick: ()->Unit) {
+fun TransactionItem(transaction: Transaction, categoryName: String, accountName: String, vectorImg: VectorImg, onClick: ()->Unit,viewModel: MainActivityViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(whiteSurface)
             .clickable { onClick() }
-            .padding(0.dp, 4.dp, 0.dp, 4.dp),
+            .padding(6.dp,4.dp,4.dp,4.dp),
         //.background(whiteSurface)
     ) {
         Row(
             modifier = Modifier
                 .height(IntrinsicSize.Min),
-            verticalAlignment = Alignment.Top,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
 
-            VectorIcon(modifier = Modifier.padding(4.dp), height = 50.dp , width = 50.dp, vectorImg = vectorImg, onClick = {}, cornerSize = 50.dp)
+            VectorIcon(modifier = Modifier.padding(4.dp), modifierIcn = Modifier.padding(8.dp), height = 45.dp , width = 45.dp, vectorImg = vectorImg, onClick = {}, cornerSize = 50.dp)
 
 
             Column(
@@ -47,20 +53,21 @@ fun TransactionItem(transaction: Transaction, categoryName: String, accountName:
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(categoryName, color = Color.Black, fontSize = 17.sp)
-                    val sumText: String = (if(transaction.sum>0) "+" else "-") + "$ " + Math.abs(transaction.sum)
-                    val color = if(transaction.sum>0) Color.Green else Color.Red
-                    Text(sumText, color = color, fontSize = 15.sp)
+                    Text(categoryName, color = Color.Black, fontSize = 16.sp , fontWeight = FontWeight.W400)
+                    val sumText: String = (if(transaction.sum>0) "+" else "-")  + (viewModel.state.categoriesList.find { it.uuid == transaction.categoryUUID }?.currencyType?.currency
+                        ?: "$") + " " + abs(transaction.sum)
+                    val color = if(transaction.sum>0) currencyColor else currencyColorSpent
+                    Text(sumText, color = color, fontSize = 15.sp , fontWeight = FontWeight.W400)
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("\uD83D\uDCB3 $accountName", color = Color.Gray, fontSize = 16.sp)
+                    Text("\uD83D\uDCB3 $accountName", color = currencyColorZero, fontSize = 16.sp , fontWeight = FontWeight.W400)
                 }
                 (transaction.note)?.let{
-                    Text(transaction.note, color = Color(0xffababab), fontSize = 14.sp)
+                    Text(transaction.note, color = currencyColorZero, fontSize = 14.sp , fontWeight = FontWeight.W400)
                 }
             }
         }

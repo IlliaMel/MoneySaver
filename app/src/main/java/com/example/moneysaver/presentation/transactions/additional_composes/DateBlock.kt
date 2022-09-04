@@ -28,16 +28,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation.MainActivity
+import com.example.moneysaver.ui.theme.currencyColor
+import com.example.moneysaver.ui.theme.currencyColorSpent
+import com.example.moneysaver.ui.theme.currencyColorZero
+import com.example.moneysaver.ui.theme.gray
 import java.util.*
 
 @Composable
-fun DateBlock(date: Date, balanceChange: Double) {
+fun DateBlock(baseCurrency: Currency,  date: Date, balanceChange: Double) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xffececec))
-            .innerShadow(blur = 4.dp, drawLeft = false, drawRight = false)
+            .innerShadow(color = Color(0xFF4D4D4D), blur = 0.5.dp, spread = 0.1.dp, drawLeft = false, drawRight = false)
             .padding(16.dp, 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -46,7 +51,7 @@ fun DateBlock(date: Date, balanceChange: Double) {
             modifier = Modifier.fillMaxHeight(),
             verticalAlignment = Alignment.Bottom
         ) {
-            Text(text = date.date.toString(), color = Color(0xff7d7d7d), fontSize = 26.sp, fontWeight = FontWeight.Bold);
+            Text(text = if(date.date.toString().toDouble() > 9 ) date.date.toString() else "0" + date.date.toString(), color = Color(0xff7d7d7d), fontSize = 26.sp, fontWeight = FontWeight.Bold);
             Column(
                 modifier = Modifier
                     .padding(12.dp, 0.dp, 0.dp, 0.dp)
@@ -61,9 +66,9 @@ fun DateBlock(date: Date, balanceChange: Double) {
             modifier = Modifier.fillMaxHeight(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val balanceChangeText: String = (if(balanceChange>0) "+" else (if(balanceChange < 0) "-" else ""))+"$ "+balanceChange
-            val balanceChangeColor = if(balanceChange>0) Color.Green else (if(balanceChange < 0) Color.Red else Color.Gray)
-            Text(text = balanceChangeText, color = balanceChangeColor, fontSize = 20.sp)
+            val balanceChangeText: String = (if(balanceChange>0) "+" else (if(balanceChange < 0) "-" else ""))+ baseCurrency.currency + " " + balanceChange
+            val balanceChangeColor = if(balanceChange>0) currencyColor else (if(balanceChange < 0) currencyColorSpent else currencyColorZero)
+            Text(text = balanceChangeText, color = balanceChangeColor, fontSize = 20.sp , fontWeight = FontWeight.W500)
         }
     }
 }

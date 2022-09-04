@@ -197,6 +197,7 @@ fun Transactions(
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         BalanceField(
+                            baseCurrency,
                             text = stringResource(R.string.starting_balance),
                             balance = viewModel.state.startingBalance
                         )
@@ -207,6 +208,7 @@ fun Transactions(
                                 .width(1.dp)
                         )
                         BalanceField(
+                            baseCurrency,
                             text = stringResource(R.string.ending_balance),
                             balance = viewModel.state.endingBalance
                         )
@@ -219,7 +221,7 @@ fun Transactions(
                     for (x in sortedDateToTransactionMap[date]!!)
                         dayBalanceChange += x.sum
                     item {
-                        DateBlock(date = date, balanceChange = dayBalanceChange)
+                        DateBlock(baseCurrency = baseCurrency, date = date, balanceChange = dayBalanceChange)
                         Divider(modifier = Modifier.background(dividerColor))
                     }
                     sortedDateToTransactionMap[date]?.let { m ->
@@ -243,7 +245,8 @@ fun Transactions(
                                                     sheetState.expand()
                                                 }
                                             }
-                                        }
+                                        },
+                                        viewModel = viewModel
                                     )
                                     Divider(modifier = Modifier.background(dividerColor))
                                 }
