@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.model.Account
@@ -75,10 +76,10 @@ fun Transactions(
 
     viewModel.account = chosenAccountFilter.value
 
-    if(minDate.value==null||maxDate.value==null)
-        viewModel.loadTransactions()
+    if(minDate.value==null || maxDate.value == null)
+        viewModel.loadTransactions(minDate, maxDate)
     else
-        viewModel.loadTransactionsBetweenDates(minDate.value!!, maxDate.value!!)
+        viewModel.loadTransactions(minDate, maxDate)
     //viewModel.deleteTransactions()
     viewModel.loadCategories()
     viewModel.loadAccounts()
@@ -109,7 +110,7 @@ fun Transactions(
             .background(whiteSurface)
     ) {
         var sheetContentInitClose by remember { mutableStateOf(false) }
-        TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() }, minDate = minDate, maxDate = maxDate, transactionSearchText=transactionSearchText,chosenAccountFilter)
+        TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() }, minDate = minDate, maxDate = maxDate, transactionSearchText=transactionSearchText,chosenAccountFilter, viewModel)
         BottomSheetScaffold(
             scaffoldState = scaffoldState,
 
@@ -263,7 +264,7 @@ fun filterBySearchRequest(transactions: List<Transaction>, searchRequest: String
 }
 
 @Composable
-fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, transactionSearchText: MutableState<String>,chosenAccountFilter: MutableState<Account>) {
+fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, transactionSearchText: MutableState<String>,chosenAccountFilter: MutableState<Account>, viewModel: MainActivityViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -373,7 +374,10 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
 
             }
 
-            DateRangePicker(minDate, maxDate)
+            DateRangePicker(
+                minDate = minDate,
+                maxDate = maxDate
+            )
 
         }
 

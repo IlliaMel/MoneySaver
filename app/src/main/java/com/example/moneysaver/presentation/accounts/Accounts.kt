@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation.accounts
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -166,7 +167,6 @@ fun PopUp(openDialog: MutableState<Boolean>, accountList: MutableList<Account>, 
             }
         ) {
             Box( modifier = Modifier.clip(RoundedCornerShape(corner = CornerSize(4.dp)))) {
-
                 ChooseAccount(
                     openDialog = openDialog,
                     accountList = accountList,

@@ -34,7 +34,10 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Composable
-fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) {
+fun DateRangePicker(
+    minDate: MutableState<Date?>,
+    maxDate: MutableState<Date?>,
+) {
     val openChoseDateRangeDialog = remember { mutableStateOf(false) }
     val openSelectRangeSubDialog = remember { mutableStateOf(false) }
     val openPickDateSubDialog = remember { mutableStateOf(false) }
@@ -49,7 +52,7 @@ fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) 
 
         IconButton(modifier = Modifier
             .padding(8.dp, 0.dp, 8.dp, 0.dp)
-            .size(40.dp, 40.dp), onClick = { swapDates(startDate = minDate, endDate = maxDate, swapRight = false)}) {
+            .size(40.dp, 40.dp), onClick = { swapDates(startDate = minDate, endDate = maxDate, swapRight = false) }) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 tint = whiteSurface,
@@ -61,7 +64,7 @@ fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) 
 
         IconButton(modifier = Modifier
             .padding(8.dp, 0.dp, 8.dp, 0.dp)
-            .size(40.dp, 40.dp), onClick = { swapDates(startDate = minDate, endDate = maxDate, swapRight = true)}) {
+            .size(40.dp, 40.dp), onClick = { swapDates(startDate = minDate, endDate = maxDate, swapRight = true) }) {
             Icon(
                 imageVector = Icons.Default.ArrowForward,
                 tint = whiteSurface,
@@ -74,7 +77,7 @@ fun DateRangePicker(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) 
         openSelectRangeSubDialog = openSelectRangeSubDialog,
         openPickDateSubDialog = openPickDateSubDialog,
         startDate = minDate,
-        endDate = maxDate
+        endDate = maxDate,
     )
     SelectRangeSubDialog(
         openDialog = openSelectRangeSubDialog,
@@ -146,7 +149,7 @@ private fun ChoseDateRangeDialog(
     openSelectRangeSubDialog: MutableState<Boolean>,
     openPickDateSubDialog: MutableState<Boolean>,
     startDate: MutableState<Date?>,
-    endDate: MutableState<Date?>
+    endDate: MutableState<Date?>,
 ) {
     if (openDialog.value) {
         Dialog(
@@ -427,7 +430,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
-                            .clickable { openStartDateDialog.value=true }
+                            .clickable { openStartDateDialog.value = true }
                             .padding(5.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -454,7 +457,7 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
-                            .clickable { openEndDateDialog.value=true }
+                            .clickable { openEndDateDialog.value = true }
                             .padding(5.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center

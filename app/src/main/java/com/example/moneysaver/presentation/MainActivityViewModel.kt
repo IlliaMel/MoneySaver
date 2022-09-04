@@ -1,5 +1,7 @@
 package com.example.moneysaver.presentation
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -71,7 +73,6 @@ class MainActivityViewModel @Inject constructor(
 
         loadAccounts()
 
-        loadTransactions()
     }
 /*
     private fun loadCurrencyData() {
@@ -250,6 +251,7 @@ class MainActivityViewModel @Inject constructor(
             }
 
             financeRepository.deleteTransaction(transaction)
+
         }
     }
 
@@ -365,27 +367,33 @@ class MainActivityViewModel @Inject constructor(
 
 // ###########################################################
 
-    fun loadTransactions() {
+    fun loadTransactions(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) {
         financeRepository.getTransactions()
             .onEach { list ->
                 var resultList = list.filter {  it.accountUUID == account.uuid || (account.isForGoal && account.isForDebt) }
+                var startingBalance = if(!(account.isForGoal && account.isForDebt)) financeRepository.getAccountByUUID(account.uuid)!!.balance else account.balance
+                var endingBalance = if(!(account.isForGoal && account.isForDebt)) financeRepository.getAccountByUUID(account.uuid)!!.balance else account.balance
+                for(transaction in resultList) {
+                    if(maxDate.value!=null && transaction.date > maxDate.value) {
+                        endingBalance -= transaction.sum
+                    }
+                    if(minDate.value==null || transaction.date > minDate.value) {
+                        startingBalance -= transaction.sum
+                    }
+                }
+
+                if(minDate.value!=null && maxDate.value!=null) {
+                    resultList = resultList.filter { it.date >= minDate.value!! && it.date <= maxDate.value }
+                }
+
                 state = state.copy(
                     transactionList = resultList,
-                    endingBalance = resultList.sumOf { it.sum }
+                    startingBalance = startingBalance,
+                    endingBalance = endingBalance
                 )
             }.launchIn(viewModelScope)
     }
 
-    fun loadTransactionsBetweenDates(minDate: Date, maxDate: Date) {
-        financeRepository.getTransactionsInDateRange(minDate, maxDate)
-            .onEach { list ->
-                var resultList = list.filter {  it.accountUUID == account.uuid || (account.isForGoal && account.isForDebt) }
-                state = state.copy(
-                    transactionList = resultList,
-                    endingBalance = resultList.sumOf { it.sum }
-                )
-            }.launchIn(viewModelScope)
-    }
 /*
     fun addTransaction(transaction: Transaction) {
         viewModelScope.launch {

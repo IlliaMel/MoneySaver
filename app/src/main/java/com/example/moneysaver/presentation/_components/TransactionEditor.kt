@@ -264,7 +264,7 @@ fun TransactionEditor(
         closeAdder()
     }
 
-    DatePickerDialog(openDialog = openPickDateDialog, startDate = date)
+    DatePickerDialog(openDialog = openPickDateDialog, startDate = date )
     ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = accountsList, transactionAccount = transactionAccount)
     ChooseTransactionCategoryDialog(openDialog = openChoseCategoryDialog, categoryList = categoriesList, transactionCategory = category)
 }
