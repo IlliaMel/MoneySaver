@@ -44,11 +44,11 @@ import com.example.moneysaver.ui.theme.*
 @Composable
 fun Accounts(
     onNavigationIconClick: () -> Unit,
-    chosenAccountFilter: MutableState<Account>,
+    onChosenAccountFilterClick: (Account) -> Unit,
+    chosenAccountFilter: Account,
     viewModel: AccountsViewModel = hiltViewModel(),
     baseCurrency: Currency,
 ){
-
 
 
     var selectedAccountIndex by remember {
@@ -144,7 +144,7 @@ fun Accounts(
     if(filterAccounts.isNotEmpty() && filterAccounts.get(0).uuid != AccountsData.allAccountFilter.uuid )
         filterAccounts.add(0,AccountsData.allAccountFilter)
 
-    PopUp(openDialog = isSelectedFilterAccount, accountList = filterAccounts, chosenAccountFilter = chosenAccountFilter)
+    PopUp(openDialog = isSelectedFilterAccount, accountList = filterAccounts, chosenAccountFilter = chosenAccountFilter, onChosenAccountFilterClick = {onChosenAccountFilterClick (it)})
 
     ChooseAccountCompose (openDialog = setSelectedAccount,
         normalAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
@@ -158,7 +158,7 @@ fun Accounts(
 
 
 @Composable
-fun PopUp(openDialog: MutableState<Boolean>, accountList: MutableList<Account>, chosenAccountFilter: MutableState<Account>){
+fun PopUp(openDialog: MutableState<Boolean>, accountList: MutableList<Account>, chosenAccountFilter: Account , onChosenAccountFilterClick: (Account) -> Unit){
     if(openDialog.value)
         Dialog(
 
@@ -170,14 +170,16 @@ fun PopUp(openDialog: MutableState<Boolean>, accountList: MutableList<Account>, 
                 ChooseAccount(
                     openDialog = openDialog,
                     accountList = accountList,
-                    chosenAccountFilter = chosenAccountFilter
+                    chosenAccountFilter = chosenAccountFilter,
+                    onChosenAccountFilterClick = {onChosenAccountFilterClick(it)}
+
                 )
             }
         }
 }
 
 @Composable
-private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<Account>, chosenAccountFilter: MutableState<Account>) {
+private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<Account>, chosenAccountFilter: Account, onChosenAccountFilterClick: (Account) -> Unit,) {
     LazyColumn(
         modifier = Modifier
             .width(210.dp)
@@ -194,9 +196,9 @@ private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<A
                             .fillMaxWidth()
                             .clickable {
                                 openDialog.value = false
-                                chosenAccountFilter.value = it
+                                onChosenAccountFilterClick(it)
                             }
-                            .background(if (it == chosenAccountFilter.value) Color(0xff59aab3) else Color.White)
+                            .background(if (it == chosenAccountFilter) Color(0xff59aab3) else Color.White)
                             .padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -287,7 +289,7 @@ fun ChooseAccountCompose(
 
 
 @Composable
-fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> Unit, onFilterClick: () -> Unit,chosenAccountFilter: MutableState<Account>){
+fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> Unit, onFilterClick: () -> Unit,chosenAccountFilter: Account){
 
 
 
@@ -331,8 +333,8 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
-                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.value.title} ▾", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                    Text(text = ("${chosenAccountFilter.value.balance} ${chosenAccountFilter.value.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.title} ▾", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
+                    Text(text = ("${chosenAccountFilter.balance} ${chosenAccountFilter.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
 
                     Column(modifier = Modifier
                         .fillMaxHeight()

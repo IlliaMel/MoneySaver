@@ -1,4 +1,5 @@
 package com.example.moneysaver.presentation.accounts.additional_composes
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -43,6 +45,7 @@ import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
+import com.example.moneysaver.presentation.transactions.additional_composes.innerShadow
 import com.example.moneysaver.ui.theme.*
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -600,8 +603,12 @@ fun SetAccountCurrencyType(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
-                                Text(modifier = Modifier.weight(2f).padding(16.dp,0.dp,0.dp,0.dp), text = it.description, color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 16.sp)
-                                Text(modifier = Modifier.weight(1f).padding(0.dp,0.dp,0.dp,0.dp), text = it.currencyName + "(" + it.currency + ")" , color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                                Text(modifier = Modifier
+                                    .weight(2f)
+                                    .padding(16.dp, 0.dp, 0.dp, 0.dp), text = it.description, color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                                Text(modifier = Modifier
+                                    .weight(1f)
+                                    .padding(0.dp, 0.dp, 0.dp, 0.dp), text = it.currencyName + "(" + it.currency + ")" , color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                             }
                         }
                     )
@@ -879,13 +886,23 @@ fun SetImg(
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
 
-                        HsvColorPicker(
-                            modifier = Modifier
-                                .weight(2f)
-                                .height(250.dp)
-                                .padding(8.dp),
-                            controller = controller,
-                        )
+                        
+                        Box(modifier = Modifier
+                            .weight(2f), contentAlignment = Alignment.Center) {
+                            
+                            HsvColorPicker(
+                                modifier = Modifier
+                                    .height(250.dp)
+                                    .padding(8.dp),
+                                controller = controller,
+                            )
+
+                            Box( modifier = Modifier.size(90.dp).clip(CircleShape).background(Color.White).background(gray).clickable {  }
+                                ) {
+                                
+                            }
+                        }
+                        
 
 
 

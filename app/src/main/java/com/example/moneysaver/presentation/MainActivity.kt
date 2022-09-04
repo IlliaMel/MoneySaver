@@ -265,7 +265,16 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
             )
         }
 
-        val chosenAccountFilter = remember { mutableStateOf(AccountsData.allAccountFilter) }
+        var chosenAccountFilterTMP  = remember { mutableStateOf(AccountsData.allAccountFilter)}
+
+        var chosenAccountFilter =
+            if (accountsViewModel.state.allAccountList != null && accountsViewModel.state.allAccountList.isNotEmpty() && chosenAccountFilterTMP.value.uuid != AccountsData.allAccountFilter.uuid)
+                accountsViewModel.state.allAccountList.find { it.uuid == chosenAccountFilterTMP.value.uuid }
+             else
+                chosenAccountFilterTMP.value
+
+
+
 
         AccountsData.allAccountFilter.balance = accountsViewModel.findSum(accountsViewModel.state.allAccountList,baseCurrency.currencyName)
         AccountsData.allAccountFilter.currencyType = baseCurrency
@@ -385,17 +394,19 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                     scope.launch {
                                         scaffoldState.drawerState.open()
                                     }
-                                },chosenAccountFilter,baseCurrency = baseCurrency)
+                                },chosenAccountFilter = chosenAccountFilter!!,baseCurrency = baseCurrency, onChosenAccountFilterClick = { account ->
+                                    chosenAccountFilterTMP.value= account
+                                })
                             1 -> Categories(onNavigationIconClick = {
                                 scope.launch {
                                     scaffoldState.drawerState.open()
                                 }
-                            },chosenAccountFilter,baseCurrency = baseCurrency)
+                            },chosenAccountFilter!!,baseCurrency = baseCurrency)
                             2 -> Transactions(onNavigationIconClick = {
                                 scope.launch {
                                     scaffoldState.drawerState.open()
                                 }
-                            }, navigateToTransaction = {},chosenAccountFilter,viewModel,baseCurrency = baseCurrency)
+                            }, navigateToTransaction = {},chosenAccountFilter!!,viewModel,baseCurrency = baseCurrency)
                         }
                     }
 

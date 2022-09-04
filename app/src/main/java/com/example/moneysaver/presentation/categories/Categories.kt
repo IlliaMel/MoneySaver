@@ -50,7 +50,7 @@ import hu.ma.charts.pie.data.PieChartEntry
 @Composable
 fun Categories(
     onNavigationIconClick: () -> Unit,
-    chosenAccountFilter: MutableState<Account>,
+    chosenAccountFilter: Account,
     viewModel: CategoriesViewModel = hiltViewModel(),
     baseCurrency: Currency,
 ) {
@@ -73,7 +73,7 @@ fun Categories(
 
     val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.addCategory) }
 
-    viewModel.account = chosenAccountFilter.value
+    viewModel.account = chosenAccountFilter
     viewModel.loadAccounts()
 
     var categories  = viewModel.state.categoriesList.filter { it.isForSpendings == viewModel.state.isForSpendings }
@@ -613,7 +613,7 @@ fun ChartContainer(
 
 
 @Composable
-fun TopBarCategories(onNavigationIconClick: () -> Unit, onEditClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>,chosenAccountFilter: MutableState<Account>){
+fun TopBarCategories(onNavigationIconClick: () -> Unit, onEditClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>,chosenAccountFilter: Account){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -651,8 +651,8 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit, onEditClick: () -> Unit,
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(modifier = Modifier
-                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                    Text(text = ("${chosenAccountFilter.value.balance.toString()} ${chosenAccountFilter.value.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
+                    Text(text = ("${chosenAccountFilter.balance.toString()} ${chosenAccountFilter.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                 }
 
                 IconButton(modifier = Modifier

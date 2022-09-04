@@ -52,7 +52,7 @@ import java.util.*
 fun Transactions(
     onNavigationIconClick: () -> Unit,
     navigateToTransaction: (Transaction) -> Unit,
-    chosenAccountFilter: MutableState<Account>,
+    chosenAccountFilter: Account,
     viewModel: MainActivityViewModel,
     baseCurrency: Currency,
 ) {
@@ -74,7 +74,7 @@ fun Transactions(
 
     val transactionSearchText = remember { mutableStateOf("") }
 
-    viewModel.account = chosenAccountFilter.value
+    viewModel.account = chosenAccountFilter
 
     if(minDate.value==null || maxDate.value == null)
         viewModel.loadTransactions(minDate, maxDate)
@@ -264,7 +264,7 @@ fun filterBySearchRequest(transactions: List<Transaction>, searchRequest: String
 }
 
 @Composable
-fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, transactionSearchText: MutableState<String>,chosenAccountFilter: MutableState<Account>, viewModel: MainActivityViewModel) {
+fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, transactionSearchText: MutableState<String>,chosenAccountFilter: Account, viewModel: MainActivityViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -354,8 +354,8 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
                         }
                     } else {
                         Text(modifier = Modifier
-                            .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.value.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                        Text(text = ("${chosenAccountFilter.value.balance} ${chosenAccountFilter.value.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                            .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.title}", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
+                        Text(text = ("${chosenAccountFilter.balance} ${chosenAccountFilter.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                     }
                 }
 
