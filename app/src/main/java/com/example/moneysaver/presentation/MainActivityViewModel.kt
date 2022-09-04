@@ -17,6 +17,7 @@ import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.domain.repository.FinanceRepository
 import com.example.moneysaver.domain.util.Resource
+import com.example.moneysaver.presentation._components.toCalculatorString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
@@ -375,12 +377,14 @@ class MainActivityViewModel @Inject constructor(
                 var endingBalance = if(!(account.isForGoal && account.isForDebt)) financeRepository.getAccountByUUID(account.uuid)!!.balance else account.balance
                 for(transaction in resultList) {
                     if(maxDate.value!=null && transaction.date > maxDate.value) {
-                        endingBalance -= transaction.sum
+                        endingBalance -= transaction.sum*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
                     }
                     if(minDate.value==null || transaction.date > minDate.value) {
-                        startingBalance -= transaction.sum
+                        startingBalance -= transaction.sum*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
                     }
                 }
+                startingBalance=((startingBalance * 100.0).roundToInt() / 100.0)
+                endingBalance=((endingBalance * 100.0).roundToInt() / 100.0)
 
                 if(minDate.value!=null && maxDate.value!=null) {
                     resultList = resultList.filter { it.date >= minDate.value!! && it.date <= maxDate.value }
