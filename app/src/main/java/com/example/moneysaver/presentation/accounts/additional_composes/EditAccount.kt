@@ -199,7 +199,7 @@ fun EditAccount(
                     topPadding = 8.dp)
                 accountEditInfoText(
                     upperText = stringResource(R.string.currency_type),
-                    bottomText = currencyType.value.currency,
+                    bottomText = currencyType.value.description + " " + currencyType.value.currencyName + " " +  "(" + currencyType.value.currency + ")" ,
                     onAction = {setCurrencyTypeChange.value = true},
                     startPadding = 16.dp,
                     topPadding = 8.dp)

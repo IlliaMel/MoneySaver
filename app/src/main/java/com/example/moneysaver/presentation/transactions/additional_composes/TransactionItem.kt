@@ -2,17 +2,23 @@ package com.example.moneysaver.presentation.transactions.additional_composes
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
+import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.ui.theme.currencyColor
 import com.example.moneysaver.ui.theme.currencyColorSpent
@@ -21,13 +27,20 @@ import com.example.moneysaver.ui.theme.whiteSurface
 import kotlin.math.abs
 
 @Composable
-fun TransactionItem(transaction: Transaction, categoryName: String, accountName: String, vectorImg: VectorImg, onClick: ()->Unit,viewModel: MainActivityViewModel) {
+fun TransactionItem(transaction: Transaction,
+                    categoryName: String,
+                    accountName: String,
+                    vectorImg: VectorImg,
+                    onClick: ()->Unit,
+                    viewModel: MainActivityViewModel,
+                    accountsViewModel: AccountsViewModel = hiltViewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(whiteSurface)
             .clickable { onClick() }
-            .padding(6.dp,4.dp,4.dp,4.dp),
+            .padding(6.dp,0.dp,4.dp,0.dp),
         //.background(whiteSurface)
     ) {
         Row(
@@ -62,9 +75,17 @@ fun TransactionItem(transaction: Transaction, categoryName: String, accountName:
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("\uD83D\uDCB3 $accountName", color = currencyColorZero, fontSize = 16.sp , fontWeight = FontWeight.W400)
+
+                    var img = (accountsViewModel.state.allAccountList.find { it.uuid == transaction.accountUUID }?.accountImg ?: AccountsData.normalAccount.accountImg)
+                    Icon(modifier = Modifier.size(35.dp,28.dp).padding(4.dp,0.dp,8.dp,0.dp),
+                        imageVector = ImageVector.vectorResource(img.img),
+                        tint = img.externalColor,
+                        contentDescription = null
+                    )
+                    Text(accountName, color = currencyColorZero, fontSize = 16.sp , fontWeight = FontWeight.W400)
                 }
                 (transaction.note)?.let{
                     Text(transaction.note, color = currencyColorZero, fontSize = 14.sp , fontWeight = FontWeight.W400)

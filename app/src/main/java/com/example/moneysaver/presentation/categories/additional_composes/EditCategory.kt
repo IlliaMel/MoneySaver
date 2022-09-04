@@ -84,7 +84,7 @@ fun EditCategory(
 
                 onAddCategoryAction(
                     if(isEditing)
-                        Category(uuid = category.uuid,categoryImg = img.value,currencyType = currencyType.value , title = it)
+                        Category(uuid = category.uuid,categoryImg = img.value,currencyType = currencyType.value , title = it, isForSpendings = category.isForSpendings)
                     else
                         Category(categoryImg = img.value,currencyType = currencyType.value , title = it, isForSpendings = checkedState.value)
 
