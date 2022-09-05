@@ -21,6 +21,7 @@ data class Account(
     val debt: Double = 0.0,
     val isForGoal: Boolean = false,
     val isForDebt: Boolean = false,
+    val creationDate: Date = Date()
 ) : Serializable{
 
     override fun toString(): String {

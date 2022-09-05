@@ -12,19 +12,19 @@ interface AccountDao {
     @Query("SELECT * FROM `account` WHERE uuid = :uuid")
     suspend fun getAccountByUUID(uuid: UUID): Account?
 
-    @Query("SELECT * FROM `account`")
+    @Query("SELECT * FROM `account` ORDER BY creationDate")
     fun getAllAccounts(): Flow<List<Account>>
 
-    @Query("SELECT * FROM `account` WHERE isForGoal=0 AND isForDebt=0")
+    @Query("SELECT * FROM `account` WHERE isForGoal=0 AND isForDebt=0 ORDER BY creationDate")
     fun getSimpleAccounts(): Flow<List<Account>>
 
-    @Query("SELECT * FROM `account` WHERE isForGoal=0")
+    @Query("SELECT * FROM `account` WHERE isForGoal=0 ORDER BY creationDate")
     fun getSimpleAndDeptAccounts(): Flow<List<Account>>
 
-    @Query("SELECT * FROM `account` WHERE isForDebt=0")
+    @Query("SELECT * FROM `account` WHERE isForDebt=0 ORDER BY creationDate")
     fun getDebtAccounts(): Flow<List<Account>>
 
-    @Query("SELECT * FROM `account` WHERE isForGoal=1")
+    @Query("SELECT * FROM `account` WHERE isForGoal=1 ORDER BY creationDate")
     fun getGoalAccounts(): Flow<List<Account>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

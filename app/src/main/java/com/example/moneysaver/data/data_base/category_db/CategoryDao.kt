@@ -7,10 +7,10 @@ import java.util.*
 
 @Dao
 interface CategoryDao {
-    @Query("SELECT * FROM `category`")
+    @Query("SELECT * FROM `category`  ORDER BY creationDate")
     fun getCategories(): Flow<List<Category>>
 
-    @Query("SELECT * FROM `category` WHERE isForSpendings = :isForSpendings")
+    @Query("SELECT * FROM `category` WHERE isForSpendings = :isForSpendings  ORDER BY creationDate")
     fun getCategories(isForSpendings: Boolean): Flow<List<Category>>
 
     @Query("SELECT * FROM `category` WHERE uuid = :uuid")

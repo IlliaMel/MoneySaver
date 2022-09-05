@@ -15,6 +15,7 @@ data class Category(
     val title: String,
     val isForSpendings: Boolean = true,
     var spent: Double = 0.0,
+    val creationDate: Date = Date()
 ) : Serializable{
     
     override fun toString(): String {
