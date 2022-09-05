@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -227,27 +230,78 @@ fun Transactions(
                     sortedDateToTransactionMap[date]?.let { m ->
                         items(
                             items = m.toList(),
+                            key = {it -> it.hashCode()},
                             itemContent = {
                                 Column {
                                     val categoryName = viewModel.getCategoryNameByUUIID(it.categoryUUID)
-                                    TransactionItem(
-                                        transaction = it,
-                                        categoryName=(categoryName?:""),
-                                        accountName = viewModel.state.accountsList.first{ x -> x.uuid == it.accountUUID}.title,
-                                        vectorImg =viewModel.state.categoriesList.first{ x -> x.uuid == it.categoryUUID}.categoryImg,
-                                        onClick = {
-                                            scope.launch {
-                                                if(sheetState.isExpanded) {
-                                                    sheetState.collapse()
-                                                } else {
-                                                    selectedCategory.value=null
-                                                    selectedTransaction.value = it
-                                                    sheetState.expand()
+
+                                    val dismissState = rememberDismissState()
+                                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                                        viewModel.deleteTransaction(it)
+                                    }
+
+                                    SwipeToDismiss(
+                                        state = dismissState,
+                                        modifier = Modifier
+                                            .padding(0.dp, 1.dp),
+                                        directions = setOf(
+                                            DismissDirection.EndToStart
+                                        ),
+                                        dismissThresholds = { direction ->
+                                            FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1f else 0.05f)
+                                        },
+                                        background = {
+                                            val color by animateColorAsState(
+                                                when (dismissState.targetValue) {
+                                                    DismissValue.Default -> Color.White
+                                                    else -> Color.Red
                                                 }
+                                            )
+                                            val alignment = Alignment.CenterEnd
+                                            val icon = Icons.Default.Delete
+
+                                            val scale by animateFloatAsState(
+                                                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                                            )
+
+                                            Box(
+                                                Modifier
+                                                    .fillMaxSize()
+                                                    .background(color)
+                                                    .padding(20.dp, 0.dp),
+                                                contentAlignment = alignment
+                                            ) {
+                                                Icon(
+                                                    icon,
+                                                    contentDescription = "Delete Icon",
+                                                    modifier = Modifier.scale(scale)
+                                                )
                                             }
                                         },
-                                        viewModel = viewModel
+                                        dismissContent = {
+
+                                            TransactionItem(
+                                                transaction = it,
+                                                categoryName=(categoryName?:""),
+                                                accountName = viewModel.state.accountsList.first{ x -> x.uuid == it.accountUUID}.title,
+                                                vectorImg =viewModel.state.categoriesList.first{ x -> x.uuid == it.categoryUUID}.categoryImg,
+                                                onClick = {
+                                                    scope.launch {
+                                                        if(sheetState.isExpanded) {
+                                                            sheetState.collapse()
+                                                        } else {
+                                                            selectedCategory.value=null
+                                                            selectedTransaction.value = it
+                                                            sheetState.expand()
+                                                        }
+                                                    }
+                                                },
+                                                viewModel = viewModel
+                                            )
+
+                                        }
                                     )
+                                    
                                     Divider(modifier = Modifier.background(dividerColor))
                                 }
                             }
