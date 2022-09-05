@@ -145,7 +145,7 @@ class CategoriesViewModel @Inject constructor(
                 for(tr in transactions) {
                     if(tr.accountUUID == account.uuid || (account.isForGoal && account.isForDebt))
                         if(tr.categoryUUID == category.uuid) {
-                            if(accountsList.isNotEmpty())
+                            if(state.accountsList.isNotEmpty())
                             if(tr.sum < 0){
                                 spend += tr.sum * returnCurrencyValue(state.accountsList.find { it.uuid == tr.accountUUID }?.currencyType!!.currencyName, base )
                             }else

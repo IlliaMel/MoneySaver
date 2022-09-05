@@ -91,6 +91,8 @@ fun Categories(
             isAddingCategory = false
         }
     }
+
+
  if(!isAddingCategory){
     Column() {
         TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categoriesWithAdder.size > 1 || isForEditing) isForEditing =
@@ -153,7 +155,7 @@ fun Categories(
                         Row(
                             modifier = Modifier
                                 .weight(1.8f)
-                                .padding(0.dp,12.dp,0.dp,0.dp)
+                                .padding(0.dp, 12.dp, 0.dp, 0.dp)
                         ) {
 
                             Column(
@@ -335,29 +337,39 @@ fun Categories(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     com.example.moneysaver.presentation.categories.ChartContainer(
-                                        modifier = Modifier
-                                            .background(whiteSurface)
-                                            .animateContentSize()
-                                            .clickable {
-                                                viewModel.state.isForSpendings =
-                                                    !viewModel.state.isForSpendings
-                                                viewModel.loadCategories()
-                                            },
                                         spent = viewModel.state.spend.toString() + baseCurrency.currency,
                                         earned = viewModel.state.earned.toString() + baseCurrency.currency,
+                                        onClickChart = {
+                                            viewModel.state.isForSpendings =
+                                                !viewModel.state.isForSpendings
+                                            viewModel.loadCategories()
+                                        },
                                         isSpendings = viewModel.state.isForSpendings
                                     ) {
-
                                         var iSAllZero = viewModel.ifAllCategoriesIsZero()
                                         val list =  getChartData(categories,iSAllZero)[0]
-                                        PieChart(
-                                            modifier = Modifier,
-                                            sliceWidth = 13.dp,
-                                            chartSize = 175.dp,
-                                            legendOffset = 0.dp,
-                                            data = list
-                                        ){
 
+                                        if(viewModel.state.isForSpendings) {
+                                            PieChart(
+                                                modifier = Modifier,
+                                                sliceWidth = 13.dp,
+                                                chartSize = 175.dp,
+                                                legendOffset = 0.dp,
+                                                data = list
+                                            ) {
+
+                                            }
+                                        }
+                                        else{
+                                            PieChart(
+                                                modifier = Modifier,
+                                                sliceWidth = 13.dp,
+                                                chartSize = 175.dp,
+                                                legendOffset = 0.dp,
+                                                data = list
+                                            ){
+
+                                            }
                                         }
                                     }
                                 }
@@ -585,9 +597,15 @@ fun ChartContainer(
     earned: String,
     isSpendings : Boolean,
     chartOffset: Dp = 0.dp,
+    onClickChart: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Column() {
+   /* Box(modifier = modifier
+        .fillMaxSize()
+        .clip(CircleShape), contentAlignment = Alignment.Center) {
+        */
+        Box( modifier = Modifier.size(200.dp,200.dp).clip(CircleShape).background(whiteSurface).clickable { onClickChart()} , contentAlignment = Alignment.Center){
         content()
         Text(modifier = Modifier.padding(0.dp,0.dp,0.dp,32.dp), fontSize = 16.sp, fontWeight = FontWeight.W500,
             text = if (isSpendings) stringResource(R.string.spending) else  stringResource(R.string.earning), color = Color.Black)
@@ -608,6 +626,7 @@ fun ChartContainer(
                     color =  if(isSpendings) Color(red = currencyColor.red, blue = currencyColor.blue, green = currencyColor.green, alpha = 0.8f) else Color(red = currencyColorSpent.red, blue = currencyColorSpent.blue, green = currencyColorSpent.green, alpha = 0.8f)
                 )
         }
+    }
     }
 }
 

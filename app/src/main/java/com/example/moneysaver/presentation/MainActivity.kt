@@ -13,7 +13,9 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -163,8 +165,8 @@ class MainActivity : ComponentActivity() {
 
                 } else {
                     val service = AlarmService(context = applicationContext)
-                    MainUI(sharedPref,service,formattedDate)
-
+                    //MainUI(sharedPref,service,formattedDate)
+                    SlideInAnimationScreen()
                     if (viewModel.isParsingSucceeded.value) {
                         with(sharedPref.edit()) {
                             putBoolean(CURRENCY_PARSED_KEY, true)
@@ -224,6 +226,100 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun SlideInAnimationScreen() {
+    // I'm using the same duration for all animations.
+    val animationTime = 300
+
+    // This state is controlling if the second screen is being displayed or not
+    var showScreen by remember { mutableStateOf(false) }
+
+    // This is just to give that dark effect when the first screen is closed...
+    val color = animateColorAsState(
+        targetValue = if (showScreen) Color.DarkGray else Color.Red,
+        animationSpec = tween(
+            durationMillis = animationTime,
+            easing = LinearEasing
+        )
+    )
+
+    Box(Modifier.fillMaxSize()) {
+        // Screen 1
+        AnimatedVisibility(
+            !showScreen,
+            modifier = Modifier.fillMaxSize(),
+            enter = slideInHorizontally(
+                initialOffsetX = { -300 }, // small slide 300px
+                animationSpec = tween(
+                    durationMillis = animationTime,
+                    easing = LinearEasing // interpolator
+                )
+            ),
+            exit = slideOutHorizontally(
+                targetOffsetX = { -300 },
+                    animationSpec = tween(
+                    durationMillis = animationTime,
+            easing = LinearEasing
+        )
+        )
+        ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(color.value) // animating the color
+        ) {
+            Button(modifier = Modifier.align(Alignment.Center),
+                onClick = {
+                    showScreen = !showScreen
+                }) {
+                Text(text = "Ok")
+            }
+        }
+    }
+
+        // Screen 2
+        AnimatedVisibility(
+            showScreen,
+            modifier = Modifier.fillMaxSize(),
+            enter = slideInHorizontally(
+                initialOffsetX = { it }, // it == fullWidth
+                animationSpec = tween(
+                    durationMillis = animationTime,
+                    easing = LinearEasing
+                )
+            ),
+            exit = slideOutHorizontally(
+                targetOffsetX = { it },
+                animationSpec = tween(
+                    durationMillis = animationTime,
+                    easing = LinearEasing
+                )
+            )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Blue)
+            ) {
+                Button(modifier = Modifier.align(Alignment.Center),
+                    onClick = {
+                        showScreen = false
+                    }) {
+                    Text(text = "Back")
+                }
+            }
+        }
+
+
+    }
+}
+
+@Composable
+fun SlideAnimation(){
+
+
+
+}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
