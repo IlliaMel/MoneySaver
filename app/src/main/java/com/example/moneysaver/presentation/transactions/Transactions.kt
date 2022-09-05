@@ -105,7 +105,7 @@ fun Transactions(
 
     var selectedTransaction: MutableState<Transaction?> = remember { mutableStateOf(null) }
 
-
+    val editBySwipeWasActivated = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -140,7 +140,8 @@ fun Transactions(
                         accountsList = viewModel.state.accountsList,
                         categoriesList = viewModel.state.categoriesList,
                         minDate = minDate,
-                        maxDate = maxDate
+                        maxDate = maxDate,
+                        editBySwipeWasActivated = editBySwipeWasActivated
                     )
                 }
             },
@@ -230,35 +231,49 @@ fun Transactions(
                     sortedDateToTransactionMap[date]?.let { m ->
                         items(
                             items = m.toList(),
-                            key = {it -> it.hashCode()},
+                            key = {it.hashCode()},
                             itemContent = {
                                 Column {
                                     val categoryName = viewModel.getCategoryNameByUUIID(it.categoryUUID)
 
-                                    val dismissState = rememberDismissState()
-                                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                                    val dismissState = rememberDismissState(initialValue = DismissValue.Default)
+                                    if (dismissState.isDismissed(DismissDirection.StartToEnd)) {
+                                        // launch transaction editing
+                                        scope.launch {
+                                            if(sheetState.isExpanded) {
+                                                sheetState.collapse()
+                                            } else {
+                                                dismissState.reset()
+                                                selectedCategory.value = null
+                                                selectedTransaction.value = it
+                                                sheetState.expand()
+                                            }
+                                        }
+                                    } else if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                                         viewModel.deleteTransaction(it)
                                     }
 
                                     SwipeToDismiss(
                                         state = dismissState,
-                                        modifier = Modifier
-                                            .padding(0.dp, 1.dp),
                                         directions = setOf(
+                                            DismissDirection.StartToEnd,
                                             DismissDirection.EndToStart
                                         ),
-                                        dismissThresholds = { direction ->
-                                            FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1f else 0.05f)
+                                        dismissThresholds = {
+                                            FractionalThreshold(0.2f)
                                         },
                                         background = {
+                                            val direction = dismissState.dismissDirection
+
                                             val color by animateColorAsState(
-                                                when (dismissState.targetValue) {
-                                                    DismissValue.Default -> Color.White
-                                                    else -> Color.Red
+                                                when (direction) {
+                                                    DismissDirection.StartToEnd -> Color.Blue
+                                                    DismissDirection.EndToStart -> Color.Red
+                                                    else -> Color.White
                                                 }
                                             )
-                                            val alignment = Alignment.CenterEnd
-                                            val icon = Icons.Default.Delete
+
+                                            val alignment = if(direction == DismissDirection.StartToEnd) Alignment.CenterStart else Alignment.CenterEnd
 
                                             val scale by animateFloatAsState(
                                                 if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
@@ -272,7 +287,7 @@ fun Transactions(
                                                 contentAlignment = alignment
                                             ) {
                                                 Icon(
-                                                    icon,
+                                                    imageVector = if(direction == DismissDirection.StartToEnd) Icons.Default.Edit else Icons.Default.Delete,
                                                     contentDescription = "Delete Icon",
                                                     modifier = Modifier.scale(scale)
                                                 )
