@@ -74,7 +74,7 @@ fun TransactionEditor(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xffeeeeee))
-            .height(520.dp),
+            .height(if(choiceIsActive.value) 300.dp else 520.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
@@ -188,40 +188,43 @@ fun TransactionEditor(
             Row(modifier = Modifier
                 .padding(6.dp, 0.dp)
                 .fillMaxWidth()
-                .height(240.dp),
+                .height(100.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .width(90.dp)
-                        .height(90.dp)
-                        .background(Color(0xffc8ccc9))
-                        .clickable {
-                                    if(currentTransaction.value!=null)
-                                        deleteTransaction(currentTransaction.value!!)
-                                    closeAdder()
-                                   },
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(modifier = Modifier.width(40.dp).height(40.dp), imageVector = Icons.Filled.Delete, contentDescription = null, tint = Color(0xffe31d0b))
-                    Text(text = stringResource(R.string.delete), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Column(horizontalAlignment = Alignment.CenterHorizontally){
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .width(50.dp)
+                            .height(50.dp)
+                            .background(Color(0x33E31D0B))
+                            .clickable {
+                                if(currentTransaction.value!=null)
+                                    deleteTransaction(currentTransaction.value!!)
+                                closeAdder()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(modifier = Modifier.width(25.dp).height(25.dp), imageVector = Icons.Filled.Delete, contentDescription = null, tint = Color(0xffe31d0b))
+                    }
+                    Text(modifier = Modifier.padding(0.dp, 4.dp), text = stringResource(R.string.delete), fontSize = 16.sp)
+
                 }
-                Column(modifier = Modifier
-                    .clip(CircleShape)
-                    .width(90.dp)
-                    .height(90.dp)
-                    .background(Color(0xffc8ccc9))
-                    .clickable {
-                        choiceIsActive.value = false
-                    },
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(modifier = Modifier.width(40.dp).height(40.dp), imageVector = Icons.Filled.Edit, contentDescription = null, tint = Color(0xff0b53e3))
-                    Text(text = stringResource(R.string.edit), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Column(horizontalAlignment = Alignment.CenterHorizontally){
+                    Box(modifier = Modifier
+                        .clip(CircleShape)
+                        .width(50.dp)
+                        .height(50.dp)
+                        .background(Color(0x330B53E3))
+                        .clickable {
+                            choiceIsActive.value = false
+                        },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(modifier = Modifier.width(25.dp).height(25.dp), imageVector = Icons.Filled.Edit, contentDescription = null, tint = Color(0xff0b53e3))
+                    }
+                    Text(modifier = Modifier.padding(0.dp, 4.dp),text = stringResource(R.string.edit), fontSize = 16.sp)
                 }
             }
         } else {
