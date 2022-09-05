@@ -150,7 +150,7 @@ class MainActivity : ComponentActivity() {
             )
 
             MoneySaverTheme {
-                if (!isConnectionEnabled && !isParsed && !viewModel.isCurrencyDbEmpty()) {
+                if ((!isConnectionEnabled && !isParsed) ||  viewModel.isCurrencyDbEmpty()) {
                     Box(modifier = Modifier
                         .fillMaxSize()
                         .background(lightGrayTransparent), contentAlignment = Alignment.Center) {

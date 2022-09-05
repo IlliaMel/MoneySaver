@@ -95,12 +95,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
    fun isCurrencyDbEmpty() : Boolean{
-        var result = false
-       financeRepository.getCurrencyTypes()
-           .onEach { list ->
-               result = list.isEmpty()
-           }.launchIn(viewModelScope)
-       return result
+        return state.currenciesList.isEmpty()
     }
 
 
