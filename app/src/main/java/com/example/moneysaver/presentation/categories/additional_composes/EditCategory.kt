@@ -135,7 +135,7 @@ fun EditCategory(
                     verticalAlignment = Alignment.CenterVertically){
                     Text(
                         modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
-                        text = "Is for Spending",
+                        text = stringResource(R.string.is_for_spending),
                         color = Color.Black,
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp

@@ -157,7 +157,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(lightGrayTransparent), contentAlignment = Alignment.Center) {
                         Text(
-                            text = "PLease turn on internet connection",
+                            text = stringResource(R.string.no_internet_message),
                             fontSize = 20.sp,
                             color = Color.Black
                         )
@@ -272,7 +272,7 @@ fun SlideInAnimationScreen() {
                 onClick = {
                     showScreen = !showScreen
                 }) {
-                Text(text = "Ok")
+                Text(text = stringResource(R.string.ok))
             }
         }
     }
@@ -305,7 +305,7 @@ fun SlideInAnimationScreen() {
                     onClick = {
                         showScreen = false
                     }) {
-                    Text(text = "Back")
+                    Text(text = stringResource(R.string.back))
                 }
             }
         }
@@ -446,7 +446,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                                             R.string.light), icon = Icons.Default.Info),
                             MenuItem(number = 2 , title = stringResource(R.string.notifications), description = if(hoursNotification.value == 0) "00" else {hoursNotification.value.toString()} + ":" + if(minutesNotification.value == 0) "00" else {minutesNotification.value.toString()}, icon = Icons.Default.Notifications, hasSwitch = true),
 
-                            MenuItem(number = 3 , title = "Main Currency", description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart)
+                            MenuItem(number = 3 , title = stringResource(R.string.main_currency), description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart)
                         )),
                         MenuBlock(title = "Block2", items = listOf(
                             MenuItem(number = 4 , title = "Item21", description = "Desc21", icon = Icons.Default.Edit),

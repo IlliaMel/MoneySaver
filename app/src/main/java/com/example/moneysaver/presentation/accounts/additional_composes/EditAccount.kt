@@ -220,7 +220,7 @@ fun EditAccount(
 
                 Text(
                     modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
-                    text = "Balance",
+                    text = stringResource(R.string.balance),
                     color = Color.Black,
                     fontWeight = FontWeight.W500,
                     fontSize = 18.sp
@@ -438,7 +438,7 @@ fun SetAccountBalance(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
                 ) {
-                    Text(modifier = Modifier.padding(32.dp,0.dp,0.dp,0.dp), text = "Amount Of Money", color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 20.sp)
+                    Text(modifier = Modifier.padding(32.dp,0.dp,0.dp,0.dp), text = stringResource(R.string.amount_of_money), color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 20.sp)
                 }
 
                 TextField(
