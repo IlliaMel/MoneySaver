@@ -17,9 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -86,69 +84,92 @@ fun TransactionEditor(
                     .fillMaxWidth()
                     .height(IntrinsicSize.Min)
             ) {
-                Column(
+                Box(
                     modifier = Modifier
                         .weight(1f)
-                        .background(transactionAccount.value.accountImg.externalColor)
-                        .clickable { if(!choiceIsActive.value) openChoseAccountDialog.value = true }
-                        .padding(5.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        .height(IntrinsicSize.Min)
+                ){
+                    Image(
+                        painter = painterResource(R.drawable.bg5),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null,
+                        modifier = Modifier.matchParentSize(),
+                        colorFilter = ColorFilter.tint(color = transactionAccount.value.accountImg.externalColor, blendMode = BlendMode.Softlight)
+                    )
+                    Column(
+                        modifier = Modifier
+                            .clickable { if(!choiceIsActive.value) openChoseAccountDialog.value = true }
+                            .padding(5.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.Start
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            val saturation = transactionAccount.value.accountImg.externalColor.getSaturation()
-                            val color = if (saturation>0.5f) Color.White else Color.Black
-                            Text(text = stringResource(R.string.from_account), fontSize = 14.sp, color=color)
-                            Text(text = transactionAccount.value.title, fontSize = 17.sp, color=color, overflow = TextOverflow.Ellipsis)
+                            Column(
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                val saturation = transactionAccount.value.accountImg.externalColor.getSaturation()
+                                val color = if (saturation>0.5f) Color.White else Color.Black
+                                Text(text = stringResource(R.string.from_account), fontSize = 14.sp, color=color)
+                                Text(text = transactionAccount.value.title, fontSize = 17.sp, color=color, overflow = TextOverflow.Ellipsis)
+                            }
+                            Image(
+                                painter = painterResource(id = transactionAccount.value.accountImg.img),
+                                contentDescription = null,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .width(55.dp)
+                                    .height(36.dp)
+                                    .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                            )
                         }
-                        Image(
-                            painter = painterResource(id = transactionAccount.value.accountImg.img),
-                            contentDescription = null,
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .width(55.dp)
-                                .height(36.dp)
-                                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                        )
                     }
                 }
-                Column(
+
+                Box(
                     modifier = Modifier
                         .weight(1f)
-                        .background(category.value.categoryImg.externalColor)
-                        .clickable { if(!choiceIsActive.value) openChoseCategoryDialog.value = true }
-                        .padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        .height(IntrinsicSize.Min)
+                ){
+                    Image(
+                        painter = painterResource(R.drawable.bg5),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null,
+                        modifier = Modifier.matchParentSize(),
+                        colorFilter = ColorFilter.tint(color = category.value.categoryImg.externalColor, blendMode = BlendMode.Softlight)
+                    )
+                    Column(
+                        modifier = Modifier
+                            .clickable { if(!choiceIsActive.value) openChoseCategoryDialog.value = true }
+                            .padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.Start
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            val saturation = category.value.categoryImg.externalColor.getSaturation()
-                            val color = if (saturation>0.5f) Color.White else Color.Black
-                            Text(text = stringResource(R.string.to_category), fontSize = 14.sp, color=color)
-                            Text(text = category.value.title, fontSize = 17.sp, color=color, overflow = TextOverflow.Ellipsis)
+                            Column(
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                val saturation = category.value.categoryImg.externalColor.getSaturation()
+                                val color = if (saturation>0.5f) Color.White else Color.Black
+                                Text(text = stringResource(R.string.to_category), fontSize = 14.sp, color=color)
+                                Text(text = category.value.title, fontSize = 17.sp, color=color, overflow = TextOverflow.Ellipsis)
+                            }
+                            Image(
+                                painter = painterResource(id = category.value.categoryImg.img),
+                                contentDescription = null,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .width(36.dp)
+                                    .height(36.dp)
+                                    .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
+                            )
                         }
-                        Image(
-                            painter = painterResource(id = category.value.categoryImg.img),
-                            contentDescription = null,
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .width(36.dp)
-                                .height(36.dp)
-                                .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
-                        )
                     }
                 }
             }
