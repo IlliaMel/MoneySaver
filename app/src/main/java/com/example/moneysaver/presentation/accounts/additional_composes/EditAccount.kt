@@ -22,7 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -737,9 +739,16 @@ fun VectorIcon(modifier: Modifier = Modifier, modifierIcn: Modifier = Modifier, 
         .width(width)
         .height(height)
         .clickable { onClick() }
-        .clip(RoundedCornerShape(corner = CornerSize(cornerSize)))
-        .background(vectorImg.externalColor),
+        .clip(RoundedCornerShape(corner = CornerSize(cornerSize))),
         contentAlignment = Alignment.Center){
+        Image(
+            painter = painterResource(R.drawable.bg5),
+            contentScale = ContentScale.Crop,
+            contentDescription = null,
+            alignment = Alignment.BottomEnd,
+            modifier = Modifier.matchParentSize(),
+            colorFilter = ColorFilter.tint(color = vectorImg.externalColor, blendMode = BlendMode.Softlight)
+        )
         Icon(modifier = modifierIcn,
             imageVector = ImageVector.vectorResource(vectorImg.img),
             tint = vectorImg.innerColor,
