@@ -14,6 +14,7 @@ import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.ui.theme.currencyColor
 import com.example.moneysaver.ui.theme.currencyColorSpent
 import com.example.moneysaver.ui.theme.currencyColorZero
+import kotlin.math.abs
 
 @Composable
 fun BalanceField(baseCurrency: Currency, text: String, balance: Double) {
@@ -23,7 +24,7 @@ fun BalanceField(baseCurrency: Currency, text: String, balance: Double) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text, fontSize = 16.sp  , fontWeight = FontWeight.W500)
-        val balanceText: String = (if(balance>0) "+" else (if(balance < 0) "-" else ""))+baseCurrency.currency + " "+balance
+        val balanceText: String = (if(balance>0) "+" else (if(balance < 0) "-" else ""))+baseCurrency.currency + " "+ abs(balance)
         val balanceColor = if(balance>0) currencyColor else (if(balance < 0) currencyColorSpent else currencyColorZero)
         Text(text = balanceText, color = balanceColor, fontSize = 15.sp  , fontWeight = FontWeight.W500)
     }
