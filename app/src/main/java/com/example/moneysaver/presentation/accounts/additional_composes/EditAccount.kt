@@ -836,16 +836,7 @@ fun SetImg(
                                 if(idForCategory){
                                     VectorIcon(Modifier.padding(8.dp,8.dp,8.dp,8.dp),Modifier.padding(12.dp), vectorImg = CategoriesData.categoryImges[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = VectorImg(img = listOfVectors[index].img)},width = 50.dp , height = 60.dp, cornerSize = 50.dp)
                                 }else{
-                                    Card(
-                                        backgroundColor = listOfVectors[index].externalColor,
-                                        modifier = Modifier
-                                            .padding(8.dp)
-                                            .width(45.dp)
-                                            .height(45.dp),
-                                        elevation = 8.dp,
-                                    ) {
-                                        VectorIcon(Modifier.padding(8.dp,0.dp,8.dp,0.dp),vectorImg = listOfVectors[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = VectorImg(img = listOfVectors[index].img)})
-                                    }
+                                    VectorIcon(Modifier.padding(8.dp),vectorImg = listOfVectors[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = VectorImg(img = listOfVectors[index].img)})
                                 }
 
                             }
@@ -924,19 +915,9 @@ fun SetImg(
                                     .padding(8.dp, 8.dp, 8.dp, 8.dp),Modifier.padding(8.dp), vectorImg = vectorImg, onClick = {returnType(vectorImg)},width = 30.dp , height = 65.dp, cornerSize = 30.dp)
                         }else{
 
-                            Card(
-                                backgroundColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(8.dp)
-                                    .width(72.dp)
-                                    .height(45.dp),
-                                elevation = 8.dp,
-                            ) {
-                                var vectorImg: VectorImg = chosenVectorImg.value
-                                vectorImg.externalColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value
-                                VectorIcon(Modifier.padding(0.dp,0.dp,0.dp,0.dp), vectorImg = vectorImg, onClick = { returnType(vectorImg)})
-                            }
+                            var vectorImg: VectorImg = chosenVectorImg.value
+                            vectorImg.externalColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value
+                            VectorIcon(Modifier.padding(8.dp), vectorImg = vectorImg, onClick = { returnType(vectorImg)})
                         }
 
 
