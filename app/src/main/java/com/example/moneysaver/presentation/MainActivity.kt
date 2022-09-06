@@ -165,8 +165,8 @@ class MainActivity : ComponentActivity() {
 
                 } else {
                     val service = AlarmService(context = applicationContext)
-                    //MainUI(sharedPref,service,formattedDate)
-                    SlideInAnimationScreen()
+                    MainUI(sharedPref,service,formattedDate)
+                    //SlideInAnimationScreen()
                     if (viewModel.isParsingSucceeded.value) {
                         with(sharedPref.edit()) {
                             putBoolean(CURRENCY_PARSED_KEY, true)
