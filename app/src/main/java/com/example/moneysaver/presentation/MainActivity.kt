@@ -483,27 +483,25 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                         .fillMaxWidth()
                         .background(whiteSurface)
                 ) {
-                    Crossfade(targetState = selectedTabIndex) { selectedTabIndex ->
-                        when (selectedTabIndex) {
-                            0 -> Accounts(
-                                onNavigationIconClick = {
-                                    scope.launch {
-                                        scaffoldState.drawerState.open()
-                                    }
-                                },chosenAccountFilter = chosenAccountFilter!!,baseCurrency = baseCurrency, onChosenAccountFilterClick = { account ->
-                                    chosenAccountFilterTMP.value= account
-                                })
-                            1 -> Categories(onNavigationIconClick = {
+                    when (selectedTabIndex) {
+                        0 -> Accounts(
+                            onNavigationIconClick = {
                                 scope.launch {
                                     scaffoldState.drawerState.open()
                                 }
-                            },chosenAccountFilter!!,baseCurrency = baseCurrency)
-                            2 -> Transactions(onNavigationIconClick = {
-                                scope.launch {
-                                    scaffoldState.drawerState.open()
-                                }
-                            }, navigateToTransaction = {},chosenAccountFilter!!,viewModel,baseCurrency = baseCurrency)
-                        }
+                            },chosenAccountFilter = chosenAccountFilter!!,baseCurrency = baseCurrency, onChosenAccountFilterClick = { account ->
+                                chosenAccountFilterTMP.value= account
+                            })
+                        1 -> Categories(onNavigationIconClick = {
+                            scope.launch {
+                                scaffoldState.drawerState.open()
+                            }
+                        },chosenAccountFilter!!,baseCurrency = baseCurrency)
+                        2 -> Transactions(onNavigationIconClick = {
+                            scope.launch {
+                                scaffoldState.drawerState.open()
+                            }
+                        }, navigateToTransaction = {},chosenAccountFilter!!,viewModel,baseCurrency = baseCurrency)
                     }
 
                 }

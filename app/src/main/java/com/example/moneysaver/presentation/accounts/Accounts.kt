@@ -2,6 +2,8 @@ package com.example.moneysaver.presentation.accounts
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -77,52 +79,67 @@ fun Accounts(
             TopBarAccounts(onAddAccountAction = { setSelectedAccount.value = true },
                 onNavigationIconClick, onFilterClick = {isSelectedFilterAccount.value = true}, chosenAccountFilter)
 
-            SumMoneyInfo(
-                stringResource(R.string.accounts_name_label),
-                viewModel.findSum(viewModel.state.debtAndSimpleList,base = baseCurrency.currencyName),
-                baseCurrency.currencyName
-            )
-
-            LazyColumn(
-                modifier = Modifier.weight(2f),
-                contentPadding = PaddingValues()
-            ) {
-                items(
-                    items = viewModel.state.debtAndSimpleList,
-                    itemContent = {
-                        AccountListItem(account = it, navigateToCardSettings = {isForEditing.value = true ; selectedAccountIndex = 1; chosenAccount = it})
-                    }
-                )
-                item {
-                    AddBankAccount(AccountsData.accountAdder, navigateToCardAdder = {isForEditing.value = false; selectedAccountIndex = 1; chosenAccount = AccountsData.normalAccount})
+            val visibleState = remember {
+                MutableTransitionState(false).apply {
+                    // Start the animation immediately.
+                    targetState = true
                 }
             }
-            Divider(
-                modifier = Modifier
-                    .padding(0.dp, 16.dp, 0.dp, 0.dp)
-                    .background(dividerColor)
-            )
+            AnimatedVisibility(visibleState  = visibleState) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(whiteSurface)
 
-            SumMoneyInfo(
-                stringResource(R.string.savings_accounts),
-                viewModel.findSum(viewModel.state.goalList,baseCurrency.currencyName),
-                baseCurrency.currencyName
-            )
+                ) {
+                    SumMoneyInfo(
+                        stringResource(R.string.accounts_name_label),
+                        viewModel.findSum(viewModel.state.debtAndSimpleList,base = baseCurrency.currencyName),
+                        baseCurrency.currencyName
+                    )
 
-
-
-            LazyColumn(
-                modifier = Modifier.weight(1.5f),
-                contentPadding = PaddingValues()
-            ) {
-                items(
-                    items = viewModel.state.goalList,
-                    itemContent = {
-                        AccountListItem(account = it, navigateToCardSettings = {isForEditing.value = true ; selectedAccountIndex = 1; chosenAccount = it} )
+                    LazyColumn(
+                        modifier = Modifier.weight(2f),
+                        contentPadding = PaddingValues()
+                    ) {
+                        items(
+                            items = viewModel.state.debtAndSimpleList,
+                            itemContent = {
+                                AccountListItem(account = it, navigateToCardSettings = {isForEditing.value = true ; selectedAccountIndex = 1; chosenAccount = it})
+                            }
+                        )
+                        item {
+                            AddBankAccount(AccountsData.accountAdder, navigateToCardAdder = {isForEditing.value = false; selectedAccountIndex = 1; chosenAccount = AccountsData.normalAccount})
+                        }
                     }
-                )
-                item {
-                    AddBankAccount(AccountsData.goalAdder, navigateToCardAdder = { isForEditing.value = false; selectedAccountIndex = 1; chosenAccount = AccountsData.goalAccount})
+                    Divider(
+                        modifier = Modifier
+                            .padding(0.dp, 16.dp, 0.dp, 0.dp)
+                            .background(dividerColor)
+                    )
+
+                    SumMoneyInfo(
+                        stringResource(R.string.savings_accounts),
+                        viewModel.findSum(viewModel.state.goalList,baseCurrency.currencyName),
+                        baseCurrency.currencyName
+                    )
+
+
+
+                    LazyColumn(
+                        modifier = Modifier.weight(1.5f),
+                        contentPadding = PaddingValues()
+                    ) {
+                        items(
+                            items = viewModel.state.goalList,
+                            itemContent = {
+                                AccountListItem(account = it, navigateToCardSettings = {isForEditing.value = true ; selectedAccountIndex = 1; chosenAccount = it} )
+                            }
+                        )
+                        item {
+                            AddBankAccount(AccountsData.goalAdder, navigateToCardAdder = { isForEditing.value = false; selectedAccountIndex = 1; chosenAccount = AccountsData.goalAccount})
+                        }
+                    }
                 }
             }
 
