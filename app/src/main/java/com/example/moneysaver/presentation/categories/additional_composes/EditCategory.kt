@@ -44,6 +44,7 @@ import com.example.moneysaver.ui.theme.*
 
 @Composable
 fun EditCategory(
+    isForSpendings: Boolean,
     isEditing: Boolean,
     category: Category = CategoriesData.defaultCategory,
     onAddCategoryAction: (Category) -> Unit,
@@ -77,7 +78,7 @@ fun EditCategory(
             onAddAccountAction = {onAddAccountAction(
 
          */
-        val checkedState = remember { mutableStateOf(true) }
+        val checkedState = remember { mutableStateOf(isForSpendings) }
         TopBarCategoryEdit(vectorImg =  img.value ,title = title.value,onChangeImg = {img.value = it}, typeOfCategory = if(isEditing)  stringResource(
                     R.string.edit_category) else  stringResource(R.string.new_category),
             onAddCategoryAction = {

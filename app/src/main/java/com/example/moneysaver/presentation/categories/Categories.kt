@@ -144,20 +144,21 @@ fun Categories(
                             .verticalScroll(rememberScrollState())
                     ) {
 
-                        Crossfade(targetState = viewModel.state, animationSpec = tween(2000)) { state ->
-                            CategoryListView(
-                                viewModel = viewModel,
-                                isForEditing = isForEditing,
-                                categoriesWithAdder = categoriesWithAdder,
-                                isAddingCategory = isAddingCategory,
-                                selectedCategory = selectedCategory,
-                                scope = scope,
-                                sheetState = sheetState,
-                                baseCurrency = baseCurrency,
-                                categories = viewModel.state.categoriesList.filter { state.isForSpendings }
-                            )
+                        Crossfade(targetState = viewModel.state, animationSpec = tween(1000)) { state ->
+                            when(state.isForSpendings){
+                                true,false -> CategoryListView(
+                                    viewModel = viewModel,
+                                    isForEditing = isForEditing,
+                                    categoriesWithAdder = categoriesWithAdder,
+                                    isAddingCategory = isAddingCategory,
+                                    selectedCategory = selectedCategory,
+                                    scope = scope,
+                                    sheetState = sheetState,
+                                    baseCurrency = baseCurrency,
+                                    categories = viewModel.state.categoriesList.filter { it.isForSpendings == state.isForSpendings }
+                                )
+                            }
                         }
-
                     }
                 }
             }
@@ -171,7 +172,7 @@ fun Categories(
             isAddingCategory.value = false
         }
 
-        EditCategory(isForEditing,category = if(isForEditing) selectedCategory.value else CategoriesData.defaultCategory ,onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory.value = false},onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory.value = false},onCancelIconClick = {isForEditing = false;  isAddingCategory.value = false})
+        EditCategory(isForSpendings = viewModel.state.isForSpendings,isForEditing,category = if(isForEditing) selectedCategory.value else CategoriesData.defaultCategory ,onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory.value = false},onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory.value = false},onCancelIconClick = {isForEditing = false;  isAddingCategory.value = false})
     }
 
 }
