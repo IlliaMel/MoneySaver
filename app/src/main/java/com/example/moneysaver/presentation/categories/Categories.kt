@@ -65,7 +65,7 @@ fun Categories(
     val minDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().first) }
     val maxDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().second) }
 
-    var isAddingCategory by remember { mutableStateOf(false) }
+    var isAddingCategory = remember { mutableStateOf(false) }
     var isForEditing by remember { mutableStateOf(false) }
 
 
@@ -83,7 +83,7 @@ fun Categories(
     viewModel.loadAccounts()
 
     var categories  = viewModel.state.categoriesList.filter { it.isForSpendings == viewModel.state.isForSpendings }
-    var categoriesWithAdder  = viewModel.getListWithAdderCategory(isAddingCategory,isForEditing)
+    var categoriesWithAdder  = viewModel.getListWithAdderCategory(isAddingCategory.value,isForEditing)
 
     //added category adder
 
@@ -94,12 +94,12 @@ fun Categories(
     if(isForEditing){
         BackHandler() {
             isForEditing = false
-            isAddingCategory = false
+            isAddingCategory.value = false
         }
     }
 
 
- if(!isAddingCategory){
+ if(!isAddingCategory.value){
     Column() {
         TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categoriesWithAdder.size > 1 || isForEditing) isForEditing =
             !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
@@ -145,30 +145,17 @@ fun Categories(
                     ) {
 
                         Crossfade(targetState = viewModel.state, animationSpec = tween(2000)) { state ->
-                            when (state.isForSpendings) {
-                                true -> CategoryListView(
-                                    viewModel = viewModel,
-                                    isForEditing = isForEditing,
-                                    categoriesWithAdder = categoriesWithAdder,
-                                    isAddingCategory = isAddingCategory,
-                                    selectedCategory = selectedCategory,
-                                    scope = scope,
-                                    sheetState = sheetState,
-                                    baseCurrency = baseCurrency,
-                                    categories = viewModel.state.categoriesList.filter { it.isForSpendings }
-                                )
-                                false -> CategoryListView(
-                                    viewModel = viewModel,
-                                    isForEditing = isForEditing,
-                                    categoriesWithAdder = categoriesWithAdder,
-                                    isAddingCategory = isAddingCategory,
-                                    selectedCategory = selectedCategory,
-                                    scope = scope,
-                                    sheetState = sheetState,
-                                    baseCurrency = baseCurrency,
-                                    categories = viewModel.state.categoriesList.filter { !it.isForSpendings }
-                                )
-                            }
+                            CategoryListView(
+                                viewModel = viewModel,
+                                isForEditing = isForEditing,
+                                categoriesWithAdder = categoriesWithAdder,
+                                isAddingCategory = isAddingCategory,
+                                selectedCategory = selectedCategory,
+                                scope = scope,
+                                sheetState = sheetState,
+                                baseCurrency = baseCurrency,
+                                categories = viewModel.state.categoriesList.filter { state.isForSpendings }
+                            )
                         }
 
                     }
@@ -181,10 +168,10 @@ fun Categories(
 
         BackHandler() {
             isForEditing = false
-            isAddingCategory = false
+            isAddingCategory.value = false
         }
 
-        EditCategory(isForEditing,category = if(isForEditing) selectedCategory.value else CategoriesData.defaultCategory ,onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory = false},onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory = false},onCancelIconClick = {isForEditing = false;  isAddingCategory = false})
+        EditCategory(isForEditing,category = if(isForEditing) selectedCategory.value else CategoriesData.defaultCategory ,onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory.value = false},onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory.value = false},onCancelIconClick = {isForEditing = false;  isAddingCategory.value = false})
     }
 
 }
@@ -195,14 +182,13 @@ fun CategoryListView(
     viewModel: CategoriesViewModel,
     isForEditing: Boolean,
     categoriesWithAdder: List<Category>,
-    isAddingCategory: Boolean,
+    isAddingCategory: MutableState<Boolean>,
     selectedCategory: MutableState<Category>,
     scope: CoroutineScope,
     sheetState: BottomSheetState,
     baseCurrency: Currency,
     categories: List<Category>
 ) {
-    var isAddingCategory by remember { mutableStateOf(isAddingCategory) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -251,11 +237,11 @@ fun CategoryListView(
                             modifierBox = Modifier.padding(4.dp),
                             onClickCategory = {
                                 if(categoriesWithAdder.size == 1 && !isForEditing){
-                                    isAddingCategory = true
+                                    isAddingCategory.value = true
                                 }else {
                                     selectedCategory.value = categoriesWithAdder[0]
                                     if(isForEditing)
-                                        isAddingCategory = true
+                                        isAddingCategory.value = true
                                     else {
                                         if(viewModel.addingTransactionIsAllowed())
                                             switchBottomSheet(scope, sheetState)
@@ -283,12 +269,12 @@ fun CategoryListView(
                                 modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                                 modifierBox = Modifier.padding(4.dp),
                                 onClickCategory = {if(categoriesWithAdder.size == 5 && !isForEditing){
-                                    isAddingCategory = true
+                                    isAddingCategory.value = true
                                 }else {
                                     selectedCategory.value =
                                         categoriesWithAdder[4]
                                     if(isForEditing)
-                                        isAddingCategory = true
+                                        isAddingCategory.value = true
                                     else {
                                         if(viewModel.addingTransactionIsAllowed())
                                             switchBottomSheet(scope, sheetState)
@@ -311,12 +297,12 @@ fun CategoryListView(
                                 modifierBox = Modifier.padding(4.dp),
                                 onClickCategory =  {
                                     if(categoriesWithAdder.size == 7 && !isForEditing){
-                                        isAddingCategory = true
+                                        isAddingCategory.value = true
                                     }else {
                                         selectedCategory.value =
                                             categoriesWithAdder[6]
                                         if(isForEditing)
-                                            isAddingCategory = true
+                                            isAddingCategory.value = true
                                         else {
                                             if(viewModel.addingTransactionIsAllowed())
                                                 switchBottomSheet(scope, sheetState)
@@ -354,12 +340,12 @@ fun CategoryListView(
                             modifierVectorImg = Modifier.padding(8.dp, 8.dp, 8.dp, 8.dp),
                             modifierBox = Modifier.padding(4.dp),
                             onClickCategory = {if(categoriesWithAdder.size == 2 && !isForEditing){
-                                isAddingCategory = true
+                                isAddingCategory.value = true
                             }else {
                                 selectedCategory.value =
                                     categoriesWithAdder[1]
                                 if(isForEditing)
-                                    isAddingCategory = true
+                                    isAddingCategory.value = true
                                 else {
                                     if(viewModel.addingTransactionIsAllowed())
                                         switchBottomSheet(scope, sheetState)
@@ -380,12 +366,12 @@ fun CategoryListView(
                             modifierBox = Modifier.padding(4.dp),
                             onClickCategory =  {
                                 if(categoriesWithAdder.size == 3 && !isForEditing){
-                                    isAddingCategory = true
+                                    isAddingCategory.value = true
                                 }else {
                                     selectedCategory.value =
                                         categoriesWithAdder[2]
                                     if(isForEditing)
-                                        isAddingCategory = true
+                                        isAddingCategory.value = true
                                     else {
                                         if(viewModel.addingTransactionIsAllowed())
                                             switchBottomSheet(scope, sheetState)
@@ -466,12 +452,12 @@ fun CategoryListView(
                             modifierBox = Modifier.padding(4.dp),
                             onClickCategory =  {
                                 if(categoriesWithAdder.size == 4 && !isForEditing){
-                                    isAddingCategory = true
+                                    isAddingCategory.value = true
                                 }else {
                                     selectedCategory.value =
                                         categoriesWithAdder[3]
                                     if(isForEditing)
-                                        isAddingCategory = true
+                                        isAddingCategory.value = true
                                     else {
                                         if(viewModel.addingTransactionIsAllowed())
                                             switchBottomSheet(scope, sheetState)
@@ -500,12 +486,12 @@ fun CategoryListView(
                                 modifierBox = Modifier.padding(4.dp),
                                 onClickCategory =  {
                                     if(categoriesWithAdder.size == 6 && !isForEditing){
-                                        isAddingCategory = true
+                                        isAddingCategory.value = true
                                     }else {
                                         selectedCategory.value =
                                             categoriesWithAdder[5]
                                         if(isForEditing)
-                                            isAddingCategory = true
+                                            isAddingCategory.value = true
                                         else {
                                             if(viewModel.addingTransactionIsAllowed())
                                                 switchBottomSheet(scope, sheetState)
@@ -529,12 +515,12 @@ fun CategoryListView(
                                 modifierBox = Modifier.padding(4.dp),
                                 onClickCategory =  {
                                     if(categoriesWithAdder.size == 8 && !isForEditing){
-                                        isAddingCategory = true
+                                        isAddingCategory.value = true
                                     }else {
                                         selectedCategory.value =
                                             categoriesWithAdder[7]
                                         if(isForEditing)
-                                            isAddingCategory = true
+                                            isAddingCategory.value = true
                                         else {
                                             if(viewModel.addingTransactionIsAllowed())
                                                 switchBottomSheet(scope, sheetState)
@@ -576,12 +562,12 @@ fun CategoryListView(
                                     modifierBox = Modifier.padding(4.dp),
                                     onClickCategory =  {
                                         if(categoriesWithAdder.size == i + 1 && !isForEditing){
-                                            isAddingCategory = true
+                                            isAddingCategory.value = true
                                         }else {
                                             selectedCategory.value =
                                                 categoriesWithAdder[i]
                                             if(isForEditing)
-                                                isAddingCategory = true
+                                                isAddingCategory.value = true
                                             else {
                                                 if(viewModel.addingTransactionIsAllowed())
                                                     switchBottomSheet(scope, sheetState)
