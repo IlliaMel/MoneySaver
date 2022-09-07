@@ -66,7 +66,7 @@ fun EditAccount(
     var setCurrencyTypeChange = remember { mutableStateOf(false) }
     var setDescriptionChange = remember { mutableStateOf(false) }
     var setBalance = remember { mutableStateOf(false) }
-    var setCreditLimit = remember { mutableStateOf(false) }
+    var setAdditionalMoneyValue = remember { mutableStateOf(false) }
 
 
     var currencyType =  remember { mutableStateOf(account.currencyType) }
@@ -75,6 +75,7 @@ fun EditAccount(
 
 
     var amountOfDept =  remember { mutableStateOf(account.debt) }
+    var amountOfGoal =  remember { mutableStateOf(account.goal) }
     var amountOfBalance =  remember { mutableStateOf(account.balance) }
     var amountOfCreditLimit =  remember { mutableStateOf(account.creditLimit) }
     var img =  remember { mutableStateOf(account.accountImg) }
@@ -112,11 +113,13 @@ fun EditAccount(
                         Account(
                             uuid = account.uuid,
                             accountImg = img.value,
+                            balance = amountOfBalance.value,
                             debt = amountOfDept.value,
                             description = description.value,
                             currencyType = currencyType.value,
                             isForDebt = true,
                             isForGoal = false,
+                            creationDate = account.creationDate,
                             title = it
                         )
                     }else if(type == 0) {
@@ -129,6 +132,7 @@ fun EditAccount(
                             currencyType = currencyType.value,
                             isForDebt = false,
                             isForGoal = false,
+                            creationDate = account.creationDate,
                             title = it
                         )
                     }else {
@@ -136,10 +140,12 @@ fun EditAccount(
                             uuid = account.uuid,
                             accountImg = img.value,
                             balance = amountOfBalance.value,
+                            goal = amountOfGoal.value,
                             description = description.value,
                             currencyType = currencyType.value,
                             isForDebt = false,
                             isForGoal = true,
+                            creationDate = account.creationDate,
                             title = it
                         )
                     }
@@ -155,6 +161,7 @@ fun EditAccount(
                     }else if (type == 1){
                         Account(
                             debt = amountOfDept.value,
+                            balance = amountOfBalance.value,
                             accountImg = img.value,
                             isForDebt = true,
                             description = description.value,
@@ -163,6 +170,7 @@ fun EditAccount(
                     }else{
                         Account(
                             balance = amountOfBalance.value,
+                            goal = amountOfGoal.value,
                             accountImg = img.value,
                             isForGoal = true,
                             description = description.value,
@@ -228,14 +236,6 @@ fun EditAccount(
                     fontSize = 18.sp
                 )
 
-                var moneyValue: String = ""
-                when(type){
-                    0-> moneyValue = stringResource(R.string.balance)
-
-                    1-> moneyValue = stringResource(R.string.amount_of_debt)
-
-                    2-> moneyValue = stringResource(R.string.main_goal)
-                }
 
                 Row(modifier = Modifier
                     .padding(0.dp, 0.dp, 0.dp, 0.dp)
@@ -245,7 +245,7 @@ fun EditAccount(
                     verticalAlignment = Alignment.CenterVertically){
                     Text(
                         modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
-                        text = moneyValue,
+                        text = stringResource(R.string.balance),
                         color = Color.Black,
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp
@@ -253,27 +253,36 @@ fun EditAccount(
 
                     Text(
                         modifier = Modifier.padding(0.dp, 0.dp, 16.dp, 0.dp),
-                        text = if(account.isForDebt) amountOfDept.value.toString() else amountOfBalance.value.toString(),
-                        color = whichColorOfAccount(account , if(account.isForDebt) amountOfDept.value else amountOfBalance.value),
+                        text = amountOfBalance.value.toString(), //if(account.isForDebt) amountOfDept.value.toString() else amountOfBalance.value.toString()
+                        color = if(amountOfBalance.value > 0) currencyColor else if(amountOfBalance.value < 0) currencyColorSpent else currencyColorZero, // whichColorOfAccount(account , if(account.isForDebt) amountOfDept.value else amountOfBalance.value)
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp
                     )
 
                 }
+
+                var moneyValue: String = ""
+                when(type){
+                    0-> moneyValue = stringResource(R.string.credit_limit)
+
+                    1-> moneyValue = stringResource(R.string.amount_of_debt)
+
+                    2-> moneyValue = stringResource(R.string.main_goal)
+                }
+
                 Divider()
 
-                if(type == 0) {
                     Row(
                         modifier = Modifier
                             .padding(0.dp, 0.dp, 0.dp, 0.dp)
                             .fillMaxWidth()
-                            .clickable { setCreditLimit.value = true },
+                            .clickable { setAdditionalMoneyValue.value = true },
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
-                            text = stringResource(R.string.credit_limit),
+                            text = moneyValue,
                             color = Color.Black,
                             fontWeight = FontWeight.W400,
                             fontSize = 16.sp
@@ -281,13 +290,29 @@ fun EditAccount(
 
                         Text(
                             modifier = Modifier.padding(0.dp, 0.dp, 16.dp, 0.dp),
-                            text = amountOfCreditLimit.value.toString(),
-                            color = currencyColor,
+                            text = when(type){
+                                0-> amountOfCreditLimit.value.toString()
+
+                                1-> amountOfDept.value.toString()
+
+                                2-> amountOfGoal.value.toString()
+
+                                else -> {""}
+                            },
+                            color = when(type){
+                                0-> if(amountOfCreditLimit.value > 0) currencyColor else if(amountOfCreditLimit.value < 0) currencyColorSpent else currencyColorZero
+
+                                1-> if(amountOfDept.value == 0.0) currencyColorZero  else currencyColorSpent
+
+                                2-> if(amountOfGoal.value == 0.0) currencyColorZero  else currencyColor
+
+                                else -> {currencyColorZero}
+                            },
                             fontWeight = FontWeight.W400,
                             fontSize = 16.sp
                         )
                     }
-                }
+
                 Divider()
                /*
                 Row(modifier = Modifier
@@ -347,9 +372,15 @@ fun EditAccount(
         }
 
     }
-
-    SetAccountBalance(openDialog = setCreditLimit, returnType = {setCreditLimit.value = false; amountOfCreditLimit.value = it.toDouble() })
-    SetAccountBalance(openDialog = setBalance, returnType = {setBalance.value = false; if(account.isForDebt) amountOfDept.value = it.toDouble() else amountOfBalance.value = it.toDouble() })
+//if(account.isForDebt) amountOfDept.value = it.toDouble() else
+    SetAccountBalance(openDialog = setAdditionalMoneyValue, returnType = {setAdditionalMoneyValue.value = false;
+        when(type){
+            0 ->  amountOfCreditLimit.value = it.toDouble()
+            1 ->  amountOfDept.value = it.toDouble()
+            2 ->  amountOfGoal.value = it.toDouble()
+        }
+      })
+    SetAccountBalance(openDialog = setBalance, returnType = {setBalance.value = false;  amountOfBalance.value = it.toDouble() })
     SetAccountDescription(description = account.description,openDialog = setDescriptionChange, returnType = {setDescriptionChange.value = false; description.value = it })
     SetAccountCurrencyType(openDialog = setCurrencyTypeChange) { returnType ->
         setCurrencyTypeChange.value = false;

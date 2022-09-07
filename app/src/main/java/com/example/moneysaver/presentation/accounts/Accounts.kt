@@ -448,13 +448,18 @@ fun AccountListItem(account: Account, navigateToCardSettings: (Account) -> Unit)
                     modifier = Modifier
                         .padding(0.dp, 8.dp, 0.dp, 8.dp),
                     verticalArrangement = Arrangement.SpaceEvenly,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.End
                 ) {
                     Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),text = account.description,maxLines = 2,
                         overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.W400 ,color = currencyColorZero, fontSize = 14.sp)
-                    if(!account.isForGoal && !account.isForDebt)
-                    Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),text = account.creditLimit.toString() + " " + account.currencyType.currency,maxLines = 2,
-                        overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.W400 ,color = currencyColor, fontSize = 14.sp)
+
+                    Text(modifier = Modifier.padding(0.dp, 0.dp, 32.dp, 0.dp),
+                        text = (if(account.isForDebt) account.debt.toString() else if (account.isForGoal) account.goal.toString() else account.creditLimit.toString() ) + " " + account.currencyType.currency,
+                        color =
+                        if(account.isForDebt) currencyColorSpent
+                        else currencyColor,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.W400, fontSize = 14.sp)
                 }
 
 
@@ -480,7 +485,13 @@ private fun CustomDivider(){
 @Composable
 private fun textForAccount(account: Account, modifier: Modifier = Modifier){
     Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black , fontSize = 14.sp)
-    Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) , text = if(account.isForDebt) (account.debt.toString() + " " + account.currencyType.currency) else (account.balance.toString() + " " + account.currencyType.currency), color = if(account.isForDebt || account.balance < 0) currencyColorSpent else if (account.balance > 0) currencyColor else currencyColorZero, fontWeight = FontWeight.W400 , fontSize = 14.sp)
+    Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) ,
+        text = account.balance.toString() + " " + account.currencyType.currency,
+        color =
+        if(account.balance < 0.0) currencyColorSpent
+        else if (account.balance > 0.0) currencyColor
+        else currencyColorZero,
+        fontWeight = FontWeight.W400 , fontSize = 14.sp)
 }
 
 
