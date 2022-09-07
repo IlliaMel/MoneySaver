@@ -345,7 +345,7 @@ private fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, ac
                                 VectorIcon(height = 40.dp , width = 50.dp, vectorImg = it.accountImg, onClick = {})
                                 Column(modifier = Modifier.padding(8.dp, 0.dp)) {
                                     Text(it.title, fontSize = 16.sp)
-                                    val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else ""))+"$ "+it.balance
+                                    val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else "")) + it.currencyType.currency + " " + it.balance
                                     val balanceColor = if(it.balance>0) Color.Green else (if(it.balance < 0) Color.Red else Color.Gray)
                                     Text(text = balanceText, color = balanceColor, fontSize = 14.sp)
                                 }
@@ -393,7 +393,9 @@ private fun ChooseTransactionCategoryDialog(openDialog: MutableState<Boolean>, c
                                 ,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                VectorIcon(height = 40.dp , width = 40.dp, vectorImg = it.categoryImg, onClick = {}, cornerSize = 50.dp)
+                                VectorIcon(modifierIcn = Modifier.padding(6.dp), height = 40.dp , width = 40.dp, vectorImg = it.categoryImg, onClick = {
+                                    transactionCategory.value = it
+                                    openDialog.value = false}, cornerSize = 50.dp)
                                 Text(modifier = Modifier.padding(8.dp, 0.dp), text = it.title, fontSize = 16.sp)
                             }
                             Divider(modifier = Modifier.background(dividerColor))
