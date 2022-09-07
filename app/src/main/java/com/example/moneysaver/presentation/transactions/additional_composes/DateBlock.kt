@@ -35,6 +35,7 @@ import com.example.moneysaver.ui.theme.currencyColorSpent
 import com.example.moneysaver.ui.theme.currencyColorZero
 import com.example.moneysaver.ui.theme.gray
 import java.util.*
+import kotlin.math.abs
 
 @Composable
 fun DateBlock(baseCurrency: Currency,  date: Date, balanceChange: Double) {
@@ -66,7 +67,7 @@ fun DateBlock(baseCurrency: Currency,  date: Date, balanceChange: Double) {
             modifier = Modifier.fillMaxHeight(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val balanceChangeText: String = (if(balanceChange>0) "+" else (if(balanceChange < 0) "-" else ""))+ baseCurrency.currency + " " + balanceChange
+            val balanceChangeText: String = (if(balanceChange>0) "+" else (if(balanceChange < 0) "-" else ""))+ baseCurrency.currency + " " + abs(balanceChange)
             val balanceChangeColor = if(balanceChange>0) currencyColor else (if(balanceChange < 0) currencyColorSpent else currencyColorZero)
             Text(text = balanceChangeText, color = balanceChangeColor, fontSize = 20.sp , fontWeight = FontWeight.W500)
         }

@@ -120,6 +120,12 @@ class CategoriesViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
+    fun swapCategoriesType() {
+        state = state.copy(
+            isForSpendings = !state.isForSpendings
+        )
+    }
+
     fun ifAllCategoriesIsZero() : Boolean{
         state.categoriesList.filter { it.isForSpendings == state.isForSpendings }.forEach{
             if(it.spent != 0.0)
