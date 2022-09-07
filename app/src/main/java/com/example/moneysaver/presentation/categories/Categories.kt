@@ -104,66 +104,74 @@ fun Categories(
         TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categoriesWithAdder.size > 1 || isForEditing) isForEditing =
             !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
 
-        BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-            sheetContent = {
-                if(sheetContentInitClose && viewModel.state.accountsList.isNotEmpty())
-                    TransactionEditor(
-                        category = selectedCategory,
-                        addTransaction = viewModel::addTransaction,
-                        closeAdder = { scope.launch {sheetState.collapse()} },
-                        accountsList = viewModel.state.accountsList,
-                        categoriesList = categories,
-                        minDate = minDate,
-                        maxDate = maxDate
-                    )
-            },
-            sheetPeekHeight = 0.dp
-        ) {
-
-            if(sheetState.isCollapsed) sheetContentInitClose = true
-
-            BackHandler(enabled = sheetState.isExpanded) {
-                scope.launch {
-                    sheetState.collapse()
-                }
+        val visibleState = remember {
+            MutableTransitionState(false).apply {
+                // Start the animation immediately.
+                targetState = true
             }
+        }
+        AnimatedVisibility(visibleState  = visibleState) {
+            BottomSheetScaffold(
+                scaffoldState = scaffoldState,
+                sheetContent = {
+                    if(sheetContentInitClose && viewModel.state.accountsList.isNotEmpty())
+                        TransactionEditor(
+                            category = selectedCategory,
+                            addTransaction = viewModel::addTransaction,
+                            closeAdder = { scope.launch {sheetState.collapse()} },
+                            accountsList = viewModel.state.accountsList,
+                            categoriesList = categories,
+                            minDate = minDate,
+                            maxDate = maxDate
+                        )
+                },
+                sheetPeekHeight = 0.dp
+            ) {
 
-            BoxWithConstraints {
+                if(sheetState.isCollapsed) sheetContentInitClose = true
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                ) {
-
-                    Crossfade(targetState = viewModel.state, animationSpec = tween(2000)) { state ->
-                        when (state.isForSpendings) {
-                            true -> CategoryListView(
-                                viewModel = viewModel,
-                                isForEditing = isForEditing,
-                                categoriesWithAdder = categoriesWithAdder,
-                                isAddingCategory = isAddingCategory,
-                                selectedCategory = selectedCategory,
-                                scope = scope,
-                                sheetState = sheetState,
-                                baseCurrency = baseCurrency,
-                                categories = viewModel.state.categoriesList.filter { it.isForSpendings }
-                            )
-                            false -> CategoryListView(
-                                viewModel = viewModel,
-                                isForEditing = isForEditing,
-                                categoriesWithAdder = categoriesWithAdder,
-                                isAddingCategory = isAddingCategory,
-                                selectedCategory = selectedCategory,
-                                scope = scope,
-                                sheetState = sheetState,
-                                baseCurrency = baseCurrency,
-                                categories = viewModel.state.categoriesList.filter { !it.isForSpendings }
-                            )
-                        }
+                BackHandler(enabled = sheetState.isExpanded) {
+                    scope.launch {
+                        sheetState.collapse()
                     }
+                }
 
+                BoxWithConstraints {
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+
+                        Crossfade(targetState = viewModel.state, animationSpec = tween(2000)) { state ->
+                            when (state.isForSpendings) {
+                                true -> CategoryListView(
+                                    viewModel = viewModel,
+                                    isForEditing = isForEditing,
+                                    categoriesWithAdder = categoriesWithAdder,
+                                    isAddingCategory = isAddingCategory,
+                                    selectedCategory = selectedCategory,
+                                    scope = scope,
+                                    sheetState = sheetState,
+                                    baseCurrency = baseCurrency,
+                                    categories = viewModel.state.categoriesList.filter { it.isForSpendings }
+                                )
+                                false -> CategoryListView(
+                                    viewModel = viewModel,
+                                    isForEditing = isForEditing,
+                                    categoriesWithAdder = categoriesWithAdder,
+                                    isAddingCategory = isAddingCategory,
+                                    selectedCategory = selectedCategory,
+                                    scope = scope,
+                                    sheetState = sheetState,
+                                    baseCurrency = baseCurrency,
+                                    categories = viewModel.state.categoriesList.filter { !it.isForSpendings }
+                                )
+                            }
+                        }
+
+                    }
                 }
             }
         }

@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -114,219 +116,227 @@ fun Transactions(
     ) {
         var sheetContentInitClose by remember { mutableStateOf(false) }
         TopBarTransactions(onNavigationIconClick = { onNavigationIconClick() }, minDate = minDate, maxDate = maxDate, transactionSearchText=transactionSearchText,chosenAccountFilter, viewModel)
-        BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-
-            sheetContent = {
-                if(sheetContentInitClose)
-                if(selectedCategory.value==null && selectedTransaction.value==null) {
-                    CategoryChooser(selectedCategory, viewModel.state.categoriesList)
-                } else {
-                    if(selectedCategory.value==null && selectedTransaction.value!=null)
-                        selectedCategory.value = viewModel.state.categoriesList.first{ it.uuid == selectedTransaction.value!!.categoryUUID}
-                    val transactionCategory: MutableState<Category> = remember { mutableStateOf(selectedCategory.value!!) }
-                    TransactionEditor(
-                        currentTransaction = selectedTransaction,
-                        category = transactionCategory,
-                        addTransaction = viewModel::addTransaction,
-                        deleteTransaction = viewModel::deleteTransaction,
-                        closeAdder = {
-                            scope.launch {
-                                sheetState.collapse()
-                                selectedCategory.value=null // reset selected category
-                                selectedTransaction.value=null
-                            }
-                        },
-                        accountsList = viewModel.state.accountsList,
-                        categoriesList = viewModel.state.categoriesList,
-                        minDate = minDate,
-                        maxDate = maxDate,
-                        editBySwipeWasActivated = editBySwipeWasActivated
-                    )
-                }
-            },
-            sheetPeekHeight = 0.dp,
-            floatingActionButton = {
-
-                if(sheetState.isCollapsed) sheetContentInitClose = true
-//??? !sheetState.isAnimationRunning
-                FloatingActionButton(
-                    onClick = {
-                        if(viewModel.addingTransactionIsAllowed()) {
-                            scope.launch {
-                                selectedCategory.value=null
-                                selectedTransaction.value=null
-                                if(sheetState.isCollapsed && !sheetState.isAnimationRunning)
-                                    scaffoldState.bottomSheetState.expand()
-                                else
-                                    scaffoldState.bottomSheetState.collapse()
-                            }
-                        } else showNoAccountOrCategoryMessage()
-                    },
-                    backgroundColor = if(viewModel.addingTransactionIsAllowed()) Color(0xff5c6bbf) else Color(0xFFADADAB)
-                ) {
-                    Icon(
-                        imageVector = if(sheetState.isCollapsed && !sheetState.isAnimationRunning) Icons.Default.Add else Icons.Default.ArrowDropDown,
-                        contentDescription = stringResource(R.string.add_transaction)
-                    )
-                }
+        val visibleState = remember {
+            MutableTransitionState(false).apply {
+                // Start the animation immediately.
+                targetState = true
             }
-        ) {
+        }
+        AnimatedVisibility(visibleState  = visibleState) {
+            BottomSheetScaffold(
+                scaffoldState = scaffoldState,
 
-            BackHandler(enabled = sheetState.isExpanded) {
-                scope.launch {
-                    sheetState.collapse()
+                sheetContent = {
+                    if(sheetContentInitClose)
+                        if(selectedCategory.value==null && selectedTransaction.value==null) {
+                            CategoryChooser(selectedCategory, viewModel.state.categoriesList)
+                        } else {
+                            if(selectedCategory.value==null && selectedTransaction.value!=null)
+                                selectedCategory.value = viewModel.state.categoriesList.first{ it.uuid == selectedTransaction.value!!.categoryUUID}
+                            val transactionCategory: MutableState<Category> = remember { mutableStateOf(selectedCategory.value!!) }
+                            TransactionEditor(
+                                currentTransaction = selectedTransaction,
+                                category = transactionCategory,
+                                addTransaction = viewModel::addTransaction,
+                                deleteTransaction = viewModel::deleteTransaction,
+                                closeAdder = {
+                                    scope.launch {
+                                        sheetState.collapse()
+                                        selectedCategory.value=null // reset selected category
+                                        selectedTransaction.value=null
+                                    }
+                                },
+                                accountsList = viewModel.state.accountsList,
+                                categoriesList = viewModel.state.categoriesList,
+                                minDate = minDate,
+                                maxDate = maxDate,
+                                editBySwipeWasActivated = editBySwipeWasActivated
+                            )
+                        }
+                },
+                sheetPeekHeight = 0.dp,
+                floatingActionButton = {
+
+                    if(sheetState.isCollapsed) sheetContentInitClose = true
+//??? !sheetState.isAnimationRunning
+                    FloatingActionButton(
+                        onClick = {
+                            if(viewModel.addingTransactionIsAllowed()) {
+                                scope.launch {
+                                    selectedCategory.value=null
+                                    selectedTransaction.value=null
+                                    if(sheetState.isCollapsed && !sheetState.isAnimationRunning)
+                                        scaffoldState.bottomSheetState.expand()
+                                    else
+                                        scaffoldState.bottomSheetState.collapse()
+                                }
+                            } else showNoAccountOrCategoryMessage()
+                        },
+                        backgroundColor = if(viewModel.addingTransactionIsAllowed()) Color(0xff5c6bbf) else Color(0xFFADADAB)
+                    ) {
+                        Icon(
+                            imageVector = if(sheetState.isCollapsed && !sheetState.isAnimationRunning) Icons.Default.Add else Icons.Default.ArrowDropDown,
+                            contentDescription = stringResource(R.string.add_transaction)
+                        )
+                    }
+                }
+            ) {
+
+                BackHandler(enabled = sheetState.isExpanded) {
+                    scope.launch {
+                        sheetState.collapse()
+                        selectedCategory.value=null
+                        selectedTransaction.value=null
+                    }
+                }
+
+                if(sheetState.isCollapsed) {
                     selectedCategory.value=null
                     selectedTransaction.value=null
                 }
-            }
-
-            if(sheetState.isCollapsed) {
-                selectedCategory.value=null
-                selectedTransaction.value=null
-            }
 
 
-            LazyColumn(
-                Modifier.background(whiteSurface),
-                contentPadding = PaddingValues()
-            ) {
+                LazyColumn(
+                    Modifier.background(whiteSurface),
+                    contentPadding = PaddingValues()
+                ) {
 
-                item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(IntrinsicSize.Min)
-                            .background(whiteSurface),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        BalanceField(
-                            baseCurrency,
-                            text = stringResource(R.string.starting_balance),
-                            balance = viewModel.state.startingBalance
-                        )
-                        Divider(
-                            modifier = Modifier
-                                .background(dividerColor)
-                                .fillMaxHeight()
-                                .width(1.dp)
-                        )
-                        BalanceField(
-                            baseCurrency,
-                            text = stringResource(R.string.ending_balance),
-                            balance = viewModel.state.endingBalance
-                        )
-                    }
-                    Divider(modifier = Modifier.background(dividerColor))
-                }
-
-                for (date: Date in sortedDateToTransactionMap.keys) {
-                    var dayBalanceChange = 0.0
-                    for (x in sortedDateToTransactionMap[date]!!)
-                        dayBalanceChange += x.sum
                     item {
-                        DateBlock(baseCurrency = baseCurrency, date = date, balanceChange = dayBalanceChange)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(IntrinsicSize.Min)
+                                .background(whiteSurface),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            BalanceField(
+                                baseCurrency,
+                                text = stringResource(R.string.starting_balance),
+                                balance = viewModel.state.startingBalance
+                            )
+                            Divider(
+                                modifier = Modifier
+                                    .background(dividerColor)
+                                    .fillMaxHeight()
+                                    .width(1.dp)
+                            )
+                            BalanceField(
+                                baseCurrency,
+                                text = stringResource(R.string.ending_balance),
+                                balance = viewModel.state.endingBalance
+                            )
+                        }
                         Divider(modifier = Modifier.background(dividerColor))
                     }
-                    sortedDateToTransactionMap[date]?.let { m ->
-                        items(
-                            items = m.toList(),
-                            key = {it.hashCode()},
-                            itemContent = {
-                                Column {
-                                    val categoryName = viewModel.getCategoryNameByUUIID(it.categoryUUID)
 
-                                    val dismissState = rememberDismissState(initialValue = DismissValue.Default)
-                                    if (dismissState.isDismissed(DismissDirection.StartToEnd)) {
-                                        // launch transaction editing
-                                        scope.launch {
-                                            if(sheetState.isExpanded) {
-                                                sheetState.collapse()
-                                            } else {
-                                                dismissState.reset()
-                                                selectedCategory.value = null
-                                                selectedTransaction.value = it
-                                                sheetState.expand()
-                                            }
-                                        }
-                                    } else if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                                        viewModel.deleteTransaction(it)
-                                    }
+                    for (date: Date in sortedDateToTransactionMap.keys) {
+                        var dayBalanceChange = 0.0
+                        for (x in sortedDateToTransactionMap[date]!!)
+                            dayBalanceChange += x.sum
+                        item {
+                            DateBlock(baseCurrency = baseCurrency, date = date, balanceChange = dayBalanceChange)
+                            Divider(modifier = Modifier.background(dividerColor))
+                        }
+                        sortedDateToTransactionMap[date]?.let { m ->
+                            items(
+                                items = m.toList(),
+                                key = {it.hashCode()},
+                                itemContent = {
+                                    Column {
+                                        val categoryName = viewModel.getCategoryNameByUUIID(it.categoryUUID)
 
-                                    SwipeToDismiss(
-                                        state = dismissState,
-                                        directions = setOf(
-                                            DismissDirection.StartToEnd,
-                                            DismissDirection.EndToStart
-                                        ),
-                                        dismissThresholds = {
-                                            FractionalThreshold(0.2f)
-                                        },
-                                        background = {
-                                            val direction = dismissState.dismissDirection
-
-                                            val color by animateColorAsState(
-                                                when (direction) {
-                                                    DismissDirection.StartToEnd -> Color.Blue
-                                                    DismissDirection.EndToStart -> Color.Red
-                                                    else -> Color.White
+                                        val dismissState = rememberDismissState(initialValue = DismissValue.Default)
+                                        if (dismissState.isDismissed(DismissDirection.StartToEnd)) {
+                                            // launch transaction editing
+                                            scope.launch {
+                                                if(sheetState.isExpanded) {
+                                                    sheetState.collapse()
+                                                } else {
+                                                    dismissState.reset()
+                                                    selectedCategory.value = null
+                                                    selectedTransaction.value = it
+                                                    sheetState.expand()
                                                 }
-                                            )
-
-                                            val alignment = if(direction == DismissDirection.StartToEnd) Alignment.CenterStart else Alignment.CenterEnd
-
-                                            val scale by animateFloatAsState(
-                                                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
-                                            )
-
-                                            Box(
-                                                Modifier
-                                                    .fillMaxSize()
-                                                    .background(color)
-                                                    .padding(20.dp, 0.dp),
-                                                contentAlignment = alignment
-                                            ) {
-                                                Icon(
-                                                    imageVector = if(direction == DismissDirection.StartToEnd) Icons.Default.Edit else Icons.Default.Delete,
-                                                    contentDescription = "Delete Icon",
-                                                    modifier = Modifier.scale(scale)
-                                                )
                                             }
-                                        },
-                                        dismissContent = {
-
-                                            TransactionItem(
-                                                transaction = it,
-                                                categoryName=(categoryName?:""),
-                                                accountName = viewModel.state.accountsList.first{ x -> x.uuid == it.accountUUID}.title,
-                                                vectorImg =viewModel.state.categoriesList.first{ x -> x.uuid == it.categoryUUID}.categoryImg,
-                                                onClick = {
-                                                    scope.launch {
-                                                        if(sheetState.isExpanded) {
-                                                            sheetState.collapse()
-                                                        } else {
-                                                            selectedCategory.value=null
-                                                            selectedTransaction.value = it
-                                                            sheetState.expand()
-                                                        }
-                                                    }
-                                                },
-                                                viewModel = viewModel
-                                            )
-
+                                        } else if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                                            viewModel.deleteTransaction(it)
                                         }
-                                    )
-                                    
-                                    Divider(modifier = Modifier.background(dividerColor))
+
+                                        SwipeToDismiss(
+                                            state = dismissState,
+                                            directions = setOf(
+                                                DismissDirection.StartToEnd,
+                                                DismissDirection.EndToStart
+                                            ),
+                                            dismissThresholds = {
+                                                FractionalThreshold(0.2f)
+                                            },
+                                            background = {
+                                                val direction = dismissState.dismissDirection
+
+                                                val color by animateColorAsState(
+                                                    when (direction) {
+                                                        DismissDirection.StartToEnd -> Color.Blue
+                                                        DismissDirection.EndToStart -> Color.Red
+                                                        else -> Color.White
+                                                    }
+                                                )
+
+                                                val alignment = if(direction == DismissDirection.StartToEnd) Alignment.CenterStart else Alignment.CenterEnd
+
+                                                val scale by animateFloatAsState(
+                                                    if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                                                )
+
+                                                Box(
+                                                    Modifier
+                                                        .fillMaxSize()
+                                                        .background(color)
+                                                        .padding(20.dp, 0.dp),
+                                                    contentAlignment = alignment
+                                                ) {
+                                                    Icon(
+                                                        imageVector = if(direction == DismissDirection.StartToEnd) Icons.Default.Edit else Icons.Default.Delete,
+                                                        contentDescription = "Delete Icon",
+                                                        modifier = Modifier.scale(scale)
+                                                    )
+                                                }
+                                            },
+                                            dismissContent = {
+
+                                                TransactionItem(
+                                                    transaction = it,
+                                                    categoryName=(categoryName?:""),
+                                                    accountName = viewModel.state.accountsList.first{ x -> x.uuid == it.accountUUID}.title,
+                                                    vectorImg =viewModel.state.categoriesList.first{ x -> x.uuid == it.categoryUUID}.categoryImg,
+                                                    onClick = {
+                                                        scope.launch {
+                                                            if(sheetState.isExpanded) {
+                                                                sheetState.collapse()
+                                                            } else {
+                                                                selectedCategory.value=null
+                                                                selectedTransaction.value = it
+                                                                sheetState.expand()
+                                                            }
+                                                        }
+                                                    },
+                                                    viewModel = viewModel
+                                                )
+
+                                            }
+                                        )
+
+                                        Divider(modifier = Modifier.background(dividerColor))
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
+
+
                 }
 
-
             }
-
         }
     }
 }
