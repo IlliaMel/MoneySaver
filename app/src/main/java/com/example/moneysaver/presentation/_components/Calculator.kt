@@ -21,12 +21,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.ui.theme.*
 import kotlin.math.roundToInt
 
 @Composable
-fun Calculator(category:  MutableState<Category>, sumText: MutableState<String>, isSubmitted: MutableState<Boolean>, openDatePickerDialog: MutableState<Boolean>, focusManager: FocusManager) {
+fun Calculator(vectorImg:  VectorImg, sumText: MutableState<String>, isSubmitted: MutableState<Boolean>, openDatePickerDialog: MutableState<Boolean>, focusManager: FocusManager) {
     Row(modifier = Modifier
       //  .padding(6.dp, 0.dp)
         .fillMaxWidth()
@@ -234,7 +235,7 @@ fun Calculator(category:  MutableState<Category>, sumText: MutableState<String>,
                     modifier = Modifier
                         .weight(2f),
                     onClick = {evaluateSumValue(sumText)},
-                    bgColor = category.value.categoryImg.externalColor,
+                    bgColor = vectorImg.externalColor,
                     focusManager = focusManager
                 ) {
                     Text(text = "=", fontSize = 22.sp, fontWeight = FontWeight.Bold, color= Color.White)
@@ -245,7 +246,7 @@ fun Calculator(category:  MutableState<Category>, sumText: MutableState<String>,
                     modifier = Modifier
                         .weight(2f),
                     onClick = {isSubmitted.value=true},
-                    bgColor = category.value.categoryImg.externalColor,
+                    bgColor = vectorImg.externalColor,
                     focusManager = focusManager
                 ) {
                     Icon(imageVector = Icons.Default.Check, contentDescription = null, tint= Color.White)

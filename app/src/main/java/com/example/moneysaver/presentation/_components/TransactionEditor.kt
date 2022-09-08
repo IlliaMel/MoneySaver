@@ -179,8 +179,8 @@ fun TransactionEditor(
 
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(modifier = Modifier.padding(4.dp),text = if(category.value.isForSpendings) stringResource(R.string.expense) else stringResource(
-                            R.string.income), color = category.value.categoryImg.externalColor, fontSize = 16.sp)
-            Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + category.value.currencyType.currency, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                            R.string.income), color = Color.Black, fontSize = 16.sp)
+            Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + transactionAccount.value.currencyType.currency, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
         Divider()
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -199,6 +199,7 @@ fun TransactionEditor(
                     .width(220.dp)
                     .height(50.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
+                    disabledBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
                     focusedBorderColor = Color.Transparent
                 ),
@@ -251,7 +252,7 @@ fun TransactionEditor(
                 }
             }
         } else {
-            Calculator(category , sumText, isSubmitted, openPickDateDialog, focusManager)
+            Calculator(category.value.categoryImg , sumText, isSubmitted, openPickDateDialog, focusManager)
         }
 
         Row(
@@ -306,14 +307,14 @@ private fun defaultDateInRange(minDate: MutableState<Date?>, maxDate: MutableSta
 /**
  * @return value between 0.0 and 1.0
  */
-private fun Color.getSaturation(): Float {
+fun Color.getSaturation(): Float {
     val minValue = min(min(this.red, this.green), this.blue)
     return 1f - (minValue/1f)
 }
 
 
 @Composable
-private fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountList: List<Account>, transactionAccount: MutableState<Account>) {
+fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountList: List<Account>, transactionAccount: MutableState<Account>) {
     if (openDialog.value) {
         Dialog(
             onDismissRequest = {
@@ -342,7 +343,9 @@ private fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, ac
                                 ,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                VectorIcon(height = 40.dp , width = 50.dp, vectorImg = it.accountImg, onClick = {})
+                                VectorIcon(height = 40.dp , width = 50.dp, vectorImg = it.accountImg, onClick = {
+                                    transactionAccount.value = it
+                                    openDialog.value = false})
                                 Column(modifier = Modifier.padding(8.dp, 0.dp)) {
                                     Text(it.title, fontSize = 16.sp)
                                     val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else "")) + it.currencyType.currency + " " + it.balance

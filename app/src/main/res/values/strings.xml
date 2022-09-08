@@ -97,4 +97,10 @@
     <string name="main_currency">Main Currency</string>
     <string name="is_for_spending">Is for Spending</string>
     <string name="amount_of_money">Amount Of Money</string>
+    <string name="transaction">Transaction</string>
+    <string name="to_account">To Account</string>
+    <string name="add_at_least_two_accounts">Add at least 2 accounts</string>
+    <string name="transfer">Transfer</string>
+    <string name="same_account_error">Can`t make transfer to the same account</string>
+    <string name="lack_of_balance">Lack of balance</string>
 </resources>

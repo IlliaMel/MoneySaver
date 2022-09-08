@@ -9,8 +9,9 @@ data class Transaction(
     @PrimaryKey val uuid: UUID = UUID.randomUUID(),
   //  @PrimaryKey val id: Int = 0,
     val sum: Double,
-    val categoryUUID: UUID,
+    val categoryUUID: UUID?,
     val accountUUID: UUID,
+    val toAccountUUID: UUID?  = null,
     val date: Date = Date(),
     val note: String? = null
 )

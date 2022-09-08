@@ -172,7 +172,12 @@ fun Categories(
             isAddingCategory.value = false
         }
 
-        EditCategory(isForSpendings = viewModel.state.isForSpendings,isForEditing,category = if(isForEditing) selectedCategory.value else CategoriesData.defaultCategory ,onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory.value = false},onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory.value = false},onCancelIconClick = {isForEditing = false;  isAddingCategory.value = false})
+        EditCategory(isForSpendings = viewModel.state.isForSpendings,isForEditing,
+            category = if(isForEditing) selectedCategory.value else CategoriesData.defaultCategory ,
+            onAddCategoryAction = {isForEditing = false; viewModel.addCategory(it); isAddingCategory.value = false},
+            onDeleteCategory = {isForEditing = false;  viewModel.deleteCategory(it); isAddingCategory.value = false},
+            onCancelIconClick = {isForEditing = false;  isAddingCategory.value = false},
+            baseCurrency = baseCurrency)
     }
 
 }

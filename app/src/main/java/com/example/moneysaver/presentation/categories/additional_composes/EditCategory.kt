@@ -37,6 +37,8 @@ import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Currency
+import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.*
 import com.example.moneysaver.presentation.categories.CategoriesViewModel
@@ -47,16 +49,18 @@ fun EditCategory(
     isForSpendings: Boolean,
     isEditing: Boolean,
     category: Category = CategoriesData.defaultCategory,
+    viewModel: CategoriesViewModel = hiltViewModel(),
     onAddCategoryAction: (Category) -> Unit,
     onDeleteCategory: (Category) -> Unit,
     onCancelIconClick: () -> Unit,
+    baseCurrency: Currency,
 ){
 
 
     var setCurrencyTypeChange = remember { mutableStateOf(false) }
 
 
-    var currencyType =  remember { mutableStateOf(category.currencyType) }
+    var currencyType =  remember { mutableStateOf(viewModel.state.currenciesList.find { it.currencyName == baseCurrency.currencyName } ?: Currency()) }
     var title =  remember { mutableStateOf(category.title) }
     var img =  remember { mutableStateOf(category.categoryImg) }
 
@@ -112,7 +116,7 @@ fun EditCategory(
 
                 accountEditInfoText(
                     upperText = stringResource(R.string.currency_type),
-                    bottomText = currencyType.value.currency,
+                    bottomText = currencyType.value.description + " " + currencyType.value.currencyName + " " +  "(" + currencyType.value.currency + ")" ,
                     onAction = {setCurrencyTypeChange.value = true},
                     startPadding = 16.dp,
                     topPadding = 8.dp)
@@ -123,10 +127,10 @@ fun EditCategory(
                 .height(15.dp)
                 .fillMaxWidth())
 
-
+            if(!isEditing){
             Divider()
 
-            if(!isEditing){
+
                 Row(modifier = Modifier
                     .padding(0.dp, 0.dp, 0.dp, 0.dp)
                     .fillMaxWidth()

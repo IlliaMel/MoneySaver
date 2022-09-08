@@ -221,19 +221,6 @@ class MainActivityViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    fun addCategory(category: Category) {
-        viewModelScope.launch {
-            financeRepository.insertCategory(category)
-        }
-    }
-    fun deleteCategory(category: Category) {
-        viewModelScope.launch {
-            financeRepository.getTransactionsByCategoryUUID(category.uuid).onEach { list ->
-                for(transaction in list) deleteTransaction(transaction)
-            }.launchIn(viewModelScope)
-            financeRepository.deleteCategory(category)
-        }
-    }
 
     fun deleteTransaction(transaction: Transaction) {
         viewModelScope.launch {
@@ -241,10 +228,18 @@ class MainActivityViewModel @Inject constructor(
             val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
             transactionAccount?.let {
                 val updatedAccount = transactionAccount!!.copy(
-                    balance = transactionAccount.balance-transaction.sum
+                    balance = transactionAccount.balance - transaction.sum
                 )
                 // update account
                 financeRepository.insertAccount(updatedAccount)
+            }
+
+            if(transaction.toAccountUUID != null && transactionAccount != null){
+                val transactionToAccount = financeRepository.getAccountByUUID(transaction.toAccountUUID)
+                val updatedToAccount = transactionToAccount!!.copy(
+                    balance = transactionToAccount.balance - Math.round(100.0 * transaction.sum * returnCurrencyValue(transactionAccount.currencyType.currencyName,transactionToAccount.currencyType.currencyName)) / 100.0
+                )
+                financeRepository.insertAccount(updatedToAccount)
             }
 
             financeRepository.deleteTransaction(transaction)
@@ -264,27 +259,26 @@ class MainActivityViewModel @Inject constructor(
                 financeRepository.insertAccount(updatedAccount)
             }
             // add new spending data
+
             val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
+
             val updatedAccount = transactionAccount!!.copy(
-                balance = transactionAccount.balance+transaction.sum
+                balance = transactionAccount.balance-transaction.sum
             )
             financeRepository.insertAccount(updatedAccount)
+
+
+            if(transaction.toAccountUUID != null){
+                val transactionToAccount = financeRepository.getAccountByUUID(transaction.toAccountUUID)
+                val updatedToAccount = transactionToAccount!!.copy(
+                    balance = transactionToAccount.balance + Math.round(100 * transaction.sum * returnCurrencyValue(transactionAccount.currencyType.currencyName,transactionToAccount.currencyType.currencyName)) / 100.0
+                )
+                financeRepository.insertAccount(updatedToAccount)
+            }
 
             // add or update transaction
             financeRepository.insertTransaction(transaction)
         }
-    }
-    fun getListWithAdderCategory(isAddingCategory : Boolean, isForEditing : Boolean) : List<Category> {
-        var list = state.categoriesList.toMutableList()
-        if(!isAddingCategory && !isForEditing) {
-            if (list.isNotEmpty() && list.last().uuid == CategoriesData.addCategory.uuid) {
-
-            } else
-                list.add(CategoriesData.addCategory)
-        }else if(list.isNotEmpty() && list.last().uuid == CategoriesData.addCategory.uuid)
-            list.removeLast()
-
-        return list.toList()
     }
 
     fun loadCategories() {

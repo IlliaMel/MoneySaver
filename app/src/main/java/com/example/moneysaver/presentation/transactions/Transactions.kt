@@ -43,6 +43,7 @@ import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.*
+import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
 import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
@@ -60,6 +61,7 @@ fun Transactions(
     chosenAccountFilter: Account,
     viewModel: MainActivityViewModel,
     baseCurrency: Currency,
+    accountsViewModel: AccountsViewModel = hiltViewModel(),
 ) {
 
     val minDate: MutableState<Date?> = remember { mutableStateOf(getCurrentMonthDates().first) }
@@ -68,8 +70,8 @@ fun Transactions(
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
     )
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = sheetState
+     val scaffoldState = rememberBottomSheetScaffoldState(
+       bottomSheetState = sheetState
     )
     val scope = rememberCoroutineScope()
 
@@ -243,7 +245,12 @@ fun Transactions(
                                 key = {it.hashCode()},
                                 itemContent = {
                                     Column {
-                                        val categoryName = viewModel.getCategoryNameByUUIID(it.categoryUUID)
+
+                                        var transferReceiverName = if(it.categoryUUID == null)
+                                            accountsViewModel.state.allAccountList.find { account -> it.toAccountUUID == account.uuid }?.title
+                                                ?: ""
+                                        else
+                                            viewModel.getCategoryNameByUUIID(it.categoryUUID).toString()
 
                                         val dismissState = rememberDismissState(initialValue = DismissValue.Default)
                                         if (dismissState.isDismissed(DismissDirection.StartToEnd)) {
@@ -306,9 +313,9 @@ fun Transactions(
 
                                                 TransactionItem(
                                                     transaction = it,
-                                                    categoryName=(categoryName?:""),
+                                                    categoryName=(transferReceiverName?:""),
                                                     accountName = viewModel.state.accountsList.first{ x -> x.uuid == it.accountUUID}.title,
-                                                    vectorImg =viewModel.state.categoriesList.first{ x -> x.uuid == it.categoryUUID}.categoryImg,
+                                                    vectorImg = if(it.categoryUUID != null) viewModel.state.categoriesList.first{ x -> x.uuid == it.categoryUUID}.categoryImg else accountsViewModel.state.allAccountList.first{ x -> x.uuid == it.toAccountUUID}.accountImg  ,
                                                     onClick = {
                                                         scope.launch {
                                                             if(sheetState.isExpanded) {

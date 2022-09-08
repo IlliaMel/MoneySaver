@@ -28,21 +28,27 @@ import androidx.compose.ui.res.stringResource
 import com.example.moneysaver.R
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.domain.model.Currency
+import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivity
 import com.example.moneysaver.presentation.MainActivityViewModel
+import com.example.moneysaver.presentation._components.CategoryChooser
+import com.example.moneysaver.presentation._components.TransactionEditor
 import com.example.moneysaver.presentation._components.dividerForTopBar
-import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
-import com.example.moneysaver.presentation.accounts.additional_composes.ChooseAccountElement
-import com.example.moneysaver.presentation.accounts.additional_composes.EditAccount
+import com.example.moneysaver.presentation.accounts.additional_composes.*
+import com.example.moneysaver.presentation.transactions.showNoAccountOrCategoryMessage
 import com.example.moneysaver.ui.theme.*
+import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Accounts(
     onNavigationIconClick: () -> Unit,
@@ -50,34 +56,85 @@ fun Accounts(
     chosenAccountFilter: Account,
     viewModel: AccountsViewModel = hiltViewModel(),
     baseCurrency: Currency,
-){
+) {
 
 
-    var selectedAccountIndex by remember {
-        mutableStateOf(0)
-    }
+    var chosenAccount  = remember { mutableStateOf(AccountsData.accountsList.get(0)) }
 
-    var chosenAccount by remember {
-        mutableStateOf(AccountsData.accountsList.get(0))
-    }
+    var transactionAccount = remember { mutableStateOf(AccountsData.accountsList.get(0)) }
+    var transactionToAccount = remember { mutableStateOf(AccountsData.accountsList.get(0)) }
 
     var setSelectedAccount = remember { mutableStateOf(false) }
     var isSelectedFilterAccount = remember { mutableStateOf(false) }
 
+    var selectedAccountIndex = remember { mutableStateOf(0) }
     var isForEditing = remember { mutableStateOf(false) }
 
 
-    if(selectedAccountIndex == 0) {
+    val sheetState = rememberBottomSheetState(
+        initialValue = BottomSheetValue.Collapsed
+    )
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = sheetState
+    )
+
+
+    val scope = rememberCoroutineScope()
+    var sheetContentInitClose by remember { mutableStateOf(false) }
+
+    var sumText = remember {mutableStateOf("0")}
+    var lookingInfo =  remember {mutableStateOf(true)}
+
+    if(selectedAccountIndex.value == 0) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(whiteSurface)
 
         ) {
-
-
             TopBarAccounts(onAddAccountAction = { setSelectedAccount.value = true },
-                onNavigationIconClick, onFilterClick = {isSelectedFilterAccount.value = true}, chosenAccountFilter)
+                onNavigationIconClick,
+                onFilterClick = { isSelectedFilterAccount.value = true },
+                chosenAccountFilter
+            )
+
+            BackHandler(enabled = sheetState.isExpanded) {
+                scope.launch {
+                    sheetState.collapse()
+                }
+            }
+
+
+
+            BottomSheetScaffold(
+                scaffoldState = scaffoldState,
+                sheetContent = {
+                    if(sheetContentInitClose){
+
+                        sumText.value = "0"
+                        lookingInfo.value = true
+                        transactionAccount.value = chosenAccount.value
+                        transactionToAccount.value = viewModel.returnAnotherAccount(transactionAccount.value)
+                        AccountInfo(transactionAccount = transactionAccount,
+                                    transactionToAccount = transactionToAccount,
+                                    isForEditing = isForEditing,
+                                    selectedAccountIndex = selectedAccountIndex,
+                                    collapseBottomSheet = {
+                                        scope.launch {
+                                            if (sheetState.isExpanded){
+
+                                                sheetState.collapse()
+                                            }
+                                        }
+                                    },
+                                    sumText = sumText,
+                                    lookingInfo = lookingInfo)
+                }
+           },
+                sheetPeekHeight = 0.dp,
+            ){
+
+            if(sheetState.isCollapsed) sheetContentInitClose = true
 
             val visibleState = remember {
                 MutableTransitionState(false).apply {
@@ -85,7 +142,7 @@ fun Accounts(
                     targetState = true
                 }
             }
-            AnimatedVisibility(visibleState  = visibleState) {
+            AnimatedVisibility(visibleState = visibleState) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -94,7 +151,10 @@ fun Accounts(
                 ) {
                     SumMoneyInfo(
                         stringResource(R.string.accounts_name_label),
-                        viewModel.findSum(viewModel.state.debtAndSimpleList,base = baseCurrency.currencyName),
+                        viewModel.findSum(
+                            viewModel.state.debtAndSimpleList,
+                            base = baseCurrency.currencyName
+                        ),
                         baseCurrency.currencyName
                     )
 
@@ -105,11 +165,24 @@ fun Accounts(
                         items(
                             items = viewModel.state.debtAndSimpleList,
                             itemContent = {
-                                AccountListItem(account = it, navigateToCardSettings = {isForEditing.value = true ; selectedAccountIndex = 1; chosenAccount = it})
+                                AccountListItem(account = it, navigateToCardSettings = {
+                                    scope.launch {
+                                        if (sheetState.isExpanded) {
+                                            sheetState.collapse()
+                                        } else {
+                                            chosenAccount.value = it
+                                            sheetState.expand()
+                                        }
+                                    }
+                                })
                             }
                         )
                         item {
-                            AddBankAccount(AccountsData.accountAdder, navigateToCardAdder = {isForEditing.value = false; selectedAccountIndex = 1; chosenAccount = AccountsData.normalAccount})
+                            AddBankAccount(
+                                AccountsData.accountAdder,
+                                navigateToCardAdder = {
+                                    isForEditing.value = false;  selectedAccountIndex.value = 1;  chosenAccount.value = AccountsData.normalAccount
+                                })
                         }
                     }
                     Divider(
@@ -120,7 +193,7 @@ fun Accounts(
 
                     SumMoneyInfo(
                         stringResource(R.string.savings_accounts),
-                        viewModel.findSum(viewModel.state.goalList,baseCurrency.currencyName),
+                        viewModel.findSum(viewModel.state.goalList, baseCurrency.currencyName),
                         baseCurrency.currencyName
                     )
 
@@ -133,11 +206,26 @@ fun Accounts(
                         items(
                             items = viewModel.state.goalList,
                             itemContent = {
-                                AccountListItem(account = it, navigateToCardSettings = {isForEditing.value = true ; selectedAccountIndex = 1; chosenAccount = it} )
+                                AccountListItem(
+                                    account = it,
+                                    navigateToCardSettings = {
+                                        scope.launch {
+                                            if (sheetState.isExpanded) {
+                                                sheetState.collapse()
+                                            } else {
+                                                chosenAccount.value = it
+                                                sheetState.expand()
+                                            }
+                                        }
+                                    })
                             }
                         )
                         item {
-                            AddBankAccount(AccountsData.goalAdder, navigateToCardAdder = { isForEditing.value = false; selectedAccountIndex = 1; chosenAccount = AccountsData.goalAccount})
+                            AddBankAccount(
+                                AccountsData.goalAdder,
+                                navigateToCardAdder = {
+                                    isForEditing.value = false; selectedAccountIndex.value = 1;  chosenAccount.value = AccountsData.goalAccount
+                                })
                         }
                     }
                 }
@@ -145,14 +233,16 @@ fun Accounts(
 
 
         }
-    }else if (selectedAccountIndex  == 1) {
-        EditAccount(isForEditing.value,chosenAccount ,
-            onAddAccountAction = {viewModel.addAccount(it); selectedAccountIndex = 0},
-            onDeleteAccount = {viewModel.deleteAccount(it); selectedAccountIndex = 0},
-            onCancelIconClick = {selectedAccountIndex = 0} )
+    }
+    }else if (selectedAccountIndex.value == 1) {
+        EditAccount(isForEditing.value, chosenAccount.value ,
+            onAddAccountAction = {viewModel.addAccount(it); selectedAccountIndex.value = 0;},
+            onDeleteAccount = {viewModel.deleteAccount(it);  selectedAccountIndex.value = 0;},
+            onCancelIconClick = {selectedAccountIndex.value = 0;},
+            baseCurrency = baseCurrency)
 
         BackHandler() {
-            selectedAccountIndex = 0
+            selectedAccountIndex.value = 0;
         }
     }
 
@@ -164,11 +254,11 @@ fun Accounts(
     PopUp(openDialog = isSelectedFilterAccount, accountList = filterAccounts, chosenAccountFilter = chosenAccountFilter, onChosenAccountFilterClick = {onChosenAccountFilterClick (it)})
 
     ChooseAccountCompose (openDialog = setSelectedAccount,
-        normalAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
+        normalAccount = {setSelectedAccount.value = false ; selectedAccountIndex.value = 1; chosenAccount.value =
             AccountsData.normalAccount;} ,
-        debtAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
+        debtAccount = {setSelectedAccount.value = false ; selectedAccountIndex.value = 1; chosenAccount.value =
             AccountsData.deptAccount;} ,
-        goalAccount = {setSelectedAccount.value = false ;selectedAccountIndex = 1;chosenAccount =
+        goalAccount = {setSelectedAccount.value = false ; selectedAccountIndex.value = 1; chosenAccount.value =
             AccountsData.goalAccount;})
 
 }
@@ -503,7 +593,7 @@ private fun CustomDivider(){
 private fun textForAccount(account: Account, modifier: Modifier = Modifier){
     Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black , fontSize = 14.sp)
     Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) ,
-        text = account.balance.toString() + " " + account.currencyType.currency,
+        text =  valueToNormalFormat(account.balance) + " " + account.currencyType.currency,
         color =
         if(account.balance < 0.0) currencyColorSpent
         else if (account.balance > 0.0) currencyColor

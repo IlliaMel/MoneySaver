@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,6 +50,14 @@ class AccountsViewModel @Inject constructor(
         return (toFound?.valueInMainCurrency ?: 1.0) / (whichFound?.valueInMainCurrency ?: 1.0)
     }
 
+    fun returnAnotherAccount(account: Account) : Account{
+        state.allAccountList.forEach {
+            if (it.uuid != account.uuid && !(it.isForDebt && it.isForGoal))
+                return it
+        }
+        return account
+    }
+
     fun findSum(list: List<Account>, base : String) : Double{
         var sum = 0.0
         list.forEach {
@@ -61,7 +70,6 @@ class AccountsViewModel @Inject constructor(
         }
         return Math.round(sum * 100) / 100.0
     }
-
 
 
 

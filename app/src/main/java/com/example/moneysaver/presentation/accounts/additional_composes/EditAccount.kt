@@ -59,7 +59,8 @@ fun EditAccount(
     onAddAccountAction: (Account) -> Unit,
     onDeleteAccount: (Account) -> Unit,
     onCancelIconClick: () -> Unit,
-    viewModel: AccountsViewModel = hiltViewModel()
+    viewModel: AccountsViewModel = hiltViewModel(),
+    baseCurrency: Currency,
 ){
 
 
@@ -69,7 +70,7 @@ fun EditAccount(
     var setAdditionalMoneyValue = remember { mutableStateOf(false) }
 
 
-    var currencyType =  remember { mutableStateOf(account.currencyType) }
+    var currencyType =  remember { mutableStateOf(viewModel.state.currenciesList.find { it.currencyName == baseCurrency.currencyName } ?: Currency()) }
     var description =  remember { mutableStateOf(account.description) }
     var title =  remember { mutableStateOf(account.title) }
 
@@ -379,8 +380,13 @@ fun EditAccount(
             1 ->  amountOfDept.value = it.toDouble()
             2 ->  amountOfGoal.value = it.toDouble()
         }
-      })
-    SetAccountBalance(openDialog = setBalance, returnType = {setBalance.value = false;  amountOfBalance.value = it.toDouble() })
+      },defaultValue = when(type){
+        0 ->  valueToNormalFormat(amountOfCreditLimit.value)
+        1 ->  valueToNormalFormat(amountOfDept.value)
+        2 ->  valueToNormalFormat(amountOfGoal.value)
+        else -> {""}
+    })
+    SetAccountBalance(openDialog = setBalance, returnType = {setBalance.value = false;  amountOfBalance.value = it.toDouble() }, defaultValue = valueToNormalFormat(amountOfBalance.value))
     SetAccountDescription(description = account.description,openDialog = setDescriptionChange, returnType = {setDescriptionChange.value = false; description.value = it })
     SetAccountCurrencyType(openDialog = setCurrencyTypeChange) { returnType ->
         setCurrencyTypeChange.value = false;
@@ -388,6 +394,8 @@ fun EditAccount(
     }
 
 }
+
+
 
 fun whichTypeOfAccount(account: Account) : String{
     return if(account.isForDebt)
@@ -398,13 +406,9 @@ fun whichTypeOfAccount(account: Account) : String{
         "Simple"
 }
 
-fun whichColorOfAccount(account: Account, value : Double) : Color{
-    return if(account.isForDebt)
-         currencyColorSpent
-    else if (value == 0.0)
-        currencyColorZero
-    else
-        currencyColor
+fun valueToNormalFormat(value : Double) : String{
+    var balance = value.toString().split(".")
+    return balance[0] + "." + balance[1][0] + (if(balance[1].length > 1) balance[1][1] else "")
 }
 @Composable
 fun accountEditInfoText(
@@ -445,9 +449,10 @@ fun accountEditInfoText(
 @Composable
 fun SetAccountBalance(
     openDialog: MutableState<Boolean>,
+    defaultValue: String,
     returnType: (type: String) -> Unit,
 ) {
-    var text by rememberSaveable { mutableStateOf("0.0") }
+    var text by rememberSaveable { mutableStateOf(defaultValue) }
     val focusManager = LocalFocusManager.current
     if (openDialog.value) {
         Dialog(
