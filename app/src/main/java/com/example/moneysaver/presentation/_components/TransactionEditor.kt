@@ -37,6 +37,7 @@ import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.domain.model.Transaction
+import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.ui.theme.calculatorBorderColor
 import com.example.moneysaver.ui.theme.calculatorButton
@@ -55,16 +56,22 @@ fun TransactionEditor(
     categoriesList: List<Category>,
     minDate: MutableState<Date?>,
     maxDate: MutableState<Date?>,
-    editBySwipeWasActivated: MutableState<Boolean> = mutableStateOf(false)
+    editBySwipeWasActivated: MutableState<Boolean> = mutableStateOf(false),
+    returnCurrencyValue: (which : String , to : String) -> Double
 ) {
     val choiceIsActive = remember { mutableStateOf(currentTransaction.value!=null && !editBySwipeWasActivated.value)}
-    val sumText = remember { mutableStateOf(currentTransaction.value?.sum?.times(-1)?.toCalculatorString() ?: "0") }
+    val sumText = remember { mutableStateOf(
+        currentTransaction.value?.sum?.times(
+            if(category.value.isForSpendings) -1 else 1
+        )?.toCalculatorString() ?: "0")
+    }
     val date: MutableState<Date?> = remember { mutableStateOf(currentTransaction.value?.date ?: defaultDateInRange(minDate, maxDate)) }
     var note by remember { mutableStateOf(currentTransaction.value?.note ?: "") }
     val transactionAccount = remember { mutableStateOf(if(currentTransaction.value!=null) accountsList.first{it.uuid == currentTransaction.value!!.accountUUID} else if(accountsList.isNotEmpty()) accountsList[0] else AccountsData.accountsList[0]) }
     val isSubmitted = remember { mutableStateOf(false) }
     val openPickDateDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    val selectedCurrencyType = remember { mutableStateOf(transactionAccount.value.currencyType)}
     editBySwipeWasActivated.value = false
 
     val openChoseAccountDialog = remember { mutableStateOf(false) }
@@ -180,7 +187,7 @@ fun TransactionEditor(
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(modifier = Modifier.padding(4.dp),text = if(category.value.isForSpendings) stringResource(R.string.expense) else stringResource(
                             R.string.income), color = Color.Black, fontSize = 16.sp)
-            Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + transactionAccount.value.currencyType.currency, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + selectedCurrencyType.value.currency, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
         Divider()
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -252,7 +259,16 @@ fun TransactionEditor(
                 }
             }
         } else {
-            Calculator(category.value.categoryImg , sumText, isSubmitted, openPickDateDialog, focusManager)
+            Calculator(
+                category.value.categoryImg,
+                sumText,
+                isSubmitted,
+                openPickDateDialog,
+                focusManager,
+                selectedCurrencyType,
+                transactionAccount.value.currencyType,
+                returnCurrencyValue
+            )
         }
 
         Row(
