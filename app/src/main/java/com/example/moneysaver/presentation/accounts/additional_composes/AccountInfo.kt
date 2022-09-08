@@ -64,6 +64,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
     val openPickDateDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val isSubmitted = remember { mutableStateOf(false) }
+    val selectedCurrencyType = remember { mutableStateOf(transactionAccount.value.currencyType)}
 
     val openChoseAccountDialog = remember { mutableStateOf(false) }
     val openChoseToAccountDialog = remember { mutableStateOf(false) }
@@ -137,7 +138,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
 
             Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(modifier = Modifier.padding(4.dp),text = stringResource(R.string.transfer), color = Color.Black, fontSize = 16.sp)
-                Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + transactionAccount.value.currencyType.currency, color = transactionAccount.value.accountImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + selectedCurrencyType.value.currency, color = transactionAccount.value.accountImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             Divider()
 
@@ -166,7 +167,14 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
             }
             Divider()
 
-            Calculator(transactionToAccount.value.accountImg , sumText, isSubmitted, openPickDateDialog, focusManager)
+            Calculator(
+                transactionToAccount.value.accountImg,
+                sumText, isSubmitted, openPickDateDialog,
+                focusManager,
+                selectedCurrencyType,
+                transactionAccount.value.currencyType,
+                viewModel::returnCurrencyValue
+            )
         }
 
 

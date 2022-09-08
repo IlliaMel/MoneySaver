@@ -152,7 +152,8 @@ fun Transactions(
                                 categoriesList = viewModel.state.categoriesList,
                                 minDate = minDate,
                                 maxDate = maxDate,
-                                editBySwipeWasActivated = editBySwipeWasActivated
+                                editBySwipeWasActivated = editBySwipeWasActivated,
+                                returnCurrencyValue = viewModel::returnCurrencyValue
                             )
                         }
                 },

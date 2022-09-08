@@ -122,7 +122,8 @@ fun Categories(
                             accountsList = viewModel.state.accountsList,
                             categoriesList = categories,
                             minDate = minDate,
-                            maxDate = maxDate
+                            maxDate = maxDate,
+                            returnCurrencyValue = viewModel::returnCurrencyValue
                         )
                 },
                 sheetPeekHeight = 0.dp

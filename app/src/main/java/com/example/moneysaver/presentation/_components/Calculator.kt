@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation._components
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,6 +14,8 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,13 +26,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Currency
+import com.example.moneysaver.presentation.accounts.additional_composes.SetAccountCurrencyType
 import com.example.moneysaver.ui.theme.*
+import kotlin.math.round
 import kotlin.math.roundToInt
 
 @Composable
-fun Calculator(vectorImg:  VectorImg, sumText: MutableState<String>, isSubmitted: MutableState<Boolean>, openDatePickerDialog: MutableState<Boolean>, focusManager: FocusManager) {
+fun Calculator(
+    vectorImg:  VectorImg,
+    sumText: MutableState<String>,
+    isSubmitted: MutableState<Boolean>,
+    openDatePickerDialog: MutableState<Boolean>,
+    focusManager: FocusManager,
+    selectedCurrencyType: MutableState<Currency>,
+    targetCurrencyType: Currency,
+    returnCurrencyValue: (which : String , to : String) -> Double
+) {
+    var openSelectCurrencyDialog = remember { mutableStateOf(false) }
     Row(modifier = Modifier
-      //  .padding(6.dp, 0.dp)
+        //  .padding(6.dp, 0.dp)
         .fillMaxWidth()
         .height(320.dp)
     ) {
@@ -126,7 +142,15 @@ fun Calculator(vectorImg:  VectorImg, sumText: MutableState<String>, isSubmitted
             ) {
                 Text(text = "1", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
-            CalculatorButton(modifier = Modifier.weight(1f), focusManager = focusManager) { Text(text = "$", fontSize = 22.sp, fontWeight = FontWeight.Bold) }
+            CalculatorButton(
+                modifier = Modifier.weight(1f),
+                onClick = {
+                    openSelectCurrencyDialog.value=true
+                },
+                focusManager = focusManager
+            ) {
+                Text(text = selectedCurrencyType.value.currency, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            }
         }
         Column(modifier = Modifier.weight(1f)) {
             CalculatorButton(
@@ -230,11 +254,18 @@ fun Calculator(vectorImg:  VectorImg, sumText: MutableState<String>, isSubmitted
             ) {
                 Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
             }
-            if(sumText.value.canBeEvaluatedAsMathExpr()) {
+            if(sumText.value.canBeEvaluatedAsMathExpr() || selectedCurrencyType.value!=targetCurrencyType) {
                 CalculatorButton(
                     modifier = Modifier
                         .weight(2f),
-                    onClick = {evaluateSumValue(sumText)},
+                    onClick = {
+                        if(sumText.value.canBeEvaluatedAsMathExpr()) {
+                            evaluateSumValue(sumText)
+                        }  else {
+                            convertSum(sumText, selectedCurrencyType.value, targetCurrencyType, returnCurrencyValue)
+                            selectedCurrencyType.value=targetCurrencyType
+                        }
+                    },
                     bgColor = vectorImg.externalColor,
                     focusManager = focusManager
                 ) {
@@ -254,6 +285,23 @@ fun Calculator(vectorImg:  VectorImg, sumText: MutableState<String>, isSubmitted
             }
         }
     }
+
+    SetAccountCurrencyType(openDialog = openSelectCurrencyDialog) { returnType ->
+        openSelectCurrencyDialog.value = false
+        convertSum(sumText, selectedCurrencyType.value, returnType, returnCurrencyValue)
+        selectedCurrencyType.value = returnType
+    }
+}
+
+private fun convertSum(
+    sumText: MutableState<String>,
+    startCurrencyType: Currency,
+    targetCurrencyType: Currency,
+    returnCurrencyValue: (which : String , to : String) -> Double
+) {
+    var sum = sumText.value.toDouble()
+    sum = round(100.0 * sum * returnCurrencyValue(startCurrencyType.currencyName, targetCurrencyType.currencyName)) / 100.0
+    sumText.value = sum.toCalculatorString()
 }
 
 private fun Char.isMathOperator(): Boolean {
@@ -271,9 +319,9 @@ fun Double.toCalculatorString(): String {
 private fun CalculatorButton(modifier: Modifier = Modifier, onClick: ()->Unit = {}, bgColor: Color = calculatorButtonNumbers, focusManager: FocusManager, content: @Composable ()-> Unit) {
     Box(
         modifier = modifier
-           .padding(0.1.dp)
-          //  .clip(CircleShape)
-            .border(0.3.dp,calculatorBorderColor)
+            .padding(0.1.dp)
+            //  .clip(CircleShape)
+            .border(0.3.dp, calculatorBorderColor)
             .fillMaxSize()
             .background(bgColor)
             .clickable {
