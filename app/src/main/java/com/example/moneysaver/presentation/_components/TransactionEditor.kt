@@ -58,7 +58,11 @@ fun TransactionEditor(
     editBySwipeWasActivated: MutableState<Boolean> = mutableStateOf(false)
 ) {
     val choiceIsActive = remember { mutableStateOf(currentTransaction.value!=null && !editBySwipeWasActivated.value)}
-    val sumText = remember { mutableStateOf(currentTransaction.value?.sum?.times(-1)?.toCalculatorString() ?: "0") }
+    val sumText = remember { mutableStateOf(
+        currentTransaction.value?.sum?.times(
+            if(category.value.isForSpendings) -1 else 1
+        )?.toCalculatorString() ?: "0")
+    }
     val date: MutableState<Date?> = remember { mutableStateOf(currentTransaction.value?.date ?: defaultDateInRange(minDate, maxDate)) }
     var note by remember { mutableStateOf(currentTransaction.value?.note ?: "") }
     val transactionAccount = remember { mutableStateOf(if(currentTransaction.value!=null) accountsList.first{it.uuid == currentTransaction.value!!.accountUUID} else if(accountsList.isNotEmpty()) accountsList[0] else AccountsData.accountsList[0]) }
