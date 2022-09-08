@@ -43,6 +43,7 @@ import com.example.moneysaver.presentation._components.CategoryChooser
 import com.example.moneysaver.presentation._components.TransactionEditor
 import com.example.moneysaver.presentation._components.dividerForTopBar
 import com.example.moneysaver.presentation.accounts.additional_composes.*
+import com.example.moneysaver.presentation.categories.additional_composes.valueToNormalFormat
 import com.example.moneysaver.presentation.transactions.showNoAccountOrCategoryMessage
 import com.example.moneysaver.ui.theme.*
 import kotlinx.coroutines.launch
@@ -235,11 +236,15 @@ fun Accounts(
         }
     }
     }else if (selectedAccountIndex.value == 1) {
+
+        var currencyType =  remember { mutableStateOf(if(chosenAccount.value.uuid == AccountsData.accountsList.get(0).uuid) {baseCurrency} else {chosenAccount.value.currencyType })}
+        currencyType.value = if(chosenAccount.value.uuid == AccountsData.accountsList.get(0).uuid) {baseCurrency} else {chosenAccount.value.currencyType }
         EditAccount(isForEditing.value, chosenAccount.value ,
             onAddAccountAction = {viewModel.addAccount(it); selectedAccountIndex.value = 0;},
             onDeleteAccount = {viewModel.deleteAccount(it);  selectedAccountIndex.value = 0;},
             onCancelIconClick = {selectedAccountIndex.value = 0;},
-            baseCurrency = baseCurrency)
+            baseCurrency = baseCurrency,
+            currencyType = currencyType)
 
         BackHandler() {
             selectedAccountIndex.value = 0;

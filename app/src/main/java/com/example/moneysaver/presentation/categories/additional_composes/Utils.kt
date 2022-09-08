@@ -44,6 +44,12 @@ enum class s {
     Hidden;
 }
 
+fun valueToNormalFormat(value : Double) : String{
+    var balance = value.toString().split(".")
+    return balance[0] + "." + balance[1][0] + (if(balance[1].length > 1) balance[1][1] else "")
+}
+
+fun Double.round(decimals: Int = 2): Double = "%.${decimals}f".format(this).toDouble()
 
 internal val PieSampleData = LegendPosition.values().map {
     PieChartData(

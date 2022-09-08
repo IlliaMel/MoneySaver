@@ -228,7 +228,10 @@ class MainActivityViewModel @Inject constructor(
             val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
             transactionAccount?.let {
                 val updatedAccount = transactionAccount!!.copy(
-                    balance = transactionAccount.balance - transaction.sum
+                    balance= if(transaction.toAccountUUID != null)
+                                transactionAccount.balance + transaction.sum
+                            else
+                                transactionAccount.balance - transaction.sum
                 )
                 // update account
                 financeRepository.insertAccount(updatedAccount)

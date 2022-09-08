@@ -47,6 +47,7 @@ import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
+import com.example.moneysaver.presentation.categories.additional_composes.valueToNormalFormat
 import com.example.moneysaver.presentation.transactions.additional_composes.innerShadow
 import com.example.moneysaver.ui.theme.*
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
@@ -60,6 +61,7 @@ fun EditAccount(
     onDeleteAccount: (Account) -> Unit,
     onCancelIconClick: () -> Unit,
     viewModel: AccountsViewModel = hiltViewModel(),
+    currencyType: MutableState<Currency>,
     baseCurrency: Currency,
 ){
 
@@ -70,7 +72,7 @@ fun EditAccount(
     var setAdditionalMoneyValue = remember { mutableStateOf(false) }
 
 
-    var currencyType =  remember { mutableStateOf(viewModel.state.currenciesList.find { it.currencyName == baseCurrency.currencyName } ?: Currency()) }
+
     var description =  remember { mutableStateOf(account.description) }
     var title =  remember { mutableStateOf(account.title) }
 
@@ -406,10 +408,7 @@ fun whichTypeOfAccount(account: Account) : String{
         "Simple"
 }
 
-fun valueToNormalFormat(value : Double) : String{
-    var balance = value.toString().split(".")
-    return balance[0] + "." + balance[1][0] + (if(balance[1].length > 1) balance[1][1] else "")
-}
+
 @Composable
 fun accountEditInfoText(
     startPadding : Dp = 8.dp,

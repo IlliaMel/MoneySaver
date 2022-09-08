@@ -111,7 +111,7 @@ object AccountsData {
             accountImg = VectorImg(),
             currencyType = Currency(),
             title = "Cash",
-            balance = 537.53,
+            balance = 0.0,
         ),
         Account(
             accountImg =VectorImg(),

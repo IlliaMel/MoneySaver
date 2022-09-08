@@ -24,3 +24,6 @@ val externalColorGray = Color(105, 105, 105, 255)
 val calculatorButton = Color(236, 236, 236, 225)
 val calculatorButtonNumbers = Color(255, 255, 255, 221)
 val calculatorBorderColor = Color(209, 209, 209, 212)
+
+val colorDismissToDelete  = Color(175, 73, 73, 212)
+val colorDismissToEdit  = Color(73, 127, 175, 212)

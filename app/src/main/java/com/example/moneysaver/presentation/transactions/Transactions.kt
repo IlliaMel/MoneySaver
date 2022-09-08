@@ -44,13 +44,19 @@ import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
+import com.example.moneysaver.presentation.categories.additional_composes.round
+import com.example.moneysaver.presentation.categories.additional_composes.valueToNormalFormat
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
 import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
+import com.example.moneysaver.ui.theme.colorDismissToDelete
+import com.example.moneysaver.ui.theme.colorDismissToEdit
 import com.example.moneysaver.ui.theme.dividerColor
 import com.example.moneysaver.ui.theme.whiteSurface
 import kotlinx.coroutines.launch
 import java.util.*
+
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
@@ -197,7 +203,7 @@ fun Transactions(
                     selectedTransaction.value=null
                 }
 
-
+                var dismissState = rememberDismissState(initialValue = DismissValue.Default)
                 LazyColumn(
                     Modifier.background(whiteSurface),
                     contentPadding = PaddingValues()
@@ -233,14 +239,18 @@ fun Transactions(
 
                     for (date: Date in sortedDateToTransactionMap.keys) {
                         var dayBalanceChange = 0.0
-                        for (x in sortedDateToTransactionMap[date]!!)
-                            dayBalanceChange += x.sum
+                        for (x in sortedDateToTransactionMap[date]!!){
+                                dayBalanceChange += x.sum * viewModel.returnCurrencyValue(viewModel.state.accountsList.first { it.uuid == x.accountUUID }.currencyType.currencyName,baseCurrency.currencyName)
+                        }
+                        dayBalanceChange = valueToNormalFormat(dayBalanceChange).toDouble()
+
                         item {
                             DateBlock(baseCurrency = baseCurrency, date = date, balanceChange = dayBalanceChange)
                             Divider(modifier = Modifier.background(dividerColor))
                         }
                         sortedDateToTransactionMap[date]?.let { m ->
                             items(
+
                                 items = m.toList(),
                                 key = {it.hashCode()},
                                 itemContent = {
@@ -252,7 +262,7 @@ fun Transactions(
                                         else
                                             viewModel.getCategoryNameByUUIID(it.categoryUUID).toString()
 
-                                        val dismissState = rememberDismissState(initialValue = DismissValue.Default)
+
                                         if (dismissState.isDismissed(DismissDirection.StartToEnd)) {
                                             // launch transaction editing
                                             scope.launch {
@@ -266,7 +276,8 @@ fun Transactions(
                                                 }
                                             }
                                         } else if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                                            viewModel.deleteTransaction(it)
+                                                dismissState = rememberDismissState(initialValue = DismissValue.Default)
+                                                viewModel.deleteTransaction(it)
                                         }
 
                                         SwipeToDismiss(
@@ -276,15 +287,15 @@ fun Transactions(
                                                 DismissDirection.EndToStart
                                             ),
                                             dismissThresholds = {
-                                                FractionalThreshold(0.2f)
+                                                FractionalThreshold(1f)
                                             },
                                             background = {
                                                 val direction = dismissState.dismissDirection
 
                                                 val color by animateColorAsState(
                                                     when (direction) {
-                                                        DismissDirection.StartToEnd -> Color.Blue
-                                                        DismissDirection.EndToStart -> Color.Red
+                                                        DismissDirection.StartToEnd -> colorDismissToEdit
+                                                        DismissDirection.EndToStart -> colorDismissToDelete
                                                         else -> Color.White
                                                     }
                                                 )
@@ -339,10 +350,7 @@ fun Transactions(
                             )
                         }
                     }
-
-
                 }
-
             }
         }
     }
