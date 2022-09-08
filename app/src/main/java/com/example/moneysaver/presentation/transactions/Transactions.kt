@@ -204,7 +204,8 @@ fun Transactions(
                     selectedTransaction.value=null
                 }
 
-                var dismissState = rememberDismissState(initialValue = DismissValue.Default)
+
+
                 LazyColumn(
                     Modifier.background(whiteSurface),
                     contentPadding = PaddingValues()
@@ -249,6 +250,7 @@ fun Transactions(
                             DateBlock(baseCurrency = baseCurrency, date = date, balanceChange = dayBalanceChange)
                             Divider(modifier = Modifier.background(dividerColor))
                         }
+
                         sortedDateToTransactionMap[date]?.let { m ->
                             items(
 
@@ -256,6 +258,8 @@ fun Transactions(
                                 key = {it.hashCode()},
                                 itemContent = {
                                     Column {
+                                        var isDeleted = false
+                                        var dismissState = rememberDismissState(initialValue = DismissValue.Default)
 
                                         var transferReceiverName = if(it.categoryUUID == null)
                                             accountsViewModel.state.allAccountList.find { account -> it.toAccountUUID == account.uuid }?.title
@@ -277,15 +281,21 @@ fun Transactions(
                                                 }
                                             }
                                         } else if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                                                dismissState = rememberDismissState(initialValue = DismissValue.Default)
-                                                viewModel.deleteTransaction(it)
+                                            if (dismissState.currentValue != DismissValue.Default) {
+                                                LaunchedEffect(Unit) {
+                                                    dismissState.reset()
+                                                    viewModel.deleteTransaction(it)
+                                                }
+                                            }
+
                                         }
 
                                         SwipeToDismiss(
                                             state = dismissState,
                                             directions = setOf(
                                                 DismissDirection.StartToEnd,
-                                                DismissDirection.EndToStart
+                                                DismissDirection.EndToStart,
+
                                             ),
                                             dismissThresholds = {
                                                 FractionalThreshold(1f)

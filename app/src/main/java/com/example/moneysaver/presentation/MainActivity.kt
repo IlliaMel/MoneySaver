@@ -347,7 +347,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         }
 
         var baseCurrencyString by remember {
-            mutableStateOf(sharedPref.getString(MAIN_CURRENCY, Currency(currency = "₴", currencyName = "UAH").toString()))
+            mutableStateOf(sharedPref.getString(MAIN_CURRENCY, Currency(currency = "₴", currencyName = "UAH", description = "Ukrainian Hryvnia").toString()))
         }
 
         var baseCurrency by remember {
@@ -356,7 +356,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                     var arr = baseCurrencyString!!.split(",")
                     Currency(arr[0],arr[1],arr[2],arr[3].toDouble())
                 }else{
-                    Currency(currency = "₴", currencyName = "UAH")
+                    Currency(currency = "₴", currencyName = "UAH",description = "Ukrainian Hryvnia")
                 }
             )
         }
