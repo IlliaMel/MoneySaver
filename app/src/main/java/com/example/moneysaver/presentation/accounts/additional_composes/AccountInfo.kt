@@ -291,8 +291,8 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
     DatePickerDialog(openDialog = openPickDateDialog, startDate = remember {
         mutableStateOf(Date())
     } )
-    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = viewModel.state.allAccountList.filter { !(it.isForDebt && it.isForGoal) }, transactionAccount = transactionAccount)
-    ChooseTransactionAccountDialog(openDialog = openChoseToAccountDialog, accountList = viewModel.state.allAccountList.filter { !(it.isForDebt && it.isForGoal) }, transactionAccount = transactionToAccount)
+    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = viewModel.state.allAccountList.filter { !(it.isForDebt && it.isForGoal) }, transactionAccount = transactionAccount, selectedCurrencyType = null)
+    ChooseTransactionAccountDialog(openDialog = openChoseToAccountDialog, accountList = viewModel.state.allAccountList.filter { !(it.isForDebt && it.isForGoal) }, transactionAccount = transactionToAccount, selectedCurrencyType = selectedCurrencyType)
 
 }
 
