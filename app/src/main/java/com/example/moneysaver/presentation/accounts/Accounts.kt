@@ -84,7 +84,6 @@ fun Accounts(
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
     var sumText = remember {mutableStateOf("0")}
-    var sumTextSecond = remember {mutableStateOf("0")}
     var lookingInfo =  remember {mutableStateOf(true)}
 
     if(selectedAccountIndex.value == 0) {
@@ -114,7 +113,6 @@ fun Accounts(
                     if(sheetContentInitClose){
 
                         sumText.value = "0"
-                        sumTextSecond.value = "0"
                         lookingInfo.value = true
                         transactionAccount.value = chosenAccount.value
                         transactionToAccount.value = viewModel.returnAnotherAccount(transactionAccount.value)
@@ -131,7 +129,6 @@ fun Accounts(
                                         }
                                     },
                                     sumText = sumText,
-                                    sumTextSecond = sumTextSecond,
                                     lookingInfo = lookingInfo)
                 }
            },

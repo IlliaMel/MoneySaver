@@ -655,7 +655,7 @@ fun ChartContainer(
         .clip(CircleShape), contentAlignment = Alignment.Center) {
         */
         Box( modifier = Modifier
-            .size(200.dp, 200.dp)
+            .size(220.dp, 220.dp)
             .clip(CircleShape)
             .background(whiteSurface)
             .clickable { onClickChart() } , contentAlignment = Alignment.Center){

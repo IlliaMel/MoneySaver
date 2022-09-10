@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
@@ -150,6 +151,7 @@ class MainActivity : ComponentActivity() {
             systemUiController.setSystemBarsColor(
                 color = Color.Transparent
             )
+
 
             MoneySaverTheme {
                 if ((!isConnectionEnabled && !isParsed) ||  viewModel.isCurrencyDbEmpty()) {
@@ -314,12 +316,6 @@ fun SlideInAnimationScreen() {
     }
 }
 
-@Composable
-fun SlideAnimation(){
-
-
-
-}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
