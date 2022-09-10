@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -88,156 +90,178 @@ fun Accounts(
     var lookingInfo =  remember {mutableStateOf(true)}
 
     if(selectedAccountIndex.value == 0) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(whiteSurface)
 
-        ) {
-            TopBarAccounts(onAddAccountAction = { setSelectedAccount.value = true },
-                onNavigationIconClick,
-                onFilterClick = { isSelectedFilterAccount.value = true },
-                chosenAccountFilter
-            )
+        BottomSheetScaffold(
+            sheetElevation = 0.dp,
+            drawerElevation = 0.dp,
+            drawerBackgroundColor = Color.Transparent,
+            contentColor = Color.Transparent,
+            sheetBackgroundColor = Color.Transparent,
+            scaffoldState = scaffoldState,
+            sheetContent = {
+                if(sheetContentInitClose){
 
-            BackHandler(enabled = sheetState.isExpanded) {
-                scope.launch {
-                    sheetState.collapse()
+                    sumText.value = "0"
+                    sumTextSecond.value = "0"
+                    lookingInfo.value = true
+                    transactionAccount.value = chosenAccount.value
+                    transactionToAccount.value = viewModel.returnAnotherAccount(transactionAccount.value)
+                    AccountInfo(transactionAccount = transactionAccount,
+                        transactionToAccount = transactionToAccount,
+                        isForEditing = isForEditing,
+                        selectedAccountIndex = selectedAccountIndex,
+                        collapseBottomSheet = {
+                            scope.launch {
+                                if (sheetState.isExpanded){
+
+                                    sheetState.collapse()
+                                }
+                            }
+                        },
+                        sumText = sumText,
+                        sumTextSecond = sumTextSecond,
+                        lookingInfo = lookingInfo,
+                        chosenAccountFilter = chosenAccountFilter
+                    )
                 }
-            }
+            },
+            sheetPeekHeight = 0.dp,
+        ){
+
+            Box(modifier = Modifier
+                .fillMaxWidth()) {
 
 
-
-            BottomSheetScaffold(
-                scaffoldState = scaffoldState,
-                sheetContent = {
-                    if(sheetContentInitClose){
-
-                        sumText.value = "0"
-                        lookingInfo.value = true
-                        transactionAccount.value = chosenAccount.value
-                        transactionToAccount.value = viewModel.returnAnotherAccount(transactionAccount.value)
-                        AccountInfo(transactionAccount = transactionAccount,
-                                    transactionToAccount = transactionToAccount,
-                                    isForEditing = isForEditing,
-                                    selectedAccountIndex = selectedAccountIndex,
-                                    collapseBottomSheet = {
-                                        scope.launch {
-                                            if (sheetState.isExpanded){
-
-                                                sheetState.collapse()
-                                            }
-                                        }
-                                    },
-                                    sumText = sumText,
-                                    sumTextSecond = sumTextSecond,
-                                    lookingInfo = lookingInfo,
-                                    chosenAccountFilter = chosenAccountFilter
-                        )
-                }
-           },
-                sheetPeekHeight = 0.dp,
-            ){
-
-            if(sheetState.isCollapsed) sheetContentInitClose = true
-
-            val visibleState = remember {
-                MutableTransitionState(false).apply {
-                    // Start the animation immediately.
-                    targetState = true
-                }
-            }
-            AnimatedVisibility(visibleState = visibleState) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(whiteSurface)
 
                 ) {
-                    SumMoneyInfo(
-                        stringResource(R.string.accounts_name_label),
-                        viewModel.findSum(
-                            viewModel.state.debtAndSimpleList,
-                            base = baseCurrency.currencyName
-                        ),
-                        baseCurrency.currencyName
+                    TopBarAccounts(
+                        onAddAccountAction = { setSelectedAccount.value = true },
+                        onNavigationIconClick,
+                        onFilterClick = { isSelectedFilterAccount.value = true },
+                        chosenAccountFilter
                     )
 
-                    LazyColumn(
-                        modifier = Modifier.weight(2f),
-                        contentPadding = PaddingValues()
-                    ) {
-                        items(
-                            items = viewModel.state.debtAndSimpleList,
-                            itemContent = {
-                                AccountListItem(account = it, navigateToCardSettings = {
-                                    scope.launch {
-                                        if (sheetState.isExpanded) {
-                                            sheetState.collapse()
-                                        } else {
-                                            chosenAccount.value = it
-                                            sheetState.expand()
-                                        }
-                                    }
-                                })
-                            }
-                        )
-                        item {
-                            AddBankAccount(
-                                AccountsData.accountAdder,
-                                navigateToCardAdder = {
-                                    isForEditing.value = false;  selectedAccountIndex.value = 1;  chosenAccount.value = AccountsData.normalAccount
-                                })
+                    BackHandler(enabled = sheetState.isExpanded) {
+                        scope.launch {
+                            sheetState.collapse()
                         }
                     }
-                    Divider(
-                        modifier = Modifier
-                            .padding(0.dp, 16.dp, 0.dp, 0.dp)
-                            .background(dividerColor)
-                    )
-
-                    SumMoneyInfo(
-                        stringResource(R.string.savings_accounts),
-                        viewModel.findSum(viewModel.state.goalList, baseCurrency.currencyName),
-                        baseCurrency.currencyName
-                    )
 
 
+                    if (sheetState.isCollapsed) sheetContentInitClose = true
 
-                    LazyColumn(
-                        modifier = Modifier.weight(1.5f),
-                        contentPadding = PaddingValues()
-                    ) {
-                        items(
-                            items = viewModel.state.goalList,
-                            itemContent = {
-                                AccountListItem(
-                                    account = it,
-                                    navigateToCardSettings = {
-                                        scope.launch {
-                                            if (sheetState.isExpanded) {
-                                                sheetState.collapse()
-                                            } else {
-                                                chosenAccount.value = it
-                                                sheetState.expand()
+                    val visibleState = remember {
+                        MutableTransitionState(false).apply {
+                            // Start the animation immediately.
+                            targetState = true
+                        }
+                    }
+                    AnimatedVisibility(visibleState = visibleState) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(whiteSurface)
+
+                        ) {
+                            SumMoneyInfo(
+                                stringResource(R.string.accounts_name_label),
+                                viewModel.findSum(
+                                    viewModel.state.debtAndSimpleList,
+                                    base = baseCurrency.currencyName
+                                ),
+                                baseCurrency.currencyName
+                            )
+
+                            LazyColumn(
+                                modifier = Modifier.weight(2f),
+                                contentPadding = PaddingValues()
+                            ) {
+                                items(
+                                    items = viewModel.state.debtAndSimpleList,
+                                    itemContent = {
+                                        AccountListItem(account = it, navigateToCardSettings = {
+                                            scope.launch {
+                                                if (sheetState.isExpanded) {
+                                                    sheetState.collapse()
+                                                } else {
+                                                    chosenAccount.value = it
+                                                    sheetState.expand()
+                                                }
                                             }
-                                        }
-                                    })
+                                        })
+                                    }
+                                )
+                                item {
+                                    AddBankAccount(
+                                        AccountsData.accountAdder,
+                                        navigateToCardAdder = {
+                                            isForEditing.value = false; selectedAccountIndex.value =
+                                            1; chosenAccount.value = AccountsData.normalAccount
+                                        })
+                                }
                             }
-                        )
-                        item {
-                            AddBankAccount(
-                                AccountsData.goalAdder,
-                                navigateToCardAdder = {
-                                    isForEditing.value = false; selectedAccountIndex.value = 1;  chosenAccount.value = AccountsData.goalAccount
-                                })
+                            Divider(
+                                modifier = Modifier
+                                    .padding(0.dp, 16.dp, 0.dp, 0.dp)
+                                    .background(dividerColor)
+                            )
+
+                            SumMoneyInfo(
+                                stringResource(R.string.savings_accounts),
+                                viewModel.findSum(
+                                    viewModel.state.goalList,
+                                    baseCurrency.currencyName
+                                ),
+                                baseCurrency.currencyName
+                            )
+
+
+
+                            LazyColumn(
+                                modifier = Modifier.weight(1.5f),
+                                contentPadding = PaddingValues()
+                            ) {
+                                items(
+                                    items = viewModel.state.goalList,
+                                    itemContent = {
+                                        AccountListItem(
+                                            account = it,
+                                            navigateToCardSettings = {
+                                                scope.launch {
+                                                    if (sheetState.isExpanded) {
+                                                        sheetState.collapse()
+                                                    } else {
+                                                        chosenAccount.value = it
+                                                        sheetState.expand()
+                                                    }
+                                                }
+                                            })
+                                    }
+                                )
+                                item {
+                                    AddBankAccount(
+                                        AccountsData.goalAdder,
+                                        navigateToCardAdder = {
+                                            isForEditing.value = false; selectedAccountIndex.value =
+                                            1; chosenAccount.value = AccountsData.goalAccount
+                                        })
+                                }
+                            }
                         }
                     }
+
+
                 }
+
+                val alpha: Float by animateFloatAsState(if((sheetState.isAnimationRunning || sheetState.isExpanded ) ) 0.6f else 0f ,  animationSpec =  tween(durationMillis = 200))
+                Column(modifier = Modifier
+                    .background(Color.Black.copy(alpha = alpha)).fillMaxSize()){}
+
             }
-
-
-        }
     }
     }else if (selectedAccountIndex.value == 1) {
 

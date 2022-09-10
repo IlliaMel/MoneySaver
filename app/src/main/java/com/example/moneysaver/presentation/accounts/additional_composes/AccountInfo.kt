@@ -242,7 +242,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(transparentColorForBottomSheet)
+            .background(whiteSurface)
             .weight(1f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -432,7 +432,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
             modifier = Modifier
                 .height(30.dp)
                 .fillMaxWidth()
-                .background(calculatorButton)
+                .background(whiteSurface)
                 .border(BorderStroke(1.dp, calculatorBorderColor)),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
