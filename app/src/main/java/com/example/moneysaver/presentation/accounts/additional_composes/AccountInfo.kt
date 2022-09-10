@@ -78,6 +78,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
 
     val selectedCurrencyTypeSecond = remember { mutableStateOf(transactionToAccount.value.currencyType)}
     val isFirstFieldSelected = remember { mutableStateOf(true)}
+    isFirstFieldSelected.value = true
 
     if(isSubmitted.value) {
         if(transactionToAccount.value.uuid == transactionAccount.value.uuid)

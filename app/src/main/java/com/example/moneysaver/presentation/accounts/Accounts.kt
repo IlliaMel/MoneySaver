@@ -84,6 +84,7 @@ fun Accounts(
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
     var sumText = remember {mutableStateOf("0")}
+    var sumTextSecond = remember {mutableStateOf("0")}
     var lookingInfo =  remember {mutableStateOf(true)}
 
     if(selectedAccountIndex.value == 0) {
@@ -129,7 +130,10 @@ fun Accounts(
                                         }
                                     },
                                     sumText = sumText,
-                                    lookingInfo = lookingInfo)
+                                    sumTextSecond = sumTextSecond,
+                                    lookingInfo = lookingInfo,
+                                    chosenAccountFilter = chosenAccountFilter
+                        )
                 }
            },
                 sheetPeekHeight = 0.dp,
