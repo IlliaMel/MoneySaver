@@ -119,6 +119,11 @@ fun Transactions(
     val editBySwipeWasActivated = remember { mutableStateOf(false) }
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
+    if (sheetState.isCollapsed) {
+        selectedCategory.value = null
+        selectedTransaction.value = null
+    }
+
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
 
@@ -160,6 +165,7 @@ fun Transactions(
                 onClick = {
                     if(viewModel.addingTransactionIsAllowed()) {
                         scope.launch {
+                            selectedCategory.value=null
                             selectedCategory.value=null
                             selectedTransaction.value=null
                             if(sheetState.isCollapsed && !sheetState.isAnimationRunning)
@@ -211,12 +217,6 @@ fun Transactions(
                             selectedTransaction.value = null
                         }
                     }
-
-                    if (sheetState.isCollapsed) {
-                        selectedCategory.value = null
-                        selectedTransaction.value = null
-                    }
-
 
 
                     LazyColumn(
@@ -387,12 +387,13 @@ fun Transactions(
                     }
                 }
             }
-            /*
+
 
             val alpha: Float by animateFloatAsState(if((sheetState.isAnimationRunning || sheetState.isExpanded ) ) 0.6f else 0f ,  animationSpec =  tween(durationMillis = 200))
             Column(modifier = Modifier
                 .background(Color.Black.copy(alpha = alpha)).fillMaxSize()){}
-            */
+
+
             //;;
         }
     }
