@@ -2,9 +2,8 @@ package com.example.moneysaver.presentation.accounts.additional_composes
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
@@ -13,20 +12,23 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -41,7 +43,7 @@ import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
-import com.example.moneysaver.ui.theme.whiteSurface
+import com.example.moneysaver.ui.theme.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
@@ -52,7 +54,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                  isForEditing: MutableState<Boolean>,
                  selectedAccountIndex: MutableState<Int>,
                  collapseBottomSheet: () -> Unit,
-
+                 chosenAccountFilter: Account,
                  transactionToAccount: MutableState<Account>,
                  transactionAccount: MutableState<Account>,
                  lookingInfo: MutableState<Boolean>,
@@ -114,12 +116,126 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
         }
     }
 
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(whiteSurface)
-            .height(if (lookingInfo.value) 300.dp else 420.dp),
+            .height(if (lookingInfo.value) 320.dp else 480.dp)
+            .animateContentSize(),
+
         verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+
+        if(lookingInfo.value) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(0.95f)
+                    .background(Color.Transparent)
+                    //          .height(if (lookingInfo.value) 300.dp else 420.dp)
+                    .weight(0.8f),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Box(modifier = Modifier
+                    .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                    .fillMaxSize()
+                    .clickable { }
+                    .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)),
+                    contentAlignment = Alignment.Center) {
+
+                    Image(
+                        painter = painterResource(R.drawable.bg5),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null,
+                        alignment = Alignment.Center,
+                        modifier = Modifier.matchParentSize(),
+                        colorFilter = ColorFilter.tint(
+                            color = transactionAccount.value.accountImg.externalColor,
+                            blendMode = BlendMode.Softlight
+                        )
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Transparent)){
+
+                        Row(modifier = Modifier
+                            .weight(1.3f)
+                            .background(Color.Transparent)
+                            .fillMaxWidth()
+                            .padding(16.dp,0.dp,16.dp,0.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start) {
+
+                           Icon(modifier = Modifier
+                                .weight(1f)
+                                .size(48.dp,42.dp)
+                                .padding(4.dp, 0.dp, 12.dp, 0.dp),
+                            imageVector = ImageVector.vectorResource(transactionAccount.value.accountImg.img),
+                            tint = transactionAccount.value.accountImg.innerColor,
+                            contentDescription = null
+                            )
+
+
+                            Text(modifier = Modifier
+                                .weight(6f),
+                                text = transactionAccount.value.title,
+                                fontWeight = FontWeight.W500,
+                                color = Color.White,
+                                fontSize = 16.sp)
+                            if(chosenAccountFilter.uuid == transactionAccount.value.uuid)
+                            Icon(modifier = Modifier
+                                .weight(1f)
+                                .size(25.dp,25.dp)
+                                .padding(0.dp, 0.dp, 4.dp, 0.dp),
+                                imageVector = Icons.Filled.Star ,
+                                tint = Color.White,
+                                contentDescription = null
+                            )
+                        }
+
+                        Row(modifier = Modifier
+                            .weight(2f)
+                            .background(Color.Transparent)
+                            .padding(12.dp,0.dp,12.dp,12.dp),
+                            verticalAlignment = Alignment.Top,
+                            horizontalArrangement = Arrangement.Center) {
+
+                            Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Top) {
+                                Text(modifier = Modifier.padding(4.dp),
+                                    text = "Balance Of Account",
+                                    fontWeight = FontWeight.W400,
+                                    color = Color.White,
+                                    fontSize = 14.sp)
+
+                                Text(text = transactionAccount.value.balance.toString() + " " + transactionAccount.value.currencyType.currency,
+                                    fontWeight = FontWeight.W400,
+                                    color = Color.White,
+                                    fontSize = 14.sp)
+                            }
+                        }
+
+                      }
+
+
+                }
+
+
+            }
+
+            //Divider(thickness = 2.dp)
+        }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(transparentColorForBottomSheet)
+            .weight(1f),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -286,6 +402,20 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
             }
         }
         }
+    }
+
+        Row(
+            modifier = Modifier
+                .height(30.dp)
+                .fillMaxWidth()
+                .background(calculatorButton)
+                .border(BorderStroke(1.dp, calculatorBorderColor)),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = getShortDateString(Date(), LocalContext.current), color = Color(0xff54514d), fontWeight = FontWeight.Bold, fontSize = 15.sp)
+        }
+
     }
 
     DatePickerDialog(openDialog = openPickDateDialog, startDate = remember {

@@ -27,3 +27,5 @@ val calculatorBorderColor = Color(209, 209, 209, 212)
 
 val colorDismissToDelete  = Color(175, 73, 73, 212)
 val colorDismissToEdit  = Color(73, 127, 175, 212)
+
+val transparentColorForBottomSheet  = Color(0xffeeeeee)

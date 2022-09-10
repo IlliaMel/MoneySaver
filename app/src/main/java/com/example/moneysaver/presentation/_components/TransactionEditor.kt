@@ -42,6 +42,7 @@ import com.example.moneysaver.presentation.accounts.additional_composes.VectorIc
 import com.example.moneysaver.ui.theme.calculatorBorderColor
 import com.example.moneysaver.ui.theme.calculatorButton
 import com.example.moneysaver.ui.theme.dividerColor
+import com.example.moneysaver.ui.theme.transparentColorForBottomSheet
 import java.util.*
 import kotlin.math.min
 
@@ -80,7 +81,7 @@ fun TransactionEditor(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xffeeeeee))
+            .background(transparentColorForBottomSheet)
             .height(if(choiceIsActive.value) 300.dp else 520.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {

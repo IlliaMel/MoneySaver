@@ -2,8 +2,11 @@ package com.example.moneysaver.presentation.accounts
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +34,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -60,6 +66,7 @@ fun Accounts(
 ) {
 
 
+
     var chosenAccount  = remember { mutableStateOf(AccountsData.accountsList.get(0)) }
 
     var transactionAccount = remember { mutableStateOf(AccountsData.accountsList.get(0)) }
@@ -87,6 +94,44 @@ fun Accounts(
     var lookingInfo =  remember {mutableStateOf(true)}
 
     if(selectedAccountIndex.value == 0) {
+
+        BottomSheetScaffold(
+            sheetElevation = 0.dp,
+            drawerElevation = 0.dp,
+            drawerBackgroundColor = Color.Transparent,
+            contentColor = Color.Transparent,
+            sheetBackgroundColor = Color.Black.copy(0.0f),
+            scaffoldState = scaffoldState,
+            sheetContent = {
+                if(sheetContentInitClose){
+
+                    sumText.value = "0"
+                    lookingInfo.value = true
+                    transactionAccount.value = chosenAccount.value
+                    transactionToAccount.value = viewModel.returnAnotherAccount(transactionAccount.value)
+                    AccountInfo(transactionAccount = transactionAccount,
+                        transactionToAccount = transactionToAccount,
+                        isForEditing = isForEditing,
+                        selectedAccountIndex = selectedAccountIndex,
+                        collapseBottomSheet = {
+                            scope.launch {
+                                if (sheetState.isExpanded){
+
+                                    sheetState.collapse()
+                                }
+                            }
+                        },
+                        sumText = sumText,
+                        lookingInfo = lookingInfo,
+                        chosenAccountFilter = chosenAccountFilter)
+                }
+            },
+            sheetPeekHeight = 0.dp,
+        ){
+
+        Box(modifier = Modifier
+            .fillMaxWidth()) {
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -107,33 +152,7 @@ fun Accounts(
 
 
 
-            BottomSheetScaffold(
-                scaffoldState = scaffoldState,
-                sheetContent = {
-                    if(sheetContentInitClose){
 
-                        sumText.value = "0"
-                        lookingInfo.value = true
-                        transactionAccount.value = chosenAccount.value
-                        transactionToAccount.value = viewModel.returnAnotherAccount(transactionAccount.value)
-                        AccountInfo(transactionAccount = transactionAccount,
-                                    transactionToAccount = transactionToAccount,
-                                    isForEditing = isForEditing,
-                                    selectedAccountIndex = selectedAccountIndex,
-                                    collapseBottomSheet = {
-                                        scope.launch {
-                                            if (sheetState.isExpanded){
-
-                                                sheetState.collapse()
-                                            }
-                                        }
-                                    },
-                                    sumText = sumText,
-                                    lookingInfo = lookingInfo)
-                }
-           },
-                sheetPeekHeight = 0.dp,
-            ){
 
             if(sheetState.isCollapsed) sheetContentInitClose = true
 
@@ -144,12 +163,20 @@ fun Accounts(
                 }
             }
             AnimatedVisibility(visibleState = visibleState) {
+
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(whiteSurface)
 
                 ) {
+                    /*
+                    Box(modifier = Modifier.background(Color.Black.copy(alpha = 0.4f)).fillMaxSize()){
+
+                    }
+                    */
+
                     SumMoneyInfo(
                         stringResource(R.string.accounts_name_label),
                         viewModel.findSum(
@@ -228,17 +255,25 @@ fun Accounts(
                                     isForEditing.value = false; selectedAccountIndex.value = 1;  chosenAccount.value = AccountsData.goalAccount
                                 })
                         }
+
+
                     }
                 }
             }
 
 
         }
-    }
-    }else if (selectedAccountIndex.value == 1) {
 
-        var k = chosenAccount.value.uuid
-        var g =  AccountsData.accountsList.get(0).uuid
+
+                val alpha: Float by animateFloatAsState(if((sheetState.isAnimationRunning || sheetState.isExpanded ) ) 0.6f else 0f ,  animationSpec =  tween(durationMillis = 200))
+                    Column(modifier = Modifier
+                        .background(Color.Black.copy(alpha = alpha)).fillMaxSize()){}
+
+
+    }
+
+        }
+    }else if (selectedAccountIndex.value == 1) {
         var currencyType =  remember { mutableStateOf(if(chosenAccount.value.uuid == AccountsData.normalAccount.uuid || chosenAccount.value.uuid == AccountsData.deptAccount.uuid || chosenAccount.value.uuid == AccountsData.goalAccount.uuid) {baseCurrency} else {chosenAccount.value.currencyType })}
         currencyType.value = if(chosenAccount.value.uuid == AccountsData.normalAccount.uuid || chosenAccount.value.uuid == AccountsData.deptAccount.uuid || chosenAccount.value.uuid == AccountsData.goalAccount.uuid) {baseCurrency} else {chosenAccount.value.currencyType }
         EditAccount(isForEditing.value, chosenAccount.value ,
@@ -267,6 +302,9 @@ fun Accounts(
             AccountsData.deptAccount;} ,
         goalAccount = {setSelectedAccount.value = false ; selectedAccountIndex.value = 1; chosenAccount.value =
             AccountsData.goalAccount;})
+
+
+
 
 }
 
@@ -312,19 +350,16 @@ private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<A
                                 openDialog.value = false
                                 onChosenAccountFilterClick(it)
                             }
-                            .background(if (it == chosenAccountFilter) Color(0xff59aab3) else Color.White)
+                            .background(if (it == chosenAccountFilter) calculatorButton else Color.White)
                             .padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painter = painterResource(id = it.accountImg.img),
-                            contentDescription = null,
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .padding(4.dp, 2.dp, 4.dp, 2.dp)
-                                .width(60.dp)
-                                .height(48.dp)
-                                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                        Icon(modifier = Modifier
+                            .size(48.dp, 42.dp)
+                            .padding(4.dp, 4.dp, 8.dp, 4.dp),
+                            imageVector = ImageVector.vectorResource(it.accountImg.img),
+                            tint = it.accountImg.externalColor,
+                            contentDescription = null
                         )
                         Column() {
                             Text(it.title, fontSize = 14.sp)
