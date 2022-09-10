@@ -261,14 +261,14 @@ fun TransactionEditor(
             }
         } else {
             Calculator(
-                category.value.categoryImg,
-                sumText,
-                isSubmitted,
-                openPickDateDialog,
-                focusManager,
-                selectedCurrencyType,
-                transactionAccount.value.currencyType,
-                returnCurrencyValue
+                vectorImg = category.value.categoryImg,
+                sumText = sumText,
+                isSubmitted = isSubmitted,
+                openDatePickerDialog = openPickDateDialog,
+                focusManager = focusManager,
+                selectedCurrencyType = selectedCurrencyType,
+                targetCurrencyType = transactionAccount.value.currencyType,
+                returnCurrencyValue = returnCurrencyValue
             )
         }
 

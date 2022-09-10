@@ -67,8 +67,12 @@ fun TransactionItem(transaction: Transaction,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(categoryName, color = Color.Black, fontSize = 16.sp , fontWeight = FontWeight.W400)
-                    val sumText: String = if(transaction.categoryUUID != null) {(if(transaction.sum>0) "+" else "-") } else {("->")}  + (viewModel.state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType?.currency
+                    var sumText= (if(transaction.sum>0) "+" else "-") + (viewModel.state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType?.currency
                         ?: "$") + " " + abs(transaction.sum)
+                    if(transaction.toAccountUUID!=null)
+                        sumText+=" -> "+(if(transaction.toAccountSum!!>0) "+" else "-") + (viewModel.state.accountsList.find { it.uuid == transaction.toAccountUUID }?.currencyType?.currency
+                            ?: "$") + " " + abs(transaction.toAccountSum)
+
                     val color =  if(transaction.categoryUUID != null) {if(transaction.sum>0) currencyColor else currencyColorSpent} else currencyColorZero
                     Text(sumText, color = color, fontSize = 15.sp , fontWeight = FontWeight.W400)
                 }

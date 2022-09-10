@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation.accounts.additional_composes
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -40,6 +41,7 @@ import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.*
+import com.example.moneysaver.presentation._components.navigation_drawer.WithdrawalDepositField
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.ui.theme.whiteSurface
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,7 +58,9 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                  transactionToAccount: MutableState<Account>,
                  transactionAccount: MutableState<Account>,
                  lookingInfo: MutableState<Boolean>,
-                 sumText: MutableState<String>)
+                 sumText: MutableState<String>,
+                 sumTextSecond: MutableState<String>
+)
 {
 
 
@@ -69,6 +73,9 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
     val openChoseAccountDialog = remember { mutableStateOf(false) }
     val openChoseToAccountDialog = remember { mutableStateOf(false) }
 
+
+    val selectedCurrencyTypeSecond = remember { mutableStateOf(transactionToAccount.value.currencyType)}
+    val isFirstFieldSelected = remember { mutableStateOf(true)}
 
     if(isSubmitted.value) {
         if(transactionToAccount.value.uuid == transactionAccount.value.uuid)
@@ -102,6 +109,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                     categoryUUID = null,
                     accountUUID = transactionAccount.value.uuid,
                     toAccountUUID = transactionToAccount.value.uuid,
+                    toAccountSum = (sumTextSecond.value.toDoubleOrNull() ?: 0.0)*-1,
                     date = Date(),
                     note = transactionNote
                 )
@@ -136,11 +144,20 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                 Divider()
             }
 
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(modifier = Modifier.padding(4.dp),text = stringResource(R.string.transfer), color = Color.Black, fontSize = 16.sp)
-                Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + selectedCurrencyType.value.currency, color = transactionAccount.value.accountImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-            }
-            Divider()
+//            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+//                Text(modifier = Modifier.padding(4.dp),text = stringResource(R.string.transfer), color = Color.Black, fontSize = 16.sp)
+//                Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + selectedCurrencyType.value.currency, color = transactionAccount.value.accountImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+//            }
+            WithdrawalDepositField(
+                selectedAccountFirst = transactionAccount,
+                selectedCurrencyTypeFirst = selectedCurrencyType,
+                sumTextFirst = sumText,
+                selectedAccountSecond = transactionToAccount,
+                selectedCurrencyTypeSecond = selectedCurrencyTypeSecond,
+                sumTextSecond = sumTextSecond,
+                isFirstFieldSelected = isFirstFieldSelected
+            )
+
 
             Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 OutlinedTextField(
@@ -168,12 +185,18 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
             Divider()
 
             Calculator(
-                transactionToAccount.value.accountImg,
-                sumText, isSubmitted, openPickDateDialog,
-                focusManager,
-                selectedCurrencyType,
-                transactionAccount.value.currencyType,
-                viewModel::returnCurrencyValue
+                vectorImg = transactionToAccount.value.accountImg,
+                sumText = sumText,
+                sumTextSecond = sumTextSecond,
+                isFirstFieldSelected = isFirstFieldSelected,
+                isSubmitted = isSubmitted,
+                openDatePickerDialog = openPickDateDialog,
+                focusManager = focusManager,
+                selectedCurrencyType = selectedCurrencyType,
+                selectedCurrencyTypeSecond = selectedCurrencyTypeSecond,
+                targetCurrencyType = transactionAccount.value.currencyType,
+                targetCurrencyTypeSecond = transactionToAccount.value.currencyType,
+                returnCurrencyValue = viewModel::returnCurrencyValue
             )
         }
 
@@ -291,8 +314,8 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
     DatePickerDialog(openDialog = openPickDateDialog, startDate = remember {
         mutableStateOf(Date())
     } )
-    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = viewModel.state.allAccountList.filter { !(it.isForDebt && it.isForGoal) }, transactionAccount = transactionAccount, selectedCurrencyType = null)
-    ChooseTransactionAccountDialog(openDialog = openChoseToAccountDialog, accountList = viewModel.state.allAccountList.filter { !(it.isForDebt && it.isForGoal) }, transactionAccount = transactionToAccount, selectedCurrencyType = selectedCurrencyType)
+    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = viewModel.state.allAccountList.filter { !(it.isForDebt && it.isForGoal) }, transactionAccount = transactionAccount, selectedCurrencyType = selectedCurrencyType)
+    ChooseTransactionAccountDialog(openDialog = openChoseToAccountDialog, accountList = viewModel.state.allAccountList.filter { !(it.isForDebt && it.isForGoal) }, transactionAccount = transactionToAccount, selectedCurrencyType = selectedCurrencyTypeSecond)
 
 }
 

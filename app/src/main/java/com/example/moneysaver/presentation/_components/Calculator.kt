@@ -1,6 +1,7 @@
 package com.example.moneysaver.presentation._components
 
 import android.R
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,11 +37,15 @@ import kotlin.math.roundToInt
 fun Calculator(
     vectorImg:  VectorImg,
     sumText: MutableState<String>,
+    sumTextSecond: MutableState<String>? = null,
+    isFirstFieldSelected: MutableState<Boolean>? = null,
     isSubmitted: MutableState<Boolean>,
     openDatePickerDialog: MutableState<Boolean>,
     focusManager: FocusManager,
     selectedCurrencyType: MutableState<Currency>,
     targetCurrencyType: Currency,
+    selectedCurrencyTypeSecond: MutableState<Currency>? = null,
+    targetCurrencyTypeSecond: Currency? = null,
     returnCurrencyValue: (which : String , to : String) -> Double
 ) {
     var openSelectCurrencyDialog = remember { mutableStateOf(false) }
@@ -54,11 +59,8 @@ fun Calculator(
                 modifier = Modifier
                     .weight(1f),
                 onClick = {
-                    if(sumText.value.last().isMathOperator())
-                        sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.canBeEvaluatedAsMathExpr())
-                        evaluateSumValue(sumText)
-                    sumText.value+='÷'
+                    prepareSumStr(sumText, sumTextSecond, isFirstFieldSelected)
+                    enterSymbol('÷', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 bgColor = calculatorButton,
                 focusManager = focusManager
@@ -69,11 +71,8 @@ fun Calculator(
                 modifier = Modifier
                     .weight(1f),
                 onClick = {
-                    if(sumText.value.last().isMathOperator())
-                        sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.canBeEvaluatedAsMathExpr())
-                        evaluateSumValue(sumText)
-                    sumText.value+='×'
+                    prepareSumStr(sumText, sumTextSecond, isFirstFieldSelected)
+                    enterSymbol('×', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 bgColor = calculatorButton,
                 focusManager = focusManager
@@ -84,11 +83,8 @@ fun Calculator(
                 modifier = Modifier
                     .weight(1f),
                 onClick = {
-                    if(sumText.value.last().isMathOperator())
-                        sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.canBeEvaluatedAsMathExpr())
-                        evaluateSumValue(sumText)
-                    sumText.value+='-'
+                    prepareSumStr(sumText, sumTextSecond, isFirstFieldSelected)
+                    enterSymbol('-', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 bgColor = calculatorButton,
                 focusManager = focusManager
@@ -99,11 +95,8 @@ fun Calculator(
                 modifier = Modifier
                     .weight(1f),
                 onClick = {
-                    if(sumText.value.last().isMathOperator())
-                        sumText.value=sumText.value.dropLast(1)
-                    if(sumText.value.canBeEvaluatedAsMathExpr())
-                        evaluateSumValue(sumText)
-                    sumText.value+='+'
+                    prepareSumStr(sumText, sumTextSecond, isFirstFieldSelected)
+                    enterSymbol('+', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 bgColor = calculatorButton,
                 focusManager = focusManager
@@ -115,8 +108,9 @@ fun Calculator(
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='7'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('7', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -125,8 +119,9 @@ fun Calculator(
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='4'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('4', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -135,8 +130,9 @@ fun Calculator(
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='1'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('1', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -149,15 +145,16 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = selectedCurrencyType.value.currency, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = if(isFirstFieldSelected==null || isFirstFieldSelected.value) selectedCurrencyType.value.currency else selectedCurrencyTypeSecond!!.value.currency, fontSize = 22.sp, fontWeight = FontWeight.Bold)
             }
         }
         Column(modifier = Modifier.weight(1f)) {
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='8'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('8', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -166,8 +163,9 @@ fun Calculator(
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='5'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('5', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -176,8 +174,9 @@ fun Calculator(
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='2'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('2', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -186,8 +185,9 @@ fun Calculator(
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='0'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('0', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -198,8 +198,9 @@ fun Calculator(
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='9'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('9', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -208,8 +209,9 @@ fun Calculator(
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='6'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('6', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -218,8 +220,9 @@ fun Calculator(
             CalculatorButton(
                 modifier = Modifier.weight(1f),
                 onClick = {
-                    if(sumText.value=="0") sumText.value=""
-                    sumText.value+='3'
+                    if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
+                    if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
+                    enterSymbol('3', sumText, sumTextSecond, isFirstFieldSelected)
                 },
                 focusManager = focusManager
             ) {
@@ -227,7 +230,9 @@ fun Calculator(
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
-                onClick = {sumText.value+='.'},
+                onClick = {
+                    enterSymbol('.', sumText, sumTextSecond, isFirstFieldSelected)
+                },
                 focusManager = focusManager
             ) {
                 Text(text = ".", fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -238,8 +243,13 @@ fun Calculator(
                 modifier = Modifier
                     .weight(1f),
                 onClick = {
-                    if(sumText.value.length>1) sumText.value=sumText.value.dropLast(1) else sumText.value="0"
-                    if(sumText.value=="-") sumText.value="0"
+                    if(isFirstFieldSelected==null || isFirstFieldSelected.value) {
+                        if(sumText.value.length>1) sumText.value=sumText.value.dropLast(1) else sumText.value="0"
+                        if(sumText.value=="-") sumText.value="0"
+                    } else {
+                        if(sumTextSecond!!.value.length>1) sumTextSecond!!.value=sumTextSecond!!.value.dropLast(1) else sumTextSecond!!.value="0"
+                        if(sumTextSecond!!.value=="-") sumTextSecond!!.value="0"
+                    }
                 },
                 bgColor = calculatorButton,
                 focusManager = focusManager
@@ -261,9 +271,19 @@ fun Calculator(
                     onClick = {
                         if(sumText.value.canBeEvaluatedAsMathExpr()) {
                             evaluateSumValue(sumText)
+                            if(sumTextSecond!=null && sumTextSecond!!.value.canBeEvaluatedAsMathExpr()) {
+                                evaluateSumValue(sumTextSecond!!)
+                            }
                         }  else {
-                            convertSum(sumText, selectedCurrencyType.value, targetCurrencyType, returnCurrencyValue)
-                            selectedCurrencyType.value=targetCurrencyType
+                            if(isFirstFieldSelected==null || isFirstFieldSelected!!.value) {
+                                convertSum(sumText, selectedCurrencyType.value, targetCurrencyType, returnCurrencyValue)
+                                selectedCurrencyType.value=targetCurrencyType
+                            } else {
+                                convertSum(sumText, selectedCurrencyType.value, targetCurrencyType, returnCurrencyValue)
+                                selectedCurrencyType.value=targetCurrencyType
+                                convertSum(sumTextSecond!!, selectedCurrencyTypeSecond!!.value, targetCurrencyTypeSecond!!, returnCurrencyValue)
+                                selectedCurrencyTypeSecond.value=targetCurrencyTypeSecond
+                            }
                         }
                     },
                     bgColor = vectorImg.externalColor,
@@ -287,10 +307,51 @@ fun Calculator(
     }
 
     SetAccountCurrencyType(openDialog = openSelectCurrencyDialog) { returnType ->
-        openSelectCurrencyDialog.value = false
-        convertSum(sumText, selectedCurrencyType.value, returnType, returnCurrencyValue)
-        selectedCurrencyType.value = returnType
+        if(isFirstFieldSelected==null ||  isFirstFieldSelected!!.value) {
+            openSelectCurrencyDialog.value = false
+            convertSum(sumText, selectedCurrencyType.value, returnType, returnCurrencyValue)
+            selectedCurrencyType.value = returnType
+        } else {
+            openSelectCurrencyDialog.value = false
+            convertSum(sumTextSecond!!, selectedCurrencyTypeSecond!!.value, returnType, returnCurrencyValue)
+            selectedCurrencyTypeSecond!!.value = returnType
+        }
     }
+}
+
+private fun prepareSumStr(
+    sumText: MutableState<String>,
+    sumTextSecond: MutableState<String>?,
+    isFirstFieldSelected: MutableState<Boolean>?
+) {
+    if(isFirstFieldSelected!=null && !isFirstFieldSelected.value) {
+        if(sumText.value.last().isMathOperator())
+            sumText.value=sumText.value.dropLast(1)
+        if(sumText.value.canBeEvaluatedAsMathExpr())
+            evaluateSumValue(sumText)
+    } else {
+        if(sumTextSecond!!.value.last().isMathOperator())
+            sumTextSecond!!.value=sumTextSecond!!.value.dropLast(1)
+        if(sumTextSecond!!.value.canBeEvaluatedAsMathExpr())
+            evaluateSumValue(sumTextSecond!!)
+    }
+}
+
+private fun enterSymbol(
+    symbol: Char,
+    sumText: MutableState<String>,
+    sumTextSecond: MutableState<String>?,
+    isFirstFieldSelected: MutableState<Boolean>?
+) {
+    if(sumTextSecond==null || isFirstFieldSelected == null) {
+        sumText.value+=symbol
+        return
+    }
+
+    if(isFirstFieldSelected.value)
+        sumText.value+=symbol
+    else
+        sumTextSecond!!.value+=symbol
 }
 
 private fun convertSum(

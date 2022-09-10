@@ -12,6 +12,7 @@ data class Transaction(
     val categoryUUID: UUID?,
     val accountUUID: UUID,
     val toAccountUUID: UUID?  = null,
+    val toAccountSum: Double?  = null,
     val date: Date = Date(),
     val note: String? = null
 )
