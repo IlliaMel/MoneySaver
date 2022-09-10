@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation._components
 
+import java.util.*
 import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -36,14 +37,13 @@ import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Category
+import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.ui.theme.calculatorBorderColor
 import com.example.moneysaver.ui.theme.calculatorButton
 import com.example.moneysaver.ui.theme.dividerColor
-import com.example.moneysaver.ui.theme.transparentColorForBottomSheet
-import java.util.*
 import kotlin.math.min
 
 @Composable
@@ -81,7 +81,7 @@ fun TransactionEditor(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(transparentColorForBottomSheet)
+            .background(Color(0xffeeeeee))
             .height(if(choiceIsActive.value) 300.dp else 520.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -309,7 +309,7 @@ fun TransactionEditor(
     }
 
     DatePickerDialog(openDialog = openPickDateDialog, startDate = date )
-    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = accountsList, transactionAccount = transactionAccount)
+    ChooseTransactionAccountDialog(openDialog = openChoseAccountDialog, accountList = accountsList, transactionAccount = transactionAccount, selectedCurrencyType = selectedCurrencyType)
     ChooseTransactionCategoryDialog(openDialog = openChoseCategoryDialog, categoryList = categoriesList, transactionCategory = category)
 }
 
@@ -331,7 +331,7 @@ fun Color.getSaturation(): Float {
 
 
 @Composable
-fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountList: List<Account>, transactionAccount: MutableState<Account>) {
+fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountList: List<Account>, transactionAccount: MutableState<Account>, selectedCurrencyType: MutableState<Currency>? = null) {
     if (openDialog.value) {
         Dialog(
             onDismissRequest = {
@@ -353,6 +353,9 @@ fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountLis
                                     .fillMaxWidth()
                                     .clickable {
                                         transactionAccount.value = it
+                                        selectedCurrencyType?.let {
+                                            selectedCurrencyType.value = transactionAccount.value.currencyType
+                                        }
                                         openDialog.value = false
                                     }
                                     .background(if (it == transactionAccount.value) Color(0xff59aab3) else Color.White)
