@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.R
+import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Category
@@ -206,6 +207,15 @@ fun TopBarCategoryEdit(
     var text by rememberSaveable { mutableStateOf(title) }
     val focusManager = LocalFocusManager.current
 
+
+    var icn = remember {
+        mutableStateOf(vectorImg)
+    }
+
+    var icnTopBar by remember {
+        mutableStateOf(vectorImg)
+    }
+
     var setAccountImg = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -293,8 +303,7 @@ fun TopBarCategoryEdit(
                             )
                         }
 
-                       // VectorIcon(modifier =  Modifier.padding(0.dp, 0.dp, 0.dp, 18.dp),vectorImg = vectorImg , onClick = {setAccountImg.value = true}, cornerSize = 12.dp)
-                        VectorIcon(Modifier.padding(0.dp,0.dp,0.dp,8.dp),Modifier.padding(8.dp) , vectorImg = vectorImg, onClick = {setAccountImg.value = true},width = 50.dp , height = 50.dp, cornerSize = 50.dp)
+                        VectorIcon(Modifier.padding(0.dp,0.dp,0.dp,8.dp),Modifier.padding(8.dp) , vectorImg = icnTopBar, onClick = {setAccountImg.value = true},width = 50.dp , height = 50.dp, cornerSize = 50.dp)
                     }
 
                 }
@@ -303,7 +312,8 @@ fun TopBarCategoryEdit(
 
         }
     }
-    SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; } , listOfVectors = CategoriesData.categoryImges , chosenVectorImg = CategoriesData.defaultCategoryVectorImg, idForCategory = true)
+    SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; icn.value = it; icnTopBar = it} , listOfVectors = CategoriesData.categoryImges, chosenVectorImg = icn, idForCategory = true )
+
 }
 
 @Composable

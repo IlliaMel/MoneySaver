@@ -265,8 +265,7 @@ fun Accounts(
     }
     }else if (selectedAccountIndex.value == 1) {
 
-        var k = chosenAccount.value.uuid
-        var g =  AccountsData.accountsList.get(0).uuid
+
         var currencyType =  remember { mutableStateOf(if(chosenAccount.value.uuid == AccountsData.normalAccount.uuid || chosenAccount.value.uuid == AccountsData.deptAccount.uuid || chosenAccount.value.uuid == AccountsData.goalAccount.uuid) {baseCurrency} else {chosenAccount.value.currencyType })}
         currencyType.value = if(chosenAccount.value.uuid == AccountsData.normalAccount.uuid || chosenAccount.value.uuid == AccountsData.deptAccount.uuid || chosenAccount.value.uuid == AccountsData.goalAccount.uuid) {baseCurrency} else {chosenAccount.value.currencyType }
         EditAccount(isForEditing.value, chosenAccount.value ,

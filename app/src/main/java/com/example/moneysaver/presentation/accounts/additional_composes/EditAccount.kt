@@ -50,6 +50,7 @@ import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.categories.additional_composes.valueToNormalFormat
 import com.example.moneysaver.presentation.transactions.additional_composes.innerShadow
 import com.example.moneysaver.ui.theme.*
+import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
@@ -667,6 +668,14 @@ fun TopBarAccounts(
     var text by rememberSaveable { mutableStateOf(title) }
     val focusManager = LocalFocusManager.current
 
+    var icn = remember {
+        mutableStateOf(vectorImg)
+    }
+
+    var icnTopBar by remember {
+        mutableStateOf(vectorImg)
+    }
+
     var setAccountImg = remember { mutableStateOf(false) }
 
     Box(
@@ -753,18 +762,16 @@ fun TopBarAccounts(
                                 contentDescription = stringResource(R.string.apply_button)
                             )
                         }
-
-                        VectorIcon(modifier =  Modifier.padding(0.dp, 0.dp, 0.dp, 18.dp),vectorImg = vectorImg , onClick = {setAccountImg.value = true})
-
+                        if(!setAccountImg.value)
+                            VectorIcon(modifier =  Modifier.padding(0.dp, 0.dp, 0.dp, 18.dp),vectorImg = icnTopBar , onClick = {setAccountImg.value = true})
+                       else
+                            VectorIcon(modifier =  Modifier.padding(0.dp, 0.dp, 0.dp, 18.dp),vectorImg = icnTopBar, onClick = {setAccountImg.value = true})
                     }
-
                 }
-
            }
-
         }
     }
-    SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; } , listOfVectors = AccountsData.accountImges, idForCategory = false)
+    SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; icn.value = it; icnTopBar = it} , listOfVectors = AccountsData.accountImges, chosenVectorImg = icn, idForCategory = false )
 }
 
 @Composable
@@ -797,12 +804,24 @@ fun SetImg(
     openDialog: MutableState<Boolean>,
     returnType: (img: VectorImg) -> Unit,
     listOfVectors: MutableList<VectorImg>,
-    chosenVectorImg: VectorImg = VectorImg(),
+    chosenVectorImg: MutableState<VectorImg>,
     idForCategory: Boolean
 ) {
 
 
     if (openDialog.value) {
+        var controller: ColorPickerController = rememberColorPickerController()
+        var color =
+                if(controller.selectedColor.value == ColorPickerController().selectedColor.value || controller.selectedColor.value == Color.White)
+                    chosenVectorImg.value.externalColor
+                else
+                    controller.selectedColor.value
+
+        listOfVectors.forEach {
+            it.externalColor = color
+        }
+
+
         Dialog(
             onDismissRequest = {
                 openDialog.value = false
@@ -813,12 +832,12 @@ fun SetImg(
                 stringResource(R.string.image),
                 stringResource(R.string.color),
             )
-            val controller = rememberColorPickerController()
-            var chosenVectorImg = remember { mutableStateOf(chosenVectorImg) }
 
 
             if(tabIndex == 0){
-                chosenVectorImg.value.externalColor = externalColorGray
+
+
+
                 Column(modifier = Modifier
                     .fillMaxHeight(0.6f)
                     .fillMaxWidth(0.9f)
@@ -869,9 +888,9 @@ fun SetImg(
                             items(listOfVectors.size) { index ->
 
                                 if(idForCategory){
-                                    VectorIcon(Modifier.padding(8.dp,8.dp,8.dp,8.dp),Modifier.padding(12.dp), vectorImg = CategoriesData.categoryImges[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = VectorImg(img = listOfVectors[index].img)},width = 50.dp , height = 60.dp, cornerSize = 50.dp)
+                                    VectorIcon(Modifier.padding(8.dp,8.dp,8.dp,8.dp),Modifier.padding(12.dp), vectorImg = CategoriesData.categoryImges[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = listOfVectors[index].copy() },width = 50.dp , height = 60.dp, cornerSize = 50.dp)
                                 }else{
-                                    VectorIcon(Modifier.padding(8.dp),vectorImg = listOfVectors[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = VectorImg(img = listOfVectors[index].img)})
+                                    VectorIcon(Modifier.padding(8.dp),vectorImg = listOfVectors[index], onClick = {tabIndex = 1 ; chosenVectorImg.value = listOfVectors[index].copy()})
                                 }
 
                             }
@@ -879,6 +898,9 @@ fun SetImg(
                     )
                 }
             }else if (tabIndex == 1){
+
+
+
 
                 Column(modifier = Modifier
                     .fillMaxHeight(0.6f)
@@ -912,49 +934,82 @@ fun SetImg(
                             }
                         }
                     }
+                    Column( modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally) {
 
-                    Row(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
+                        chosenVectorImg.value.externalColor = color
+                        var vectorImg: VectorImg = chosenVectorImg.value
 
-                        
-                        Box(modifier = Modifier
-                            .weight(2f), contentAlignment = Alignment.Center) {
-                            
-                            HsvColorPicker(
+                        Row(
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth().weight(6f),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+
+
+                            Box(
                                 modifier = Modifier
-                                    .height(250.dp)
-                                    .padding(8.dp),
-                                controller = controller,
-                            )
+                                    .weight(2f), contentAlignment = Alignment.Center
+                            ) {
 
-                            Box( modifier = Modifier.size(90.dp).clip(CircleShape).background(Color.White).background(gray).clickable {  }
+                                HsvColorPicker(
+                                    modifier = Modifier
+                                        .height(250.dp)
+                                        .padding(8.dp),
+                                    controller = controller,
+                                )
+
+
+                                Box(modifier = Modifier
+                                    .size(90.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.White)
+                                    .background(gray)
+                                    .clickable { }
                                 ) {
-                                
+
+                                }
+                            }
+
+
+
+                            if (idForCategory) {
+                                VectorIcon(
+                                    Modifier
+                                        .weight(1f)
+                                        .padding(8.dp, 8.dp, 8.dp, 8.dp),
+                                    Modifier.padding(8.dp),
+                                    vectorImg = vectorImg,
+                                    onClick = { returnType(vectorImg.copy()) },
+                                    width = 30.dp,
+                                    height = 65.dp,
+                                    cornerSize = 30.dp
+                                )
+                            } else {
+                                chosenVectorImg.value.externalColor = color
+                                var vectorImg: VectorImg = chosenVectorImg.value
+                                VectorIcon(
+                                    Modifier.padding(8.dp),
+                                    vectorImg = vectorImg,
+                                    onClick = { returnType(vectorImg.copy()) })
                             }
                         }
-                        
 
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f).clickable {  returnType(vectorImg.copy()) }.background(inactiveColorTab),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center) {
 
-
-                        if(idForCategory){
-                            var vectorImg: VectorImg = chosenVectorImg.value
-                            vectorImg.externalColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value
-                            VectorIcon(
-                                Modifier
-                                    .weight(1f)
-                                    .padding(8.dp, 8.dp, 8.dp, 8.dp),Modifier.padding(8.dp), vectorImg = vectorImg, onClick = {returnType(vectorImg)},width = 30.dp , height = 65.dp, cornerSize = 30.dp)
-                        }else{
-
-                            var vectorImg: VectorImg = chosenVectorImg.value
-                            vectorImg.externalColor = if(controller.selectedColor.value == Color.White) externalColorGray else controller.selectedColor.value
-                            VectorIcon(Modifier.padding(8.dp), vectorImg = vectorImg, onClick = { returnType(vectorImg)})
+                            Text(modifier = Modifier, text = "Submit",
+                                fontSize = 16.sp,
+                                color = Color.Black
+                            )
                         }
-
 
                     }
                 }

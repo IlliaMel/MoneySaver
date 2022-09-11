@@ -224,7 +224,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                                 Text(text = transactionAccount.value.balance.toString() + " " + transactionAccount.value.currencyType.currency,
                                     fontWeight = FontWeight.W400,
                                     color = Color.White,
-                                    fontSize = 14.sp)
+                                    fontSize = 16.sp)
                             }
                         }
 
