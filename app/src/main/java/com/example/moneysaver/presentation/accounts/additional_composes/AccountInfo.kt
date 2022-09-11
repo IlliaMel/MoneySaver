@@ -71,14 +71,15 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
     val focusManager = LocalFocusManager.current
     val isSubmitted = remember { mutableStateOf(false) }
     val selectedCurrencyType = remember { mutableStateOf(transactionAccount.value.currencyType)}
+    selectedCurrencyType.value = transactionAccount.value.currencyType
+    val selectedCurrencyTypeSecond = remember { mutableStateOf(transactionToAccount.value.currencyType)}
+    selectedCurrencyTypeSecond.value = transactionToAccount.value.currencyType
+    val isFirstFieldSelected = remember { mutableStateOf(true)}
+    isFirstFieldSelected.value = true
 
     val openChoseAccountDialog = remember { mutableStateOf(false) }
     val openChoseToAccountDialog = remember { mutableStateOf(false) }
 
-
-    val selectedCurrencyTypeSecond = remember { mutableStateOf(transactionToAccount.value.currencyType)}
-    val isFirstFieldSelected = remember { mutableStateOf(true)}
-    isFirstFieldSelected.value = true
 
     if(isSubmitted.value) {
         if(transactionToAccount.value.uuid == transactionAccount.value.uuid)

@@ -275,7 +275,7 @@ fun Calculator(
                                 evaluateSumValue(sumTextSecond!!)
                             }
                         }  else {
-                            if(isFirstFieldSelected==null || isFirstFieldSelected!!.value) {
+                            if(isFirstFieldSelected==null) {
                                 convertSum(sumText, selectedCurrencyType.value, targetCurrencyType, returnCurrencyValue)
                                 selectedCurrencyType.value=targetCurrencyType
                             } else {
