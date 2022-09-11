@@ -111,6 +111,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('7', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -122,6 +125,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('4', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -133,6 +139,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('1', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -155,6 +164,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('8', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -166,6 +178,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('5', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -177,6 +192,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('2', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -188,6 +206,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('0', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -201,6 +222,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('9', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -212,6 +236,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('6', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -223,6 +250,9 @@ fun Calculator(
                     if(sumText.value=="0" && (isFirstFieldSelected==null || isFirstFieldSelected!!.value)) sumText.value=""
                     if(sumTextSecond!=null && !isFirstFieldSelected!!.value && sumTextSecond!!.value=="0")sumTextSecond!!.value=""
                     enterSymbol('3', sumText, sumTextSecond, isFirstFieldSelected)
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
+                    }
                 },
                 focusManager = focusManager
             ) {
@@ -249,6 +279,9 @@ fun Calculator(
                     } else {
                         if(sumTextSecond!!.value.length>1) sumTextSecond!!.value=sumTextSecond!!.value.dropLast(1) else sumTextSecond!!.value="0"
                         if(sumTextSecond!!.value=="-") sumTextSecond!!.value="0"
+                    }
+                    if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                        autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
                     }
                 },
                 bgColor = calculatorButton,
@@ -284,6 +317,9 @@ fun Calculator(
                                 convertSum(sumTextSecond!!, selectedCurrencyTypeSecond!!.value, targetCurrencyTypeSecond!!, returnCurrencyValue)
                                 selectedCurrencyTypeSecond.value=targetCurrencyTypeSecond
                             }
+                        }
+                        if(isFirstFieldSelected!=null && isFirstFieldSelected!!.value) {
+                            autoConvert(sumText, selectedCurrencyType.value, sumTextSecond, selectedCurrencyTypeSecond!!.value, returnCurrencyValue)
                         }
                     },
                     bgColor = vectorImg.externalColor,
@@ -352,6 +388,21 @@ private fun enterSymbol(
         sumText.value+=symbol
     else
         sumTextSecond!!.value+=symbol
+}
+
+private fun autoConvert(
+    sumTextFirst: MutableState<String>,
+    selectedCurrencyFirst: Currency,
+    sumTextSecond: MutableState<String>?,
+    selectedCurrencySecond: Currency,
+    returnCurrencyValue: (which : String , to : String) -> Double
+) {
+    // auto-convert
+    val firstSum = sumTextFirst.value.toDoubleOrNull()
+    firstSum?.let {
+        val secondSum = round(100.0 * firstSum * returnCurrencyValue(selectedCurrencyFirst.currencyName, selectedCurrencySecond.currencyName)) / 100.0
+        sumTextSecond!!.value = secondSum.toCalculatorString()
+    }
 }
 
 private fun convertSum(
