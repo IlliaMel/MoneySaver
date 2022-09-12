@@ -364,15 +364,28 @@ class MainActivityViewModel @Inject constructor(
     fun loadTransactions(minDate: MutableState<Date?>, maxDate: MutableState<Date?>) {
         financeRepository.getTransactions()
             .onEach { list ->
-                var resultList = list.filter {  it.accountUUID == account.uuid || (account.isForGoal && account.isForDebt) }
+                var resultList = list.filter {  it.accountUUID == account.uuid || it.toAccountUUID == account.uuid || (account.isForGoal && account.isForDebt) }
                 var startingBalance = if(!(account.isForGoal && account.isForDebt)) financeRepository.getAccountByUUID(account.uuid)!!.balance else account.balance
                 var endingBalance = if(!(account.isForGoal && account.isForDebt)) financeRepository.getAccountByUUID(account.uuid)!!.balance else account.balance
                 for(transaction in resultList) {
                     if(maxDate.value!=null && transaction.date > maxDate.value) {
-                        endingBalance -= transaction.sum*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
+                        if(!(account.isForGoal && account.isForDebt)) {
+                            if(account.uuid==transaction.uuid) {
+                                endingBalance -= transaction.sum*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
+                            } else if(account.uuid==transaction.toAccountUUID) {
+                                endingBalance -= transaction.toAccountSum!!*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.toAccountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
+                            }
+                        }
                     }
                     if(minDate.value==null || transaction.date > minDate.value) {
-                        startingBalance -= transaction.sum*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
+                        if(!(account.isForGoal && account.isForDebt)) {
+                            if(account.uuid==transaction.uuid) {
+                                startingBalance -= transaction.sum*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
+                            } else if(account.uuid==transaction.toAccountUUID) {
+                                startingBalance -= transaction.toAccountSum!!*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.toAccountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
+                            }
+                        }
+
                     }
                 }
                 startingBalance=((startingBalance * 100.0).roundToInt() / 100.0)

@@ -255,10 +255,24 @@ fun Transactions(
                         for (date: Date in sortedDateToTransactionMap.keys) {
                             var dayBalanceChange = 0.0
                             for (x in sortedDateToTransactionMap[date]!!) {
-                                dayBalanceChange += x.sum * viewModel.returnCurrencyValue(
-                                    viewModel.state.accountsList.first { it.uuid == x.accountUUID }.currencyType.currencyName,
-                                    baseCurrency.currencyName
-                                )
+                                if(x.categoryUUID!=null) {
+                                    dayBalanceChange += x.sum * viewModel.returnCurrencyValue(
+                                        viewModel.state.accountsList.first { it.uuid == x.accountUUID }.currencyType.currencyName,
+                                        baseCurrency.currencyName
+                                    )
+                                } else if (!(chosenAccountFilter.isForGoal && chosenAccountFilter.isForDebt)) {
+                                    if(x.accountUUID == chosenAccountFilter.uuid) {
+                                        dayBalanceChange += x.sum * viewModel.returnCurrencyValue(
+                                            viewModel.state.accountsList.first { it.uuid == x.accountUUID }.currencyType.currencyName,
+                                            baseCurrency.currencyName
+                                        )
+                                    } else if(x.toAccountUUID==chosenAccountFilter.uuid) {
+                                        dayBalanceChange += x.toAccountSum!! * viewModel.returnCurrencyValue(
+                                            viewModel.state.accountsList.first { it.uuid == x.toAccountUUID }.currencyType.currencyName,
+                                            baseCurrency.currencyName
+                                        )
+                                    }
+                                }
                             }
                             dayBalanceChange = valueToNormalFormat(dayBalanceChange).toDouble()
 
