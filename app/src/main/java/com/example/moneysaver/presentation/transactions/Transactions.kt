@@ -45,6 +45,7 @@ import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
+import com.example.moneysaver.presentation.accounts.additional_composes.AccountTransferEditor
 import com.example.moneysaver.presentation.categories.additional_composes.round
 import com.example.moneysaver.presentation.categories.additional_composes.valueToNormalFormat
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
@@ -124,6 +125,9 @@ fun Transactions(
         selectedTransaction.value = null
     }
 
+    var sumText = remember {mutableStateOf("0")}
+    var sumTextSecond = remember {mutableStateOf("0")}
+
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
 
@@ -131,9 +135,29 @@ fun Transactions(
             if(sheetContentInitClose)
                 if(selectedCategory.value==null && selectedTransaction.value==null) {
                     CategoryChooser(selectedCategory, viewModel.state.categoriesList)
-                } else {
-                    if(selectedCategory.value==null && selectedTransaction.value!=null)
-                        selectedCategory.value = viewModel.state.categoriesList.first{ it.uuid == selectedTransaction.value!!.categoryUUID}
+                } else if (selectedTransaction.value!=null && selectedTransaction.value!!.categoryUUID == null){
+
+                        sumText.value = "0"
+                        sumTextSecond.value = "0"
+
+                        AccountTransferEditor(
+                            collapseBottomSheet = {
+                                scope.launch {
+                                    if (sheetState.isExpanded) {
+                                        sheetState.collapse()
+                                        selectedCategory.value = null // reset selected category
+                                        selectedTransaction.value = null
+                                    }
+                                }
+                            },
+                            currentTransaction = selectedTransaction,
+                            sumText = sumText,
+                            sumTextSecond = sumTextSecond,
+                        )
+
+                }
+                else {
+                    if(selectedCategory.value==null && selectedTransaction.value!=null) selectedCategory.value = viewModel.state.categoriesList.first{ it.uuid == selectedTransaction.value!!.categoryUUID}
                     val transactionCategory: MutableState<Category> = remember { mutableStateOf(selectedCategory.value!!) }
                     TransactionEditor(
                         currentTransaction = selectedTransaction,
@@ -154,6 +178,7 @@ fun Transactions(
                         editBySwipeWasActivated = editBySwipeWasActivated,
                         returnCurrencyValue = viewModel::returnCurrencyValue
                     )
+
                 }
         },
         sheetPeekHeight = 0.dp,
