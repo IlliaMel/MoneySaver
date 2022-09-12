@@ -233,7 +233,7 @@ fun Transactions(
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 BalanceField(
-                                    baseCurrency,
+                                    account = chosenAccountFilter,
                                     text = stringResource(R.string.starting_balance),
                                     balance = viewModel.state.startingBalance
                                 )
@@ -244,7 +244,7 @@ fun Transactions(
                                         .width(1.dp)
                                 )
                                 BalanceField(
-                                    baseCurrency,
+                                    account = chosenAccountFilter,
                                     text = stringResource(R.string.ending_balance),
                                     balance = viewModel.state.endingBalance
                                 )
@@ -258,18 +258,18 @@ fun Transactions(
                                 if(x.categoryUUID!=null) {
                                     dayBalanceChange += x.sum * viewModel.returnCurrencyValue(
                                         viewModel.state.accountsList.first { it.uuid == x.accountUUID }.currencyType.currencyName,
-                                        baseCurrency.currencyName
+                                        chosenAccountFilter.currencyType.currencyName
                                     )
                                 } else if (!(chosenAccountFilter.isForGoal && chosenAccountFilter.isForDebt)) {
                                     if(x.accountUUID == chosenAccountFilter.uuid) {
                                         dayBalanceChange += x.sum * viewModel.returnCurrencyValue(
                                             viewModel.state.accountsList.first { it.uuid == x.accountUUID }.currencyType.currencyName,
-                                            baseCurrency.currencyName
+                                            chosenAccountFilter.currencyType.currencyName
                                         )
                                     } else if(x.toAccountUUID==chosenAccountFilter.uuid) {
                                         dayBalanceChange += x.toAccountSum!! * viewModel.returnCurrencyValue(
                                             viewModel.state.accountsList.first { it.uuid == x.toAccountUUID }.currencyType.currencyName,
-                                            baseCurrency.currencyName
+                                            chosenAccountFilter.currencyType.currencyName
                                         )
                                     }
                                 }
@@ -278,7 +278,7 @@ fun Transactions(
 
                             item {
                                 DateBlock(
-                                    baseCurrency = baseCurrency,
+                                    baseCurrency = chosenAccountFilter.currencyType,
                                     date = date,
                                     balanceChange = dayBalanceChange
                                 )
