@@ -19,6 +19,9 @@ interface TransactionDao {
     @Query("SELECT * FROM `transaction`  WHERE  accountUUID = :accountUUID")
     fun getTransactionsByAccountUUID(accountUUID: UUID): Flow<List<Transaction>>
 
+    @Query("SELECT * FROM `transaction`  WHERE  toAccountUUID = :toAccountUUID")
+    fun getTransactionsByToAccountUUID(toAccountUUID: UUID): Flow<List<Transaction>>
+
     @Query("SELECT * FROM `transaction` WHERE date BETWEEN :minDate AND :maxDate")
     fun getTransactionsInDateRange(minDate: Date, maxDate: Date): Flow<List<Transaction>>
 

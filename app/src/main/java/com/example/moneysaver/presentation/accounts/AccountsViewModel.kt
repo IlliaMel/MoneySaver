@@ -135,6 +135,9 @@ class AccountsViewModel @Inject constructor(
             financeRepository.getTransactionsByAccountUUID(account.uuid).onEach { list ->
                 for(transaction in list) deleteTransaction(transaction)
             }.launchIn(viewModelScope)
+            financeRepository.getTransactionsByToAccountUUID(account.uuid).onEach { list ->
+                for(transaction in list) deleteTransaction(transaction)
+            }.launchIn(viewModelScope)
             financeRepository.deleteAccount(account)
         }
         loadAllAccounts()

@@ -20,6 +20,8 @@ interface FinanceRepository {
 
     fun getTransactionsByAccountUUID(accountUUID: UUID): Flow<List<Transaction>>
 
+    fun getTransactionsByToAccountUUID(toAccountUUID: UUID): Flow<List<Transaction>>
+
     fun getTransactionsInDateRange(minDate: Date, maxDate: Date): Flow<List<Transaction>>
 
     suspend fun insertTransaction(transaction: Transaction)

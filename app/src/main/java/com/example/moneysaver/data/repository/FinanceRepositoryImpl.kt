@@ -1,5 +1,6 @@
 package com.example.moneysaver.data.repository
 
+import androidx.room.Query
 import com.example.moneysaver.data.data_base.account_db.AccountDao
 import com.example.moneysaver.data.data_base.category_db.CategoryDao
 import com.example.moneysaver.data.data_base.currency_db.CurrencyDao
@@ -38,6 +39,10 @@ class FinanceRepositoryImpl(
 
     override fun getTransactionsByAccountUUID(accountUUID: UUID): Flow<List<Transaction>> {
         return transactionDao.getTransactionsByAccountUUID(accountUUID)
+    }
+
+    override fun getTransactionsByToAccountUUID(toAccountUUID: UUID): Flow<List<Transaction>> {
+        return transactionDao.getTransactionsByToAccountUUID(toAccountUUID)
     }
 
     override fun getTransactionsInDateRange(minDate: Date, maxDate: Date): Flow<List<Transaction>> {
