@@ -228,10 +228,7 @@ class MainActivityViewModel @Inject constructor(
             val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
             transactionAccount?.let {
                 val updatedAccount = transactionAccount!!.copy(
-                    balance= if(transaction.toAccountUUID != null)
-                                transactionAccount.balance + transaction.sum
-                            else
-                                transactionAccount.balance - transaction.sum
+                    balance= transactionAccount.balance - transaction.sum
                 )
                 // update account
                 financeRepository.insertAccount(updatedAccount)
@@ -240,7 +237,7 @@ class MainActivityViewModel @Inject constructor(
             if(transaction.toAccountUUID != null && transactionAccount != null){
                 val transactionToAccount = financeRepository.getAccountByUUID(transaction.toAccountUUID)
                 val updatedToAccount = transactionToAccount!!.copy(
-                    balance = transactionToAccount.balance + transaction.toAccountSum!!
+                    balance = transactionToAccount.balance - transaction.toAccountSum!!
                 )
                 financeRepository.insertAccount(updatedToAccount)
             }
@@ -262,7 +259,7 @@ class MainActivityViewModel @Inject constructor(
             val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
 
             val updatedAccount = transactionAccount!!.copy(
-                balance = transactionAccount.balance-transaction.sum
+                balance = transactionAccount.balance+transaction.sum
             )
             financeRepository.insertAccount(updatedAccount)
 
@@ -270,7 +267,7 @@ class MainActivityViewModel @Inject constructor(
             if(transaction.toAccountUUID != null){
                 val transactionToAccount = financeRepository.getAccountByUUID(transaction.toAccountUUID)
                 val updatedToAccount = transactionToAccount!!.copy(
-                    balance = transactionToAccount.balance + Math.round(100 * transaction.sum * returnCurrencyValue(transactionAccount.currencyType.currencyName,transactionToAccount.currencyType.currencyName)) / 100.0
+                    balance = transactionToAccount.balance + transaction.toAccountSum!!
                 )
                 financeRepository.insertAccount(updatedToAccount)
             }

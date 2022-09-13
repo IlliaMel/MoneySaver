@@ -64,8 +64,8 @@ fun AccountTransferEditor (
 )
 {
 
-    sumText.value = currentTransaction.value?.sum.toString() ?: "0"
-    sumTextSecond.value = currentTransaction.value?.toAccountSum.toString() ?: "0"
+    sumText.value = currentTransaction.value?.sum?.times(-1).toString() ?: "0"
+    sumTextSecond.value = currentTransaction.value?.toAccountSum?.toString() ?: "0"
 
     var  isForEditingTransactionView by remember {
         mutableStateOf(true)
