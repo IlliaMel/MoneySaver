@@ -125,6 +125,9 @@ fun Transactions(
         selectedTransaction.value = null
     }
 
+    var closedBottomSheet by remember {
+        mutableStateOf(false)
+    }
     var sumText = remember {mutableStateOf("0")}
     var sumTextSecond = remember {mutableStateOf("0")}
 
@@ -134,7 +137,13 @@ fun Transactions(
         sheetContent = {
             if(sheetContentInitClose)
                 if(selectedCategory.value==null && selectedTransaction.value==null) {
-                    CategoryChooser(selectedCategory, viewModel.state.categoriesList)
+                    if(!closedBottomSheet)
+                        CategoryChooser(selectedCategory, viewModel.state.categoriesList)
+                    else {
+                        if(sheetState.isCollapsed)
+                            closedBottomSheet = false
+                    }
+
                 } else if (selectedTransaction.value!=null && selectedTransaction.value!!.categoryUUID == null){
 
                         sumText.value = "0"
@@ -147,6 +156,7 @@ fun Transactions(
                                         sheetState.collapse()
                                         selectedCategory.value = null // reset selected category
                                         selectedTransaction.value = null
+                                        closedBottomSheet = true
                                     }
                                 }
                             },
@@ -169,6 +179,7 @@ fun Transactions(
                                 sheetState.collapse()
                                 selectedCategory.value=null // reset selected category
                                 selectedTransaction.value=null
+                                closedBottomSheet = true
                             }
                         },
                         accountsList = viewModel.state.accountsList,
@@ -193,6 +204,7 @@ fun Transactions(
                             selectedCategory.value=null
                             selectedCategory.value=null
                             selectedTransaction.value=null
+                            closedBottomSheet = true
                             if(sheetState.isCollapsed && !sheetState.isAnimationRunning)
                                 scaffoldState.bottomSheetState.expand()
                             else
@@ -430,7 +442,8 @@ fun Transactions(
 
             val alpha: Float by animateFloatAsState(if((sheetState.isAnimationRunning || sheetState.isExpanded ) ) 0.6f else 0f ,  animationSpec =  tween(durationMillis = 200))
             Column(modifier = Modifier
-                .background(Color.Black.copy(alpha = alpha)).fillMaxSize()){}
+                .background(Color.Black.copy(alpha = alpha))
+                .fillMaxSize()){}
 
 
             //;;
