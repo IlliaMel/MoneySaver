@@ -82,6 +82,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
 
 
     if(isSubmitted.value) {
+        isSubmitted.value=false
         if(transactionToAccount.value.uuid == transactionAccount.value.uuid)
             Toast
                 .makeText(
@@ -120,7 +121,6 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
              //   viewModel.addAccount(transactionAccount.value)
               //  viewModel.addAccount(transactionToAccount.value)
                 mainActivityViewModel.addTransaction(transaction)
-                isSubmitted.value=false
                 collapseBottomSheet()
             }
         }

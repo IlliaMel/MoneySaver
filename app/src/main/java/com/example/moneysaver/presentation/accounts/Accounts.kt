@@ -534,7 +534,7 @@ fun AddBankAccount(account: Account, navigateToCardAdder: (Account) -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
-                AccountImage(account)
+                AccountImage(account, navigateToCardSettings =  {navigateToCardAdder(account)})
             }
 
             Column(
@@ -567,7 +567,7 @@ fun AccountListItem(account: Account, navigateToCardSettings: (Account) -> Unit)
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
-                AccountImage(account)
+                AccountImage(account, navigateToCardSettings =  {navigateToCardSettings(account)})
             }
 
             Row(
@@ -637,8 +637,8 @@ private fun textForAccount(account: Account, modifier: Modifier = Modifier){
 
 
 @Composable
-private fun AccountImage(account: Account) {
-    VectorIcon(modifier = Modifier.padding(8.dp),height = 40.dp , width = 50.dp, vectorImg = account.accountImg,onClick = {})
+private fun AccountImage(account: Account, navigateToCardSettings: () -> Unit) {
+    VectorIcon(modifier = Modifier.padding(8.dp),height = 40.dp , width = 50.dp, vectorImg = account.accountImg,onClick = {navigateToCardSettings()})
 }
 
 @Preview

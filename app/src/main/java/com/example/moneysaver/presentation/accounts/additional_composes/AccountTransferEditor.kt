@@ -59,13 +59,18 @@ fun AccountTransferEditor (
     currentTransaction: MutableState<Transaction?> = mutableStateOf(null),
     collapseBottomSheet: () -> Unit,
 
-    sumText: MutableState<String>,
-    sumTextSecond: MutableState<String>,
+    sumTextMain: MutableState<String>,
+    sumTextSecondMain: MutableState<String>,
 )
 {
 
-    sumText.value = currentTransaction.value?.sum?.times(-1).toString() ?: "0"
-    sumTextSecond.value = currentTransaction.value?.toAccountSum?.toString() ?: "0"
+    var sumText = remember {
+        mutableStateOf((currentTransaction.value?.sum?.times(-1)).toString() ?: sumTextMain.value)
+    }
+
+    var sumTextSecond = remember {
+        mutableStateOf(currentTransaction.value?.toAccountSum.toString() ?: sumTextSecondMain.value)
+    }
 
     var  isForEditingTransactionView by remember {
         mutableStateOf(true)
@@ -97,6 +102,7 @@ fun AccountTransferEditor (
 
 
     if(isSubmitted.value) {
+        isSubmitted.value=false
         if(transactionToAccount.value.uuid == transactionAccount.value.uuid)
             Toast
                 .makeText(
@@ -125,16 +131,15 @@ fun AccountTransferEditor (
                 val transactionNote: String? = if (note != "") note else null
                 val transaction = Transaction(
                     uuid = currentTransaction.value?.uuid ?: UUID.randomUUID(),
-                    sum = writtenSum*(-1),
+                    sum = writtenSum *(-1),
                     categoryUUID = null,
                     accountUUID = transactionAccount.value.uuid,
                     toAccountUUID = transactionToAccount.value.uuid,
-                    toAccountSum = sumTextSecond.value.toDoubleOrNull() ?: 0.0,
+                    toAccountSum = (sumTextSecond.value.toDoubleOrNull() ?: 0.0),
                     date = currentTransaction.value?.date ?: Date(),
                     note = transactionNote
                 )
                 mainActivityViewModel.addTransaction(transaction)
-                isSubmitted.value=false
                 collapseBottomSheet()
             }
         }

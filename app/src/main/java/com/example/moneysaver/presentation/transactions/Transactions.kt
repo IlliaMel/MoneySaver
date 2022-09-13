@@ -151,8 +151,8 @@ fun Transactions(
                                 }
                             },
                             currentTransaction = selectedTransaction,
-                            sumText = sumText,
-                            sumTextSecond = sumTextSecond,
+                            sumTextMain = sumText,
+                            sumTextSecondMain = sumTextSecond,
                         )
 
                 }
