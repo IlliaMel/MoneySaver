@@ -240,7 +240,7 @@ class MainActivityViewModel @Inject constructor(
             if(transaction.toAccountUUID != null && transactionAccount != null){
                 val transactionToAccount = financeRepository.getAccountByUUID(transaction.toAccountUUID)
                 val updatedToAccount = transactionToAccount!!.copy(
-                    balance = transactionToAccount.balance - Math.round(100.0 * transaction.sum * returnCurrencyValue(transactionAccount.currencyType.currencyName,transactionToAccount.currencyType.currencyName)) / 100.0
+                    balance = transactionToAccount.balance + transaction.toAccountSum!!
                 )
                 financeRepository.insertAccount(updatedToAccount)
             }

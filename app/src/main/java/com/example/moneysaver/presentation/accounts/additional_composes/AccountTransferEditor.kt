@@ -268,7 +268,9 @@ fun AccountTransferEditor (
                                 .height(50.dp)
                                 .background(Color(0x33E31D0B))
                                 .clickable {
-                                    viewModel.deleteAccount(transactionAccount.value)
+                                    currentTransaction.value?.let {
+                                        mainActivityViewModel.deleteTransaction(it)
+                                    }
                                     collapseBottomSheet()
                                 },
                             contentAlignment = Alignment.Center
