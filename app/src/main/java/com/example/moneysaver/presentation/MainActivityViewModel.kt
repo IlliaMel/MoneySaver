@@ -254,13 +254,9 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             // remove previous spending data if transaction isn't new
             financeRepository.getTransactionByUUID(transaction.uuid)?.let {
-                val transactionAccount = financeRepository.getAccountByUUID(it.accountUUID)
-                val updatedAccount = transactionAccount!!.copy(
-                    balance = transactionAccount.balance-it.sum
-                )
-                // update account
-                financeRepository.insertAccount(updatedAccount)
+                financeRepository.deleteTransaction(transaction)
             }
+
             // add new spending data
 
             val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
@@ -316,9 +312,6 @@ class MainActivityViewModel @Inject constructor(
                 categoriesList = categories,
                 selectedAccount = account
             )
-            //  if(!isCategoriesParsed)
-            //       delay(100)
-            //    isCategoriesParsed = true
         }.launchIn(viewModelScope)
     }
 
@@ -344,9 +337,6 @@ class MainActivityViewModel @Inject constructor(
                 categoriesList = categories,
                 selectedAccount = account
             )
-            //    if(!isCategoriesParsed)
-            //         delay(100)
-            //    isCategoriesParsed = true
         }.launchIn(viewModelScope)
     }
 

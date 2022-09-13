@@ -109,11 +109,11 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
 
                 val transactionNote: String? = if (note != "") note else null
                 val transaction = Transaction(
-                    sum = writtenSum*(-1),
+                    sum = writtenSum,
                     categoryUUID = null,
                     accountUUID = transactionAccount.value.uuid,
                     toAccountUUID = transactionToAccount.value.uuid,
-                    toAccountSum = sumTextSecond.value.toDoubleOrNull() ?: 0.0,
+                    toAccountSum = (sumTextSecond.value.toDoubleOrNull() ?: 0.0)*(-1),
                     date = Date(),
                     note = transactionNote
                 )
