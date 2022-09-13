@@ -366,7 +366,7 @@ class MainActivityViewModel @Inject constructor(
                     }
                     if(minDate.value==null || transaction.date > minDate.value) {
                         if(!(account.isForGoal && account.isForDebt)) {
-                            if(account.uuid==transaction.uuid) {
+                            if(account.uuid==transaction.accountUUID) {
                                 startingBalance -= transaction.sum*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
                             } else if(account.uuid==transaction.toAccountUUID) {
                                 startingBalance -= transaction.toAccountSum!!*returnCurrencyValue(state.accountsList.find { it.uuid == transaction.toAccountUUID }?.currencyType!!.currencyName, account.currencyType.currencyName )
