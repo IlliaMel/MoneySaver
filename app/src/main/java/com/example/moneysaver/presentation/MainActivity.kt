@@ -2,6 +2,7 @@ package com.example.moneysaver.presentation
 
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,7 +10,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -64,6 +67,7 @@ import com.example.moneysaver.ui.theme.whiteSurface
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.net.URI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -90,6 +94,46 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
 
+
+    private val FILE_SELECT_CODE = 0;
+
+    fun importActivityData(viewModel: MainActivityViewModel) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "*/*"
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+
+        try {
+            startActivityForResult(
+                Intent.createChooser(intent, "Select a File"),
+                FILE_SELECT_CODE
+            )
+        } catch (ex: ActivityNotFoundException) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(
+                MoneySaver.applicationContext(), "Please install a File Manager.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    fun exportActivityData(viewModel: MainActivityViewModel) {
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == FILE_SELECT_CODE) {
+            if(resultCode == RESULT_OK) {
+                if(data==null) {
+                    return
+                }
+                val uri = data.data
+                if (uri != null) {
+                    Log.d("TAG", "Selected file:" + uri.path )
+                }
+            }
+        }
+    }
 
     private var CURRENCY_PARSED_KEY = "is_currency_parsed"
     private var CURRENCY_PARSING_DATE_KEY = "currency_parsing_date"
@@ -317,11 +361,11 @@ fun SlideInAnimationScreen() {
 }
 
 fun importData(viewModel: MainActivityViewModel) {
-
+    MainActivity.instance!!.importActivityData(viewModel)
 }
 
 fun exportData(viewModel: MainActivityViewModel) {
-
+    MainActivity.instance!!.exportActivityData(viewModel)
 }
 
 
