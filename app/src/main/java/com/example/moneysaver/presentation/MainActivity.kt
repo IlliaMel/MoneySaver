@@ -330,6 +330,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
     var LAST_STARTING = "last_starting"
     var MAIN_CURRENCY = "main_currency"
 
+    var ALARM_ON = "alarm_on"
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -376,7 +377,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         }
 
         var hoursNotification = remember {
-            mutableStateOf(sharedPref.getInt(HOUR_ALARM, 0))
+            mutableStateOf(sharedPref.getInt(HOUR_ALARM, 12))
         }
 
         var minutesNotification = remember {
@@ -384,7 +385,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         }
 
         var timeSwitch by remember {
-            mutableStateOf(false)
+            mutableStateOf(sharedPref.getBoolean(ALARM_ON, true))
         }
 
         var notificationClicked by remember {
@@ -393,8 +394,9 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
 
         var mainCurrencyClicked = remember { mutableStateOf(false) }
 
-        if(sharedPref.getString(LAST_STARTING, "") != formattedDate && timeSwitch)
-            //alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
+        ///*sharedPref.getString(LAST_STARTING, "") != formattedDate && */timeSwitch
+        if(timeSwitch)
+            alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
 
 
         //Date of Last Starting
@@ -440,7 +442,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                 R.string.defaultStr), icon = Icons.Default.Place),
                             MenuItem(number = 1 , title = stringResource(R.string.theme), description = stringResource(
                                                             R.string.light), icon = Icons.Default.Info),
-                            MenuItem(number = 2 , title = stringResource(R.string.notifications), description = if(hoursNotification.value == 0) "00" else {hoursNotification.value.toString()} + ":" + if(minutesNotification.value == 0) "00" else {minutesNotification.value.toString()}, icon = Icons.Default.Notifications, hasSwitch = true),
+                            MenuItem(number = 2 , title = stringResource(R.string.notifications), description = if(hoursNotification.value == 0) "00" else {hoursNotification.value.toString()} + ":" + if(minutesNotification.value == 0) "00" else {minutesNotification.value.toString()}, icon = Icons.Default.Notifications, hasSwitch = true, switchIsActive = timeSwitch ,),
 
                             MenuItem(number = 3 , title = stringResource(R.string.main_currency), description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart)
                         )),
@@ -456,12 +458,19 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                 openSelectLanguageDialog.value = true
                             }
                             2 -> {
-                                if(it.switchIsActive)
-                                    timeSwitch = true
                                 notificationClicked = true
                             }
                             3 -> {
                                 mainCurrencyClicked.value = true
+                            }
+                        }
+                    },
+                    onSwitchClick = {
+                        when (it.number) {
+                            2 -> {
+                                with(sharedPref.edit()) {
+                                    putBoolean(ALARM_ON, !it.switchIsActive)
+                                    apply()}
                             }
                         }
                     }

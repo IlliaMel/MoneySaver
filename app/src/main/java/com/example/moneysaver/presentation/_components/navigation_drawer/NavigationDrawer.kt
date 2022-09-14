@@ -36,6 +36,8 @@ fun DrawerBody(
     blocks: List<MenuBlock>,
     modifier: Modifier = Modifier,
     onItemClick: (MenuItem) -> Unit,
+    onSwitchClick: (MenuItem) -> Unit = {},
+
 ) {
     LazyColumn(modifier) {
         items(blocks) { block ->
@@ -80,10 +82,11 @@ fun DrawerBody(
                                 )
                             }
                             if(item.hasSwitch) {
-                                val checkedState = remember { mutableStateOf(true) }
+                                val checkedState = remember { mutableStateOf(item.switchIsActive) }
                                 Switch(
                                     checked = checkedState.value,
                                     onCheckedChange = {
+                                        onSwitchClick(item)
                                         checkedState.value = it
                                         item.switchIsActive = it
                                     },
