@@ -64,7 +64,6 @@ fun Accounts(
 
     var chosenAccount  = remember { mutableStateOf(AccountsData.accountsList.get(0)) }
 
-    var transactionAccount = remember { mutableStateOf(AccountsData.accountsList.get(0)) }
     var transactionToAccount = remember { mutableStateOf(AccountsData.accountsList.get(0)) }
 
     var setSelectedAccount = remember { mutableStateOf(false) }
@@ -82,12 +81,16 @@ fun Accounts(
     )
 
 
+
     val scope = rememberCoroutineScope()
     var sheetContentInitClose by remember { mutableStateOf(false) }
 
     var sumText = remember {mutableStateOf("0")}
     var sumTextSecond = remember {mutableStateOf("0")}
     var lookingInfo =  remember {mutableStateOf(true)}
+
+    if(sheetState.isCollapsed)
+        lookingInfo.value = true
 
     if(selectedAccountIndex.value == 0) {
 
@@ -104,16 +107,16 @@ fun Accounts(
                     sumText.value = "0"
                     sumTextSecond.value = "0"
                     lookingInfo.value = true
-                    transactionAccount.value = chosenAccount.value
-                    transactionToAccount.value = viewModel.returnAnotherAccount(transactionAccount.value)
-                    AccountInfo(transactionAccount = transactionAccount,
+
+                    transactionToAccount.value = viewModel.returnAnotherAccount(chosenAccount.value)
+                    AccountInfoCompose(
+                        chosenAccount = chosenAccount.value,
                         transactionToAccount = transactionToAccount,
                         isForEditing = isForEditing,
                         selectedAccountIndex = selectedAccountIndex,
                         collapseBottomSheet = {
                             scope.launch {
                                 if (sheetState.isExpanded){
-
                                     sheetState.collapse()
                                 }
                             }

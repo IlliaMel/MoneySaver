@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
+import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
@@ -51,6 +52,35 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
+fun AccountInfoCompose (
+          isForEditing: MutableState<Boolean>,
+          selectedAccountIndex: MutableState<Int>,
+          collapseBottomSheet: () -> Unit,
+          chosenAccountFilter: Account,
+          chosenAccount: Account,
+          transactionToAccount: MutableState<Account>,
+          lookingInfo: MutableState<Boolean>,
+          sumText: MutableState<String>,
+          sumTextSecond: MutableState<String>
+)
+{
+    var transactionAccount = remember { mutableStateOf(AccountsData.accountsList.get(0)) }
+    transactionAccount.value = chosenAccount
+
+    AccountInfo(
+        transactionAccount = transactionAccount,
+        transactionToAccount = transactionToAccount,
+        isForEditing = isForEditing,
+        selectedAccountIndex = selectedAccountIndex,
+        collapseBottomSheet = collapseBottomSheet,
+        sumText = sumText,
+        sumTextSecond = sumTextSecond,
+        lookingInfo = lookingInfo,
+        chosenAccountFilter = chosenAccountFilter
+    )
+}
+
+@Composable
 fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                  mainActivityViewModel: MainActivityViewModel = hiltViewModel(),
                  isForEditing: MutableState<Boolean>,
@@ -58,6 +88,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                  collapseBottomSheet: () -> Unit,
                  chosenAccountFilter: Account,
                  transactionToAccount: MutableState<Account>,
+                 //account: Account,
                  transactionAccount: MutableState<Account>,
                  lookingInfo: MutableState<Boolean>,
                  sumText: MutableState<String>,
@@ -65,6 +96,14 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
 )
 {
 
+
+    BackHandler() {
+        if(lookingInfo.value){
+            collapseBottomSheet()
+        }else{
+            lookingInfo.value = true
+        }
+    }
 
     var note by remember { mutableStateOf( "") }
     val openPickDateDialog = remember { mutableStateOf(false) }
@@ -176,14 +215,14 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                             .weight(1.3f)
                             .background(Color.Transparent)
                             .fillMaxWidth()
-                            .padding(16.dp,0.dp,16.dp,0.dp),
+                            .padding(16.dp, 0.dp, 16.dp, 0.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start) {
 
                            Icon(modifier = Modifier
-                                .weight(1f)
-                                .size(48.dp,42.dp)
-                                .padding(4.dp, 0.dp, 12.dp, 0.dp),
+                               .weight(1f)
+                               .size(48.dp, 42.dp)
+                               .padding(4.dp, 0.dp, 12.dp, 0.dp),
                             imageVector = ImageVector.vectorResource(transactionAccount.value.accountImg.img),
                             tint = transactionAccount.value.accountImg.innerColor,
                             contentDescription = null
@@ -199,7 +238,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                             if(chosenAccountFilter.uuid == transactionAccount.value.uuid)
                             Icon(modifier = Modifier
                                 .weight(1f)
-                                .size(25.dp,25.dp)
+                                .size(25.dp, 25.dp)
                                 .padding(0.dp, 0.dp, 4.dp, 0.dp),
                                 imageVector = Icons.Filled.Star ,
                                 tint = Color.White,
@@ -210,7 +249,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                         Row(modifier = Modifier
                             .weight(2f)
                             .background(Color.Transparent)
-                            .padding(12.dp,0.dp,12.dp,12.dp),
+                            .padding(12.dp, 0.dp, 12.dp, 12.dp),
                             verticalAlignment = Alignment.Top,
                             horizontalArrangement = Arrangement.Center) {
 
