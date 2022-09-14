@@ -316,6 +316,14 @@ fun SlideInAnimationScreen() {
     }
 }
 
+fun importData(viewModel: MainActivityViewModel) {
+
+}
+
+fun exportData(viewModel: MainActivityViewModel) {
+
+}
+
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -446,10 +454,9 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
 
                             MenuItem(number = 3 , title = stringResource(R.string.main_currency), description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart)
                         )),
-                        MenuBlock(title = "Block2", items = listOf(
-                            MenuItem(number = 4 , title = "Item21", description = "Desc21", icon = Icons.Default.Edit),
-                            MenuItem(number = 5 , title = "Item22", description = "Desc22", icon = Icons.Default.Edit),
-                            MenuItem(number = 6 , title = "Item23", description = "Desc23", icon = Icons.Default.Edit)
+                        MenuBlock(title = "Data Management", items = listOf(
+                            MenuItem(number = 4 , title = "Import", description = "Write data to file", icon = Icons.Default.Edit),
+                            MenuItem(number = 5 , title = "Export", description = "Get data from file", icon = Icons.Default.Edit)
                         ))
                     ),
                     onItemClick = {
@@ -462,6 +469,12 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                             }
                             3 -> {
                                 mainCurrencyClicked.value = true
+                            }
+                            4 -> {
+                                importData(viewModel)
+                            }
+                            5 -> {
+                                exportData(viewModel)
                             }
                         }
                     },
