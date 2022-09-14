@@ -25,6 +25,6 @@ data class Account(
 ) : Serializable{
 
     override fun toString(): String {
-        return "$accountImg,$currencyType,$title,$description,$balance,$creditLimit,$goal,$debt,$isForGoal,$isForDebt"
+        return "\"$uuid\", \"$accountImg\", \"$currencyType\", \"$title\", \"$description\", \"$balance\", \"$creditLimit\", \"$goal\", \"$debt\", \"$isForGoal\", \"$isForDebt\", \"$creationDate\""
     }
 }
