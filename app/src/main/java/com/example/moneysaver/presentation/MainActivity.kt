@@ -2,23 +2,24 @@ package com.example.moneysaver.presentation
 
 
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -41,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
@@ -67,7 +67,8 @@ import com.example.moneysaver.ui.theme.whiteSurface
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.net.URI
+import java.io.File
+import java.io.FileOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -117,7 +118,52 @@ class MainActivity : ComponentActivity() {
     }
 
     fun exportActivityData(viewModel: MainActivityViewModel) {
+        //Text of the Document
+        var textToWrite = ""
 
+        for(account in viewModel.state.accountsList) {
+            textToWrite+="$account \n"
+        }
+        textToWrite+="\n"
+        for(category in viewModel.state.categoriesList) {
+            textToWrite+="$category \n"
+        }
+        textToWrite+="\n"
+        for(transaction in viewModel.state.transactionList) {
+            textToWrite+="$transaction \n"
+        }
+
+        //Checking the availability state of the External Storage.
+        val state = Environment.getExternalStorageState()
+        if (Environment.MEDIA_MOUNTED != state) {
+
+            //If it isn't mounted - we can't write into it.
+            return
+        }
+
+
+        //Create a new file that points to the root directory, with the given name:
+        val file = File(getExternalFilesDir(null), "moneysaver_data.csv")
+
+
+        //This point and below is responsible for the write operation
+        var outputStream: FileOutputStream? = null
+        try {
+            if(file.exists()) file.delete()
+            file.createNewFile()
+            //second argument of FileOutputStream constructor indicates whether
+            //to append or create new file if one exists
+            outputStream = FileOutputStream(file, true)
+            outputStream.write(textToWrite.toByteArray())
+            outputStream.flush()
+            outputStream.close()
+            Toast.makeText(
+                MoneySaver.applicationContext(), "Saved to \"Android/data/com.example.moneysaver/moneysaver_data.csv\"",
+                Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -494,7 +540,18 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                 R.string.defaultStr), icon = Icons.Default.Place),
                             MenuItem(number = 1 , title = stringResource(R.string.theme), description = stringResource(
                                                             R.string.light), icon = Icons.Default.Info),
-                            MenuItem(number = 2 , title = stringResource(R.string.notifications), description = if(hoursNotification.value == 0) "00" else {hoursNotification.value.toString()} + ":" + if(minutesNotification.value == 0) "00" else {minutesNotification.value.toString()}, icon = Icons.Default.Notifications, hasSwitch = true, switchIsActive = timeSwitch ,),
+                            MenuItem(
+                                number = 2,
+                                title = stringResource(R.string.notifications),
+                                description = if (hoursNotification.value == 0) "00" else {
+                                    hoursNotification.value.toString()
+                                } + ":" + if (minutesNotification.value == 0) "00" else {
+                                    minutesNotification.value.toString()
+                                },
+                                icon = Icons.Default.Notifications,
+                                hasSwitch = true,
+                                switchIsActive = timeSwitch
+                            ),
 
                             MenuItem(number = 3 , title = stringResource(R.string.main_currency), description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart)
                         )),

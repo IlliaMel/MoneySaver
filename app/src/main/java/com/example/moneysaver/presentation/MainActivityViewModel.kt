@@ -1,10 +1,7 @@
 package com.example.moneysaver.presentation
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moneysaver.data.data_base._test_data.AccountsData
@@ -72,7 +69,8 @@ class MainActivityViewModel @Inject constructor(
         loadCategories()
         loadCategoriesData()
         loadCurrencyData()
-
+        val tempDate: MutableState<Date?> = mutableStateOf(null)
+        loadTransactions(tempDate, tempDate)
         loadAccounts()
 
     }
