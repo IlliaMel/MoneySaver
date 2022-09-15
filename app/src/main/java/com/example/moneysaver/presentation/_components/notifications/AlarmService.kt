@@ -15,8 +15,6 @@ class  AlarmService(
 
     fun setAlarm(hours: Int = 12, minutes: Int = 0){
 
-
-
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var alarmIntent: PendingIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             PendingIntent.getBroadcast(context, 0, intent, 0)
@@ -37,6 +35,16 @@ class  AlarmService(
             AlarmManager.INTERVAL_DAY,
             alarmIntent
         )
+
+    }
+
+    fun cancelAlarm(){
+
+        alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        var alarmIntent: PendingIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+            PendingIntent.getBroadcast(context, 0, intent, 0)
+        }
+        alarmMgr!!.cancel(alarmIntent)
     }
 }
 

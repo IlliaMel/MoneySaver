@@ -23,7 +23,8 @@ class NotificationService(
         )
 
         val notification = NotificationCompat.Builder(context, COUNTER_CHANNEL_ID)
-            .setSmallIcon(R.drawable.cash)
+            .setSmallIcon(R.drawable.logo)
+            .setAutoCancel(true)
             .setContentTitle("Money Saver")
             .setContentText("Don`t forget to add your money transactions :) ")
             .setContentIntent(activityPendingIntent)

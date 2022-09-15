@@ -495,6 +495,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         ///*sharedPref.getString(LAST_STARTING, "") != formattedDate && */timeSwitch
         if(timeSwitch)
             alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
+        else
+            alarmService.cancelAlarm()
 
 
         //Date of Last Starting
@@ -517,6 +519,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                         putInt(MINUTE_ALARM, minutesNotification.value)
                         putInt(HOUR_ALARM, hoursNotification.value)
                         apply()
+
+
                     }
                     }, minutesNotification,hoursNotification)
                     notificationClicked = false
@@ -543,11 +547,10 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                             MenuItem(
                                 number = 2,
                                 title = stringResource(R.string.notifications),
-                                description = if (hoursNotification.value == 0) "00" else {
+                                description = if (hoursNotification.value <= 9) "0" + hoursNotification.value.toString() else {
                                     hoursNotification.value.toString()
-                                } + ":" + if (minutesNotification.value == 0) "00" else {
-                                    minutesNotification.value.toString()
-                                },
+                                } + ":" + if (minutesNotification.value <= 9) "0" + minutesNotification.value.toString() else {
+                                    minutesNotification.value.toString()},
                                 icon = Icons.Default.Notifications,
                                 hasSwitch = true,
                                 switchIsActive = timeSwitch
@@ -582,8 +585,13 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                     onSwitchClick = {
                         when (it.number) {
                             2 -> {
+                                if(it.switchIsActive)
+                                    alarmService.cancelAlarm()
+                                else
+                                    alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
+                                timeSwitch = !timeSwitch
                                 with(sharedPref.edit()) {
-                                    putBoolean(ALARM_ON, !it.switchIsActive)
+                                    putBoolean(ALARM_ON, timeSwitch)
                                     apply()}
                             }
                         }
