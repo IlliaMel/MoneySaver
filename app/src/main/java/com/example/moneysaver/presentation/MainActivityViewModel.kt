@@ -465,4 +465,30 @@ class MainActivityViewModel @Inject constructor(
     }
     */
 
+    fun insertDirectlyInDb(account: Account) {
+        viewModelScope.launch {
+            financeRepository.insertAccount(account)
+        }
+    }
+
+    fun insertDirectlyInDb(category: Category) {
+        viewModelScope.launch {
+            financeRepository.insertCategory(category)
+        }
+    }
+
+    fun insertDirectlyInDb(transaction: Transaction) {
+        viewModelScope.launch {
+            financeRepository.insertTransaction(transaction)
+        }
+    }
+
+
+    fun clearRepository() {
+        viewModelScope.launch {
+            financeRepository.deleteAllAccounts()
+            financeRepository.deleteAllCategories()
+            financeRepository.deleteAllTransaction()
+        }
+    }
 }

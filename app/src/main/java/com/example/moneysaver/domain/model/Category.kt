@@ -19,6 +19,6 @@ data class Category(
 ) : Serializable{
     
     override fun toString(): String {
-        return "\"$uuid\", \"$categoryImg\", \"$currencyType\", \"$title\", \"$isForSpendings\", \"$spent\", \"$creationDate\""
+        return "\"$uuid\", \"$categoryImg\", \"$currencyType\", \"$title\", \"$isForSpendings\", \"$spent\", \"${creationDate.time}\""
     }
 }
