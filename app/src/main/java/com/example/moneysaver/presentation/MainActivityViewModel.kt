@@ -465,4 +465,18 @@ class MainActivityViewModel @Inject constructor(
     }
     */
 
+    fun importRepository(
+        accounts: List<Account>,
+        categories: List<Category>,
+        transactions: List<Transaction>
+    ) {
+        viewModelScope.launch {
+            financeRepository.deleteAllTransaction()
+            financeRepository.deleteAllCategories()
+            financeRepository.deleteAllAccounts()
+            for(account in accounts) financeRepository.insertAccount(account)
+            for(category in categories) financeRepository.insertCategory(category)
+            for(transaction in transactions) financeRepository.insertTransaction(transaction)
+        }
+    }
 }

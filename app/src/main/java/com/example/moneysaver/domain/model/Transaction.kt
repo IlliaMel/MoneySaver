@@ -19,6 +19,6 @@ data class Transaction(
 ) : Serializable {
 
     override fun toString(): String {
-        return "\"$uuid\", \"$sum\", \"$categoryUUID\", \"$accountUUID\", \"$toAccountUUID\", \"$toAccountSum\", \"$date\", \"$note\""
+        return "\"$uuid\", \"$sum\", \"$categoryUUID\", \"$accountUUID\", \"$toAccountUUID\", \"$toAccountSum\", \"${date.time}\", \"$note\""
     }
 }
