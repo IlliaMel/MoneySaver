@@ -5,24 +5,23 @@ import android.annotation.SuppressLint
 import android.content.*
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
-import android.os.Bundle
-import android.os.Environment
+import android.os.*
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.*
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -33,11 +32,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -257,8 +260,8 @@ class MainActivity : ComponentActivity() {
 
                 } else {
                     val service = AlarmService(context = applicationContext)
-                    MainUI(sharedPref,service,formattedDate)
-                    //SlideInAnimationScreen()
+
+                    MainUI(sharedPref,service,formattedDate= formattedDate, context = MainActivity.instance)
                     if (viewModel.isParsingSucceeded.value) {
                         with(sharedPref.edit()) {
                             putBoolean(CURRENCY_PARSED_KEY, true)
@@ -319,92 +322,251 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SlideInAnimationScreen() {
+fun SecureCodeEntering(context : Context, isCorrectFunc : () -> Unit) {
     // I'm using the same duration for all animations.
-    val animationTime = 300
 
-    // This state is controlling if the second screen is being displayed or not
-    var showScreen by remember { mutableStateOf(false) }
-
-    // This is just to give that dark effect when the first screen is closed...
-    val color = animateColorAsState(
-        targetValue = if (showScreen) Color.DarkGray else Color.Red,
-        animationSpec = tween(
-            durationMillis = animationTime,
-            easing = LinearEasing
-        )
-    )
-
-    Box(Modifier.fillMaxSize()) {
-        // Screen 1
-        AnimatedVisibility(
-            !showScreen,
-            modifier = Modifier.fillMaxSize(),
-            enter = slideInHorizontally(
-                initialOffsetX = { -300 }, // small slide 300px
-                animationSpec = tween(
-                    durationMillis = animationTime,
-                    easing = LinearEasing // interpolator
-                )
-            ),
-            exit = slideOutHorizontally(
-                targetOffsetX = { -300 },
-                    animationSpec = tween(
-                    durationMillis = animationTime,
-            easing = LinearEasing
-        )
-        )
-        ) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(color.value) // animating the color
-        ) {
-            Button(modifier = Modifier.align(Alignment.Center),
-                onClick = {
-                    showScreen = !showScreen
-                }) {
-                Text(text = stringResource(R.string.ok))
-            }
+    Box(modifier = Modifier.fillMaxSize()){
+       var isCorrect = false
+        var code = remember{ mutableStateOf("")}
+        if(code.value.length == 6){
+            isCorrect = code.value == "123456"
         }
+
+        Image(
+            painter = painterResource(R.drawable.bg5),
+            contentScale = ContentScale.Crop,
+            contentDescription = null,
+            alignment = Alignment.BottomEnd,
+            modifier = Modifier.matchParentSize(),
+            colorFilter = ColorFilter.tint(color = AccountsData.normalAccount.accountImg.externalColor, blendMode = BlendMode.Softlight)
+        )
+
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Transparent),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .weight(2f)
+                .background(Color.Transparent)
+                .padding(0.dp, 0.dp, 0.dp, 0.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+
+                Image(
+                    painter = painterResource(R.drawable.logo_transparent),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null,
+                    alignment = Alignment.Center,
+                )
+            }
+
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .background(Color.Transparent)
+                .padding(0.dp, 0.dp, 0.dp, 0.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally) {
+
+                Text(fontSize = 18.sp, fontWeight = FontWeight.W500, text = "Enter You Password", color = Color.White)
+                Spacer(modifier = Modifier.fillMaxWidth().height(20.dp))
+                val animVisibleState = remember { MutableTransitionState(false) }
+                    .apply { targetState = true }
+
+                secureCodeFilled(context = context,code.value.length, isCorrect = isCorrect, code,animVisibleState,isCorrectFunc = {isCorrectFunc()})
+
+            }
+
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .weight(2.5f)
+                .background(Color.Transparent)
+                .padding(20.dp, 0.dp, 20.dp, 0.dp),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally) {
+
+                var list = listOf("1","2","3","4","5","6","7","8","9","","0")
+
+                LazyVerticalGrid(
+                    modifier = Modifier
+                        .padding(0.dp, 0.dp, 0.dp, 0.dp),
+                    columns = GridCells.Fixed(3),
+                    userScrollEnabled = false,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.Center,
+                    // content padding
+
+                    content = {
+                        list.forEach {
+                            item {
+                                secureCodeButton(symbol = it, onClick = {if (it != "" && code.value.length < 6) {code.value += it ;
+                                    vibratePhone(context)} })
+                            }
+                        }
+
+                        item {
+                            secureCodeButton(imageVector = Icons.Filled.KeyboardArrowLeft , onClick = {code.value = code.value.dropLast(1); vibratePhone(context)})
+                        }
+
+                    })
+            }
+
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.6f)
+                .background(Color.Transparent),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(fontSize = 15.sp, fontWeight = FontWeight.W400, text = "Forget password: ", color = Color.White)
+            }
+
+
+
+        }
+
     }
 
-        // Screen 2
-        AnimatedVisibility(
-            showScreen,
-            modifier = Modifier.fillMaxSize(),
-            enter = slideInHorizontally(
-                initialOffsetX = { it }, // it == fullWidth
-                animationSpec = tween(
-                    durationMillis = animationTime,
-                    easing = LinearEasing
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun secureCodeFilled(
+    context : Context,
+    filled: Int = 0,
+    isCorrect: Boolean,
+    code: MutableState<String>,
+    animVisibleState: MutableTransitionState<Boolean>,
+    isCorrectFunc: () -> Unit, ){
+
+
+
+
+    if (!animVisibleState.targetState &&
+        !animVisibleState.currentState
+    ) {
+        if(isCorrect)
+            isCorrectFunc()
+        else{
+            vibratePhone(context, 400)
+            code.value = ""
+        }
+
+    }
+
+    Box(modifier = Modifier
+        .fillMaxWidth(), contentAlignment = Alignment.Center){
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp, 0.dp, 0.dp, 0.dp,),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center) {
+
+            for (i in 1..6) {
+                var color = if((filled!= 6 && i <= filled) || isCorrect) {
+                    Color(233, 233, 233, 236)
+                }else {
+                    Color(233, 233, 233, 53)
+                }
+
+                Box(
+                    modifier = Modifier
+                        .size(20.dp)
+                        .padding(4.dp)
+                        .clip(CircleShape)
+                        .background(color)
                 )
-            ),
-            exit = slideOutHorizontally(
-                targetOffsetX = { it },
-                animationSpec = tween(
-                    durationMillis = animationTime,
-                    easing = LinearEasing
-                )
-            )
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Blue)
-            ) {
-                Button(modifier = Modifier.align(Alignment.Center),
-                    onClick = {
-                        showScreen = false
-                    }) {
-                    Text(text = stringResource(R.string.back))
+            }
+        }
+
+
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp, 0.dp, 0.dp, 0.dp,),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center) {
+
+            for (i in 1..6) {
+                var color = if(filled == 6 && !isCorrect) {
+                    Color(233, 233, 233, 236)
+                }else {
+                    Color(233, 233, 233, 53)
+                }
+                AnimatedVisibility(
+                    visibleState = animVisibleState,
+                    enter = fadeIn(animationSpec = tween(300)),
+                    exit = fadeOut(animationSpec = tween(300))
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .animateEnterExit(
+                                // Slide in/out the inner box.
+                                enter = slideInVertically(animationSpec = tween (500)),
+                                exit = slideOutVertically(animationSpec = tween (500))
+                            ), contentAlignment =  Alignment.Center
+                    ){
+                        Box(
+                            modifier = Modifier
+                                .size(20.dp)
+                                .padding(4.dp)
+                                .clip(CircleShape).background(color)){
+
+
+                            if(filled == 6){
+                                animVisibleState.targetState = false
+                            }
+
+                        }
+                    }
                 }
             }
         }
-
-
     }
+
 }
+
+
+
+
+@Composable
+fun secureCodeButton(symbol : String = "", imageVector: ImageVector?= null , onClick : () -> Unit){
+
+    var modifier = if(symbol != "" || imageVector!= null) Modifier
+        .size(75.dp)
+        .padding(24.dp, 4.dp, 24.dp, 4.dp)
+        .clip(CircleShape)
+        .clickable { onClick() }
+        .background(Color.Transparent)
+    else
+        Modifier
+            .background(Color.Transparent)
+            .size(75.dp)
+            .padding(24.dp, 4.dp, 24.dp, 4.dp)
+            .clip(CircleShape)
+
+    Box(modifier = modifier, contentAlignment = Alignment.Center)
+        {
+
+        if(imageVector == null)
+            Text(fontSize = 27.sp, fontWeight = FontWeight.W400, text = symbol, color = Color.White)
+        else {
+            Icon(
+                modifier = Modifier
+                    .padding(0.dp, 2.dp, 0.dp, 0.dp)
+                    .width(40.dp)
+                    .height(40.dp),
+                imageVector = imageVector,
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
+    }
+
+}
+
 
 fun importData(viewModel: MainActivityViewModel) {
     MainActivity.instance!!.importActivityData(viewModel)
@@ -417,7 +579,9 @@ fun exportData(viewModel: MainActivityViewModel) {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedDate : String,
+fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
+           context: Context?,
+           formattedDate : String,
            accountsViewModel: AccountsViewModel  = hiltViewModel(),
            viewModel: MainActivityViewModel  = hiltViewModel()){
 
@@ -425,10 +589,17 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
 
     var MINUTE_ALARM = "minute_alarm"
     var HOUR_ALARM = "hour_alarm"
-    var LAST_STARTING = "last_starting"
     var MAIN_CURRENCY = "main_currency"
-
     var ALARM_ON = "alarm_on"
+
+    var SECURE_CODE = "secure_code"
+
+    /*
+        with(sharedPref.edit()) {
+            putString(IS_SECURE_ENABLED, formattedDate)
+            apply()
+        }
+        */
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -438,7 +609,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         val scope = rememberCoroutineScope()
 
         var selectedTabIndex by remember {
-            mutableStateOf(0)
+            mutableStateOf(/*f(sharedPref.getString(SECURE_CODE, "") == "") 0 else*/ 3)
         }
 
         var baseCurrencyString by remember {
@@ -498,12 +669,6 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         else
             alarmService.cancelAlarm()
 
-
-        //Date of Last Starting
-        with(sharedPref.edit()) {
-            putString(LAST_STARTING, formattedDate)
-            apply()
-        }
 
         val openSelectLanguageDialog = remember { mutableStateOf(false) }
 
@@ -629,9 +794,12 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
                                 scaffoldState.drawerState.open()
                             }
                         }, navigateToTransaction = {},chosenAccountFilter!!,viewModel,baseCurrency = baseCurrency)
+
+                        3 -> SecureCodeEntering(context = context!!,isCorrectFunc = {selectedTabIndex = 0} )
                     }
 
                 }
+                if(selectedTabIndex != 3)
                 Row(modifier = Modifier.weight(0.8f)) {
                     TabsForScreens(){
                         selectedTabIndex = it
@@ -729,6 +897,15 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService, formattedD
         }
 
     }
+
+fun vibratePhone(context: Context?, time : Long  = 80) {
+    val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    if (Build.VERSION.SDK_INT >= 26) {
+        vibrator.vibrate(VibrationEffect.createOneShot(time, VibrationEffect.DEFAULT_AMPLITUDE))
+    } else {
+        vibrator.vibrate(time)
+    }
+}
 
     @Composable
     fun Greeting(name: String) {
