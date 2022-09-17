@@ -465,30 +465,18 @@ class MainActivityViewModel @Inject constructor(
     }
     */
 
-    fun insertDirectlyInDb(account: Account) {
+    fun importRepository(
+        accounts: List<Account>,
+        categories: List<Category>,
+        transactions: List<Transaction>
+    ) {
         viewModelScope.launch {
-            financeRepository.insertAccount(account)
-        }
-    }
-
-    fun insertDirectlyInDb(category: Category) {
-        viewModelScope.launch {
-            financeRepository.insertCategory(category)
-        }
-    }
-
-    fun insertDirectlyInDb(transaction: Transaction) {
-        viewModelScope.launch {
-            financeRepository.insertTransaction(transaction)
-        }
-    }
-
-
-    fun clearRepository() {
-        viewModelScope.launch {
-            financeRepository.deleteAllAccounts()
-            financeRepository.deleteAllCategories()
             financeRepository.deleteAllTransaction()
+            financeRepository.deleteAllCategories()
+            financeRepository.deleteAllAccounts()
+            for(account in accounts) financeRepository.insertAccount(account)
+            for(category in categories) financeRepository.insertCategory(category)
+            for(transaction in transactions) financeRepository.insertTransaction(transaction)
         }
     }
 }

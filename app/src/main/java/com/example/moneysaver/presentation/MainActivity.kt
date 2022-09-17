@@ -181,7 +181,6 @@ class MainActivity : ComponentActivity() {
                 }
                 val uri = data.data
                 if (uri != null) {
-                    viewModel.clearRepository()
                     try {
                         val input: InputStream? = contentResolver.openInputStream(uri)
                         val r = BufferedReader(InputStreamReader(input))
@@ -189,6 +188,9 @@ class MainActivity : ComponentActivity() {
                         var line: String?
                         var blockIndex = 0; // 0 - accounts, 1 - categories, 2 - transactions
                         var converters = Converters()
+                        val accounts = mutableListOf<Account>()
+                        val categories = mutableListOf<Category>()
+                        val transactions = mutableListOf<Transaction>()
                         while (r.readLine().also { line = it } != null) {
                             if(line!!.isEmpty()) {
                                 // empty line - block with next data types
@@ -213,7 +215,7 @@ class MainActivity : ComponentActivity() {
                                         isForDebt = str[10].toBoolean(),
                                         creationDate = converters.fromTimestamp(str[11].dropLast(2).toLong())!!
                                     )
-                                    viewModel.insertDirectlyInDb(account)
+                                    accounts.add(account)
                                 }
                                 1 -> {
                                     // we need to remove '"' from start of first part and end of last part
@@ -227,7 +229,7 @@ class MainActivity : ComponentActivity() {
                                         spent = str[5].toDouble(),
                                         creationDate = converters.fromTimestamp(str[6].dropLast(2).toLong())!!,
                                     )
-                                    viewModel.insertDirectlyInDb(category)
+                                    categories.add(category)
                                 }
                                 2 -> {
                                     val str: List<String> = line!!.split("\", \"")
@@ -241,10 +243,12 @@ class MainActivity : ComponentActivity() {
                                         date = converters.fromTimestamp(str[6].toLong())!!,
                                         note = if(str[7].dropLast(2)=="null") null else str[7].dropLast(2)
                                     )
-                                    viewModel.insertDirectlyInDb(transaction)
+                                    transactions.add(transaction)
                                 }
                             }
                         }
+
+                        viewModel.importRepository(accounts, categories, transactions)
 
                         Toast.makeText(
                             MoneySaver.applicationContext(), "\"${uri.path}\" has been read",

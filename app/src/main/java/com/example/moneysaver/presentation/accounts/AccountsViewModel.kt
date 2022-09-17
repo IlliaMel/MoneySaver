@@ -179,13 +179,22 @@ class AccountsViewModel @Inject constructor(
             val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
             transactionAccount?.let {
                 val updatedAccount = transactionAccount!!.copy(
-                    balance = transactionAccount.balance-transaction.sum
+                    balance= transactionAccount.balance - transaction.sum
                 )
                 // update account
                 financeRepository.insertAccount(updatedAccount)
             }
 
+            if(transaction.toAccountUUID != null && transactionAccount != null){
+                val transactionToAccount = financeRepository.getAccountByUUID(transaction.toAccountUUID)
+                val updatedToAccount = transactionToAccount!!.copy(
+                    balance = transactionToAccount.balance - transaction.toAccountSum!!
+                )
+                financeRepository.insertAccount(updatedToAccount)
+            }
+
             financeRepository.deleteTransaction(transaction)
+
         }
     }
 
