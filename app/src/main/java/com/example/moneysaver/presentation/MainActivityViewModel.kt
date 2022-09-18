@@ -471,12 +471,14 @@ class MainActivityViewModel @Inject constructor(
         transactions: List<Transaction>
     ) {
         viewModelScope.launch {
+            state = state.copy(isDataLoading = true)
             financeRepository.deleteAllTransaction()
             financeRepository.deleteAllCategories()
             financeRepository.deleteAllAccounts()
             for(account in accounts) financeRepository.insertAccount(account)
             for(category in categories) financeRepository.insertCategory(category)
             for(transaction in transactions) financeRepository.insertTransaction(transaction)
+            state = state.copy(isDataLoading = false)
         }
     }
 }

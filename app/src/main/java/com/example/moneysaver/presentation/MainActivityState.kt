@@ -22,5 +22,7 @@ data class MainActivityState(
     //val categoriesList: List<Category> = emptyList(),
     //val accountsList: List<Account> = emptyList()
 
+    val isDataLoading: Boolean = false
+
 
 )

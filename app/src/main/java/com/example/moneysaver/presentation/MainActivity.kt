@@ -457,7 +457,9 @@ fun SecureCodeEntering(context : Context, isCorrectFunc : () -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally) {
 
                 Text(fontSize = 18.sp, fontWeight = FontWeight.W500, text = "Enter You Password", color = Color.White)
-                Spacer(modifier = Modifier.fillMaxWidth().height(20.dp))
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp))
                 val animVisibleState = remember { MutableTransitionState(false) }
                     .apply { targetState = true }
 
@@ -589,15 +591,16 @@ fun secureCodeFilled(
                             .size(20.dp)
                             .animateEnterExit(
                                 // Slide in/out the inner box.
-                                enter = slideInVertically(animationSpec = tween (500)),
-                                exit = slideOutVertically(animationSpec = tween (500))
+                                enter = slideInVertically(animationSpec = tween(500)),
+                                exit = slideOutVertically(animationSpec = tween(500))
                             ), contentAlignment =  Alignment.Center
                     ){
                         Box(
                             modifier = Modifier
                                 .size(20.dp)
                                 .padding(4.dp)
-                                .clip(CircleShape).background(color)){
+                                .clip(CircleShape)
+                                .background(color)){
 
 
                             if(filled == 6){
@@ -825,9 +828,11 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                                 mainCurrencyClicked.value = true
                             }
                             4 -> {
+                                scope.launch { scaffoldState.drawerState.close() }
                                 importData(viewModel)
                             }
                             5 -> {
+                                scope.launch { scaffoldState.drawerState.close() }
                                 exportData(viewModel)
                             }
                         }
@@ -900,6 +905,17 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
             sharedPref = sharedPref,
             restartApp = {MainActivity.instance!!.restartApp()}
         )
+
+        if(viewModel.state.isDataLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(modifier = Modifier.size(100.dp))
+            }
+        }
     }
 
 }
