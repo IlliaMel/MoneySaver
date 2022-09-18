@@ -82,12 +82,11 @@ fun DrawerBody(
                                 )
                             }
                             if(item.hasSwitch) {
-                                val checkedState = remember { mutableStateOf(item.switchIsActive) }
+
                                 Switch(
-                                    checked = checkedState.value,
+                                    checked = item.switchIsActive,
                                     onCheckedChange = {
                                         onSwitchClick(item)
-                                        checkedState.value = it
                                         item.switchIsActive = it
                                     },
                                     colors = SwitchDefaults.colors(

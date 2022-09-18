@@ -3,45 +3,26 @@ package com.example.moneysaver.presentation
 
 import android.annotation.SuppressLint
 import android.content.*
-import androidx.biometric.BiometricPrompt
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+
+
 import android.os.*
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.biometric.BiometricPrompt
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.*
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,6 +40,7 @@ import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivity.Companion.APP_LANGUAGE
 import com.example.moneysaver.presentation._components.DrawerBody
 import com.example.moneysaver.presentation._components.DrawerHeader
+import com.example.moneysaver.presentation._components.SecureCodeEntering
 import com.example.moneysaver.presentation._components.SelectLanguageDialog
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
@@ -70,7 +52,6 @@ import com.example.moneysaver.presentation.accounts.additional_composes.SetAccou
 import com.example.moneysaver.presentation.categories.Categories
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.ui.theme.MoneySaverTheme
-import com.example.moneysaver.ui.theme.inactiveColor
 import com.example.moneysaver.ui.theme.lightGrayTransparent
 import com.example.moneysaver.ui.theme.whiteSurface
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -99,13 +80,12 @@ class MainActivity : FragmentActivity() {
         var isNeedToParseCurrency = false
         var isCategoriesParsed = false
         val APP_LANGUAGE = "app_language"
-        val correctCode = "123456"
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
 
 
-    private val FILE_SELECT_CODE = 0;
+    val FILE_SELECT_CODE = 0;
 
     private val biometricsIgnoredErrors = listOf(
         BiometricPrompt.ERROR_NEGATIVE_BUTTON,
@@ -114,123 +94,54 @@ class MainActivity : FragmentActivity() {
         BiometricPrompt.ERROR_NO_BIOMETRICS
     )
 
-    fun showBiometricPrompt(onSucceeded: () -> Unit) {
-        // 2
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Login")
-            .setSubtitle("Login with fingerprint")
-            .setNegativeButtonText("Cancel")
-            .build()
+ fun showBiometricPrompt(onSucceeded: () -> Unit) {
+     // 2
+     val promptInfo = BiometricPrompt.PromptInfo.Builder()
+         .setTitle("Login")
+         .setSubtitle("Login with fingerprint")
+         .setNegativeButtonText("Cancel")
+         .build()
 
-        // 3
-        val biometricPrompt = BiometricPrompt(
-            this@MainActivity,
-            object : BiometricPrompt.AuthenticationCallback() {
-                // 4
-                override fun onAuthenticationError(
-                    errorCode: Int,
-                    errString: CharSequence
-                ) {
-                    if (errorCode !in biometricsIgnoredErrors) {
-                        Toast.makeText(
-                            MoneySaver.applicationContext(),
-                            "Authentication Error",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
+     // 3
+     val biometricPrompt = BiometricPrompt(
+         this@MainActivity,
+         object : BiometricPrompt.AuthenticationCallback() {
+             // 4
+             override fun onAuthenticationError(
+                 errorCode: Int,
+                 errString: CharSequence
+             ) {
+                 if (errorCode !in biometricsIgnoredErrors) {
+                     Toast.makeText(
+                         MoneySaver.applicationContext(),
+                         "Authentication Error",
+                         Toast.LENGTH_LONG
+                     ).show()
+                 }
+             }
 
-                // 5
-                override fun onAuthenticationSucceeded(
-                    result: BiometricPrompt.AuthenticationResult
-                ) {
-                    onSucceeded()
-                }
+             // 5
+             override fun onAuthenticationSucceeded(
+                 result: BiometricPrompt.AuthenticationResult
+             ) {
+                 onSucceeded()
+             }
 
-                // 6
-                override fun onAuthenticationFailed() {
-                    Toast.makeText(
-                        MoneySaver.applicationContext(),
-                        "Authentication Failed",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        )
-        // 7
-        biometricPrompt.authenticate(promptInfo)
-    }
-
-    fun importActivityData(viewModel: MainActivityViewModel) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-
-        try {
-            startActivityForResult(
-                Intent.createChooser(intent, "Select a File"),
-                FILE_SELECT_CODE
-            )
-        } catch (ex: ActivityNotFoundException) {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(
-                MoneySaver.applicationContext(), "Please install a File Manager.",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    fun exportActivityData(viewModel: MainActivityViewModel) {
-        //Text of the Document
-        var textToWrite = ""
-
-        for(account in viewModel.state.accountsList) {
-            textToWrite+="$account \n"
-        }
-        textToWrite+="\n"
-        for(category in viewModel.state.categoriesList) {
-            textToWrite+="$category \n"
-        }
-        textToWrite+="\n"
-        for(transaction in viewModel.state.transactionList) {
-            textToWrite+="$transaction \n"
-        }
-
-        //Checking the availability state of the External Storage.
-        val state = Environment.getExternalStorageState()
-        if (Environment.MEDIA_MOUNTED != state) {
-
-            //If it isn't mounted - we can't write into it.
-            return
-        }
+             // 6
+             override fun onAuthenticationFailed() {
+                 Toast.makeText(
+                     MoneySaver.applicationContext(),
+                     "Authentication Failed",
+                     Toast.LENGTH_LONG
+                 ).show()
+             }
+         }
+     )
+     // 7
+     biometricPrompt.authenticate(promptInfo)
+ }
 
 
-        //Create a new file that points to the root directory, with the given name:
-        val file = File(getExternalFilesDir(null), "moneysaver_data.csv")
-
-
-        //This point and below is responsible for the write operation
-        var outputStream: FileOutputStream? = null
-        try {
-            if(file.exists()) file.delete()
-            file.createNewFile()
-            //second argument of FileOutputStream constructor indicates whether
-            //to append or create new file if one exists
-            outputStream = FileOutputStream(file, true)
-            outputStream.write(textToWrite.toByteArray())
-            outputStream.flush()
-            outputStream.close()
-            Toast.makeText(
-                MoneySaver.applicationContext(), "Saved to \"Android/data/com.example.moneysaver/files/moneysaver_data.csv\"",
-                Toast.LENGTH_SHORT
-            ).show()
-        } catch (e: Exception) {
-            Toast.makeText(
-                MoneySaver.applicationContext(), "Can't save current app state",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -339,12 +250,12 @@ class MainActivity : FragmentActivity() {
         val lang = sharedPref.getString(APP_LANGUAGE, "Default")
         if(lang!=null) {
             if(lang == "Default") setLanguage(Locale.getDefault().language)
-            else setLanguage(languageToLanguageCode(lang))
+            else setLanguage(Utils.languageToLanguageCode(lang))
         }
 
         val isParsed = sharedPref.getBoolean(CURRENCY_PARSED_KEY, false)
         val parsingDate = sharedPref.getString(CURRENCY_PARSING_DATE_KEY, "2000-01-01")
-        val isConnectionEnabled = isNetworkAvailable(applicationContext)
+        val isConnectionEnabled = Utils.isNetworkAvailable(applicationContext)
 
 
         //Formatter of date
@@ -434,292 +345,8 @@ class MainActivity : FragmentActivity() {
             createConfigurationContext(config)
         resources.updateConfiguration(config, resources.displayMetrics)
     }
-
-    private fun isNetworkAvailable(context: Context?): Boolean {
-        if (context == null) return false
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-            if (capabilities != null) {
-                when {
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-                        return true
-                    }
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-                        return true
-                    }
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
-                        return true
-                    }
-                }
-            }
-        } else {
-            val activeNetworkInfo = connectivityManager.activeNetworkInfo
-            if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
-                return true
-            }
-        }
-        return false
-    }
 }
 
-
-@Composable
-fun SecureCodeEntering(context : Context, isCorrectFunc : () -> Unit, correctCode: String) {
-    // I'm using the same duration for all animations.
-
-    Box(modifier = Modifier.fillMaxSize()){
-       var isCorrect = false
-        var code = remember{ mutableStateOf("")}
-        if(code.value.length == correctCode.length){
-            isCorrect = code.value == correctCode
-        }
-
-        Image(
-            painter = painterResource(R.drawable.bg5),
-            contentScale = ContentScale.Crop,
-            contentDescription = null,
-            alignment = Alignment.BottomEnd,
-            modifier = Modifier.matchParentSize(),
-            colorFilter = ColorFilter.tint(color = AccountsData.normalAccount.accountImg.externalColor, blendMode = BlendMode.Softlight)
-        )
-
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Transparent),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .weight(2f)
-                .background(Color.Transparent)
-                .padding(0.dp, 0.dp, 0.dp, 0.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-
-                Image(
-                    painter = painterResource(R.drawable.logo_transparent),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null,
-                    alignment = Alignment.Center,
-                )
-            }
-
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .background(Color.Transparent)
-                .padding(0.dp, 0.dp, 0.dp, 0.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally) {
-
-                Text(fontSize = 18.sp, fontWeight = FontWeight.W500, text = "Enter You Password", color = Color.White)
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp))
-                val animVisibleState = remember { MutableTransitionState(false) }
-                    .apply { targetState = true }
-
-                secureCodeFilled(context = context,code.value.length, isCorrect = isCorrect, code,animVisibleState,isCorrectFunc = {isCorrectFunc()})
-
-            }
-
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .weight(2.5f)
-                .background(Color.Transparent)
-                .padding(20.dp, 0.dp, 20.dp, 0.dp),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally) {
-
-                var list = listOf("1","2","3","4","5","6","7","8","9","","0")
-
-                LazyVerticalGrid(
-                    modifier = Modifier
-                        .padding(0.dp, 0.dp, 0.dp, 0.dp),
-                    columns = GridCells.Fixed(3),
-                    userScrollEnabled = false,
-                    verticalArrangement = Arrangement.Center,
-                    horizontalArrangement = Arrangement.Center,
-                    // content padding
-
-                    content = {
-                        list.forEach {
-                            item {
-                                secureCodeButton(symbol = it, onClick = {if (it != "" && code.value.length < 6) {code.value += it ;
-                                    vibratePhone(context)} })
-                            }
-                        }
-
-                        item {
-                            secureCodeButton(imageVector = Icons.Filled.KeyboardArrowLeft , onClick = {code.value = code.value.dropLast(1); vibratePhone(context)})
-                        }
-
-                    })
-            }
-
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.6f)
-                .background(Color.Transparent),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(
-                    shape = RoundedCornerShape(30.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
-                    onClick = { MainActivity.instance!!.showBiometricPrompt(
-                        onSucceeded = {code.value = correctCode}
-                    ) }
-                ) {
-                    Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Use Fingerprint", color = Color.White)
-                }
-            }
-
-
-
-        }
-
-    }
-
-}
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun secureCodeFilled(
-    context : Context,
-    filled: Int = 0,
-    isCorrect: Boolean,
-    code: MutableState<String>,
-    animVisibleState: MutableTransitionState<Boolean>,
-    isCorrectFunc: () -> Unit, ){
-
-
-
-
-    if (!animVisibleState.targetState &&
-        !animVisibleState.currentState
-    ) {
-        if(isCorrect)
-            isCorrectFunc()
-        else{
-            vibratePhone(context, 400)
-            code.value = ""
-        }
-
-    }
-
-    Box(modifier = Modifier
-        .fillMaxWidth(), contentAlignment = Alignment.Center){
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(0.dp, 0.dp, 0.dp, 0.dp,),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center) {
-
-            for (i in 1..6) {
-                var color = if((filled!= 6 && i <= filled) || isCorrect) {
-                    Color(233, 233, 233, 236)
-                }else {
-                    Color(233, 233, 233, 53)
-                }
-
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .padding(4.dp)
-                        .clip(CircleShape)
-                        .background(color)
-                )
-            }
-        }
-
-
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(0.dp, 0.dp, 0.dp, 0.dp,),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center) {
-
-            for (i in 1..6) {
-                var color = if(filled == 6 && !isCorrect) {
-                    Color(233, 233, 233, 236)
-                }else {
-                    Color(233, 233, 233, 53)
-                }
-                AnimatedVisibility(
-                    visibleState = animVisibleState,
-                    enter = fadeIn(animationSpec = tween(300)),
-                    exit = fadeOut(animationSpec = tween(300))
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(20.dp)
-                            .animateEnterExit(
-                                // Slide in/out the inner box.
-                                enter = slideInVertically(animationSpec = tween(500)),
-                                exit = slideOutVertically(animationSpec = tween(500))
-                            ), contentAlignment =  Alignment.Center
-                    ){
-                        Box(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .padding(4.dp)
-                                .clip(CircleShape)
-                                .background(color)){
-
-
-                            if(filled == 6){
-                                animVisibleState.targetState = false
-                            }
-
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-}
-
-
-
-
-@Composable
-fun secureCodeButton(symbol : String = "", imageVector: ImageVector?= null , onClick : () -> Unit){
-
-    var modifier = if(symbol != "" || imageVector!= null) Modifier
-        .size(75.dp)
-        .padding(24.dp, 4.dp, 24.dp, 4.dp)
-        .clip(CircleShape)
-        .clickable { onClick() }
-        .background(Color.Transparent)
-    else
-        Modifier
-            .background(Color.Transparent)
-            .size(75.dp)
-            .padding(24.dp, 4.dp, 24.dp, 4.dp)
-            .clip(CircleShape)
-
-    Box(modifier = modifier, contentAlignment = Alignment.Center)
-        {
-
-        if(imageVector == null)
-            Text(fontSize = 27.sp, fontWeight = FontWeight.W400, text = symbol, color = Color.White)
-        else {
-            Icon(
-                modifier = Modifier
-                    .padding(0.dp, 2.dp, 0.dp, 0.dp)
-                    .width(40.dp)
-                    .height(40.dp),
-                imageVector = imageVector,
-                contentDescription = null,
-                tint = Color.White
-            )
-        }
-    }
-
-}
 
 
 fun importData(viewModel: MainActivityViewModel) {
@@ -731,6 +358,7 @@ fun exportData(viewModel: MainActivityViewModel) {
 }
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
@@ -745,7 +373,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
     var HOUR_ALARM = "hour_alarm"
     var MAIN_CURRENCY = "main_currency"
     var ALARM_ON = "alarm_on"
-
+    var SECURE_ON = "secure_on"
     var SECURE_CODE = "secure_code"
 
     /*
@@ -763,7 +391,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
         val scope = rememberCoroutineScope()
 
         var selectedTabIndex by remember {
-            mutableStateOf(/*f(sharedPref.getString(SECURE_CODE, "") == "") 0 else*/ 3)
+            mutableStateOf(if(sharedPref.getString(SECURE_CODE, "") == "") 0 else 3)
         }
 
         var baseCurrencyString by remember {
@@ -811,6 +439,10 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
             mutableStateOf(sharedPref.getBoolean(ALARM_ON, true))
         }
 
+        var secureSwitch by remember {
+            mutableStateOf(sharedPref.getBoolean(SECURE_ON, false))
+        }
+
         var notificationClicked by remember {
             mutableStateOf(false)
         }
@@ -825,6 +457,9 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
 
 
         val openSelectLanguageDialog = remember { mutableStateOf(false) }
+
+        var isCodeOpenFromNavBar by remember { mutableStateOf(false) }
+
 
 
         Scaffold(
@@ -875,11 +510,14 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                                 switchIsActive = timeSwitch
                             ),
 
-                            MenuItem(number = 3 , title = stringResource(R.string.main_currency), description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart)
-                        )),
+                            MenuItem(number = 3 , title = stringResource(R.string.main_currency), description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart),
+                            MenuItem(number = 4 , title = stringResource(R.string.secure_code), description = stringResource(R.string.log_in_password), icon = Icons.Default.Lock, hasSwitch = true, switchIsActive = secureSwitch )
+                        )
+
+                        ),
                         MenuBlock(title = "Data Management", items = listOf(
-                            MenuItem(number = 4 , title = "Import", description = "Read data to file", icon = Icons.Default.Edit),
-                            MenuItem(number = 5 , title = "Export", description = "Write data from file", icon = Icons.Default.Edit)
+                            MenuItem(number = 5 , title = "Import", description = "Read data to file", icon = Icons.Default.Edit),
+                            MenuItem(number = 6 , title = "Export", description = "Write data from file", icon = Icons.Default.Edit)
                         ))
                     ),
                     onItemClick = {
@@ -894,10 +532,18 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                                 mainCurrencyClicked.value = true
                             }
                             4 -> {
+                                scope.launch {
+                                    isCodeOpenFromNavBar = true
+                                    selectedTabIndex = 3
+                                    scaffoldState.drawerState.close()
+                                }
+
+                            }
+                            5 -> {
                                 scope.launch { scaffoldState.drawerState.close() }
                                 importData(viewModel)
                             }
-                            5 -> {
+                            6 -> {
                                 scope.launch { scaffoldState.drawerState.close() }
                                 exportData(viewModel)
                             }
@@ -914,6 +560,22 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                                 with(sharedPref.edit()) {
                                     putBoolean(ALARM_ON, timeSwitch)
                                     apply()}
+                            }
+                            4 -> {
+                                   if(it.switchIsActive){
+                                       secureSwitch = false
+                                       with(sharedPref.edit()) {
+                                           putBoolean(SECURE_ON, false)
+                                           putString(SECURE_CODE,"")
+                                           apply()}
+                                   }else{
+                                       scope.launch {
+                                           isCodeOpenFromNavBar = true
+                                           selectedTabIndex = 3
+                                           scaffoldState.drawerState.close()
+                                       }
+                                   }
+                                it.switchIsActive = false
                             }
                         }
                     }
@@ -937,23 +599,49 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                                 scope.launch {
                                     scaffoldState.drawerState.open()
                                 }
-                            },chosenAccountFilter = chosenAccountFilter!!,baseCurrency = baseCurrency, onChosenAccountFilterClick = { account ->
-                                chosenAccountFilterTMP.value= account
+                            },
+                            chosenAccountFilter = chosenAccountFilter!!,
+                            baseCurrency = baseCurrency,
+                            onChosenAccountFilterClick = { account ->
+                                chosenAccountFilterTMP.value = account
                             })
                         1 -> Categories(onNavigationIconClick = {
                             scope.launch {
                                 scaffoldState.drawerState.open()
                             }
-                        },chosenAccountFilter!!,baseCurrency = baseCurrency)
-                        2 -> Transactions(onNavigationIconClick = {
-                            scope.launch {
-                                scaffoldState.drawerState.open()
-                            }
-                        }, navigateToTransaction = {},chosenAccountFilter!!,viewModel,baseCurrency = baseCurrency)
+                        }, chosenAccountFilter!!, baseCurrency = baseCurrency)
+                        2 -> Transactions(
+                            onNavigationIconClick = {
+                                scope.launch {
+                                    scaffoldState.drawerState.open()
+                                }
+                            },
+                            navigateToTransaction = {},
+                            chosenAccountFilter!!,
+                            viewModel,
+                            baseCurrency = baseCurrency
+                        )
 
                         3 -> {
-                            SecureCodeEntering(context = context!!,isCorrectFunc = {selectedTabIndex = 0}, correctCode = MainActivity.correctCode )
+
+                            SecureCodeEntering(
+                                context = context!!,
+                                isCorrectFunc = {
+                                    selectedTabIndex = 0 },
+                                inNewPassword = {
+                                    with(sharedPref.edit()) {
+                                        putBoolean(SECURE_ON, true)
+                                        putString(SECURE_CODE, it)
+                                        apply()
+                                    }
+                                    secureSwitch = true
+                                    selectedTabIndex = 0
+                                },
+                                correctCode = sharedPref.getString(SECURE_CODE, "123456")!!,
+                                isCodeOpenFromNavBar,
+                            )
                         }
+
                     }
 
                 }
@@ -988,154 +676,11 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
 
 }
 
-
-
-
-
-    @Composable
-    fun TabsForScreens(
-        modifier: Modifier = Modifier,
-        onTabSelected: (selectedIndex: Int) -> Unit
-    ) {
-        var selectedTabIndex by remember {
-            mutableStateOf(0)
-        }
-        val imageWithTexts = listOf(
-            ImageWithText(
-                image = painterResource(id = R.drawable.accounts_img),
-                text = stringResource(R.string.accounts)
-            ),
-            ImageWithText(
-                image = painterResource(id = R.drawable.categories_img),
-                text = stringResource(R.string.categories)
-            ),
-            ImageWithText(
-                image = painterResource(id = R.drawable.transactions_img),
-                text = stringResource(R.string.transactions)
-            )
-        )
-
-
-        Box(
-            modifier = modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-        ) {
-
-            TabRow(
-                selectedTabIndex = selectedTabIndex,
-                backgroundColor = Color.White,
-                contentColor = Color.White,
-                modifier = modifier.shadow(elevation = 5.dp)
-            ) {
-                imageWithTexts.forEachIndexed { index, item ->
-                    Tab(selected = selectedTabIndex == index,
-                        selectedContentColor = Color.Black,
-                        unselectedContentColor = inactiveColor,
-                        onClick = {
-                            selectedTabIndex = index
-                            onTabSelected(index)
-                        }
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.SpaceAround,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painter = item.image,
-                                contentDescription = null,
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier
-                                    .padding(4.dp)
-                                    .width(35.dp)
-                                    .height(23.dp)
-                                    .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                            )
-                            Text(
-                                modifier = Modifier
-                                    .padding(2.dp),
-                                text = item.text,
-                                fontSize = 12.sp,
-                                color = if (selectedTabIndex == index) Color.Black else inactiveColor
-                            )
-                        }
-
-                    }
-                }
-            }
-        }
-
-    }
-
-fun vibratePhone(context: Context?, time : Long  = 80) {
-    val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    if (Build.VERSION.SDK_INT >= 26) {
-        vibrator.vibrate(VibrationEffect.createOneShot(time, VibrationEffect.DEFAULT_AMPLITUDE))
-    } else {
-        vibrator.vibrate(time)
-    }
-}
-
-    @Composable
-    fun Greeting(name: String) {
-        Text(text = "Hello $name!")
-    }
-
     @Preview(showBackground = true)
     @Composable
     fun DefaultPreview() {
         MoneySaverTheme {
-            /*
-            ChooseAccountFragmentCompose(
-                normalAccount = {},
-                debtAccount = {},
-                goalAccount = {})
-            */
-
         }
     }
 
-fun languageToLanguageCode(language: String): String {
-    return when(language) {
-        "Albanian" -> "sq"
-        "Arabic" -> "ar"
-        "Armenian" -> "hy"
-        "Azerbaijani" -> "az"
-        "Bosnian" -> "bs"
-        "Bulgarian" -> "bg"
-        "Chinese" -> "zh"
-        "Croatian" -> "hr"
-        "Czech" -> "cs"
-        "Danish" -> "da"
-        "English" -> "en"
-        "Esperanto" -> "eo"
-        "Estonian" -> "et"
-        "Filipino" -> "tl"
-        "Finnish" -> "fi"
-        "French" -> "fr"
-        "Georgian" -> "ka"
-        "German" -> "de"
-        "Greek" -> "el"
-        "Icelandic" -> "is"
-        "Indonesian" -> "id"
-        "Irish" -> "ga"
-        "Italian" -> "it"
-        "Japanese" -> "ja"
-        "Kazakh" -> "kk"
-        "Korean" -> "ko"
-        "Latvian" -> "lv"
-        "Mongolian" -> "mn"
-        "Norwegian" -> "no"
-        "Persian" -> "fa"
-        "Polish" -> "pl"
-        "Portuguese" -> "pt"
-        "Serbian" -> "sr"
-        "Slovak" -> "sk"
-        "Slovenian" -> "sl"
-        "Swedish" -> "sv"
-        "Turkish" -> "tr"
-        "Ukrainian" -> "uk"
-        else -> "en"
-    }
 
-}
