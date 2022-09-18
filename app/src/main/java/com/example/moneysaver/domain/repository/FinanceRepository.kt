@@ -1,5 +1,6 @@
 package com.example.moneysaver.domain.repository
 
+import androidx.room.Query
 import com.example.moneysaver.data.remote.CurrencyDto
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Category
@@ -29,6 +30,12 @@ interface FinanceRepository {
     suspend fun deleteTransaction(transaction: Transaction)
 
     suspend fun deleteAllTransaction()
+
+    suspend fun deleteTransactionsByAccountUUID(accountUUID: UUID)
+
+    suspend fun deleteTransactionsByToAccountUUID(toAccountUUID: UUID)
+
+    suspend fun deleteTransactionsByCategoryUUID(categoryUUID: UUID)
 
 
     // Categories

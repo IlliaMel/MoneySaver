@@ -61,6 +61,18 @@ class FinanceRepositoryImpl(
         transactionDao.deleteAll()
     }
 
+    override suspend fun deleteTransactionsByAccountUUID(accountUUID: UUID){
+        transactionDao.deleteTransactionsByAccountUUID(accountUUID)
+    }
+
+    override suspend fun deleteTransactionsByToAccountUUID(toAccountUUID: UUID) {
+        transactionDao.deleteTransactionsByToAccountUUID(toAccountUUID)
+    }
+
+    override suspend fun deleteTransactionsByCategoryUUID(categoryUUID: UUID) {
+        transactionDao.deleteTransactionsByCategoryUUID(categoryUUID)
+    }
+
 
     // Categories
     override  fun getCategories(): Flow<List<Category>> {

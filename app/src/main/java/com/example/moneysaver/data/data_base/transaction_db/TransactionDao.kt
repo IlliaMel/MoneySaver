@@ -34,4 +34,13 @@ interface TransactionDao {
     @Query("DELETE FROM `transaction`")
     suspend fun deleteAll()
 
+    @Query("DELETE FROM `transaction`  WHERE  accountUUID = :accountUUID")
+    suspend fun deleteTransactionsByAccountUUID(accountUUID: UUID)
+
+    @Query("DELETE FROM `transaction`  WHERE  toAccountUUID = :toAccountUUID")
+    suspend fun deleteTransactionsByToAccountUUID(toAccountUUID: UUID)
+
+    @Query("DELETE FROM `transaction`  WHERE  categoryUUID = :categoryUUID")
+    suspend fun deleteTransactionsByCategoryUUID(categoryUUID: UUID)
+
 }

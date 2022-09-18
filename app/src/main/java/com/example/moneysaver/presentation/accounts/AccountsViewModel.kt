@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation.accounts
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -132,12 +133,8 @@ class AccountsViewModel @Inject constructor(
 
     fun deleteAccount(account: Account) {
         viewModelScope.launch {
-            financeRepository.getTransactionsByAccountUUID(account.uuid).onEach { list ->
-                for(transaction in list) deleteTransaction(transaction)
-            }.launchIn(viewModelScope)
-            financeRepository.getTransactionsByToAccountUUID(account.uuid).onEach { list ->
-                for(transaction in list) deleteTransaction(transaction)
-            }.launchIn(viewModelScope)
+            financeRepository.deleteTransactionsByAccountUUID(account.uuid)
+            financeRepository.deleteTransactionsByToAccountUUID(account.uuid)
             financeRepository.deleteAccount(account)
         }
         loadAllAccounts()

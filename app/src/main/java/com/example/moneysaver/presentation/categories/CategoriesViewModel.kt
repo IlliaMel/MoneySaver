@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation.categories
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,9 +52,7 @@ class CategoriesViewModel @Inject constructor(
     }
     fun deleteCategory(category: Category) {
         viewModelScope.launch {
-            financeRepository.getTransactionsByCategoryUUID(category.uuid).onEach { list ->
-                for(transaction in list) deleteTransaction(transaction)
-            }.launchIn(viewModelScope)
+            financeRepository.deleteTransactionsByCategoryUUID(category.uuid)
             financeRepository.deleteCategory(category)
         }
     }
