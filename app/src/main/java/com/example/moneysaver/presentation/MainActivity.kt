@@ -3,6 +3,7 @@ package com.example.moneysaver.presentation
 
 import android.annotation.SuppressLint
 import android.content.*
+import androidx.biometric.BiometricPrompt
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.*
@@ -45,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
@@ -86,7 +88,7 @@ data class ImageWithText(
 )
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     init {
         instance = this
@@ -97,12 +99,67 @@ class MainActivity : ComponentActivity() {
         var isNeedToParseCurrency = false
         var isCategoriesParsed = false
         val APP_LANGUAGE = "app_language"
+        val correctCode = "123456"
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
 
 
     private val FILE_SELECT_CODE = 0;
+
+    private val biometricsIgnoredErrors = listOf(
+        BiometricPrompt.ERROR_NEGATIVE_BUTTON,
+        BiometricPrompt.ERROR_CANCELED,
+        BiometricPrompt.ERROR_USER_CANCELED,
+        BiometricPrompt.ERROR_NO_BIOMETRICS
+    )
+
+    fun showBiometricPrompt(onSucceeded: () -> Unit) {
+        // 2
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Login")
+            .setSubtitle("Login with fingerprint")
+            .setNegativeButtonText("Cancel")
+            .build()
+
+        // 3
+        val biometricPrompt = BiometricPrompt(
+            this@MainActivity,
+            object : BiometricPrompt.AuthenticationCallback() {
+                // 4
+                override fun onAuthenticationError(
+                    errorCode: Int,
+                    errString: CharSequence
+                ) {
+                    if (errorCode !in biometricsIgnoredErrors) {
+                        Toast.makeText(
+                            MoneySaver.applicationContext(),
+                            "Authentication Error",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                // 5
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult
+                ) {
+                    onSucceeded()
+                }
+
+                // 6
+                override fun onAuthenticationFailed() {
+                    Toast.makeText(
+                        MoneySaver.applicationContext(),
+                        "Authentication Failed",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        )
+        // 7
+        biometricPrompt.authenticate(promptInfo)
+    }
 
     fun importActivityData(viewModel: MainActivityViewModel) {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -406,15 +463,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
-fun SecureCodeEntering(context : Context, isCorrectFunc : () -> Unit) {
+fun SecureCodeEntering(context : Context, isCorrectFunc : () -> Unit, correctCode: String) {
     // I'm using the same duration for all animations.
 
     Box(modifier = Modifier.fillMaxSize()){
        var isCorrect = false
         var code = remember{ mutableStateOf("")}
-        if(code.value.length == 6){
-            isCorrect = code.value == "123456"
+        if(code.value.length == correctCode.length){
+            isCorrect = code.value == correctCode
         }
 
         Image(
@@ -507,7 +565,15 @@ fun SecureCodeEntering(context : Context, isCorrectFunc : () -> Unit) {
                 .background(Color.Transparent),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(fontSize = 15.sp, fontWeight = FontWeight.W400, text = "Forget password: ", color = Color.White)
+                Button(
+                    shape = RoundedCornerShape(30.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                    onClick = { MainActivity.instance!!.showBiometricPrompt(
+                        onSucceeded = {code.value = correctCode}
+                    ) }
+                ) {
+                    Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Use Fingerprint", color = Color.White)
+                }
             }
 
 
@@ -885,7 +951,9 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                             }
                         }, navigateToTransaction = {},chosenAccountFilter!!,viewModel,baseCurrency = baseCurrency)
 
-                        3 -> SecureCodeEntering(context = context!!,isCorrectFunc = {selectedTabIndex = 0} )
+                        3 -> {
+                            SecureCodeEntering(context = context!!,isCorrectFunc = {selectedTabIndex = 0}, correctCode = MainActivity.correctCode )
+                        }
                     }
 
                 }
