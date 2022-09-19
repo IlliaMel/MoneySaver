@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -105,7 +106,8 @@ fun SecureCodeEntering(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally) {
 
-                Text(fontSize = 18.sp, fontWeight = FontWeight.W500, text = if(isCodeOpenFromNavBar) "Enter New Password" else "Enter You Password", color = Color.White)
+                Text(fontSize = 18.sp, fontWeight = FontWeight.W500, text = if(isCodeOpenFromNavBar) stringResource(
+                                    R.string.enter_new_password) else stringResource(R.string.enter_you_password), color = Color.White)
                 Spacer(modifier = Modifier
                     .fillMaxWidth()
                     .height(20.dp))
@@ -165,7 +167,7 @@ fun SecureCodeEntering(
                             activity = MainActivity.instance!!
                         ) }
                     ) {
-                        Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Use Fingerprint", color = Color.White)
+                        Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(R.string.use_Fingerprint), color = Color.White)
                     }
                 }
             }else {
@@ -183,7 +185,8 @@ fun SecureCodeEntering(
                         onClick = { isCorrectFunc() }
                     ) {
                         Box(modifier = Modifier.width(80.dp), contentAlignment = Alignment.Center) {
-                            Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Cancel", color = Color.White)
+                            Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
+                                                            R.string.cancel), color = Color.White)
                         }
 
                     }
@@ -194,21 +197,26 @@ fun SecureCodeEntering(
                         onClick = {
                             if(code.value.length == 6){
                                 Toast.makeText(
-                                    MoneySaver.applicationContext(), "New Password Added",
+                                    MoneySaver.applicationContext(), MoneySaver
+                                        .applicationContext()
+                                        .getString(R.string.new_password_added),
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 inNewPassword(code.value)
                             }else {
 
                                 Toast.makeText(
-                                    MoneySaver.applicationContext(), "Password must have 6 digits",
+                                    MoneySaver.applicationContext(),MoneySaver
+                                        .applicationContext()
+                                        .getString(R.string.password_must_have_six_digits) ,
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                             }
                     ) {
                         Box(modifier = Modifier.width(80.dp), contentAlignment = Alignment.Center) {
-                            Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Save", color = Color.White)
+                            Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
+                                R.string.save), color = Color.White)
                         }
                     }
                 }
@@ -239,7 +247,7 @@ fun secureCodeFilled(
         else{
             vibratePhone(context, 400)
             Toast.makeText(
-                MoneySaver.applicationContext(), "Password is not correct",
+                MoneySaver.applicationContext(), stringResource(R.string.password_is_not_correct),
                 Toast.LENGTH_SHORT
             ).show()
             code.value = ""

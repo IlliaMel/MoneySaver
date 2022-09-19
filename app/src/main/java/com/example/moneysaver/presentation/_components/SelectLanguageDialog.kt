@@ -17,11 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.presentation.MainActivity
@@ -110,7 +112,8 @@ fun SelectLanguageDialog(
                         }
                     ) {
                         Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
-                            Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Save", color = Color.White)
+                            Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
+                                                            R.string.save), color = Color.White)
                         }
 
                     }

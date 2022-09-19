@@ -53,7 +53,7 @@ fun WithdrawalDepositField(
                     .clickable { isFirstFieldSelected.value = true },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(modifier = Modifier.padding(4.dp),text = "Withdrawal", color = Color.Black, fontSize = 16.sp)
+                Text(modifier = Modifier.padding(4.dp),text = stringResource(R.string.withdrawal), color = Color.Black, fontSize = 16.sp)
                 Text(modifier = Modifier.padding(2.dp),text =  sumTextFirst.value + " " + selectedCurrencyTypeFirst.value.currency, color = selectedAccountFirst.value.accountImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
 
@@ -72,7 +72,7 @@ fun WithdrawalDepositField(
                     .clickable { isFirstFieldSelected.value = false },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(modifier = Modifier.padding(4.dp),text = "Deposit", color = Color.Black, fontSize = 16.sp)
+                Text(modifier = Modifier.padding(4.dp),text = stringResource(R.string.deposit), color = Color.Black, fontSize = 16.sp)
                 Text(modifier = Modifier.padding(2.dp),text =  sumTextSecond.value + " " + selectedCurrencyTypeSecond.value.currency, color = selectedAccountSecond.value.accountImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
 

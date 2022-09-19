@@ -1011,7 +1011,8 @@ fun SetImg(
                                 }
                             ) {
                                 Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
-                                    Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Submit", color = Color.White)
+                                    Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
+                                                                            R.string.submit), color = Color.White)
                                 }
 
                             }

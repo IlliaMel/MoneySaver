@@ -3,6 +3,7 @@ package com.example.moneysaver.presentation.utils
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import com.example.moneysaver.MoneySaver
+import com.example.moneysaver.R
 import com.example.moneysaver.presentation.MainActivity
 
 private val biometricsIgnoredErrors = listOf(
@@ -15,7 +16,7 @@ private val biometricsIgnoredErrors = listOf(
 fun showBiometricPrompt(onSucceeded: () -> Unit, activity: MainActivity) {
     // 2
     val promptInfo = BiometricPrompt.PromptInfo.Builder()
-        .setTitle("Login")
+        .setTitle(activity.getString(R.string.login))
         .setSubtitle("Login with fingerprint")
         .setNegativeButtonText("Cancel")
         .build()

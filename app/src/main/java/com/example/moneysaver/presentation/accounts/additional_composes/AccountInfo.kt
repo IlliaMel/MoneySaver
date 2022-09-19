@@ -256,7 +256,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                             Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Top) {
                                 Text(modifier = Modifier.padding(4.dp),
-                                    text = "Balance Of Account",
+                                    text = stringResource(R.string.balance_of_account),
                                     fontWeight = FontWeight.W400,
                                     color = Color.White,
                                     fontSize = 14.sp)

@@ -352,9 +352,10 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                         )
 
                         ),
-                        MenuBlock(title = "Data Management", items = listOf(
-                            MenuItem(number = 5 , title = "Import", description = "Read data to file", icon = Icons.Default.Edit),
-                            MenuItem(number = 6 , title = "Export", description = "Write data from file", icon = Icons.Default.Edit)
+                        MenuBlock(title = stringResource(R.string.data_management), items = listOf(
+                            MenuItem(number = 5 , title = stringResource(R.string._import), description = stringResource(R.string.read_data_to_file), icon = Icons.Default.Edit),
+                            MenuItem(number = 6 , title = stringResource(R.string._export), description = stringResource(
+                                                            R.string.write_data_from_file), icon = Icons.Default.Edit)
                         ))
                     ),
                     onItemClick = {

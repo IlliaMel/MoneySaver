@@ -107,4 +107,22 @@
     <string name="security_password">Security Password</string>
     <string name="log_in_password">Log in password</string>
     <string name="secure_code">Secure Code</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_password_added">New Password Added</string>
+    <string name="password_must_have_six_digits">Password must have six digits</string>
+    <string name="use_Fingerprint">Use Fingerprint</string>
+    <string name="password_is_not_correct">Password is not correct</string>
+    <string name="withdrawal">Withdrawal</string>
+    <string name="deposit">Deposit</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="enter_you_password">Enter You Password</string>
+    <string name="balance_of_account">Balance Of Account</string>
+    <string name="submit">Submit</string>
+    <string name="login">Login</string>
+    <string name="data_management">Data Management</string>
+    <string name="read_data_to_file">Read data to file</string>
+    <string name="_import">Import</string>
+    <string name="_export">Export</string>
+    <string name="write_data_from_file">Write data from file</string>
 </resources>
