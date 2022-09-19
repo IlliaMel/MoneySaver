@@ -51,6 +51,7 @@ import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.SetAccountCurrencyType
 import com.example.moneysaver.presentation.categories.Categories
 import com.example.moneysaver.presentation.transactions.Transactions
+import com.example.moneysaver.presentation.utils.*
 import com.example.moneysaver.ui.theme.MoneySaverTheme
 import com.example.moneysaver.ui.theme.lightGrayTransparent
 import com.example.moneysaver.ui.theme.whiteSurface
@@ -87,153 +88,11 @@ class MainActivity : FragmentActivity() {
 
     val FILE_SELECT_CODE = 0;
 
-    private val biometricsIgnoredErrors = listOf(
-        BiometricPrompt.ERROR_NEGATIVE_BUTTON,
-        BiometricPrompt.ERROR_CANCELED,
-        BiometricPrompt.ERROR_USER_CANCELED,
-        BiometricPrompt.ERROR_NO_BIOMETRICS
-    )
-
- fun showBiometricPrompt(onSucceeded: () -> Unit) {
-     // 2
-     val promptInfo = BiometricPrompt.PromptInfo.Builder()
-         .setTitle("Login")
-         .setSubtitle("Login with fingerprint")
-         .setNegativeButtonText("Cancel")
-         .build()
-
-     // 3
-     val biometricPrompt = BiometricPrompt(
-         this@MainActivity,
-         object : BiometricPrompt.AuthenticationCallback() {
-             // 4
-             override fun onAuthenticationError(
-                 errorCode: Int,
-                 errString: CharSequence
-             ) {
-                 if (errorCode !in biometricsIgnoredErrors) {
-                     Toast.makeText(
-                         MoneySaver.applicationContext(),
-                         "Authentication Error",
-                         Toast.LENGTH_LONG
-                     ).show()
-                 }
-             }
-
-             // 5
-             override fun onAuthenticationSucceeded(
-                 result: BiometricPrompt.AuthenticationResult
-             ) {
-                 onSucceeded()
-             }
-
-             // 6
-             override fun onAuthenticationFailed() {
-                 Toast.makeText(
-                     MoneySaver.applicationContext(),
-                     "Authentication Failed",
-                     Toast.LENGTH_LONG
-                 ).show()
-             }
-         }
-     )
-     // 7
-     biometricPrompt.authenticate(promptInfo)
- }
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == FILE_SELECT_CODE) {
-            if(resultCode == RESULT_OK) {
-                if(data==null) {
-                    return
-                }
-                val uri = data.data
-                if (uri != null) {
-                    try {
-                        val input: InputStream? = contentResolver.openInputStream(uri)
-                        val r = BufferedReader(InputStreamReader(input))
-                        //val total = StringBuilder()
-                        var line: String?
-                        var blockIndex = 0; // 0 - accounts, 1 - categories, 2 - transactions
-                        var converters = Converters()
-                        val accounts = mutableListOf<Account>()
-                        val categories = mutableListOf<Category>()
-                        val transactions = mutableListOf<Transaction>()
-                        while (r.readLine().also { line = it } != null) {
-                            if(line!!.isEmpty()) {
-                                // empty line - block with next data types
-                                blockIndex++
-                                continue
-                            }
-                            when(blockIndex) {
-                                0 -> {
-                                    // we need to remove '"' from start of first part and '" ' end of last part
-                                    val str: List<String> = line!!.split("\", \"")
-                                    val account = Account(
-                                        uuid = UUID.fromString(str[0].drop(1)),
-                                        accountImg = converters.fromStringToVectorImg(str[1])!!,
-                                        currencyType = converters.fromStringToCurrency(str[2])!!,
-                                        title = str[3],
-                                        description = str[4],
-                                        balance = str[5].toDouble(),
-                                        creditLimit = str[6].toDouble(),
-                                        goal = str[7].toDouble(),
-                                        debt = str[8].toDouble(),
-                                        isForGoal = str[9].toBoolean(),
-                                        isForDebt = str[10].toBoolean(),
-                                        creationDate = converters.fromTimestamp(str[11].dropLast(2).toLong())!!
-                                    )
-                                    accounts.add(account)
-                                }
-                                1 -> {
-                                    // we need to remove '"' from start of first part and end of last part
-                                    val str: List<String> = line!!.split("\", \"")
-                                    val category = Category(
-                                        uuid = UUID.fromString(str[0].drop(1)),
-                                        categoryImg = converters.fromStringToVectorImg(str[1])!!,
-                                        currencyType = converters.fromStringToCurrency(str[2])!!,
-                                        title = str[3],
-                                        isForSpendings = str[4].toBoolean(),
-                                        spent = str[5].toDouble(),
-                                        creationDate = converters.fromTimestamp(str[6].dropLast(2).toLong())!!,
-                                    )
-                                    categories.add(category)
-                                }
-                                2 -> {
-                                    val str: List<String> = line!!.split("\", \"")
-                                    val transaction = Transaction(
-                                        uuid = UUID.fromString(str[0].drop(1)),
-                                        sum = str[1].toDouble(),
-                                        categoryUUID = if(str[2]=="null") null else UUID.fromString(str[2]),
-                                        accountUUID = UUID.fromString(str[3]),
-                                        toAccountUUID = if(str[4]=="null") null else UUID.fromString(str[4]),
-                                        toAccountSum = if(str[5]=="null") null else str[5].toDouble(),
-                                        date = converters.fromTimestamp(str[6].toLong())!!,
-                                        note = if(str[7].dropLast(2)=="null") null else str[7].dropLast(2)
-                                    )
-                                    transactions.add(transaction)
-                                }
-                            }
-                        }
-
-                        viewModel.importRepository(accounts, categories, transactions)
-
-                        Toast.makeText(
-                            MoneySaver.applicationContext(), "\"${uri.path}\" has been read",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                    } catch (e: java.lang.Exception) {
-                        Toast.makeText(
-                            MoneySaver.applicationContext(), "Can't read this file",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
+            onChoseImportFileActivityResult(resultCode, data, viewModel)
         }
     }
 
@@ -333,28 +192,6 @@ class MainActivity : FragmentActivity() {
         finishAffinity()
     }
 
-    fun setLanguage(languageCode: String) {
-        val config = resources.configuration
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            config.setLocale(locale)
-        else
-            config.locale = locale
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            createConfigurationContext(config)
-        resources.updateConfiguration(config, resources.displayMetrics)
-    }
-}
-
-
-
-fun importData(viewModel: MainActivityViewModel) {
-    MainActivity.instance!!.importActivityData(viewModel)
-}
-
-fun exportData(viewModel: MainActivityViewModel) {
-    MainActivity.instance!!.exportActivityData(viewModel)
 }
 
 

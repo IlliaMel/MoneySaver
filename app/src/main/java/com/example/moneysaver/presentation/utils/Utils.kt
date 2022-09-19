@@ -1,4 +1,4 @@
-package com.example.moneysaver.presentation
+package com.example.moneysaver.presentation.utils
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -11,8 +11,11 @@ import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
 import com.example.moneysaver.MoneySaver
+import com.example.moneysaver.presentation.MainActivity
+import com.example.moneysaver.presentation.MainActivityViewModel
 import java.io.File
 import java.io.FileOutputStream
+import java.util.*
 
 class Utils {
     companion object Methods {
@@ -92,74 +95,15 @@ class Utils {
     }
 }
 
-fun MainActivity.exportActivityData(viewModel: MainActivityViewModel) {
-    //Text of the Document
-    var textToWrite = ""
-
-    for(account in viewModel.state.accountsList) {
-        textToWrite+="$account \n"
-    }
-    textToWrite+="\n"
-    for(category in viewModel.state.categoriesList) {
-        textToWrite+="$category \n"
-    }
-    textToWrite+="\n"
-    for(transaction in viewModel.state.transactionList) {
-        textToWrite+="$transaction \n"
-    }
-
-    //Checking the availability state of the External Storage.
-    val state = Environment.getExternalStorageState()
-    if (Environment.MEDIA_MOUNTED != state) {
-
-        //If it isn't mounted - we can't write into it.
-        return
-    }
-
-
-    //Create a new file that points to the root directory, with the given name:
-    val file = File(getExternalFilesDir(null), "moneysaver_data.csv")
-
-
-    //This point and below is responsible for the write operation
-    var outputStream: FileOutputStream? = null
-    try {
-        if(file.exists()) file.delete()
-        file.createNewFile()
-        //second argument of FileOutputStream constructor indicates whether
-        //to append or create new file if one exists
-        outputStream = FileOutputStream(file, true)
-        outputStream.write(textToWrite.toByteArray())
-        outputStream.flush()
-        outputStream.close()
-        Toast.makeText(
-            MoneySaver.applicationContext(), "Saved to \"Android/data/com.example.moneysaver/files/moneysaver_data.csv\"",
-            Toast.LENGTH_SHORT
-        ).show()
-    } catch (e: Exception) {
-        Toast.makeText(
-            MoneySaver.applicationContext(), "Can't save current app state",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-}
-
-
-fun MainActivity.importActivityData(viewModel: MainActivityViewModel) {
-    val intent = Intent(Intent.ACTION_GET_CONTENT)
-    intent.type = "*/*"
-    intent.addCategory(Intent.CATEGORY_OPENABLE)
-
-    try {
-        startActivityForResult(
-            Intent.createChooser(intent, "Select a File"),
-            FILE_SELECT_CODE
-        )
-    } catch (ex: ActivityNotFoundException) {
-        // Potentially direct the user to the Market with a Dialog
-        Toast.makeText(
-            MoneySaver.applicationContext(), "Please install a File Manager.",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
+fun MainActivity.setLanguage(languageCode: String) {
+    val config = resources.configuration
+    val locale = Locale(languageCode)
+    Locale.setDefault(locale)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+        config.setLocale(locale)
+    else
+        config.locale = locale
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        createConfigurationContext(config)
+    resources.updateConfiguration(config, resources.displayMetrics)
 }

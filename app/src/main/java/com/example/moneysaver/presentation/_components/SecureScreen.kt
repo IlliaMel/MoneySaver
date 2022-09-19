@@ -41,6 +41,7 @@ import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.presentation.MainActivity
+import com.example.moneysaver.presentation.utils.showBiometricPrompt
 
 
 
@@ -159,8 +160,9 @@ fun SecureCodeEntering(
                     Button(
                         shape = RoundedCornerShape(30.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
-                        onClick = { MainActivity.instance!!.showBiometricPrompt(
-                            onSucceeded = {code.value = correctCode}
+                        onClick = { showBiometricPrompt(
+                            onSucceeded = {code.value = correctCode},
+                            activity = MainActivity.instance!!
                         ) }
                     ) {
                         Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Use Fingerprint", color = Color.White)
