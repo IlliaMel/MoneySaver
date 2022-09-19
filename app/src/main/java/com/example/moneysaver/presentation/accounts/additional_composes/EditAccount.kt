@@ -46,6 +46,7 @@ import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.data.data_base._test_data.VectorImg
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Currency
+import com.example.moneysaver.presentation.MainActivity
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.categories.additional_composes.valueToNormalFormat
 import com.example.moneysaver.presentation.transactions.additional_composes.innerShadow
@@ -993,23 +994,30 @@ fun SetImg(
                                 chosenVectorImg.value.externalColor = color
                                 var vectorImg: VectorImg = chosenVectorImg.value
                                 VectorIcon(
-                                    Modifier.padding(8.dp),
+                                    Modifier.weight(1f).padding(8.dp),
                                     vectorImg = vectorImg,
                                     onClick = { returnType(vectorImg.copy()) })
                             }
                         }
 
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f).clickable {  returnType(vectorImg.copy()) }.background(inactiveColorTab),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center) {
+                        Box(modifier = Modifier.fillMaxWidth()
+                            .weight(1.5f).background(transparentColorForBottomSheet), contentAlignment = Alignment.Center){
+                            Button(
+                                modifier = Modifier.padding(0.dp),
+                                shape = RoundedCornerShape(30.dp),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                                onClick = {
+                                    returnType(vectorImg.copy())
+                                }
+                            ) {
+                                Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
+                                    Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Submit", color = Color.White)
+                                }
 
-                            Text(modifier = Modifier, text = "Submit",
-                                fontSize = 16.sp,
-                                color = Color.Black
-                            )
+                            }
                         }
+
+
 
                     }
                 }

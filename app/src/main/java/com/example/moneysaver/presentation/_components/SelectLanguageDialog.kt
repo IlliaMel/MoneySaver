@@ -8,10 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -29,6 +27,8 @@ import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.presentation.MainActivity
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.example.moneysaver.ui.theme.dividerColor
+import com.example.moneysaver.ui.theme.inactiveColorTab
+import com.example.moneysaver.ui.theme.transparentColorForBottomSheet
 import org.intellij.lang.annotations.Language
 
 val languageList = listOf("Default", "Albanian","Arabic", "Armenian", "Azerbaijani", "Bosnian", "Bulgarian",
@@ -54,14 +54,14 @@ fun SelectLanguageDialog(
         ) {
             Column(
                 modifier = Modifier
-                    .height(500.dp)
-                    .width(280.dp)
-                    .clip(RoundedCornerShape(20.dp))
+                    .height(330.dp)
+                    .width(300.dp)
+                    .clip(RoundedCornerShape(15.dp))
                     .background(Color.White),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LazyColumn(
-                    modifier = Modifier.height(440.dp)
+                    modifier = Modifier.fillMaxHeight(0.83f).padding(8.dp,12.dp,8.dp,8.dp)
                 ) {
                     if(appLanguage.value!=null) selectedValue.value = appLanguage.value!!
 
@@ -96,16 +96,24 @@ fun SelectLanguageDialog(
                         }
                     )
                 }
-                Button(
-                    modifier = Modifier.padding(12.dp),
-                    onClick = {
-                        appLanguage.value = selectedValue.value
-                        var editor = sharedPref.edit()
-                        editor.putString(MainActivity.APP_LANGUAGE,selectedValue.value)
-                        editor.commit()
-                        restartApp()
-                    }) {
-                    Text("Save")
+                Box(modifier = Modifier.fillMaxSize().background(transparentColorForBottomSheet), contentAlignment = Alignment.Center){
+                    Button(
+                        modifier = Modifier.padding(4.dp,4.dp,4.dp,4.dp),
+                        shape = RoundedCornerShape(30.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                        onClick = {
+                            appLanguage.value = selectedValue.value
+                            var editor = sharedPref.edit()
+                            editor.putString(MainActivity.APP_LANGUAGE,selectedValue.value)
+                            editor.commit()
+                            restartApp()
+                        }
+                    ) {
+                        Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
+                            Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = "Save", color = Color.White)
+                        }
+
+                    }
                 }
             }
         }
