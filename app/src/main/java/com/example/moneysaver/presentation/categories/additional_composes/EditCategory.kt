@@ -302,8 +302,10 @@ fun TopBarCategoryEdit(
                                 contentDescription = stringResource(R.string.apply_button)
                             )
                         }
-
-                        VectorIcon(Modifier.padding(0.dp,0.dp,0.dp,8.dp),Modifier.padding(8.dp) , vectorImg = icnTopBar, onClick = {setAccountImg.value = true},width = 50.dp , height = 50.dp, cornerSize = 50.dp)
+                        if(!setAccountImg.value)
+                            VectorIcon(Modifier.padding(0.dp,0.dp,0.dp,8.dp),Modifier.padding(8.dp) , vectorImg = icnTopBar, onClick = {setAccountImg.value = true},width = 50.dp , height = 50.dp, cornerSize = 50.dp)
+                        else
+                            VectorIcon(Modifier.padding(0.dp,0.dp,0.dp,8.dp),Modifier.padding(8.dp) , vectorImg = icnTopBar, onClick = {setAccountImg.value = true},width = 50.dp , height = 50.dp, cornerSize = 50.dp)
                     }
 
                 }
@@ -312,7 +314,7 @@ fun TopBarCategoryEdit(
 
         }
     }
-    SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; icn.value = it; icnTopBar = it} , listOfVectors = CategoriesData.categoryImges, chosenVectorImg = icn, idForCategory = true )
+    SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; icn.value = it; icnTopBar = it } , listOfVectors = CategoriesData.categoryImges, chosenVectorImg = icn, idForCategory = true )
 
 }
 
