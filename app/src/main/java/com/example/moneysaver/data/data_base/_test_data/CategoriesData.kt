@@ -3,20 +3,21 @@ package com.example.moneysaver.data.data_base._test_data
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.domain.model.Currency
+import com.example.moneysaver.presentation.MainActivity
 
 object CategoriesData {
 
-    val addCategory = Category(
+    var addCategory = Category(
         categoryImg = VectorImg(img = R.drawable.ic_plus_categ_icn),
         currencyType = Currency(),
-        title = "Add Category",
+        title = MainActivity.instance!!.getString(R.string.add_category),
         spent = 0.0,
     )
 
-    val defaultCategory = Category(
+    var defaultCategory = Category(
         categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
         currencyType = Currency(),
-        title = "Add Category",
+        title = MainActivity.instance!!.getString(R.string.add_category),
         spent = 0.0,
     )
 
@@ -35,7 +36,20 @@ object CategoriesData {
 
     var defaultCategoryVectorImg =  VectorImg(img = R.drawable.ic_categ_icn_1)
 
-
+    fun update() {
+        addCategory = Category(
+            categoryImg = VectorImg(img = R.drawable.ic_plus_categ_icn),
+            currencyType = Currency(),
+            title = MainActivity.instance!!.getString(R.string.add_category),
+            spent = 0.0,
+        )
+        defaultCategory = Category(
+            categoryImg = VectorImg(img = R.drawable.ic_categ_icn_1),
+            currencyType = Currency(),
+            title = MainActivity.instance!!.getString(R.string.add_category),
+            spent = 0.0,
+        )
+    }
 
 
 }

@@ -17,8 +17,8 @@ fun showBiometricPrompt(onSucceeded: () -> Unit, activity: MainActivity) {
     // 2
     val promptInfo = BiometricPrompt.PromptInfo.Builder()
         .setTitle(activity.getString(R.string.login))
-        .setSubtitle("Login with fingerprint")
-        .setNegativeButtonText("Cancel")
+        .setSubtitle(activity.getString(R.string.login_with_fingerprint))
+        .setNegativeButtonText(activity.getString(R.string.cancel))
         .build()
 
     // 3
@@ -33,7 +33,7 @@ fun showBiometricPrompt(onSucceeded: () -> Unit, activity: MainActivity) {
                 if (errorCode !in biometricsIgnoredErrors) {
                     Toast.makeText(
                         MoneySaver.applicationContext(),
-                        "Authentication Error",
+                        activity.getString(R.string.authentication_error),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -50,7 +50,7 @@ fun showBiometricPrompt(onSucceeded: () -> Unit, activity: MainActivity) {
             override fun onAuthenticationFailed() {
                 Toast.makeText(
                     MoneySaver.applicationContext(),
-                    "Authentication Failed",
+                    activity.getString(R.string.authentication_failed),
                     Toast.LENGTH_LONG
                 ).show()
             }

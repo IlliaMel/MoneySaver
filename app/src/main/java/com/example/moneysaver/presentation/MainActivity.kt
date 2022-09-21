@@ -33,6 +33,7 @@ import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base.Converters
 import com.example.moneysaver.data.data_base._test_data.AccountsData
+import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.domain.model.Currency
@@ -102,7 +103,6 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         //SharedPref
         val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
 
@@ -111,6 +111,8 @@ class MainActivity : FragmentActivity() {
             if(lang == "Default") setLanguage(Locale.getDefault().language)
             else setLanguage(Utils.languageToLanguageCode(lang))
         }
+        AccountsData.update()
+        CategoriesData.update()
 
         val isParsed = sharedPref.getBoolean(CURRENCY_PARSED_KEY, false)
         val parsingDate = sharedPref.getString(CURRENCY_PARSING_DATE_KEY, "2000-01-01")

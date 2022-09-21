@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.toArgb
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Currency
+import com.example.moneysaver.presentation.MainActivity
 import com.example.moneysaver.ui.theme.externalColorGray
 import java.io.Serializable
 
@@ -56,39 +57,39 @@ object AccountsData {
         )
 
 
-    val deptAccount = Account(
+    var deptAccount = Account(
         accountImg = VectorImg(),
         currencyType = Currency(),
-        title = "Car Dept",
-        description = "Dept for the car",
+        title = MainActivity.instance!!.getString(R.string.car_dept),
+        description = MainActivity.instance!!.getString(R.string.dept_for_the_car),
         debt = 0.0,
         isForDebt = true
     )
 
-    val normalAccount = Account(
+    var normalAccount = Account(
         accountImg = VectorImg(),
         currencyType = Currency(),
-        title = "Cash",
-        description = "Salary",
+        title = MainActivity.instance!!.getString(R.string.cash),
+        description = MainActivity.instance!!.getString(R.string.salary),
         balance = 0.0,
         creditLimit = 0.0,
     )
 
-    val goalAccount = Account(
+    var goalAccount = Account(
         accountImg = VectorImg(),
         currencyType = Currency(),
-        title = "Stash",
-        description = "For trip",
+        title = MainActivity.instance!!.getString(R.string.stash),
+        description = MainActivity.instance!!.getString(R.string.for_trip),
         balance = 0.0,
         creditLimit = 0.0,
         goal = 0.0,
         isForGoal = true
     )
 
-    val allAccountFilter = Account(
+    var allAccountFilter = Account(
         accountImg = VectorImg(),
         currencyType = Currency(),
-        title = "All Accounts",
+        title = MainActivity.instance!!.getString(R.string.all_accounts),
         description = "",
         balance = 0.0,
         creditLimit = 0.0,
@@ -97,20 +98,20 @@ object AccountsData {
         isForDebt = true
     )
 
-    val accountAdder = Account(
+    var accountAdder = Account(
     accountImg = VectorImg(),
-    title = "Add Bank Account",
+    title = MainActivity.instance!!.getString(R.string.add_bank_account),
     )
 
-    val goalAdder = Account(
+    var goalAdder = Account(
         accountImg = VectorImg(),
-        title = "Add Goal",
+        title = MainActivity.instance!!.getString(R.string.add_goal),
     )
-    val accountsList = mutableListOf(
+    var accountsList = mutableListOf(
         Account(
             accountImg = VectorImg(),
             currencyType = Currency(),
-            title = "Cash",
+            title = MainActivity.instance!!.getString(R.string.cash),
             balance = 0.0,
         ),
         Account(
@@ -127,4 +128,73 @@ object AccountsData {
         ),
 
     )
+
+    fun update() {
+        deptAccount = Account(
+            accountImg = VectorImg(),
+            currencyType = Currency(),
+            title = MainActivity.instance!!.getString(R.string.car_dept),
+            description = MainActivity.instance!!.getString(R.string.dept_for_the_car),
+            debt = 0.0,
+            isForDebt = true
+        )
+        normalAccount = Account(
+            accountImg = VectorImg(),
+            currencyType = Currency(),
+            title = MainActivity.instance!!.getString(R.string.cash),
+            description = MainActivity.instance!!.getString(R.string.salary),
+            balance = 0.0,
+            creditLimit = 0.0,
+        )
+        goalAccount = Account(
+            accountImg = VectorImg(),
+            currencyType = Currency(),
+            title = MainActivity.instance!!.getString(R.string.stash),
+            description = MainActivity.instance!!.getString(R.string.for_trip),
+            balance = 0.0,
+            creditLimit = 0.0,
+            goal = 0.0,
+            isForGoal = true
+        )
+        allAccountFilter = Account(
+            accountImg = VectorImg(),
+            currencyType = Currency(),
+            title = MainActivity.instance!!.getString(R.string.all_accounts),
+            description = "",
+            balance = 0.0,
+            creditLimit = 0.0,
+            goal = 0.0,
+            isForGoal = true,
+            isForDebt = true
+        )
+        accountAdder = Account(
+            accountImg = VectorImg(),
+            title = MainActivity.instance!!.getString(R.string.add_bank_account),
+        )
+        goalAdder = Account(
+            accountImg = VectorImg(),
+            title = MainActivity.instance!!.getString(R.string.add_goal),
+        )
+        accountsList = mutableListOf(
+            Account(
+                accountImg = VectorImg(),
+                currencyType = Currency(),
+                title = MainActivity.instance!!.getString(R.string.cash),
+                balance = 0.0,
+            ),
+            Account(
+                accountImg =VectorImg(),
+                currencyType = Currency(),
+                title = "Credit Card #1",
+                balance = 15267.43,
+            ),
+            Account(
+                accountImg = VectorImg(),
+                currencyType = Currency(),
+                title = "Credit Card #2",
+                balance = 1678.63,
+            ),
+
+            )
+    }
 }
