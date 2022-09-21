@@ -111,7 +111,7 @@ fun SelectLanguageDialog(
                             restartApp()
                         }
                     ) {
-                        Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
+                        Box(modifier = Modifier.defaultMinSize(minWidth = 60.dp), contentAlignment = Alignment.Center) {
                             Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
                                                             R.string.save), color = Color.White)
                         }
