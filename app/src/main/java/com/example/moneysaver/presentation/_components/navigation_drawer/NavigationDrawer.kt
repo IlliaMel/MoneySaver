@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
@@ -86,12 +87,15 @@ fun DrawerBody(
                                 Text(
                                     text = item.title,
                                     fontSize = 16.sp,
-
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                                 Text(
                                     text = item.description,
                                     fontSize = 15.sp,
-                                    color = Color(0xff4c4ab0)
+                                    color = Color(0xff4c4ab0),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                             if(item.hasSwitch) {

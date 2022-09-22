@@ -391,7 +391,9 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                 Text(
                     modifier = Modifier.padding(0.dp, 4.dp),
                     text = stringResource(R.string.delete),
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
@@ -421,7 +423,9 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                 Text(
                     modifier = Modifier.padding(0.dp, 4.dp),
                     text = stringResource(R.string.edit),
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
@@ -461,7 +465,9 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                 Text(
                     modifier = Modifier.padding(0.dp, 4.dp),
                     text = stringResource(R.string.transaction),
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

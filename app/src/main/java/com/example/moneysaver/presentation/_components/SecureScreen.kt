@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.MoneySaver
@@ -186,7 +187,7 @@ fun SecureCodeEntering(
                     ) {
                         Box(modifier = Modifier.width(80.dp), contentAlignment = Alignment.Center) {
                             Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
-                                                            R.string.cancel), color = Color.White)
+                                                            R.string.cancel), color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
 
                     }
@@ -216,7 +217,7 @@ fun SecureCodeEntering(
                     ) {
                         Box(modifier = Modifier.width(80.dp), contentAlignment = Alignment.Center) {
                             Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
-                                R.string.save), color = Color.White)
+                                R.string.save), color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
                     }
                 }

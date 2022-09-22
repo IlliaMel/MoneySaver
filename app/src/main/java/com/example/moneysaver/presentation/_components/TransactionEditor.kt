@@ -224,7 +224,10 @@ fun TransactionEditor(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally){
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
@@ -240,10 +243,19 @@ fun TransactionEditor(
                     ) {
                         Icon(modifier = Modifier.width(25.dp).height(25.dp), imageVector = Icons.Filled.Delete, contentDescription = null, tint = Color(0xffe31d0b))
                     }
-                    Text(modifier = Modifier.padding(0.dp, 4.dp), text = stringResource(R.string.delete), fontSize = 16.sp)
+                    Text(
+                        modifier = Modifier.padding(0.dp, 4.dp),
+                        text = stringResource(R.string.delete),
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
 
                 }
-                Column(horizontalAlignment = Alignment.CenterHorizontally){
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
                     Box(modifier = Modifier
                         .clip(CircleShape)
                         .width(50.dp)
@@ -256,7 +268,13 @@ fun TransactionEditor(
                     ) {
                         Icon(modifier = Modifier.width(25.dp).height(25.dp), imageVector = Icons.Filled.Edit, contentDescription = null, tint = Color(0xff0b53e3))
                     }
-                    Text(modifier = Modifier.padding(0.dp, 4.dp),text = stringResource(R.string.edit), fontSize = 16.sp)
+                    Text(
+                        modifier = Modifier.padding(0.dp, 4.dp),
+                        text = stringResource(R.string.edit),
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         } else {

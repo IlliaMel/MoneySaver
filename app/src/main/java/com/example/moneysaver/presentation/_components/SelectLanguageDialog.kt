@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -111,9 +112,15 @@ fun SelectLanguageDialog(
                             restartApp()
                         }
                     ) {
-                        Box(modifier = Modifier.defaultMinSize(minWidth = 60.dp), contentAlignment = Alignment.Center) {
-                            Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
-                                                            R.string.save), color = Color.White)
+                        Box(modifier = Modifier.width(70.dp), contentAlignment = Alignment.Center) {
+                            Text(
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.W500,
+                                text = stringResource(R.string.save),
+                                color = Color.White,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
 
                     }

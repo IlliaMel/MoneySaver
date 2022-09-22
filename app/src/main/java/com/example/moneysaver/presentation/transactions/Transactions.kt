@@ -270,6 +270,7 @@ fun Transactions(
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 BalanceField(
+                                    modifier = Modifier.weight(1f),
                                     account = chosenAccountFilter,
                                     text = stringResource(R.string.starting_balance),
                                     balance = viewModel.state.startingBalance
@@ -281,6 +282,7 @@ fun Transactions(
                                         .width(1.dp)
                                 )
                                 BalanceField(
+                                    modifier = Modifier.weight(1f),
                                     account = chosenAccountFilter,
                                     text = stringResource(R.string.ending_balance),
                                     balance = viewModel.state.endingBalance

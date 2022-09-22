@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -865,7 +866,9 @@ fun SetImg(
                                             .padding(12.dp),
                                         text = text,
                                         fontSize = 16.sp,
-                                        color = if (tabIndex == index) Color.Black else inactiveColor
+                                        color = if (tabIndex == index) Color.Black else inactiveColor,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                 }
                             }
@@ -1012,7 +1015,7 @@ fun SetImg(
                             ) {
                                 Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
                                     Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
-                                                                            R.string.submit), color = Color.White)
+                                                                            R.string.submit), color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
                                 }
 
                             }
