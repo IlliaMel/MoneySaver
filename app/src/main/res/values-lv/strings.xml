@@ -112,7 +112,7 @@
     <string name="balance_of_account">Automašīnas nodaļa</string>
     <string name="submit">Automašīnas nodaļa</string>
     <string name="login">Pievienot kategoriju</string>
-    <string name="data_management">Data Management</string>
+    <string name="data_management">Vienkārši</string>
     <string name="read_data_to_file">Read data to file</string>
     <string name="_import">Import</string>
     <string name="_export">Export</string>
@@ -129,4 +129,5 @@
     <string name="car_dept">Car Dept</string>
     <string name="dept_for_the_car">Dept for the car</string>
     <string name="add_category">Add Category</string>
+    <string name="simple">Simple</string>
 </resources>

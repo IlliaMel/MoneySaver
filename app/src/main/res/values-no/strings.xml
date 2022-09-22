@@ -93,7 +93,7 @@
     <string name="to_account">Til konto</string>
     <string name="add_at_least_two_accounts">Legg til minst 2 kontoer</string>
     <string name="transfer">Overfør</string>
-    <string name="same_account_error">Kan ikke foreta overføring til sam e-konto</string>
+    <string name="same_account_error">Kan ikke foreta overføring til sam e konto</string>
     <string name="lack_of_balance">Mangel på balanse</string>
     <string name="add_security">Legg til Sikkerhet</string>
     <string name="security_password">Sikkerhetspassord</string>
@@ -108,8 +108,8 @@
     <string name="withdrawal">Uttak</string>
     <string name="deposit">Innskudd</string>
     <string name="enter_new_password">Skriv inn nytt passord</string>
-    <string name="enter_you_password"> Skriv inn ditt passord</string>
-    <string name="balance_of_account">Kontobalanse</string>
+    <string name="enter_you_password"> Skriv inn passordet ditt</string>
+    <string name="balance_of_account">Kontobalansen</string>
     <string name="submit">Send inn</string>
     <string name="login">Logg inn</string>
     <string name="data_management">Databehandling</string>
@@ -129,4 +129,5 @@
     <string name="car_dept">Bilavdeling</string>
     <string name="dept_for_the_car">Avd. for bilen</string>
     <string name="add_category">Legg til kategori</string>
+    <string name="simple">Enkelt</string>
 </resources>

@@ -124,9 +124,10 @@
     <string name="add_goal">Добавяне на цел</string>
     <string name="all_accounts">Всички акаунти</string>
     <string name="salary">Заплата </string>
-    <string name="stash">Стайлище</string>
+    <string name="stash">Стайник</string>
     <string name="for_trip">За пътуване</string>
     <string name="car_dept">Отдел за кола</string>
     <string name="dept_for_the_car">Отдел за кола</string>
     <string name="add_category">Добавяне на категория</string>
+    <string name="simple">Просто</string>
 </resources>

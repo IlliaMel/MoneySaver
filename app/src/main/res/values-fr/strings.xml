@@ -129,4 +129,5 @@
     <string name="car_dept">Département des voitures</string>
     <string name="dept_for_the_car">Département pour la voiture</string>
     <string name="add_category">Ajouter une catégorie</string>
+    <string name="simple">Simple</string>
 </resources>

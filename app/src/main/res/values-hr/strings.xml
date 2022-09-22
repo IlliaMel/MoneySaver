@@ -126,7 +126,8 @@
     <string name="salary">Plaća </string>
     <string name="stash">Skladište</string>
     <string name="for_trip">Za put</string>
-    <string name="car_dept">Odjel za automobil</string>
+    <string name="car_dept">Odjel za automobile</string>
     <string name="dept_for_the_car">Odjel za automobil</string>
     <string name="add_category">Dodaj kategoriju</string>
+    <string name="simple">Jednostavno</string>
 </resources>

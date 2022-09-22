@@ -129,4 +129,5 @@
     <string name="car_dept">Oddělení auta</string>
     <string name="dept_for_the_car">Oddělení pro auto</string>
     <string name="add_category">Přidat kategorii</string>
+    <string name="simple">Jednoduché</string>
 </resources>

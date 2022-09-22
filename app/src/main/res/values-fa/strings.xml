@@ -22,7 +22,7 @@
     <string name="categories">دسته‌ها</string>
     <string name="transactions">معامله</string>
     <string name="spending">محاسبات</string>
-    <string name="edit"> انتخاب دسته برای ویرایش</string>
+    <string name="edit"> دسته را برای ویرایش</string>
     <string name="chose_category_to_edit">جستجو</string>
     <string name="search">افزودن تراکنش</string>
     <string name="add_transaction">موجودی اولیه</string>
@@ -42,8 +42,8 @@
     <string name="november">دسامبر</string>
     <string name="december">یکشنبه</string>
     <string name="sunday">دوشنبه</string>
-    <string name="monday">سه‌شنبه</string>
-    <string name="tuesday">چهارشنبه </string>
+    <string name="monday">سه شنبه</string>
+    <string name="tuesday">چهارشنبه انتخاب کنید. </string>
     <string name="wednesday">پنجشنبه</string>
     <string name="thursday">جمعه</string>
     <string name="friday">شنبه</string>
@@ -86,13 +86,13 @@
     <string name="income">لطفا اتصال اینترنت را روشن کنید</string>
     <string name="no_internet_message">برگشت</string>
     <string name="back">ارز اصلی</string>
-    <string name="main_currency">برای خرج است</string>
+    <string name="main_currency">برای خرج کردن</string>
     <string name="is_for_spending">مبلغ پول</string>
     <string name="amount_of_money">معامله</string>
     <string name="transaction">به حساب</string>
     <string name="to_account">حداقل 2 حساب اضافه کنید</string>
     <string name="add_at_least_two_accounts">انتقال</string>
-    <string name="transfer">انتقال به سام امکان پذیر نیست حساب الکترونیکی</string>
+    <string name="transfer">نمیتوان به سام انتقال داد حساب الکترونیکی</string>
     <string name="same_account_error">عدم موجودی</string>
     <string name="lack_of_balance">افزودن امنیت</string>
     <string name="add_security">رمز امنیتی</string>
@@ -112,7 +112,7 @@
     <string name="balance_of_account"> ارسال </string>
     <string name="submit"> ورود به سیستم </string>
     <string name="login"> مدیریت داده ها </string>
-    <string name="data_management"> خواندن داده ها در فایل</string>
+    <string name="data_management"> خواندن داده ها به فایل</string>
     <string name="read_data_to_file">واردات</string>
     <string name="_import">صادرات</string>
     <string name="_export">نوشتن داده ها از فایل</string>
@@ -125,8 +125,9 @@
     <string name="all_accounts">حقوق </string>
     <string name="salary"> مخفیگاه</string>
     <string name="stash">برای سفر</string>
-    <string name="for_trip">بخش خودرو</string>
-    <string name="car_dept">بخش برای خودرو</string>
+    <string name="for_trip">دپارتمان خودرو</string>
+    <string name="car_dept">بخش خودرو</string>
     <string name="dept_for_the_car">افزودن دسته</string>
-    <string name="add_category">Add Category</string>
+    <string name="add_category">ساده</string>
+    <string name="simple">Simple</string>
 </resources>

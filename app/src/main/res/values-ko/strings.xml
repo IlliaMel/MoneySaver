@@ -129,4 +129,5 @@
     <string name="car_dept">자동차 부서</string>
     <string name="dept_for_the_car">자동차 부서</string>
     <string name="add_category">카테고리 추가</string>
+    <string name="simple">단순</string>
 </resources>

@@ -129,4 +129,5 @@
     <string name="car_dept">車のデパート</string>
     <string name="dept_for_the_car">車のデパート</string>
     <string name="add_category">カテゴリを追加</string>
+    <string name="simple">シンプル</string>
 </resources>

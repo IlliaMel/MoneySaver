@@ -93,7 +93,7 @@
     <string name="to_account">Á reikning</string>
     <string name="add_at_least_two_accounts">Bæta við að minnsta kosti 2 reikningum</string>
     <string name="transfer">Flytja</string>
-    <string name="same_account_error">Getur ekki millifært á sam E-reikningur</string>
+    <string name="same_account_error">Getur ekki millifært á sam e reikningur</string>
     <string name="lack_of_balance">Skortur á jafnvægi</string>
     <string name="add_security">Bæta við öryggi</string>
     <string name="security_password">Öryggislykilorði</string>
@@ -102,10 +102,10 @@
     <string name="save">Vista</string>
     <string name="cancel">Hætta við</string>
     <string name="new_password_added">Nýju lykilorði bætt við</string>
-    <string name="password_must_have_six_digits">Lykilorð verður að hafa sex tölustafi</string>
+    <string name="password_must_have_six_digits">Lykilorð verður að vera sex tölustafir</string>
     <string name="use_Fingerprint">Notaðu fingrafar</string>
     <string name="password_is_not_correct">Lykilorð er ekki rétt</string>
-    <string name="withdrawal">Uttekt</string>
+    <string name="withdrawal">Uppdráttur</string>
     <string name="deposit">Innborgun</string>
     <string name="enter_new_password">Sláðu inn nýtt lykilorð</string>
     <string name="enter_you_password"> Sláðu inn lykilorð</string>
@@ -117,7 +117,7 @@
     <string name="_import">Flytja inn</string>
     <string name="_export">Flytja út</string>
     <string name="write_data_from_file">Skrifa gögn úr skrá</string>
-    <string name="login_with_fingerprint">Innskráning með fingrafar</string>
+    <string name="login_with_fingerprint">Innskráning með fingrafari</string>
     <string name="authentication_error">Auðkenningarvilla</string>
     <string name="authentication_failed">Auðkenning mistókst</string>
     <string name="add_bank_account">Bæta við bankareikningi</string>
@@ -127,6 +127,7 @@
     <string name="stash">Stash</string>
     <string name="for_trip">Fyrir ferð</string>
     <string name="car_dept">Bíladeild</string>
-    <string name="dept_for_the_car">Bíladeild</string>
+    <string name="dept_for_the_car">Afdeild fyrir bílinn</string>
     <string name="add_category">Bæta við flokki</string>
+    <string name="simple">Einfalt</string>
 </resources>

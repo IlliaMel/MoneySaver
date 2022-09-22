@@ -128,5 +128,6 @@
     <string name="for_trip">Por vojaĝo</string>
     <string name="car_dept">Aŭta Depto</string>
     <string name="dept_for_the_car">Departemento por la aŭto</string>
-    <string name="add_category">Aldonu Kategorion</string>
+    <string name="add_category">Aldoni Kategorion</string>
+    <string name="simple">Simpla</string>
 </resources>

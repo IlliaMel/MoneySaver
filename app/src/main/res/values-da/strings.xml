@@ -129,4 +129,5 @@
     <string name="car_dept">Bilafdeling</string>
     <string name="dept_for_the_car">Afd. for bilen</string>
     <string name="add_category">Tilføj kategori</string>
+    <string name="simple">Simpelt</string>
 </resources>

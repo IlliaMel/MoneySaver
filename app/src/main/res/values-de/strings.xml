@@ -81,7 +81,7 @@
     <string name="expense">Ausgaben</string>
     <string name="notes">Notizen</string>
     <string name="delete">Löschen</string>
-    <string name="no_account_or_category_message">Mindestens 1 Konto und 1 Konto hinzufügen Kategorie</string>
+    <string name="no_account_or_category_message">Fügen Sie mindestens 1 Konto und 1 hinzu Kategorie</string>
     <string name="earning">Verdienen</string>
     <string name="income">Einkommen</string>
     <string name="no_internet_message">Bitte schalten Sie die Internetverbindung ein</string>
@@ -93,7 +93,7 @@
     <string name="to_account">Zum Konto</string>
     <string name="add_at_least_two_accounts">Fügen Sie mindestens 2 Konten hinzu</string>
     <string name="transfer">Überweisung</string>
-    <string name="same_account_error">Überweisung an sam nicht möglich e-Konto</string>
+    <string name="same_account_error">Überweisung an sam ist nicht möglich e-Konto</string>
     <string name="lack_of_balance">Mangelndes Guthaben</string>
     <string name="add_security">Sicherheit hinzufügen</string>
     <string name="security_password">Sicherheitspasswort</string>
@@ -129,4 +129,5 @@
     <string name="car_dept">Autoabteilung</string>
     <string name="dept_for_the_car">Abteilung für das Auto</string>
     <string name="add_category">Kategorie hinzufügen</string>
+    <string name="simple">Einfach</string>
 </resources>

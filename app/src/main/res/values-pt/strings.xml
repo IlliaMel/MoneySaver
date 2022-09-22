@@ -128,5 +128,6 @@
     <string name="for_trip">Para viagem</string>
     <string name="car_dept">Departamento de carro</string>
     <string name="dept_for_the_car">Departamento para o carro</string>
-    <string name="add_category">Adicionar categoria</string>
+    <string name="add_category">Adicionar Categoria</string>
+    <string name="simple">Simples</string>
 </resources>

@@ -404,11 +404,11 @@ fun EditAccount(
 
 fun whichTypeOfAccount(account: Account) : String{
     return if(account.isForDebt)
-        "Dept"
+        MainActivity.instance!!.getString(R.string.debt)
     else if (account.isForGoal)
-        "Goal"
+        MainActivity.instance!!.getString(R.string.goal)
     else
-        "Simple"
+        MainActivity.instance!!.getString(R.string.simple)
 }
 
 

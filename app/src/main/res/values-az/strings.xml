@@ -109,15 +109,15 @@
     <string name="deposit"> Şifrənizi Daxil Edin</string>
     <string name="enter_new_password">Hesab balansı</string>
     <string name="enter_you_password">Təqdim et</string>
-    <string name="balance_of_account">Giriş</string>
+    <string name="balance_of_account">Daxil ol</string>
     <string name="submit">Məlumatların İdarə Edilməsi</string>
     <string name="login">Faylıya verilənləri oxuyun</string>
     <string name="data_management">İdxal</string>
     <string name="read_data_to_file">İxrac</string>
-    <string name="_import">Fayldan məlumat yazın</string>
+    <string name="_import">Fayldan verilənləri yazın</string>
     <string name="_export">Barmaq izi ilə daxil olun</string>
-    <string name="write_data_from_file">Autentifikasiya xətası</string>
-    <string name="login_with_fingerprint">Autentifikasiya alınmadı</string>
+    <string name="write_data_from_file">Doğrulama Xətası</string>
+    <string name="login_with_fingerprint">Doğrulama Başa çatmadı</string>
     <string name="authentication_error">Bank hesabı əlavə edin</string>
     <string name="authentication_failed">Məqsəd əlavə edin</string>
     <string name="add_bank_account">Bütün hesablar</string>
@@ -126,7 +126,8 @@
     <string name="salary">Səyahət üçün</string>
     <string name="stash">Maşın Departamenti</string>
     <string name="for_trip">Avtomobil Departamenti</string>
-    <string name="car_dept">Kateqoriya əlavə edin</string>
-    <string name="dept_for_the_car">Dept for the car</string>
+    <string name="car_dept">Kateqoriya əlavə et</string>
+    <string name="dept_for_the_car">Sadə</string>
     <string name="add_category">Add Category</string>
+    <string name="simple">Simple</string>
 </resources>

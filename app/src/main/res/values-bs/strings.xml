@@ -80,7 +80,7 @@
     <string name="to_category">Troškovi</string>
     <string name="expense">Napomene</string>
     <string name="notes">Izbriši</string>
-    <string name="delete">Dodajte najmanje 1 račun i 1 kategorija</string>
+    <string name="delete">Dodaj najmanje 1 račun i 1 kategorija</string>
     <string name="no_account_or_category_message">Zarada</string>
     <string name="earning">Prihod</string>
     <string name="income">Molimo uključite internet konekciju</string>
@@ -128,5 +128,6 @@
     <string name="for_trip">Odeljenje automobila</string>
     <string name="car_dept">Odeljenje za auto</string>
     <string name="dept_for_the_car">Dodaj kategoriju</string>
-    <string name="add_category">Add Category</string>
+    <string name="add_category">Jednostavno</string>
+    <string name="simple">Simple</string>
 </resources>

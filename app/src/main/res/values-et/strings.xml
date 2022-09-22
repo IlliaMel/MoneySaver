@@ -107,7 +107,7 @@
     <string name="password_is_not_correct">Autoosakond</string>
     <string name="withdrawal">Autoosakond</string>
     <string name="deposit">Lisa kategooria</string>
-    <string name="enter_new_password">Enter New Password</string>
+    <string name="enter_new_password">Lihtne</string>
     <string name="enter_you_password">Enter You Password</string>
     <string name="balance_of_account">Balance Of Account</string>
     <string name="submit">Submit</string>
@@ -129,4 +129,5 @@
     <string name="car_dept">Car Dept</string>
     <string name="dept_for_the_car">Dept for the car</string>
     <string name="add_category">Add Category</string>
+    <string name="simple">Simple</string>
 </resources>

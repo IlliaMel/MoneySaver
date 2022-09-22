@@ -121,12 +121,13 @@
     <string name="authentication_error">Ավելացնել նպատակը</string>
     <string name="authentication_failed">Բոլոր հաշիվները</string>
     <string name="add_bank_account">Աշխատավարձը </string>
-    <string name="add_goal">Ստաշ</string>
+    <string name="add_goal">Պահպանման</string>
     <string name="all_accounts">Ուղևորության համար</string>
     <string name="salary">Մեքենաների բաժին</string>
-    <string name="stash">Ավտոմեքենայի բաժին</string>
+    <string name="stash">Մեքենայի բաժին</string>
     <string name="for_trip">Ավելացնել կատեգորիա</string>
-    <string name="car_dept">Car Dept</string>
+    <string name="car_dept">Պարզ</string>
     <string name="dept_for_the_car">Dept for the car</string>
     <string name="add_category">Add Category</string>
+    <string name="simple">Simple</string>
 </resources>

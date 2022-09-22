@@ -129,4 +129,5 @@
     <string name="car_dept">Car Dept</string>
     <string name="dept_for_the_car">Dept for the car</string>
     <string name="add_category">Add Category</string>
+    <string name="simple">Simple</string>
 </resources>

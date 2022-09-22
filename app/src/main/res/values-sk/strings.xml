@@ -15,7 +15,7 @@
     <string name="settings">Nastavenia</string>
     <string name="language">Jazyk</string>
     <string name="defaultStr">Predvolený</string>
-    <string name="theme">Téma</string>
+    <string name="theme">Motív</string>
     <string name="light">Svetlo</string>
     <string name="notifications">Upozornenia</string>
     <string name="accounts">Účty</string>
@@ -49,11 +49,11 @@
     <string name="friday">Piatok</string>
     <string name="saturday">Sobota</string>
     <string name="currency_type">Typ meny</string>
-    <string name="delete_category">Odstrániť kategóriu</string>
+    <string name="delete_category">Vymazať kategóriu</string>
     <string name="name">Názov</string>
     <string name="choose_account_img">Vybrať obrázok účtu</string>
     <string name="edit_category">Upraviť kategóriu</string>
-    <string name="new_category">Nová kategória</string>
+    <string name="new_category">Novú kategóriu</string>
     <string name="account_description">Popis účtu</string>
     <string name="choose_currency_type">Vybrať typ meny</string>
     <string name="image">Obrázok</string>
@@ -129,4 +129,5 @@
     <string name="car_dept">Oddelenie auta</string>
     <string name="dept_for_the_car">Oddelenie pre auto</string>
     <string name="add_category">Pridať kategóriu</string>
+    <string name="simple">Jednoduché</string>
 </resources>

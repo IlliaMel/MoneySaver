@@ -128,5 +128,6 @@
     <string name="for_trip">Untuk perjalanan</string>
     <string name="car_dept">Dept Mobil</string>
     <string name="dept_for_the_car">Dept untuk mobil</string>
-    <string name="add_category">Tambah Kategori</string>
+    <string name="add_category">Tambahkan Kategori</string>
+    <string name="simple">Sederhana</string>
 </resources>

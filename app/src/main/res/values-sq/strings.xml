@@ -46,7 +46,7 @@
     <string name="tuesday">e martë</string>
     <string name="wednesday">e mërkurë </string>
     <string name="thursday">E enjte</string>
-    <string name="friday">E premte</string>
+    <string name="friday">E Premte</string>
     <string name="saturday">E shtunë</string>
     <string name="currency_type">Lloji i monedhës</string>
     <string name="delete_category">Fshi kategorinë</string>
@@ -68,21 +68,21 @@
     <string name="credit_limit">Limiti i kredisë</string>
     <string name="delete_account">Fshi llogarinë</string>
     <string name="select_range">Zgjidh diapazonin</string>
-    <string name="month">Muajin</string>
+    <string name="month">Muaji</string>
     <string name="from">Nga</string>
     <string name="to">Në</string>
     <string name="all_time">Gjithë kohën</string>
     <string name="select_day">Zgjidh ditën</string>
-    <string name="Week">javën</string>
+    <string name="Week">Javën</string>
     <string name="today">Sot</string>
-    <string name="year">Viti</string>
+    <string name="year">Vitin</string>
     <string name="from_account">Nga llogaria</string>
     <string name="to_category">Te kategoria</string>
     <string name="expense">Shpenzimet</string>
     <string name="notes">Shënimet</string>
     <string name="delete">Fshi</string>
     <string name="no_account_or_category_message">Shto të paktën 1 llogari dhe 1 kategoria</string>
-    <string name="earning">Fitimet</string>
+    <string name="earning">Fitimi</string>
     <string name="income">Të ardhurat</string>
     <string name="no_internet_message">Ju lutemi aktivizoni lidhjen me internetin</string>
     <string name="back">Prapa</string>
@@ -93,7 +93,7 @@
     <string name="to_account">Në llogari</string>
     <string name="add_at_least_two_accounts">Shto të paktën 2 llogari</string>
     <string name="transfer">Transfero</string>
-    <string name="same_account_error">Nuk mund të bëjë transferim në sam e llogarisë</string>
+    <string name="same_account_error">Nuk mund të bëhet transferim në sam e llogarisë</string>
     <string name="lack_of_balance">Mungesa e gjendjes</string>
     <string name="add_security">Shto fjalëkalimin e sigurisë</string>
     <string name="security_password">Fjalëkalimin e sigurisë</string>
@@ -127,6 +127,7 @@
     <string name="stash">Stash</string>
     <string name="for_trip">Për udhëtim</string>
     <string name="car_dept">Departamenti i makinave</string>
-    <string name="dept_for_the_car">Departamenti për makinën</string>
+    <string name="dept_for_the_car">Departamenti për veturën</string>
     <string name="add_category">Shto kategorinë</string>
+    <string name="simple">E thjeshtë</string>
 </resources>
