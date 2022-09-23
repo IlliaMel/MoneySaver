@@ -12,7 +12,7 @@ import java.io.Serializable
 
 
 data class VectorImg(
-    var img: Int = R.drawable.ic_account_img_1,
+    var img: Int = R.drawable.ic_account_img_0,
     var innerColor: Color =  Color(255, 255, 255, 255),
     var externalColor: Color =  externalColorGray
 ) : Serializable  {
@@ -37,7 +37,12 @@ object AccountsData {
         VectorImg(img = R.drawable.ic_account_img_7),
         VectorImg(img = R.drawable.ic_account_img_8),
         VectorImg(img = R.drawable.ic_account_img_9),
-        VectorImg(img = R.drawable.ic_account_img_10),
+        VectorImg(img = R.drawable.ic_account_img_9_0),
+        VectorImg(img = R.drawable.ic_account_img_9_1),
+        VectorImg(img = R.drawable.ic_account_img_9_2),
+        VectorImg(img = R.drawable.ic_account_img_9_3),
+        VectorImg(img = R.drawable.ic_account_img_9_4),
+        VectorImg(img = R.drawable.ic_account_img_9_5),
     )
 
 

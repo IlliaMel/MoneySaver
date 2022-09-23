@@ -8,6 +8,14 @@ plugins {
 android {
     compileSdk 32
 
+    android.sourceSets {
+        main.res.srcDirs = [
+                'src/main/res/layouts/abc',
+                'src/main/res/layouts',
+                'src/main/res'
+                ]
+    }
+
     defaultConfig {
         applicationId "com.example.moneysaver"
         minSdk 21

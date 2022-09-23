@@ -11,6 +11,59 @@
         <entry key="..\:/android/1/app/src/main/res/layout/layout.xml" value="0.16168478260869565" />
         <entry key="..\:/android/1/app/src/main/res/layout/time_fragment.xml" value="0.10344827586206896" />
         <entry key="..\:/android/MoneySaver/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1595" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_0.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_0_1.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_1.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_10.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_2.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_3.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_4.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_5.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_6.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_7.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_8.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_9.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_9_0.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_9_1.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_9_2.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_9_3.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_9_4.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_account_img_9_5.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_1.xml" value="0.1" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_2.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_3.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_4.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_5.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_6.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_7.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_8.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_0.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_1.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_2.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_3.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_4.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_5.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_6.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_7.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_8.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_0.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_1.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_2.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_3.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_4.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_5.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_6.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_7.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_8.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_9.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_9_0.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_9_1.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_9_2.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_9_3.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/drawable/ic_categ_icn_9_9_9_4.xml" value="0.112" />
+        <entry key="..\:/android/MoneySaver/app/src/main/res/layouts/abc/drawable/ic_categ_icn_7.xml" value="0.112" />
         <entry key="..\:/android/MoneySaverFinal/app/src/main/res/drawable/logo.xml" value="0.1" />
         <entry key="..\:/android/MoneySaverFinal/app/src/main/res/layout/activity_main.xml" value="0.24394550958627648" />
         <entry key="..\:/android/MoneySaverFinal/app/src/main/res/layout/time_fragment.xml" value="0.24394550958627648" />
