@@ -7,6 +7,33 @@ val Purple500 = Color(0xFF6200EE)
 val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 
+val darkThemeBackgroundColor = Color(0xFF1F1F1F)
+val darkThemeTextColor = Color(0xFFFFFFFF)
+
+val textPrimaryColor = Color(0xFFFFFFFF)
+val textSecondaryColor = Color(0xFFDDDDDD)
+
+val backgroundPrimaryColor = Color(0xFF0C0C0C)
+val backgroundSecondaryColor = Color(0xFF1F1F1F)
+val backgroundSecondaryLighterColor = Color(0xFF2F2F2F)
+
+val primaryColor = Color(0xFF171717)
+val secondaryColor = Color(0xFF252525)
+
+val bordersPrimaryColor = Color(0xFF292929)
+val bordersSecondaryColor = Color(0xFF3A3A3A)
+
+val calculatorButton = Color(23, 23, 23, 225)
+val calculatorButtonNumbers = Color(49, 49, 49, 221)
+val calculatorBorderColor = Color(0xFF3A3A3A)
+
+/*
+
+val calculatorButton = Color(236, 236, 236, 225)
+val calculatorButtonNumbers = Color(255, 255, 255, 221)
+val calculatorBorderColor = Color(209, 209, 209, 212)
+
+ */
 
 
 val whiteSurface = Color(0xFFFFFFFF)
@@ -21,9 +48,7 @@ val inactiveColor = Color(0xFF777777)
 val inactiveColorTab = Color(0x8EBBBBBB)
 val externalColorGray = Color(105, 105, 105, 255)
 
-val calculatorButton = Color(236, 236, 236, 225)
-val calculatorButtonNumbers = Color(255, 255, 255, 221)
-val calculatorBorderColor = Color(209, 209, 209, 212)
+
 
 val colorDismissToDelete  = Color(175, 73, 73, 212)
 val colorDismissToEdit  = Color(73, 127, 175, 212)

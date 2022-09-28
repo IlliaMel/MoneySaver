@@ -39,10 +39,7 @@ import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivity.Companion.APP_LANGUAGE
-import com.example.moneysaver.presentation._components.DrawerBody
-import com.example.moneysaver.presentation._components.DrawerHeader
-import com.example.moneysaver.presentation._components.SecureCodeEntering
-import com.example.moneysaver.presentation._components.SelectLanguageDialog
+import com.example.moneysaver.presentation._components.*
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
 import com.example.moneysaver.presentation._components.notifications.AlarmService
@@ -54,6 +51,7 @@ import com.example.moneysaver.presentation.categories.Categories
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.presentation.utils.*
 import com.example.moneysaver.ui.theme.MoneySaverTheme
+import com.example.moneysaver.ui.theme.backgroundPrimaryColor
 import com.example.moneysaver.ui.theme.lightGrayTransparent
 import com.example.moneysaver.ui.theme.whiteSurface
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -224,7 +222,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
+        color = backgroundPrimaryColor
     ) {
         val scaffoldState = rememberScaffoldState()
         val scope = rememberCoroutineScope()
@@ -303,6 +301,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
 
         Scaffold(
             scaffoldState = scaffoldState,
+            backgroundColor = backgroundPrimaryColor,
+            drawerBackgroundColor = backgroundPrimaryColor,
             drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
             drawerContent = {
                 DrawerHeader()
@@ -329,14 +329,13 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                         apply()
                     }
                 }
-
                 DrawerBody(
                     blocks = listOf(
                         MenuBlock(title = stringResource(R.string.settings), items = listOf(
                             MenuItem(number = 0 , title = stringResource(R.string.language), description = if(appLanguage.value!=null) appLanguage.value!! else stringResource(
                                 R.string.defaultStr), icon = Icons.Default.Place),
                             MenuItem(number = 1 , title = stringResource(R.string.theme), description = stringResource(
-                                                            R.string.light), icon = Icons.Default.Info),
+                                                            R.string.light), icon = Icons.Default.Build),
                             MenuItem(
                                 number = 2,
                                 title = stringResource(R.string.notifications),
@@ -358,7 +357,13 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                             MenuItem(number = 5 , title = stringResource(R.string._import), description = stringResource(R.string.read_data_to_file), icon = Icons.Default.Edit),
                             MenuItem(number = 6 , title = stringResource(R.string._export), description = stringResource(
                                                             R.string.write_data_from_file), icon = Icons.Default.Edit)
+                        )),
+
+                        MenuBlock(title = stringResource(R.string.Info), items = listOf(
+                            MenuItem(number = 7 , title = "Wipe Data", description = "Delete All Information", icon = Icons.Default.Delete),
+                            MenuItem(number = 8 , title = "Info", description = "Info about us", icon = Icons.Default.Info)
                         ))
+
                     ),
                     onItemClick = {
                         when (it.number) {
@@ -425,13 +430,13 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(whiteSurface)
+                    .background(backgroundPrimaryColor)
             ) {
                 Column(
                     modifier = Modifier
                         .weight(10f)
                         .fillMaxWidth()
-                        .background(whiteSurface)
+                        .background(backgroundPrimaryColor)
                 ) {
                     when (selectedTabIndex) {
                         0 -> Accounts(
@@ -487,6 +492,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                 }
                 if(selectedTabIndex != 3)
                 Row(modifier = Modifier.weight(0.8f)) {
+
                     TabsForScreens(){
                         selectedTabIndex = it
                     }
@@ -506,7 +512,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White),
+                    .background(backgroundPrimaryColor),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(modifier = Modifier.size(100.dp))

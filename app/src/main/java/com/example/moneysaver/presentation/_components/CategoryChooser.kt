@@ -15,14 +15,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
+import com.example.moneysaver.ui.theme.backgroundPrimaryColor
+import com.example.moneysaver.ui.theme.backgroundSecondaryColor
+import com.example.moneysaver.ui.theme.textPrimaryColor
 
 @Composable
 fun CategoryChooser(selectedCategory: MutableState<Category?>, categories: List<Category>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xffeeeeee))
-            .height(300.dp),
+            .background(backgroundSecondaryColor)
+            .height(250.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         LazyVerticalGrid(
@@ -35,11 +38,11 @@ fun CategoryChooser(selectedCategory: MutableState<Category?>, categories: List<
                         .clickable {
                             selectedCategory.value = it
                         }
-                        .padding(5.dp),
+                        .padding(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    VectorIcon(height = 60.dp , width = 60.dp, vectorImg = it.categoryImg, onClick = {selectedCategory.value = it}, cornerSize = 50.dp)
-                    Text(text = it.title, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    VectorIcon(modifierIcn = Modifier.padding(8.dp),height = 50.dp , width = 50.dp, vectorImg = it.categoryImg, onClick = {selectedCategory.value = it}, cornerSize = 50.dp)
+                    Text(text = it.title, color = textPrimaryColor, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
             }
         }

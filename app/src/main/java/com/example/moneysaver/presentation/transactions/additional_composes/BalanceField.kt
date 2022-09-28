@@ -1,5 +1,6 @@
 package com.example.moneysaver.presentation.transactions.additional_composes
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
@@ -13,16 +14,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.domain.model.Account
 import com.example.moneysaver.domain.model.Currency
-import com.example.moneysaver.ui.theme.currencyColor
-import com.example.moneysaver.ui.theme.currencyColorSpent
-import com.example.moneysaver.ui.theme.currencyColorZero
+import com.example.moneysaver.ui.theme.*
 import kotlin.math.abs
 
 @Composable
 fun BalanceField(modifier: Modifier = Modifier, account: Account, text: String, balance: Double) {
     Column(
         modifier = modifier
-            .padding(8.dp),
+            .padding(8.dp).background(backgroundPrimaryColor),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -30,6 +29,7 @@ fun BalanceField(modifier: Modifier = Modifier, account: Account, text: String, 
             fontSize = 16.sp,
             fontWeight = FontWeight.W500,
             maxLines = 1,
+            color = textPrimaryColor,
             overflow = TextOverflow.Ellipsis
         )
         val balanceText: String = (if(balance>0) "+" else (if(balance < 0) "-" else ""))+account.currencyType.currency + " "+ abs(balance)

@@ -2,6 +2,7 @@ package com.example.moneysaver.presentation._components
 
 import android.media.Image
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuBlock
 import com.example.moneysaver.presentation._components.navigation_drawer.MenuItem
+import com.example.moneysaver.ui.theme.*
 
 @Composable
 fun DrawerHeader() {
@@ -33,6 +36,7 @@ fun DrawerHeader() {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.25f)
+            .background(backgroundPrimaryColor)
             .padding(vertical = 0.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -41,6 +45,7 @@ fun DrawerHeader() {
             painter = painterResource(id = R.drawable.logo_transparent),
             contentDescription = null,
             contentScale = ContentScale.Crop,
+            colorFilter = ColorFilter.tint(textSecondaryColor)
         )
     }
 }
@@ -53,10 +58,10 @@ fun DrawerBody(
     onSwitchClick: (MenuItem) -> Unit = {},
 
 ) {
-    LazyColumn(modifier) {
+    LazyColumn(modifier.background(backgroundPrimaryColor)) {
         items(blocks) { block ->
 
-            Column(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp)) {
+            Column(modifier = Modifier.background(backgroundPrimaryColor).padding(0.dp, 16.dp, 0.dp, 0.dp)) {
                 Text(
                     modifier = Modifier.padding(16.dp, 4.dp),
                     text = block.title,
@@ -67,11 +72,12 @@ fun DrawerBody(
                 for(i in 0 until block.items.size) {
                     val item = block.items[i]
 
-                    Column() {
+                    Column(modifier = Modifier.background(backgroundPrimaryColor)) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(IntrinsicSize.Min)
+                                .background(backgroundPrimaryColor)
                                 .clickable {
                                     onItemClick(item)
                                 }
@@ -80,15 +86,17 @@ fun DrawerBody(
                         ) {
                             Icon(
                                 imageVector = item.icon,
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = textPrimaryColor
                             )
                             Spacer(modifier = Modifier.width(16.dp))
-                            Column(modifier = Modifier.weight(1f).padding(0.dp, 8.dp)) {
+                            Column(modifier = Modifier.weight(1f).background(backgroundPrimaryColor).padding(0.dp, 8.dp)) {
                                 Text(
                                     text = item.title,
                                     fontSize = 16.sp,
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = textPrimaryColor
                                 )
                                 Text(
                                     text = item.description,
@@ -116,14 +124,14 @@ fun DrawerBody(
                             }
                         }
                         if(i<block.items.size-1) {
-                            Row {
-                                Spacer(modifier = Modifier.width(56.dp))
-                                Divider()
+                            Row (modifier = Modifier.background(backgroundPrimaryColor)){
+                                Spacer(modifier = Modifier.background(backgroundPrimaryColor).width(56.dp))
+                                Divider(modifier = Modifier.background(bordersPrimaryColor))
                             }
                         }
                     }
                 }
-                Divider()
+                Divider(modifier = Modifier.background(bordersPrimaryColor))
 
             }
 

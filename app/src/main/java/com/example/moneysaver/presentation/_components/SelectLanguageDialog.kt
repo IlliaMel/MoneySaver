@@ -29,9 +29,7 @@ import com.example.moneysaver.data.data_base._test_data.CategoriesData
 import com.example.moneysaver.domain.model.Category
 import com.example.moneysaver.presentation.MainActivity
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
-import com.example.moneysaver.ui.theme.dividerColor
-import com.example.moneysaver.ui.theme.inactiveColorTab
-import com.example.moneysaver.ui.theme.transparentColorForBottomSheet
+import com.example.moneysaver.ui.theme.*
 import org.intellij.lang.annotations.Language
 
 val languageList = listOf("Default", "Albanian","Arabic", "Armenian", "Azerbaijani", "Bosnian", "Bulgarian",
@@ -60,8 +58,7 @@ fun SelectLanguageDialog(
                     .height(330.dp)
                     .width(300.dp)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(Color.White),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .background(backgroundSecondaryColor)
             ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxHeight(0.83f).padding(8.dp,12.dp,8.dp,8.dp)
@@ -85,6 +82,7 @@ fun SelectLanguageDialog(
                                     .padding(8.dp, 16.dp)
                             ) {
                                 RadioButton(
+
                                     selected = isSelectedItem(it),
                                     onClick = null
                                 )
@@ -93,13 +91,14 @@ fun SelectLanguageDialog(
                                         .fillMaxWidth()
                                         .padding(8.dp, 0.dp, 0.dp),
                                     text = it,
-                                    fontSize = 20.sp
+                                    fontSize = 20.sp,
+                                    color = textPrimaryColor
                                 )
                             }
                         }
                     )
                 }
-                Box(modifier = Modifier.fillMaxSize().background(transparentColorForBottomSheet), contentAlignment = Alignment.Center){
+                Box(modifier = Modifier.fillMaxSize().background(backgroundSecondaryColor), contentAlignment = Alignment.Center){
                     Button(
                         modifier = Modifier.padding(4.dp,4.dp,4.dp,4.dp),
                         shape = RoundedCornerShape(30.dp),

@@ -107,7 +107,7 @@ fun EditAccount(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(gray)
+            .background(backgroundPrimaryColor)
     ) {
 
 
@@ -188,21 +188,22 @@ fun EditAccount(
 
             )}, onCancelIconClick = {onCancelIconClick()})
        // dividerForTopBar()
+        Divider(modifier = Modifier.background(bordersSecondaryColor).height(2.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(whiteSurface),
+                ,
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.Start
         ) {
 
 
-            Column(modifier = Modifier.shadow(elevation = 1.dp)) {
+            Column(modifier = Modifier.shadow(elevation = 1.dp, ambientColor = textPrimaryColor)) {
 
                 Text(
                     modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
                     text = stringResource(R.string.account),
-                    color = Color.Black,
+                    color = textPrimaryColor,
                     fontWeight = FontWeight.W500,
                     fontSize = 18.sp
                 )
@@ -226,18 +227,20 @@ fun EditAccount(
                     startPadding = 16.dp,
                     topPadding = 8.dp)
             }
+            Divider(modifier = Modifier.background(bordersSecondaryColor))
 
             Box(modifier = Modifier
-                .background(gray)
+                .background(backgroundSecondaryColor)
                 .height(15.dp)
                 .fillMaxWidth())
 
-            Column(modifier = Modifier.shadow(elevation = 1.dp)){
+            Divider(modifier = Modifier.background(bordersSecondaryColor))
+            Column(modifier = Modifier.shadow(elevation = 1.dp, ambientColor = textPrimaryColor)){
 
                 Text(
                     modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
                     text = stringResource(R.string.balance),
-                    color = Color.Black,
+                    color = textPrimaryColor,
                     fontWeight = FontWeight.W500,
                     fontSize = 18.sp
                 )
@@ -252,7 +255,7 @@ fun EditAccount(
                     Text(
                         modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
                         text = stringResource(R.string.balance),
-                        color = Color.Black,
+                        color = textPrimaryColor,
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp
                     )
@@ -276,7 +279,7 @@ fun EditAccount(
                     2-> moneyValue = stringResource(R.string.main_goal)
                 }
 
-                Divider()
+                Divider(modifier = Modifier.background(bordersPrimaryColor))
 
                     Row(
                         modifier = Modifier
@@ -289,7 +292,7 @@ fun EditAccount(
                         Text(
                             modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
                             text = moneyValue,
-                            color = Color.Black,
+                            color = textPrimaryColor,
                             fontWeight = FontWeight.W400,
                             fontSize = 16.sp
                         )
@@ -319,7 +322,6 @@ fun EditAccount(
                         )
                     }
 
-                Divider()
                /*
                 Row(modifier = Modifier
                     .padding(0.dp, 0.dp, 0.dp, 0.dp)
@@ -344,15 +346,19 @@ fun EditAccount(
                 */
             }
 
+            Divider(modifier = Modifier.background(bordersSecondaryColor))
+
             Box(modifier = Modifier
-                .background(gray)
+                .background(backgroundSecondaryColor)
                 .height(20.dp)
                 .fillMaxWidth())
+
+            Divider(modifier = Modifier.background(bordersSecondaryColor))
 
             Row(modifier = Modifier
                 .padding(0.dp, 0.dp, 0.dp, 0.dp)
                 .clickable { onDeleteAccount(account) }
-                .shadow(elevation = 1.dp)
+                .shadow(elevation = 1.dp, ambientColor = textPrimaryColor)
                 .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically){
@@ -371,8 +377,13 @@ fun EditAccount(
                     fontSize = 16.sp
                 )
 
-
             }
+            Divider(modifier = Modifier.background(bordersSecondaryColor))
+
+            Box(modifier = Modifier
+                .background(backgroundSecondaryColor)
+                .fillMaxHeight()
+                .fillMaxWidth())
 
 
         }
@@ -431,7 +442,7 @@ fun accountEditInfoText(
             Text(
                 modifier = Modifier.padding(startPadding, topPadding,endPadding, 0.dp),
                 text = upperText,
-                color = Color.Black,
+                color = textPrimaryColor,
                 fontWeight = FontWeight.W400,
                 fontSize = 16.sp
             )
@@ -442,7 +453,7 @@ fun accountEditInfoText(
                 fontWeight = FontWeight.W400,
                 fontSize = 16.sp
             )
-        Divider()
+        Divider(modifier = Modifier.background(bordersPrimaryColor))
     }
 
 
@@ -465,10 +476,8 @@ fun SetAccountBalance(
 
             Column(modifier = Modifier
                 .defaultMinSize()
-                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                .background(
-                    whiteSurface
-                ),
+                .background(backgroundSecondaryColor)
+                .clip(RoundedCornerShape(corner = CornerSize(4.dp))),
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally){
                 Row(
@@ -478,14 +487,14 @@ fun SetAccountBalance(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
                 ) {
-                    Text(modifier = Modifier.padding(32.dp,0.dp,0.dp,0.dp), text = stringResource(R.string.amount_of_money), color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 20.sp)
+                    Text(modifier = Modifier.padding(32.dp,0.dp,0.dp,0.dp), text = stringResource(R.string.amount_of_money), color = textPrimaryColor, fontWeight = FontWeight.W500 , fontSize = 20.sp)
                 }
 
                 TextField(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                     modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
-                    textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.W400 , fontSize = 18.sp),
+                    textStyle = TextStyle(color = textPrimaryColor, fontWeight = FontWeight.W400 , fontSize = 18.sp),
                     value = text,
                     onValueChange = {
                         text = if (it.isEmpty()) {
@@ -499,10 +508,10 @@ fun SetAccountBalance(
                     },
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
-                        textColor = Color.Black,
+                        textColor = textPrimaryColor,
                         disabledTextColor = Color.Transparent,
                         backgroundColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Black,
+                        focusedIndicatorColor = textPrimaryColor,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent
                     ),
@@ -537,10 +546,8 @@ fun SetAccountDescription(
 
             Column(modifier = Modifier
                 .defaultMinSize()
-                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                .background(
-                    whiteSurface
-                ),
+                .background(backgroundSecondaryColor)
+                .clip(RoundedCornerShape(corner = CornerSize(4.dp))),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally){
                 Row(
@@ -550,24 +557,24 @@ fun SetAccountDescription(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
                 ) {
-                    Text(modifier = Modifier.padding(32.dp,0.dp,0.dp,0.dp), text = stringResource(R.string.account_description), color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 20.sp)
+                    Text(modifier = Modifier.padding(32.dp,0.dp,0.dp,0.dp), text = stringResource(R.string.account_description), color = textPrimaryColor, fontWeight = FontWeight.W500 , fontSize = 20.sp)
                 }
 
                 TextField(
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                     modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
-                    textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.W400 , fontSize = 18.sp),
+                    textStyle = TextStyle(color = textPrimaryColor, fontWeight = FontWeight.W400 , fontSize = 18.sp),
                     value = text,
                     onValueChange = {
                         text = it
                     },
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
-                        textColor = Color.Black,
+                        textColor = textPrimaryColor,
                         disabledTextColor = Color.Transparent,
                         backgroundColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Black,
+                        focusedIndicatorColor = textPrimaryColor,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent
                     ),
@@ -590,10 +597,10 @@ fun ButtonWithColor(returnType: (type: String) -> Unit,  text : String){
     Button(modifier = Modifier.padding(0.dp,4.dp,0.dp,8.dp),onClick = {
         returnType(text)
     },
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.DarkGray))
+        colors = ButtonDefaults.buttonColors(backgroundColor = backgroundPrimaryColor))
 
     {
-        Text(text = "  ${stringResource(R.string.ok)}  ",color = Color.White)
+        Text(text = "  ${stringResource(R.string.ok)}  ",color = textPrimaryColor)
     }
 }
 
@@ -611,10 +618,8 @@ fun SetAccountCurrencyType(
 
             Column(modifier = Modifier
                 .fillMaxHeight(0.6f)
-                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                .background(
-                    whiteSurface
-                )) {
+                .background(backgroundSecondaryColor)
+                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))) {
                 Row(
                     modifier = Modifier
                         .padding(0.dp, 4.dp, 0.dp, 4.dp)
@@ -622,7 +627,7 @@ fun SetAccountCurrencyType(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
                 ) {
-                    Text(modifier = Modifier.padding(22.dp,4.dp,0.dp,4.dp), text = stringResource(R.string.choose_currency_type), color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 20.sp)
+                    Text(modifier = Modifier.padding(22.dp,4.dp,0.dp,4.dp), text = stringResource(R.string.choose_currency_type), color = textPrimaryColor, fontWeight = FontWeight.W500 , fontSize = 20.sp)
 
                 }
 
@@ -645,10 +650,10 @@ fun SetAccountCurrencyType(
                             ) {
                                 Text(modifier = Modifier
                                     .weight(2f)
-                                    .padding(16.dp, 0.dp, 0.dp, 0.dp), text = it.description, color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                                    .padding(16.dp, 0.dp, 0.dp, 0.dp), text = it.description, color = textPrimaryColor, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                                 Text(modifier = Modifier
                                     .weight(1f)
-                                    .padding(0.dp, 0.dp, 0.dp, 0.dp), text = it.currencyName + "(" + it.currency + ")" , color = Color.Black, fontWeight = FontWeight.W500 , fontSize = 16.sp)
+                                    .padding(0.dp, 0.dp, 0.dp, 0.dp), text = it.currencyName + "(" + it.currency + ")" , color = textPrimaryColor, fontWeight = FontWeight.W500 , fontSize = 16.sp)
                             }
                         }
                     )
@@ -774,6 +779,7 @@ fun TopBarAccounts(
         }
     }
     SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; icn.value = it; icnTopBar = it} , listOfVectors = AccountsData.accountImges, chosenVectorImg = icn, idForCategory = false )
+
 }
 
 @Composable
@@ -843,30 +849,30 @@ fun SetImg(
                 Column(modifier = Modifier
                     .fillMaxHeight(0.6f)
                     .fillMaxWidth(0.9f)
+                    .background(backgroundSecondaryColor)
                     .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                    .background(
-                        whiteSurface
-                    )) {
+            ) {
 
                     TabRow(selectedTabIndex = tabIndex,
-                           backgroundColor = Color.White,
-                           contentColor = Color.White,
-                        modifier = Modifier.shadow(elevation = 5.dp)
+                           backgroundColor = backgroundPrimaryColor,
+                           contentColor = backgroundPrimaryColor,
+                        modifier = Modifier.shadow(elevation = 5.dp, ambientColor = textPrimaryColor)
                     ) {
                         tabData.forEachIndexed { index, text ->
-                            Tab(selected = tabIndex == index,
+                            Tab(selectedContentColor = textPrimaryColor,
+                                selected = tabIndex == index,
                                 onClick = {
                                 tabIndex = index
                             }){
                                 Box(modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(if (tabIndex == index) inactiveColorTab else Color.White), contentAlignment = Alignment.Center) {
+                                    .background(if (tabIndex == index) inactiveColorTab else bordersSecondaryColor), contentAlignment = Alignment.Center) {
                                     Text(
                                         modifier = Modifier
                                             .padding(12.dp),
                                         text = text,
                                         fontSize = 16.sp,
-                                        color = if (tabIndex == index) Color.Black else inactiveColor,
+                                        color = if (tabIndex == index) textPrimaryColor else inactiveColor,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -909,30 +915,32 @@ fun SetImg(
                 Column(modifier = Modifier
                     .fillMaxHeight(0.6f)
                     .fillMaxWidth(0.9f)
+                    .background(backgroundSecondaryColor)
                     .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                    .background(
-                        whiteSurface
-                    )) {
+                  ) {
 
                     TabRow(selectedTabIndex = tabIndex,
-                        backgroundColor = Color.White,
-                        contentColor = Color.White,
-                        modifier = Modifier.shadow(elevation = 5.dp)
+                        backgroundColor = backgroundPrimaryColor,
+
+                        contentColor = backgroundPrimaryColor,
+                        modifier = Modifier.shadow(elevation = 5.dp, ambientColor = textPrimaryColor)
                     ) {
                         tabData.forEachIndexed { index, text ->
-                            Tab(selected = tabIndex == index,
+                            Tab(
+                                selectedContentColor = textPrimaryColor,
+                                selected = tabIndex == index,
                                 onClick = {
                                     tabIndex = index
                                 }){
                                 Box(modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(if (tabIndex == index) inactiveColorTab else Color.White), contentAlignment = Alignment.Center) {
+                                    .background(if (tabIndex == index) bordersSecondaryColor else backgroundSecondaryColor), contentAlignment = Alignment.Center) {
                                     Text(
                                         modifier = Modifier
                                             .padding(12.dp),
                                         text = text,
                                         fontSize = 16.sp,
-                                        color = if (tabIndex == index) Color.Black else externalColorGray
+                                        color = if (tabIndex == index) textPrimaryColor else inactiveColor,
                                     )
                                 }
                             }
@@ -971,8 +979,7 @@ fun SetImg(
                                 Box(modifier = Modifier
                                     .size(90.dp)
                                     .clip(CircleShape)
-                                    .background(Color.White)
-                                    .background(gray)
+                                    .background(backgroundSecondaryColor)
                                     .clickable { }
                                 ) {
 
@@ -1004,18 +1011,18 @@ fun SetImg(
                         }
 
                         Box(modifier = Modifier.fillMaxWidth()
-                            .weight(1.5f).background(transparentColorForBottomSheet), contentAlignment = Alignment.Center){
+                            .weight(1.5f).background(backgroundSecondaryColor), contentAlignment = Alignment.Center){
                             Button(
                                 modifier = Modifier.padding(0.dp),
                                 shape = RoundedCornerShape(30.dp),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = backgroundPrimaryColor),
                                 onClick = {
                                     returnType(vectorImg.copy())
                                 }
                             ) {
                                 Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
                                     Text(fontSize = 14.sp, fontWeight = FontWeight.W500, text = stringResource(
-                                                                            R.string.submit), color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                                                            R.string.submit), color = textPrimaryColor, maxLines = 1, overflow = TextOverflow.Ellipsis)
                                 }
 
                             }

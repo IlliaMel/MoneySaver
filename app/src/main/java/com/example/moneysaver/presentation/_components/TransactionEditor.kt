@@ -41,9 +41,7 @@ import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
-import com.example.moneysaver.ui.theme.calculatorBorderColor
-import com.example.moneysaver.ui.theme.calculatorButton
-import com.example.moneysaver.ui.theme.dividerColor
+import com.example.moneysaver.ui.theme.*
 import kotlin.math.min
 
 @Composable
@@ -80,8 +78,7 @@ fun TransactionEditor(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xffeeeeee))
+            .fillMaxWidth().background(backgroundSecondaryColor)
             .height(if(choiceIsActive.value) 300.dp else 520.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -182,15 +179,15 @@ fun TransactionEditor(
                 }
             }
 
-            Divider()
-        }
 
+        }
+        Divider(modifier = Modifier.background(bordersSecondaryColor))
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(modifier = Modifier.padding(4.dp),text = if(category.value.isForSpendings) stringResource(R.string.expense) else stringResource(
-                            R.string.income), color = Color.Black, fontSize = 16.sp)
+                            R.string.income), color = textPrimaryColor, fontSize = 16.sp)
             Text(modifier = Modifier.padding(2.dp),text =  sumText.value + " " + selectedCurrencyType.value.currency, color = category.value.categoryImg.externalColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
-        Divider()
+        Divider(modifier = Modifier.background(bordersSecondaryColor))
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             OutlinedTextField(
                 value = note,
@@ -198,14 +195,15 @@ fun TransactionEditor(
                 enabled = !choiceIsActive.value,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                placeholder = { Text(modifier = Modifier.fillMaxWidth(), text = "${stringResource(R.string.notes)}...", textAlign = TextAlign.Center) },
+                placeholder = { Text(modifier = Modifier.fillMaxWidth(), text = "${stringResource(R.string.notes)}...", color = textPrimaryColor, textAlign = TextAlign.Center) },
                 textStyle = LocalTextStyle.current.copy(
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
+                    color = textPrimaryColor
                 ),
                 modifier = Modifier
                     .width(220.dp)
-                    .height(50.dp),
+                    .height(55.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     disabledBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
@@ -214,7 +212,7 @@ fun TransactionEditor(
                 maxLines = 1
             )
         }
-        Divider()
+        Divider(modifier = Modifier.background(bordersSecondaryColor))
 
         if(choiceIsActive.value) {
             Row(modifier = Modifier
@@ -248,6 +246,7 @@ fun TransactionEditor(
                         text = stringResource(R.string.delete),
                         fontSize = 16.sp,
                         maxLines = 1,
+                        color = textPrimaryColor,
                         overflow = TextOverflow.Ellipsis
                     )
 
@@ -273,6 +272,7 @@ fun TransactionEditor(
                         text = stringResource(R.string.edit),
                         fontSize = 16.sp,
                         maxLines = 1,
+                        color = textPrimaryColor,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
@@ -294,8 +294,8 @@ fun TransactionEditor(
             modifier = Modifier
                 .height(30.dp)
                 .fillMaxWidth()
-                .background(calculatorButton)
-                .border(BorderStroke(1.dp, calculatorBorderColor)),
+                .background(backgroundSecondaryColor)
+                .border(BorderStroke(1.dp, bordersPrimaryColor)),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -358,9 +358,10 @@ fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountLis
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .height(350.dp)
-                    .width(300.dp)
-                    .background(Color.White)
+                    .width(230.dp)
+                    .height(220.dp)
+                    .background(backgroundSecondaryColor)
+                    .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
             ) {
                 items(
                     items = accountList,
@@ -376,22 +377,32 @@ fun ChooseTransactionAccountDialog(openDialog: MutableState<Boolean>, accountLis
                                         }
                                         openDialog.value = false
                                     }
-                                    .background(if (it == transactionAccount.value) Color(0xff59aab3) else Color.White)
-                                    .padding(10.dp)
+                                    .background(if (it == transactionAccount.value) Color(0xFF585E5F) else backgroundSecondaryColor)
+                                    .padding(2.dp)
                                 ,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start
                             ) {
-                                VectorIcon(height = 40.dp , width = 50.dp, vectorImg = it.accountImg, onClick = {
-                                    transactionAccount.value = it
-                                    openDialog.value = false})
-                                Column(modifier = Modifier.padding(8.dp, 0.dp)) {
-                                    Text(it.title, fontSize = 16.sp)
-                                    val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else "")) + it.currencyType.currency + " " + it.balance
-                                    val balanceColor = if(it.balance>0) Color.Green else (if(it.balance < 0) Color.Red else Color.Gray)
-                                    Text(text = balanceText, color = balanceColor, fontSize = 14.sp)
+                                Box(contentAlignment = Alignment.Center) {
+                                    VectorIcon(
+                                        modifier = Modifier
+                                            .padding(8.dp),
+                                        height = 35.dp,
+                                        width = 48.dp,
+                                        vectorImg = it.accountImg,
+                                        onClick = {
+                                            transactionAccount.value = it
+                                            openDialog.value = false
+                                        })
+                                }
+                                Column() {
+                                    Text(it.title,color = textPrimaryColor, fontSize = 14.sp)
+                                    val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else ""))+"${it.currencyType.currency} "+it.balance
+                                    val balanceColor = if(it.balance>0) currencyColor else (if(it.balance < 0) currencyColorSpent else currencyColorZero)
+                                    Text(text = balanceText, color = balanceColor, fontSize = 12.sp)
                                 }
                             }
-                            Divider(modifier = Modifier.background(dividerColor))
+                            Divider(modifier = Modifier.background(bordersSecondaryColor))
                         }
                     }
                 )
@@ -410,9 +421,10 @@ private fun ChooseTransactionCategoryDialog(openDialog: MutableState<Boolean>, c
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .height(350.dp)
-                    .width(300.dp)
-                    .background(Color.White)
+                    .width(230.dp)
+                    .height(320.dp)
+                    .background(backgroundSecondaryColor)
+                    .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
             ) {
                 items(
                     items = categoryList.filter { it.uuid!=CategoriesData.addCategory.uuid },
@@ -421,14 +433,15 @@ private fun ChooseTransactionCategoryDialog(openDialog: MutableState<Boolean>, c
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
+
                                     .clickable {
                                         transactionCategory.value = it
                                         openDialog.value = false
                                     }
                                     .background(
                                         if (it == transactionCategory.value) Color(
-                                            0xff59aab3
-                                        ) else Color.White
+                                            0xFF585E5F
+                                        ) else backgroundSecondaryColor
                                     )
                                     .padding(10.dp)
                                 ,
@@ -437,9 +450,9 @@ private fun ChooseTransactionCategoryDialog(openDialog: MutableState<Boolean>, c
                                 VectorIcon(modifierIcn = Modifier.padding(6.dp), height = 40.dp , width = 40.dp, vectorImg = it.categoryImg, onClick = {
                                     transactionCategory.value = it
                                     openDialog.value = false}, cornerSize = 50.dp)
-                                Text(modifier = Modifier.padding(8.dp, 0.dp), text = it.title, fontSize = 16.sp)
+                                Text(modifier = Modifier.padding(8.dp, 0.dp), color = textPrimaryColor ,text = it.title, fontSize = 16.sp)
                             }
-                            Divider(modifier = Modifier.background(dividerColor))
+                            Divider(modifier = Modifier.background(bordersSecondaryColor))
                         }
                     }
                 )

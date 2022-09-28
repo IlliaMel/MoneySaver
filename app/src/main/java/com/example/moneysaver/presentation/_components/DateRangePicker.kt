@@ -29,6 +29,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.R
 import com.example.moneysaver.presentation.transactions.additional_composes.getNameOfMonthByNumber
 import com.example.moneysaver.presentation.transactions.additional_composes.getYear
+import com.example.moneysaver.ui.theme.backgroundSecondaryColor
 import com.example.moneysaver.ui.theme.whiteSurface
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -513,7 +514,7 @@ fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<
             var year = Date().year
             var month = Date().month
             var date = Date().date
-            Column(modifier = Modifier.background(Color.White),horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.background(whiteSurface), horizontalAlignment = Alignment.CenterHorizontally) {
                 AndroidView(
                     { CalendarView(it) },
                     modifier = Modifier
@@ -550,7 +551,7 @@ fun StartDatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableS
             var year = if(startDate.value!=null) startDate.value!!.year else Date().year
             var month = if(startDate.value!=null) startDate.value!!.month else Date().month
             var date =if(startDate.value!=null) startDate.value!!.date else  Date().date
-            Column(modifier = Modifier.background(Color.White),horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 AndroidView(
                     { CalendarView(it) },
                     modifier = Modifier
@@ -587,7 +588,7 @@ fun EndDatePickerDialog(openDialog: MutableState<Boolean>, endDate: MutableState
             var year = if(endDate.value!=null) endDate.value!!.year else Date().year
             var month = if(endDate.value!=null) endDate.value!!.month else Date().month
             var date =if(endDate.value!=null) endDate.value!!.date else  Date().date
-            Column(modifier = Modifier.background(Color.White),horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 AndroidView(
                     { CalendarView(it) },
                     modifier = Modifier

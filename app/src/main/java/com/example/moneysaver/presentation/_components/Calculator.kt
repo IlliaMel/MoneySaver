@@ -65,7 +65,7 @@ fun Calculator(
                 bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
-                Text(text = "÷", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "÷", color = textPrimaryColor,fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier
@@ -77,7 +77,7 @@ fun Calculator(
                 bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
-                Text(text = "×", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "×",color = textPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier
@@ -89,7 +89,7 @@ fun Calculator(
                 bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
-                Text(text = "-", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "-",color = textPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier
@@ -101,7 +101,7 @@ fun Calculator(
                 bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
-                Text(text = "+", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "+", color = textPrimaryColor,fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
         }
         Column(modifier = Modifier.weight(1f)) {
@@ -117,7 +117,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "7", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "7", color = textPrimaryColor,fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
@@ -131,7 +131,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "4", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "4", color = textPrimaryColor,fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
@@ -145,7 +145,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "1", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "1",color = textPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
@@ -154,7 +154,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = if(isFirstFieldSelected==null || isFirstFieldSelected.value) selectedCurrencyType.value.currency else selectedCurrencyTypeSecond!!.value.currency, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(text = if(isFirstFieldSelected==null || isFirstFieldSelected.value) selectedCurrencyType.value.currency else selectedCurrencyTypeSecond!!.value.currency,color = textPrimaryColor, fontSize = 22.sp, fontWeight = FontWeight.Bold)
             }
         }
         Column(modifier = Modifier.weight(1f)) {
@@ -170,7 +170,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "8", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "8", color = textPrimaryColor,fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
@@ -184,7 +184,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "5", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "5", color = textPrimaryColor,fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
@@ -198,7 +198,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "2", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "2",color = textPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
@@ -212,7 +212,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "0", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "0", color = textPrimaryColor,fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
         }
         Column(modifier = Modifier.weight(1f)) {
@@ -228,7 +228,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "9", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "9", color = textPrimaryColor,fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
@@ -242,7 +242,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "6", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "6",color = textPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
@@ -256,7 +256,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = "3", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "3", color = textPrimaryColor,fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             CalculatorButton(
                 modifier = Modifier.weight(1f),
@@ -265,7 +265,7 @@ fun Calculator(
                 },
                 focusManager = focusManager
             ) {
-                Text(text = ".", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = ".",color = textPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
         }
         Column(modifier = Modifier.weight(1f)) {
@@ -287,7 +287,7 @@ fun Calculator(
                 bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
-                Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = null)
+                Icon(imageVector = Icons.Default.KeyboardArrowLeft, tint = textPrimaryColor, contentDescription = null)
             }
             CalculatorButton(modifier = Modifier
                 .weight(1f),
@@ -295,7 +295,7 @@ fun Calculator(
                 bgColor = calculatorButton,
                 focusManager = focusManager
             ) {
-                Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
+                Icon(imageVector = Icons.Default.DateRange,tint = textPrimaryColor, contentDescription = null)
             }
             if(sumText.value.canBeEvaluatedAsMathExpr() || selectedCurrencyType.value!=targetCurrencyType) {
                 CalculatorButton(
@@ -325,7 +325,7 @@ fun Calculator(
                     bgColor = vectorImg.externalColor,
                     focusManager = focusManager
                 ) {
-                    Text(text = "=", fontSize = 22.sp, fontWeight = FontWeight.Bold, color= Color.White)
+                    Text(text = "=",color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 }
             }
             else {

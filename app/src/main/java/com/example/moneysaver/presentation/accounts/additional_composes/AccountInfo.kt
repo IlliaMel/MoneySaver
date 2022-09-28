@@ -169,8 +169,9 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(if (lookingInfo.value) 320.dp else 480.dp)
+            .height(if (lookingInfo.value) 320.dp else 500.dp)
             .animateContentSize(),
+
 
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -282,7 +283,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(whiteSurface)
+            .background(backgroundSecondaryColor)
             .weight(1f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -298,8 +299,8 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                     AccountInfoItem(modifier = Modifier.weight(1f),lookingInfo = lookingInfo.value, isAccountTransactionTo = false, openChoseAccountDialog = openChoseAccountDialog , transactionAccount = transactionAccount)
                     AccountInfoItem(modifier = Modifier.weight(1f),lookingInfo = lookingInfo.value, isAccountTransactionTo = true, openChoseAccountDialog = openChoseToAccountDialog , transactionAccount = transactionToAccount)
                 }
-                Divider()
             }
+
 
 //            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 //                Text(modifier = Modifier.padding(4.dp),text = stringResource(R.string.transfer), color = Color.Black, fontSize = 16.sp)
@@ -323,14 +324,15 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                     enabled = !isSubmitted.value,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    placeholder = { Text(modifier = Modifier.fillMaxWidth(), text = "${stringResource(R.string.notes)}...", textAlign = TextAlign.Center) },
+                    placeholder = { Text(modifier = Modifier.fillMaxWidth(), text = "${stringResource(R.string.notes)}...", color = textPrimaryColor,textAlign = TextAlign.Center) },
                     textStyle = LocalTextStyle.current.copy(
                         fontSize = 16.sp,
                         textAlign = TextAlign.Center,
+                        color = textPrimaryColor
                     ),
                     modifier = Modifier
                         .width(220.dp)
-                        .height(50.dp),
+                        .height(55.dp),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         disabledBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent,
@@ -339,7 +341,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                     maxLines = 1
                 )
             }
-            Divider()
+            Divider(modifier = Modifier.background(bordersSecondaryColor))
 
             Calculator(
                 vectorImg = transactionToAccount.value.accountImg,
@@ -361,7 +363,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
         if(lookingInfo.value){
         Row(modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp),
+            .height(120.dp).background(backgroundSecondaryColor),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
@@ -393,7 +395,8 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                     text = stringResource(R.string.delete),
                     fontSize = 16.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = textPrimaryColor
                 )
             }
 
@@ -425,7 +428,8 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                     text = stringResource(R.string.edit),
                     fontSize = 16.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = textPrimaryColor
                 )
             }
 
@@ -467,7 +471,8 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                     text = stringResource(R.string.transaction),
                     fontSize = 16.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = textPrimaryColor
                 )
             }
         }
@@ -478,12 +483,12 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
             modifier = Modifier
                 .height(30.dp)
                 .fillMaxWidth()
-                .background(whiteSurface)
-                .border(BorderStroke(1.dp, calculatorBorderColor)),
-            horizontalArrangement = Arrangement.Center,
+                .background(backgroundSecondaryColor)
+                .border(BorderStroke(1.dp, bordersPrimaryColor))
+            ,horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = getShortDateString(Date(), LocalContext.current), color = Color(0xff54514d), fontWeight = FontWeight.Bold, fontSize = 15.sp)
+            Text(text = getShortDateString(Date(), LocalContext.current), color = Color(0xFF73716D), fontWeight = FontWeight.Bold, fontSize = 15.sp)
         }
 
     }

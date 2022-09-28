@@ -51,10 +51,7 @@ import com.example.moneysaver.presentation.categories.additional_composes.valueT
 import com.example.moneysaver.presentation.transactions.additional_composes.BalanceField
 import com.example.moneysaver.presentation.transactions.additional_composes.DateBlock
 import com.example.moneysaver.presentation.transactions.additional_composes.TransactionItem
-import com.example.moneysaver.ui.theme.colorDismissToDelete
-import com.example.moneysaver.ui.theme.colorDismissToEdit
-import com.example.moneysaver.ui.theme.dividerColor
-import com.example.moneysaver.ui.theme.whiteSurface
+import com.example.moneysaver.ui.theme.*
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -222,12 +219,12 @@ fun Transactions(
         }
     ) {
         Box(modifier = Modifier
-            .fillMaxWidth()) {
+            .fillMaxWidth().background(backgroundSecondaryColor)) {
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(whiteSurface)
+                    .background(backgroundPrimaryColor)
             ) {
 
                 TopBarTransactions(
@@ -257,7 +254,7 @@ fun Transactions(
 
 
                     LazyColumn(
-                        Modifier.background(whiteSurface),
+                        Modifier.background(backgroundPrimaryColor),
                         contentPadding = PaddingValues()
                     ) {
 
@@ -266,7 +263,7 @@ fun Transactions(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(IntrinsicSize.Min)
-                                    .background(whiteSurface),
+                                    .background(backgroundPrimaryColor),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 BalanceField(
@@ -277,7 +274,7 @@ fun Transactions(
                                 )
                                 Divider(
                                     modifier = Modifier
-                                        .background(dividerColor)
+                                        .background(bordersSecondaryColor)
                                         .fillMaxHeight()
                                         .width(1.dp)
                                 )
@@ -288,7 +285,7 @@ fun Transactions(
                                     balance = viewModel.state.endingBalance
                                 )
                             }
-                            Divider(modifier = Modifier.background(dividerColor))
+                            Divider(modifier = Modifier.background(bordersSecondaryColor))
                         }
 
                         for (date: Date in sortedDateToTransactionMap.keys) {
@@ -321,7 +318,7 @@ fun Transactions(
                                     date = date,
                                     balanceChange = dayBalanceChange
                                 )
-                                Divider(modifier = Modifier.background(dividerColor))
+                                Divider(modifier = Modifier.background(bordersSecondaryColor))
                             }
 
                             sortedDateToTransactionMap[date]?.let { m ->
@@ -431,7 +428,7 @@ fun Transactions(
                                                 }
                                             )
 
-                                            Divider(modifier = Modifier.background(dividerColor))
+                                            Divider(modifier = Modifier.background(bordersSecondaryColor))
                                         }
                                     }
                                 )

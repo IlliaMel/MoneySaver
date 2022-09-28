@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -132,13 +133,14 @@ fun Accounts(
         ){
 
             Box(modifier = Modifier
+                .background(backgroundSecondaryColor)
                 .fillMaxWidth()) {
 
 
                 Column(
                     modifier = Modifier
+                        .background(backgroundSecondaryColor)
                         .fillMaxWidth()
-                        .background(whiteSurface)
 
                 ) {
                     TopBarAccounts(
@@ -166,8 +168,8 @@ fun Accounts(
                     AnimatedVisibility(visibleState = visibleState) {
                         Column(
                             modifier = Modifier
+                                .background(backgroundPrimaryColor)
                                 .fillMaxWidth()
-                                .background(whiteSurface)
 
                         ) {
                             SumMoneyInfo(
@@ -210,7 +212,7 @@ fun Accounts(
                             Divider(
                                 modifier = Modifier
                                     .padding(0.dp, 16.dp, 0.dp, 0.dp)
-                                    .background(dividerColor)
+                                    .background(bordersSecondaryColor)
                             )
 
                             SumMoneyInfo(
@@ -225,7 +227,9 @@ fun Accounts(
 
 
                             LazyColumn(
-                                modifier = Modifier.weight(1.5f),
+                                modifier = Modifier
+                                    .weight(1.5f)
+                                    .background(backgroundPrimaryColor),
                                 contentPadding = PaddingValues()
                             ) {
                                 items(
@@ -262,7 +266,8 @@ fun Accounts(
 
                 val alpha: Float by animateFloatAsState(if((sheetState.isAnimationRunning || sheetState.isExpanded ) ) 0.6f else 0f ,  animationSpec =  tween(durationMillis = 200))
                 Column(modifier = Modifier
-                    .background(Color.Black.copy(alpha = alpha)).fillMaxSize()){}
+                    .background(Color.Black.copy(alpha = alpha))
+                    .fillMaxSize()){}
 
             }
     }
@@ -310,7 +315,9 @@ fun PopUp(openDialog: MutableState<Boolean>, accountList: MutableList<Account>, 
                 openDialog.value = false
             }
         ) {
-            Box( modifier = Modifier.clip(RoundedCornerShape(corner = CornerSize(4.dp)))) {
+            Box( modifier = Modifier
+                .background(backgroundSecondaryColor)
+                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))) {
                 ChooseAccount(
                     openDialog = openDialog,
                     accountList = accountList,
@@ -326,15 +333,16 @@ fun PopUp(openDialog: MutableState<Boolean>, accountList: MutableList<Account>, 
 private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<Account>, chosenAccountFilter: Account, onChosenAccountFilterClick: (Account) -> Unit,) {
     LazyColumn(
         modifier = Modifier
-            .width(210.dp)
+            .width(230.dp)
             .height(220.dp)
-            .background(Color.White)
+            .background(backgroundSecondaryColor)
             .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
     ) {
         items(
             items = accountList,
             itemContent = {
-                Column() {
+                Column(modifier = Modifier
+                    .background(backgroundSecondaryColor)) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -342,28 +350,32 @@ private fun ChooseAccount(openDialog: MutableState<Boolean>, accountList: List<A
                                 openDialog.value = false
                                 onChosenAccountFilterClick(it)
                             }
-                            .background(if (it == chosenAccountFilter) Color(0xff59aab3) else Color.White)
-                            .padding(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .background(if (it == chosenAccountFilter) Color(0xFF585E5F) else backgroundSecondaryColor)
+                            .padding(2.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
                     ) {
+                        Box(contentAlignment = Alignment.Center) {
                         Image(
                             painter = painterResource(id = it.accountImg.img),
                             contentDescription = null,
-                            contentScale = ContentScale.Fit,
+                            contentScale = ContentScale.None,
                             modifier = Modifier
                                 .padding(4.dp, 2.dp, 4.dp, 2.dp)
                                 .width(60.dp)
                                 .height(48.dp)
-                                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                                .clip(RoundedCornerShape(corner = CornerSize(4.dp))),
+                                colorFilter = ColorFilter.tint(textPrimaryColor)
                         )
+                        }
                         Column() {
-                            Text(it.title, fontSize = 14.sp)
+                            Text(it.title,color = textPrimaryColor, fontSize = 14.sp)
                             val balanceText: String = (if(it.balance>0) "+" else (if(it.balance < 0) "-" else ""))+"${it.currencyType.currency} "+it.balance
                             val balanceColor = if(it.balance>0) currencyColor else (if(it.balance < 0) currencyColorSpent else currencyColorZero)
                             Text(text = balanceText, color = balanceColor, fontSize = 12.sp)
                         }
                     }
-                    Divider(modifier = Modifier.background(dividerColor))
+                    Divider(modifier = Modifier.background(bordersSecondaryColor))
                 }
             }
         )
@@ -391,15 +403,14 @@ fun ChooseAccountCompose(
                 .fillMaxHeight(0.6f)
                 .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
                 .fillMaxHeight(0.35f)
-                .background(
-                    whiteSurface
-                ), verticalArrangement = Arrangement.Center) {
+                .background(backgroundSecondaryColor)
+, verticalArrangement = Arrangement.Center) {
                 Row(modifier = Modifier.padding(16.dp,0.dp,0.dp,0.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Start) {
                     Text(
                         modifier = Modifier.padding(0.dp),
                         text = stringResource(R.string.new_account),
                         fontWeight = FontWeight.W500,
-                        color = Color.Black,
+                        color = textPrimaryColor,
                         fontSize = 16.sp
                     )
                 }
@@ -548,7 +559,7 @@ fun AddBankAccount(account: Account, navigateToCardAdder: (Account) -> Unit) {
                     .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black, fontSize = 14.sp)
+                Text(text = account.title, fontWeight = FontWeight.W400 ,color = textPrimaryColor, fontSize = 14.sp)
             }
         }
     }
@@ -621,14 +632,14 @@ private fun CustomDivider(){
 
         Row(modifier = Modifier.weight(4f)) { Divider( modifier = Modifier
             .padding(8.dp, 2.dp, 0.dp, 0.dp)
-            .background(dividerColor)) }
+            .background(bordersSecondaryColor)) }
     }
 }
 
 
 @Composable
 private fun textForAccount(account: Account, modifier: Modifier = Modifier){
-    Text(text = account.title, fontWeight = FontWeight.W400 ,color = Color.Black , fontSize = 14.sp)
+    Text(text = account.title, fontWeight = FontWeight.W400 ,color = textPrimaryColor , fontSize = 14.sp)
     Text(modifier = modifier.padding(0.dp, 2.dp, 0.dp, 0.dp) ,
         text =  valueToNormalFormat(account.balance) + " " + account.currencyType.currency,
         color =

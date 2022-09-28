@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
@@ -13,13 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.R
+import com.example.moneysaver.presentation._components.dividerForTopBar
+import com.example.moneysaver.ui.theme.backgroundPrimaryColor
 import com.example.moneysaver.ui.theme.inactiveColor
+import com.example.moneysaver.ui.theme.textPrimaryColor
 
 
 @Composable
@@ -32,15 +37,15 @@ fun TabsForScreens(
     }
     val imageWithTexts = listOf(
         ImageWithText(
-            image = painterResource(id = R.drawable.accounts_img),
+            image = painterResource(id = R.drawable.ic_account_img_9_5),
             text = stringResource(R.string.accounts)
         ),
         ImageWithText(
-            image = painterResource(id = R.drawable.categories_img),
+            image = painterResource(id = R.drawable.ic_account_img_9_4),
             text = stringResource(R.string.categories)
         ),
         ImageWithText(
-            image = painterResource(id = R.drawable.transactions_img),
+            image = painterResource(id = R.drawable.ic_account_img_9_0),
             text = stringResource(R.string.transactions)
         )
     )
@@ -51,16 +56,16 @@ fun TabsForScreens(
             .fillMaxHeight()
             .fillMaxWidth()
     ) {
-
+        dividerForTopBar(height = 2.dp)
         TabRow(
             selectedTabIndex = selectedTabIndex,
-            backgroundColor = Color.White,
-            contentColor = Color.White,
-            modifier = modifier.shadow(elevation = 5.dp)
+            backgroundColor = backgroundPrimaryColor,
+            contentColor = backgroundPrimaryColor,
+            modifier = modifier.shadow(elevation = 6.dp, ambientColor = textPrimaryColor)
         ) {
             imageWithTexts.forEachIndexed { index, item ->
                 Tab(selected = selectedTabIndex == index,
-                    selectedContentColor = Color.Black,
+                    selectedContentColor = textPrimaryColor,
                     unselectedContentColor = inactiveColor,
                     onClick = {
                         selectedTabIndex = index
@@ -76,17 +81,17 @@ fun TabsForScreens(
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
-                                .padding(4.dp)
-                                .width(35.dp)
-                                .height(23.dp)
-                                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                                .padding(2.dp,4.dp,2.dp,0.dp)
+                                .width(38.dp)
+                                .height(38.dp),
+                            colorFilter = ColorFilter.tint(textPrimaryColor)
                         )
                         Text(
                             modifier = Modifier
-                                .padding(2.dp),
+                                .padding(2.dp,0.dp,2.dp,2.dp),
                             text = item.text,
-                            fontSize = 12.sp,
-                            color = if (selectedTabIndex == index) Color.Black else inactiveColor
+                            fontSize = 11.sp,
+                            color = if (selectedTabIndex == index) textPrimaryColor else inactiveColor
                         )
                     }
 

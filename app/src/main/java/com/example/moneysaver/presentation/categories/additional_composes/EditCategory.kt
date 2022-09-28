@@ -69,7 +69,7 @@ fun EditCategory(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(gray)
+            .background(backgroundSecondaryColor)
     ) {
         /*
             title: String,
@@ -95,11 +95,13 @@ fun EditCategory(
                         Category(categoryImg = img.value,currencyType = currencyType.value , title = it, isForSpendings = checkedState.value)
 
                 )}, onCancelIconClick = {onCancelIconClick()},)
-        // dividerForTopBar()
+
+        Divider(modifier = Modifier.background(bordersSecondaryColor).height(2.dp))
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(whiteSurface),
+                .background(backgroundPrimaryColor),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.Start
         ) {
@@ -110,7 +112,7 @@ fun EditCategory(
                 Text(
                     modifier = Modifier.padding(16.dp, 16.dp, 0.dp, 0.dp),
                     text = stringResource(R.string.settings),
-                    color = Color.Black,
+                    color = textPrimaryColor,
                     fontWeight = FontWeight.W500,
                     fontSize = 18.sp
                 )
@@ -124,12 +126,12 @@ fun EditCategory(
             }
 
             Box(modifier = Modifier
-                .background(gray)
+                .background(backgroundSecondaryColor)
                 .height(15.dp)
                 .fillMaxWidth())
 
             if(!isEditing){
-            Divider()
+                Divider(modifier = Modifier.background(bordersSecondaryColor))
 
 
                 Row(modifier = Modifier
@@ -142,7 +144,7 @@ fun EditCategory(
                     Text(
                         modifier = Modifier.padding(16.dp, 8.dp, 0.dp, 16.dp),
                         text = stringResource(R.string.is_for_spending),
-                        color = Color.Black,
+                        color = textPrimaryColor,
                         fontWeight = FontWeight.W400,
                         fontSize = 16.sp
                     )
@@ -153,16 +155,16 @@ fun EditCategory(
                     )
 
                 }
-                Divider()
+                Divider(modifier = Modifier.background(bordersSecondaryColor))
 
                 Box(modifier = Modifier
-                    .background(gray)
+                    .background(backgroundSecondaryColor)
                     .height(15.dp)
                     .fillMaxWidth())
             }
 
 
-
+            Divider(modifier = Modifier.background(bordersSecondaryColor))
             Row(modifier = Modifier
                 .padding(0.dp, 0.dp, 0.dp, 0.dp)
                 .clickable { onDeleteCategory(category) }
@@ -186,6 +188,7 @@ fun EditCategory(
                 )
 
             }
+            Divider(modifier = Modifier.background(bordersSecondaryColor))
 
 
         }
@@ -315,61 +318,6 @@ fun TopBarCategoryEdit(
         }
     }
     SetImg(openDialog = setAccountImg, returnType={setAccountImg.value = false; onChangeImg(it) ; icn.value = it; icnTopBar = it } , listOfVectors = CategoriesData.categoryImges, chosenVectorImg = icn, idForCategory = true )
-
-}
-
-@Composable
-fun SetCategoryImg(
-    openDialog: MutableState<Boolean>,
-    returnType: (img: VectorImg) -> Unit,
-) {
-    if (openDialog.value) {
-        Dialog(
-            onDismissRequest = {
-                openDialog.value = false
-            }
-        ) {
-
-            Column(modifier = Modifier
-                .fillMaxHeight(0.6f)
-                .fillMaxWidth(0.9f)
-                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
-                .background(
-                    whiteSurface
-                )) {
-                Row(
-                    modifier = Modifier
-                        .padding(0.dp, 4.dp, 0.dp, 4.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    Text(modifier = Modifier.padding(0.dp,8.dp,0.dp,4.dp), text = stringResource(R.string.choose_account_img), color = currencyColorZero, fontWeight = FontWeight.W500 , fontSize = 20.sp)
-
-                }
-
-
-                LazyVerticalGrid(
-                    modifier = Modifier.padding(0.dp,0.dp,0.dp,16.dp),
-                    columns = GridCells.Fixed(3),
-                    // content padding
-                    contentPadding = PaddingValues(
-                        start = 12.dp,
-                        top = 16.dp,
-                        end = 12.dp,
-                        bottom = 16.dp
-                    ),
-                    content = {
-                        items(CategoriesData.categoryImges.size) { index ->
-
-                                VectorIcon(Modifier.padding(8.dp,8.dp,8.dp,8.dp),Modifier.padding(12.dp), vectorImg = CategoriesData.categoryImges[index], onClick = {returnType(CategoriesData.categoryImges[index])},width = 50.dp , height = 60.dp, cornerSize = 50.dp)
-
-                        }
-                    }
-                )
-            }
-        }
-    }
 
 }
 

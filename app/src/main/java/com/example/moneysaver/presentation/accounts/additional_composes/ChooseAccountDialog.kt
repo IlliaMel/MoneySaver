@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneysaver.ui.theme.currencyColorZero
+import com.example.moneysaver.ui.theme.textPrimaryColor
 
 
 @Composable
@@ -33,7 +35,7 @@ fun ChooseAccountElement(
             Text(
                 text = title,
                 fontWeight = FontWeight.W400,
-                color = Color.Black,
+                color = textPrimaryColor,
                 fontSize = 15.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -54,12 +56,13 @@ fun ChooseAccountElement(
         Image(
             painter = img,
             contentDescription = null,
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .padding(0.dp,8.dp,8.dp,8.dp)
                 .width(45.dp)
                 .height(45.dp)
-                .clip(RoundedCornerShape(corner = CornerSize(4.dp)))
+                .clip(RoundedCornerShape(corner = CornerSize(4.dp))),
+            colorFilter = ColorFilter.tint(textPrimaryColor)
         )
     }
 

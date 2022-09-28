@@ -110,7 +110,7 @@ fun Categories(
                 targetState = true
             }
         }
-        AnimatedVisibility(visibleState  = visibleState) {
+        AnimatedVisibility(modifier = Modifier.background(backgroundSecondaryColor), visibleState  = visibleState) {
             BottomSheetScaffold(
                 scaffoldState = scaffoldState,
                 sheetContent = {
@@ -141,6 +141,7 @@ fun Categories(
 
                     Box(
                         modifier = Modifier
+                            .background(backgroundSecondaryColor)
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
                     ) {
@@ -196,11 +197,13 @@ fun CategoryListView(
     baseCurrency: Currency,
     categories: List<Category>
 ) {
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(LocalConfiguration.current.screenHeightDp.dp)
-            .background(whiteSurface),
+            .background(backgroundPrimaryColor)
+            .height(LocalConfiguration.current.screenHeightDp.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -208,13 +211,13 @@ fun CategoryListView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(lightGrayTransparent),
+                .background(backgroundSecondaryColor),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             AnimatedVisibility(visible = isForEditing) {
                 Text(modifier = Modifier.padding(8.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 16.sp, fontWeight = FontWeight.W400, text = stringResource(
-                    R.string.chose_category_to_edit), color = Color.Black)
+                    R.string.chose_category_to_edit), color = textPrimaryColor)
             }
         }
 
@@ -618,7 +621,7 @@ private fun CategoriesVectorImage(category: Category, viewModel: CategoriesViewM
         .clickable { onClickCategory() }
         .clip(RoundedCornerShape(CornerSize(4.dp)))
         .padding(4.dp), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(modifier = Modifier.padding(2.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 14.sp, fontWeight = FontWeight.W400, text = category.title, color = Color.Black)
+        Text(modifier = Modifier.padding(2.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 14.sp, fontWeight = FontWeight.W400, text = category.title, color = textPrimaryColor)
         VectorIcon(
             modifierBox,
             modifierVectorImg,
@@ -657,11 +660,11 @@ fun ChartContainer(
         Box( modifier = Modifier
             .size(180.dp, 180.dp)
             .clip(CircleShape)
-            .background(whiteSurface)
+            .background(backgroundPrimaryColor)
             .clickable { onClickChart() } , contentAlignment = Alignment.Center){
         content()
         Text(modifier = Modifier.padding(0.dp,0.dp,0.dp,32.dp), fontSize = 16.sp, fontWeight = FontWeight.W500,
-            text = if (isSpendings) stringResource(R.string.spending) else  stringResource(R.string.earning), color = Color.Black)
+            text = if (isSpendings) stringResource(R.string.spending) else  stringResource(R.string.earning), color = textPrimaryColor)
 
         Column(modifier = Modifier.padding(0.dp,32.dp,0.dp,0.dp), verticalArrangement =  Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
@@ -757,39 +760,4 @@ private fun switchBottomSheet(scope: CoroutineScope, bottomSheetState: BottomShe
             bottomSheetState.collapse()
         }
     }
-}
-
-@Composable
-private fun CategoriesImage(category: Category, viewModel: CategoriesViewModel, modifier: Modifier = Modifier) {
-    val state = remember {
-        MutableTransitionState(false).apply {
-            // Start the animation immediately.
-            targetState = true
-        }
-    }
-    AnimatedVisibility(
-        visibleState  = state
-    ) {
-        Column(modifier = modifier, verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(modifier = Modifier.padding(4.dp), fontSize = 13.sp, fontWeight = FontWeight.W400, text = category.title, color = Color.Black)
-            Image(
-                painter = painterResource(id = category.categoryImg.img),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .padding(4.dp)
-                    .width(50.dp)
-                    .height(50.dp)
-                    .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
-            )
-            var color = currencyColor
-            val categorySum = viewModel.state.categoriesSums[category]
-            if(categorySum == 0.0)
-                color = currencyColorZero
-
-            Text(modifier = Modifier.padding(4.dp), fontSize = 13.sp, fontWeight = FontWeight.W500, text = (categorySum.toString() + " " + category.currencyType), color = color)
-        }
-    }
-
-
 }

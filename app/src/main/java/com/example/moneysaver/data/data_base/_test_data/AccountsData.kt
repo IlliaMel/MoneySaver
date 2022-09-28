@@ -92,7 +92,7 @@ object AccountsData {
     )
 
     var allAccountFilter = Account(
-        accountImg = VectorImg(),
+        accountImg = VectorImg(img = R.drawable.ic_account_img_3),
         currencyType = Currency(),
         title = MainActivity.instance!!.getString(R.string.all_accounts),
         description = "",

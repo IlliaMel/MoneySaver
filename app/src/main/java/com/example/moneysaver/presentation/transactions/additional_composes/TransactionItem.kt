@@ -20,10 +20,7 @@ import com.example.moneysaver.domain.model.Transaction
 import com.example.moneysaver.presentation.MainActivityViewModel
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.VectorIcon
-import com.example.moneysaver.ui.theme.currencyColor
-import com.example.moneysaver.ui.theme.currencyColorSpent
-import com.example.moneysaver.ui.theme.currencyColorZero
-import com.example.moneysaver.ui.theme.whiteSurface
+import com.example.moneysaver.ui.theme.*
 import kotlin.math.abs
 
 @Composable
@@ -38,7 +35,7 @@ fun TransactionItem(transaction: Transaction,
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(whiteSurface)
+            .background(backgroundPrimaryColor)
             .clickable { onClick() }
             .padding(6.dp,0.dp,4.dp,0.dp),
         //.background(whiteSurface)
@@ -66,7 +63,7 @@ fun TransactionItem(transaction: Transaction,
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(categoryName, color = Color.Black, fontSize = 16.sp , fontWeight = FontWeight.W400)
+                    Text(categoryName, color = textPrimaryColor, fontSize = 16.sp , fontWeight = FontWeight.W400)
                     var sumText= (if(transaction.sum>0) "+" else "-") + (viewModel.state.accountsList.find { it.uuid == transaction.accountUUID }?.currencyType?.currency
                         ?: "$") + " " + abs(transaction.sum)
                     if(transaction.toAccountUUID!=null)

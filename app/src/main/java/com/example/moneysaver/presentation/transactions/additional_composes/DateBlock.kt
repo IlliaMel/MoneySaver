@@ -30,10 +30,7 @@ import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
 import com.example.moneysaver.domain.model.Currency
 import com.example.moneysaver.presentation.MainActivity
-import com.example.moneysaver.ui.theme.currencyColor
-import com.example.moneysaver.ui.theme.currencyColorSpent
-import com.example.moneysaver.ui.theme.currencyColorZero
-import com.example.moneysaver.ui.theme.gray
+import com.example.moneysaver.ui.theme.*
 import java.util.*
 import kotlin.math.abs
 
@@ -42,7 +39,7 @@ fun DateBlock(baseCurrency: Currency,  date: Date, balanceChange: Double) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xffececec))
+            .background(backgroundSecondaryColor)
             .innerShadow(color = Color(0xFF4D4D4D), blur = 0.5.dp, spread = 0.1.dp, drawLeft = false, drawRight = false)
             .padding(16.dp, 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
