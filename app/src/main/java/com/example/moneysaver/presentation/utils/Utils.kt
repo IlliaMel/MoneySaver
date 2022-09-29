@@ -9,10 +9,12 @@ import android.os.Build
 import android.os.Environment
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
+import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.presentation.MainActivity
 import com.example.moneysaver.presentation.MainActivityViewModel
+import com.example.moneysaver.ui.theme.*
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -93,6 +95,40 @@ class Utils {
             }
         }
     }
+}
+
+fun MainActivity.changeTheme(theme : String){
+    if(theme == "dark"){
+
+        textPrimaryColor = Color(0xFFFFFFFF)
+        textSecondaryColor = Color(0xFFDDDDDD)
+
+        backgroundPrimaryColor = Color(0xFF141414)
+        backgroundSecondaryColor = Color(0xFF1F1F1F)
+
+        bordersPrimaryColor = Color(0xFF292929)
+        bordersSecondaryColor = Color(0xFF3A3A3A)
+
+        calculatorButton = Color(23, 23, 23, 225)
+        calculatorButtonNumbers = Color(49, 49, 49, 221)
+        calculatorBorderColor = Color(0xFF3A3A3A)
+
+    }else if (theme == "light"){
+
+        textPrimaryColor = Color(0xFF141414)
+        textSecondaryColor = Color(0xFF1F1F1F)
+
+        backgroundPrimaryColor = Color(0xFFF3F3F3)
+        backgroundSecondaryColor = Color(0xFFE7E7E7)
+
+        bordersPrimaryColor = Color(0xFFD2D2D2)
+        bordersSecondaryColor = Color(0xFFCACACA)
+
+        calculatorButton = Color(236, 236, 236, 225)
+        calculatorButtonNumbers = Color(255, 255, 255, 221)
+        calculatorBorderColor = Color(209, 209, 209, 212)
+    }
+
 }
 
 fun MainActivity.setLanguage(languageCode: String) {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.CalendarView
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -22,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -29,8 +31,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.moneysaver.R
 import com.example.moneysaver.presentation.transactions.additional_composes.getNameOfMonthByNumber
 import com.example.moneysaver.presentation.transactions.additional_composes.getYear
-import com.example.moneysaver.ui.theme.backgroundSecondaryColor
-import com.example.moneysaver.ui.theme.whiteSurface
+import com.example.moneysaver.ui.theme.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -160,9 +161,11 @@ private fun ChoseDateRangeDialog(
         ) {
 
             Column(modifier = Modifier
+                .clip(RoundedCornerShape(CornerSize(8.dp)))
                 .width(300.dp)
                 .height(IntrinsicSize.Min)
-                .background(Color.White)
+                .background(backgroundSecondaryColor)
+
             ) {
 
                 Row(
@@ -184,16 +187,16 @@ private fun ChoseDateRangeDialog(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Icon(imageVector = Icons.Default.DateRange, contentDescription = null, tint = Color.Gray)
-                        Text(text = stringResource(R.string.select_range))
+                        Text(text = stringResource(R.string.select_range), color = textPrimaryColor)
                         val (d1, d2) = getCurrentMonthDates()
                         var shortRangeText = getShortDateRangeString(d1, d2, LocalContext.current)
                         if(startDate.value!=null && endDate!=null)
                             shortRangeText = getShortDateRangeString(startDate.value!!, endDate.value!!, LocalContext.current)
-                        Text(text = shortRangeText, fontSize = 14.sp, color = Color.Gray)
+                        Text(text = shortRangeText, fontSize = 14.sp, color = currencyColorZero)
                     }
                 }
 
-                Divider()
+                Divider(modifier = Modifier.background(bordersSecondaryColor))
 
                 Row(
                     modifier = Modifier
@@ -214,9 +217,10 @@ private fun ChoseDateRangeDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(text = stringResource(R.string.all_time))
+                        Text(text = stringResource(R.string.all_time), color = textPrimaryColor)
                     }
-                    Divider(modifier = Modifier
+
+                    Divider(modifier = Modifier.background(bordersSecondaryColor)
                         .width(1.dp)
                         .fillMaxHeight())
                     Column(
@@ -231,11 +235,11 @@ private fun ChoseDateRangeDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(text = stringResource(R.string.select_day))
+                        Text(text = stringResource(R.string.select_day), color = textPrimaryColor)
                     }
                 }
 
-                Divider()
+                Divider(modifier = Modifier.background(bordersSecondaryColor))
 
                 Row(
                     modifier = Modifier
@@ -263,18 +267,19 @@ private fun ChoseDateRangeDialog(
                                 .width(25.dp)
                                 .height(25.dp)
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(Color.Gray),
+                                .background(currencyColorZero),
                             textAlign = TextAlign.Center,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = stringResource(R.string.Week))
+                        Text(text = stringResource(R.string.Week), color = textPrimaryColor)
                         val (d1, d2) = getCurrentWeekDates()
                         val weekShortText = d1.date.toString()+" "+ getMonthAbr(d1, LocalContext.current)+" - "+d2.date.toString()+" "+ getMonthAbr(d2, LocalContext.current)
-                        Text(text = weekShortText, fontSize = 14.sp, color = Color.Gray)
+                        Text(text = weekShortText, fontSize = 14.sp, color = currencyColorZero)
                     }
-                    Divider(modifier = Modifier
+
+                    Divider(modifier = Modifier.background(bordersSecondaryColor)
                         .width(1.dp)
                         .fillMaxHeight())
                     Column(
@@ -297,20 +302,20 @@ private fun ChoseDateRangeDialog(
                                 .width(25.dp)
                                 .height(25.dp)
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(Color.Gray),
+                                .background(currencyColorZero),
                             textAlign = TextAlign.Center,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = stringResource(R.string.today))
+                        Text(text = stringResource(R.string.today), color = textPrimaryColor)
                         val d1 = getCurrentDayDates().first
                         val todayShortText = getNameOfMonthByNumber(d1.month, LocalContext.current)+" "+d1.date.toString()
-                        Text(text = todayShortText, fontSize = 14.sp, color = Color.Gray)
+                        Text(text = todayShortText, fontSize = 14.sp, color = currencyColorZero)
                     }
                 }
 
-                Divider()
+                Divider(modifier = Modifier.background(bordersSecondaryColor))
 
                 Row(
                     modifier = Modifier
@@ -338,18 +343,19 @@ private fun ChoseDateRangeDialog(
                                 .width(40.dp)
                                 .height(25.dp)
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(Color.Gray),
+                                .background(currencyColorZero),
                             textAlign = TextAlign.Center,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = stringResource(R.string.year))
+                        Text(text = stringResource(R.string.year), color = textPrimaryColor)
                         val d1 = Date()
                         val yearShortText = "${stringResource(R.string.year)} "+getYear(d1)
-                        Text(text = yearShortText, fontSize = 14.sp, color = Color.Gray)
+                        Text(text = yearShortText, fontSize = 14.sp, color = currencyColorZero)
                     }
-                    Divider(modifier = Modifier
+
+                    Divider(modifier = Modifier.background(bordersSecondaryColor)
                         .width(1.dp)
                         .fillMaxHeight())
                     Column(
@@ -371,16 +377,16 @@ private fun ChoseDateRangeDialog(
                                     openDialog.value = false
                                 }
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(Color.Gray),
+                                .background(currencyColorZero),
                             textAlign = TextAlign.Center,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = stringResource(R.string.month))
+                        Text(text = stringResource(R.string.month), color = textPrimaryColor)
                         val d1 = Date()
                         val monthShortText = getNameOfMonthByNumber(d1.month, LocalContext.current)+" "+ getYear(d1)
-                        Text(text = monthShortText, fontSize = 14.sp, color = Color.Gray)
+                        Text(text = monthShortText, fontSize = 14.sp, color = currencyColorZero)
                     }
                 }
             }
@@ -406,9 +412,10 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
         ) {
             Column(
                 modifier = Modifier
+                    .clip(RoundedCornerShape(CornerSize(4.dp)))
                     .width(300.dp)
                     .height(IntrinsicSize.Min)
-                    .background(Color.White)
+                    .background(backgroundSecondaryColor)
             ) {
                 Row(
                     modifier = Modifier
@@ -417,9 +424,9 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = stringResource(R.string.select_range), fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.select_range), fontWeight = FontWeight.Bold, color = textPrimaryColor)
                 }
-                Divider()
+                Divider(modifier = Modifier.background(bordersSecondaryColor))
 
                 Row(
                     modifier = Modifier
@@ -443,15 +450,16 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                                 .width(50.dp)
                                 .height(25.dp)
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(Color.Gray),
+                                .background(currencyColorZero),
                             textAlign = TextAlign.Center,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = getShortDateString(startDate.value!!, LocalContext.current), fontSize = 14.sp, color = Color.Gray)
+                        Text(text = getShortDateString(startDate.value!!, LocalContext.current), fontSize = 14.sp, color = currencyColorZero)
                     }
-                    Divider(modifier = Modifier
+
+                    Divider(modifier = Modifier.background(bordersSecondaryColor)
                         .width(1.dp)
                         .fillMaxHeight())
                     Column(
@@ -470,17 +478,17 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                                 .width(50.dp)
                                 .height(25.dp)
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(Color.Gray),
+                                .background(currencyColorZero),
                             textAlign = TextAlign.Center,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color= Color.White
                         )
-                        Text(text = getShortDateString(endDate.value!!, LocalContext.current), fontSize = 14.sp, color = Color.Gray)
+                        Text(text = getShortDateString(endDate.value!!, LocalContext.current), fontSize = 14.sp, color = currencyColorZero)
                     }
                 }
 
-                Divider()
+                Divider(modifier = Modifier.background(bordersSecondaryColor))
                 
                 Row(
                     modifier = Modifier
@@ -489,9 +497,23 @@ private fun SelectRangeSubDialog(openDialog: MutableState<Boolean>, startDate: M
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(onClick = { openDialog.value = false }) {
-                        Text(text = stringResource(R.string.ok), fontWeight = FontWeight.Bold, color = Color.White)
+
+
+                    Button(
+                        modifier = Modifier.padding(0.dp),
+                        shape = RoundedCornerShape(30.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = backgroundPrimaryColor),
+                        onClick = {
+                            openDialog.value = false
+                        }
+                    ) {
+                        Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
+                            Text(text = stringResource(
+                                R.string.ok), color = textPrimaryColor, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        }
+
                     }
+
                 }
             }
 
@@ -527,15 +549,22 @@ fun DatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableState<
                         }
                     }
                 )
-                Button(onClick = {
-                    pickDate(Date(year, month, date),startDate, endDate)
-                    openDialog.value = false
-                },
-                    shape = RoundedCornerShape(30.dp)) {
-                    Text(text = stringResource(R.string.ok), color = Color.White)
+
+                Button(
+                    modifier = Modifier.padding(0.dp),
+                    shape = RoundedCornerShape(30.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = backgroundPrimaryColor),
+                    onClick = {
+                        pickDate(Date(year, month, date),startDate, endDate)
+                        openDialog.value = false
+                    }
+                ) {
+                    Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
+                        Text(text = stringResource(
+                            R.string.ok), color = textPrimaryColor, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
                 }
             }
-
         }
     }
 }
@@ -551,7 +580,7 @@ fun StartDatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableS
             var year = if(startDate.value!=null) startDate.value!!.year else Date().year
             var month = if(startDate.value!=null) startDate.value!!.month else Date().month
             var date =if(startDate.value!=null) startDate.value!!.date else  Date().date
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.background(whiteSurface), horizontalAlignment = Alignment.CenterHorizontally) {
                 AndroidView(
                     { CalendarView(it) },
                     modifier = Modifier
@@ -564,12 +593,20 @@ fun StartDatePickerDialog(openDialog: MutableState<Boolean>, startDate: MutableS
                         }
                     }
                 )
-                Button(onClick = {
-                    pickStartDate(Date(year, month, date), startDate)
-                    openDialog.value = false
-                },
-                    shape = RoundedCornerShape(30.dp)) {
-                    Text(text = stringResource(R.string.ok), color = Color.White)
+
+                Button(
+                    modifier = Modifier.padding(0.dp),
+                    shape = RoundedCornerShape(30.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = backgroundPrimaryColor),
+                    onClick = {
+                        pickStartDate(Date(year, month, date), startDate)
+                        openDialog.value = false
+                    }
+                ) {
+                    Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
+                        Text(text = stringResource(
+                            R.string.ok), color = textPrimaryColor, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
                 }
             }
 
@@ -588,7 +625,7 @@ fun EndDatePickerDialog(openDialog: MutableState<Boolean>, endDate: MutableState
             var year = if(endDate.value!=null) endDate.value!!.year else Date().year
             var month = if(endDate.value!=null) endDate.value!!.month else Date().month
             var date =if(endDate.value!=null) endDate.value!!.date else  Date().date
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.background(whiteSurface), horizontalAlignment = Alignment.CenterHorizontally) {
                 AndroidView(
                     { CalendarView(it) },
                     modifier = Modifier
@@ -601,15 +638,22 @@ fun EndDatePickerDialog(openDialog: MutableState<Boolean>, endDate: MutableState
                         }
                     }
                 )
-                Button(onClick = {
-                    pickEndDate(Date(year, month, date), endDate)
-                    openDialog.value = false
-                },
-                    shape = RoundedCornerShape(30.dp)) {
-                    Text(text = stringResource(R.string.ok), color = Color.White)
+
+                Button(
+                    modifier = Modifier.padding(0.dp),
+                    shape = RoundedCornerShape(30.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = backgroundPrimaryColor),
+                    onClick = {
+                        pickEndDate(Date(year, month, date), endDate)
+                        openDialog.value = false
+                    }
+                ) {
+                    Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.Center) {
+                        Text(text = stringResource(
+                            R.string.ok), color = textPrimaryColor, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
                 }
             }
-
         }
     }
 }

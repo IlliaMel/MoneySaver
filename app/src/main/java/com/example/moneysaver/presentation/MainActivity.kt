@@ -48,12 +48,10 @@ import com.example.moneysaver.presentation.accounts.Accounts
 import com.example.moneysaver.presentation.accounts.AccountsViewModel
 import com.example.moneysaver.presentation.accounts.additional_composes.SetAccountCurrencyType
 import com.example.moneysaver.presentation.categories.Categories
+import com.example.moneysaver.presentation.categories.CategoriesViewModel
 import com.example.moneysaver.presentation.transactions.Transactions
 import com.example.moneysaver.presentation.utils.*
-import com.example.moneysaver.ui.theme.MoneySaverTheme
-import com.example.moneysaver.ui.theme.backgroundPrimaryColor
-import com.example.moneysaver.ui.theme.lightGrayTransparent
-import com.example.moneysaver.ui.theme.whiteSurface
+import com.example.moneysaver.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -158,6 +156,11 @@ class MainActivity : FragmentActivity() {
             )
 
 
+            var THEME = "theme"
+            var theme = sharedPref.getString(THEME, "light")
+            if (theme != null) {
+                changeTheme (theme)
+            }
             MoneySaverTheme {
                 if ((!isConnectionEnabled && !isParsed) ||  viewModel.isCurrencyDbEmpty()) {
                     Box(modifier = Modifier
@@ -202,9 +205,11 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
            context: Context?,
            formattedDate : String,
            accountsViewModel: AccountsViewModel  = hiltViewModel(),
-           viewModel: MainActivityViewModel  = hiltViewModel()){
+           viewModel: MainActivityViewModel  = hiltViewModel(),
+           categoriesViewModel: CategoriesViewModel = hiltViewModel()){
 
     // A surface container using the 'background' color from the theme
+
 
     var MINUTE_ALARM = "minute_alarm"
     var HOUR_ALARM = "hour_alarm"
@@ -212,6 +217,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
     var ALARM_ON = "alarm_on"
     var SECURE_ON = "secure_on"
     var SECURE_CODE = "secure_code"
+    var THEME = "theme"
 
     /*
         with(sharedPref.edit()) {
@@ -260,6 +266,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
         AccountsData.allAccountFilter.balance = accountsViewModel.findSum(accountsViewModel.state.allAccountList,baseCurrency.currencyName)
         AccountsData.allAccountFilter.currencyType = baseCurrency
 
+
+
         var appLanguage = remember {
             mutableStateOf(sharedPref.getString(APP_LANGUAGE, "Default"))
         }
@@ -296,8 +304,6 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
         val openSelectLanguageDialog = remember { mutableStateOf(false) }
 
         var isCodeOpenFromNavBar by remember { mutableStateOf(false) }
-
-
 
         Scaffold(
             scaffoldState = scaffoldState,
@@ -370,6 +376,33 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                             0 -> {
                                 openSelectLanguageDialog.value = true
                             }
+                            1 -> {
+
+                                if(sharedPref.getString(THEME, "light") == "light") {
+                                    Toast.makeText(
+                                        MoneySaver.applicationContext(),
+                                        "Dark Theme",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    with(sharedPref.edit()) {
+                                        putString(THEME, "dark")
+                                        apply()
+                                    }
+                                }
+                                else if (sharedPref.getString(THEME, "light") == "dark") {
+                                    Toast.makeText(
+                                        MoneySaver.applicationContext(),
+                                        "Light Theme",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    with(sharedPref.edit()) {
+                                        putString(THEME, "light")
+                                        apply()
+                                    }
+                                }
+                                MainActivity.instance!!.restartApp()
+                            }
+
                             2 -> {
                                 notificationClicked = true
                             }
@@ -490,13 +523,23 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                     }
 
                 }
-                if(selectedTabIndex != 3)
-                Row(modifier = Modifier.weight(0.8f)) {
+                if(selectedTabIndex != 3){
+                    Row(modifier = Modifier.weight(0.8f)) {
+                        TabsForScreens(){
+                            selectedTabIndex = it
+                        }
+                    }
 
-                    TabsForScreens(){
-                        selectedTabIndex = it
+                    Row(modifier = Modifier
+                        .weight(0.1f)
+                        .fillMaxWidth()
+                        .background(
+                            backgroundSecondaryColor
+                        )) {
+
                     }
                 }
+
 
             }
         }

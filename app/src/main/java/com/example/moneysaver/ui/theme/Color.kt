@@ -10,22 +10,18 @@ val Teal200 = Color(0xFF03DAC5)
 val darkThemeBackgroundColor = Color(0xFF1F1F1F)
 val darkThemeTextColor = Color(0xFFFFFFFF)
 
-val textPrimaryColor = Color(0xFFFFFFFF)
-val textSecondaryColor = Color(0xFFDDDDDD)
+var textPrimaryColor = Color(0xFF141414)
+var textSecondaryColor = Color(0xFF1F1F1F)
 
-val backgroundPrimaryColor = Color(0xFF0C0C0C)
-val backgroundSecondaryColor = Color(0xFF1F1F1F)
-val backgroundSecondaryLighterColor = Color(0xFF2F2F2F)
+var backgroundPrimaryColor = Color(0xFFF3F3F3)
+var backgroundSecondaryColor = Color(0xFFE7E7E7)
 
-val primaryColor = Color(0xFF171717)
-val secondaryColor = Color(0xFF252525)
+var bordersPrimaryColor = Color(0xFFD2D2D2)
+var bordersSecondaryColor = Color(0xFFCACACA)
 
-val bordersPrimaryColor = Color(0xFF292929)
-val bordersSecondaryColor = Color(0xFF3A3A3A)
-
-val calculatorButton = Color(23, 23, 23, 225)
-val calculatorButtonNumbers = Color(49, 49, 49, 221)
-val calculatorBorderColor = Color(0xFF3A3A3A)
+var calculatorButton = Color(236, 236, 236, 225)
+var calculatorButtonNumbers = Color(255, 255, 255, 221)
+var calculatorBorderColor = Color(209, 209, 209, 212)
 
 /*
 
@@ -33,6 +29,20 @@ val calculatorButton = Color(236, 236, 236, 225)
 val calculatorButtonNumbers = Color(255, 255, 255, 221)
 val calculatorBorderColor = Color(209, 209, 209, 212)
 
+
+
+var textPrimaryColor = Color(0xFFFFFFFF)
+var textSecondaryColor = Color(0xFFDDDDDD)
+
+var backgroundPrimaryColor = Color(0xFF141414)
+var backgroundSecondaryColor = Color(0xFF1F1F1F)
+
+var bordersPrimaryColor = Color(0xFF292929)
+var bordersSecondaryColor = Color(0xFF3A3A3A)
+
+var calculatorButton = Color(23, 23, 23, 225)
+var calculatorButtonNumbers = Color(49, 49, 49, 221)
+var calculatorBorderColor = Color(0xFF3A3A3A)
  */
 
 
