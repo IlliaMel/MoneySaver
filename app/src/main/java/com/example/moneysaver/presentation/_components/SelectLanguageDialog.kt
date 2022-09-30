@@ -32,11 +32,19 @@ import com.example.moneysaver.presentation.accounts.additional_composes.VectorIc
 import com.example.moneysaver.ui.theme.*
 import org.intellij.lang.annotations.Language
 
-val languageList = listOf("Default", "Albanian","Arabic", "Armenian", "Azerbaijani", "Bosnian", "Bulgarian",
-    "Chinese", "Croatian", "Czech", "Danish", "English", "Esperanto", "Estonian", "Filipino", "Finnish",
-    "French","Georgian","German","Greek","Icelandic","Indonesian","Irish","Italian","Japanese","Kazakh",
-    "Korean","Latvian","Mongolian","Norwegian","Persian","Polish","Portuguese","Serbian","Slovak", "Slovenian",
-    "Swedish", "Turkish","Ukrainian")
+val languageList = listOf(
+    "Default",
+    "Arabic",
+    "Chinese",
+    "English",
+    "French",
+    "German",
+    "Hindi",
+    "Japanese",
+    "Spanish",
+    "Turkish",
+    "Ukrainian"
+)
 
 @Composable
 fun SelectLanguageDialog(

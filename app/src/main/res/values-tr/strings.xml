@@ -55,7 +55,7 @@
     <string name="edit_category">Kategoriyi Düzenle</string>
     <string name="new_category">Yeni Kategori</string>
     <string name="account_description">Hesap Açıklaması</string>
-    <string name="choose_currency_type">Para Türü Seç</string>
+    <string name="choose_currency_type">Para Birimi Türü Seç</string>
     <string name="image">Resim</string>
     <string name="color">Renk</string>
     <string name="edit_account">Hesabı Düzenle</string>
@@ -93,7 +93,7 @@
     <string name="to_account">Hesaba</string>
     <string name="add_at_least_two_accounts">En az 2 hesap ekleyin</string>
     <string name="transfer">Transfer</string>
-    <string name="same_account_error">Am\'a havale yapılamıyor e hesap</string>
+    <string name="same_account_error">Sam\'e havale yapılamıyor e hesap</string>
     <string name="lack_of_balance">Bakiye eksikliği</string>
     <string name="add_security">Güvenlik Ekle</string>
     <string name="security_password">Güvenlik Şifresi</string>
@@ -124,10 +124,14 @@
     <string name="add_goal">Hedef Ekle</string>
     <string name="all_accounts">Tüm Hesaplar</string>
     <string name="salary">Maaş </string>
-    <string name="stash">Stash</string>
+    <string name="stash">Sakla</string>
     <string name="for_trip">Seyahat için</string>
-    <string name="car_dept">Araba Departmanı</string>
-    <string name="dept_for_the_car">Araba Departmanı</string>
+    <string name="car_dept">Araba borcu</string>
+    <string name="dept_for_the_car">Araba için borç</string>
     <string name="add_category">Kategori Ekle</string>
     <string name="simple">Basit</string>
+    <string name="wipe_data">Verileri Sil</string>
+    <string name="delete_all_information">Tüm bilgileri sil</string>
+    <string name="info">Bilgi</string>
+    <string name="info_about_us">Hakkımızda bilgiler</string>
 </resources>

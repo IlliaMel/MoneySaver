@@ -126,8 +126,12 @@
     <string name="salary">Gehalt </string>
     <string name="stash">Stash</string>
     <string name="for_trip">Für die Reise</string>
-    <string name="car_dept">Autoabteilung</string>
-    <string name="dept_for_the_car">Abteilung für das Auto</string>
+    <string name="car_dept">Autoschulden</string>
+    <string name="dept_for_the_car">Schulden für Auto</string>
     <string name="add_category">Kategorie hinzufügen</string>
     <string name="simple">Einfach</string>
+    <string name="wipe_data">Daten löschen</string>
+    <string name="delete_all_information">Alle Informationen löschen</string>
+    <string name="info">Info</string>
+    <string name="info_about_us">Info über uns</string>
 </resources>

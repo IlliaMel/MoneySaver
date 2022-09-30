@@ -362,12 +362,12 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                         MenuBlock(title = stringResource(R.string.data_management), items = listOf(
                             MenuItem(number = 5 , title = stringResource(R.string._import), description = stringResource(R.string.read_data_to_file), icon = Icons.Default.Edit),
                             MenuItem(number = 6 , title = stringResource(R.string._export), description = stringResource(
-                                                            R.string.write_data_from_file), icon = Icons.Default.Edit)
-                        )),
+                                                            R.string.write_data_from_file), icon = Icons.Default.Edit),
+                            MenuItem(number = 7 , title = stringResource(R.string.wipe_data), description = stringResource(R.string.delete_all_information), icon = Icons.Default.Delete),
+                            )),
 
-                        MenuBlock(title = stringResource(R.string.Info), items = listOf(
-                            MenuItem(number = 7 , title = "Wipe Data", description = "Delete All Information", icon = Icons.Default.Delete),
-                            MenuItem(number = 8 , title = "Info", description = "Info about us", icon = Icons.Default.Info)
+                        MenuBlock(title = stringResource(R.string.info), items = listOf(
+                            MenuItem(number = 8 , title =  stringResource(R.string.info), description =  stringResource(R.string.info_about_us), icon = Icons.Default.Info)
                         ))
 
                     ),
