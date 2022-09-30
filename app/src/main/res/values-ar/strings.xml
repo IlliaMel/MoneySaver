@@ -28,7 +28,7 @@
     <string name="add_transaction"> إضافة معاملة </string>
     <string name="starting_balance"> الرصيد الافتتاحي </string>
     <string name="ending_balance"> الرصيد الختامي </string>
-    <string name="undo_search"> تراجع عن البحث </string>
+    <string name="undo_search"> التراجع عن البحث </string>
     <string name="january"> يناير </string>
     <string name="february"> فبراير </string>
     <string name="march"> مارس </string>
@@ -93,7 +93,7 @@
     <string name="to_account"> إلى الحساب </string>
     <string name="add_at_least_two_accounts"> إضافة حسابين على الأقل </string>
     <string name="transfer"> التحويل </string>
-    <string name="same_account_error"> لا يمكن إجراء تحويل إلى sam حساب إلكتروني </string>
+    <string name="same_account_error"> لا يمكن إجراء التحويل إلى sam حساب إلكتروني </string>
     <string name="lack_of_balance"> عدم وجود رصيد </string>
     <string name="add_security"> إضافة أمان </string>
     <string name="security_password"> كلمة مرور الأمان </string>
@@ -124,10 +124,14 @@
     <string name="add_goal"> إضافة هدف </string>
     <string name="all_accounts"> جميع الحسابات </string>
     <string name="salary"> الراتب </string>
-    <string name="stash"> Stash </string>
-    <string name="for_trip"> للرحلات </string>
-    <string name="car_dept"> قسم السيارات </string>
-    <string name="dept_for_the_car"> قسم السيارة </string>
+    <string name="stash"> خبأ </string>
+    <string name="for_trip"> لرحلة </string>
+    <string name="car_dept">ديون السيارات</string>
+    <string name="dept_for_the_car">ديون للسيارة</string>
     <string name="add_category"> إضافة فئة </string>
-    <string name="simple"> بسيط</string>
+    <string name="simple"> بسيط </string>
+    <string name="wipe_data"> مسح البيانات </string>
+    <string name="delete_all_information"> حذف جميع المعلومات </string>
+    <string name="info"> معلومات </string>
+    <string name="info_about_us"> معلومات عنا</string>
 </resources>

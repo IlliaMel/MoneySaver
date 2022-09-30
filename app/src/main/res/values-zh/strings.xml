@@ -124,10 +124,14 @@
     <string name="add_goal">添加目標</string>
     <string name="all_accounts">所有賬戶</string>
     <string name="salary">工資</string>
-    <string name="stash">儲藏</string>
+    <string name="stash">存儲</string>
     <string name="for_trip">旅行</string>
-    <string name="car_dept">汽車部門</string>
-    <string name="dept_for_the_car">汽車部門</string>
+    <string name="car_dept">車債</string>
+    <string name="dept_for_the_car">車債</string>
     <string name="add_category">添加類別</string>
     <string name="simple">簡單</string>
+    <string name="wipe_data">擦除數據</string>
+    <string name="delete_all_information">刪除所有信息</string>
+    <string name="info">信息</string>
+    <string name="info_about_us">關於我們的信息</string>
 </resources>

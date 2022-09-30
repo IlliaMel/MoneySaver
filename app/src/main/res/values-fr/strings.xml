@@ -124,10 +124,14 @@
     <string name="add_goal">Ajouter un objectif</string>
     <string name="all_accounts">Tous les comptes</string>
     <string name="salary">Salaire </string>
-    <string name="stash">Casque</string>
+    <string name="stash">Stash</string>
     <string name="for_trip">Pour le voyage</string>
-    <string name="car_dept">Département des voitures</string>
-    <string name="dept_for_the_car">Département pour la voiture</string>
+    <string name="car_dept">Dette de voiture</string>
+    <string name="dept_for_the_car">Dette pour voiture</string>
     <string name="add_category">Ajouter une catégorie</string>
     <string name="simple">Simple</string>
+    <string name="wipe_data">Effacer les données</string>
+    <string name="delete_all_information">Supprimer toutes les informations</string>
+    <string name="info">Infos</string>
+    <string name="info_about_us">Infos sur nous</string>
 </resources>

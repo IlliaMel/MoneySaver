@@ -126,8 +126,12 @@
     <string name="salary">給与</string>
     <string name="stash">Stash</string>
     <string name="for_trip">旅行用</string>
-    <string name="car_dept">車のデパート</string>
-    <string name="dept_for_the_car">車のデパート</string>
+    <string name="car_dept">車の借金</string>
+    <string name="dept_for_the_car">車の借金</string>
     <string name="add_category">カテゴリを追加</string>
     <string name="simple">シンプル</string>
+    <string name="wipe_data">データを消去</string>
+    <string name="delete_all_information">すべての情報を削除</string>
+    <string name="info">情報</string>
+    <string name="info_about_us">私たちについての情報</string>
 </resources>
