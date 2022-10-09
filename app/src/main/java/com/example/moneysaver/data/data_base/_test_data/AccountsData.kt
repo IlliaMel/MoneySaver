@@ -118,20 +118,7 @@ object AccountsData {
             currencyType = Currency(),
             title = MainActivity.instance!!.getString(R.string.cash),
             balance = 0.0,
-        ),
-        Account(
-            accountImg =VectorImg(),
-            currencyType = Currency(),
-            title = "Credit Card #1",
-            balance = 15267.43,
-        ),
-        Account(
-            accountImg = VectorImg(),
-            currencyType = Currency(),
-            title = "Credit Card #2",
-            balance = 1678.63,
-        ),
-
+        )
     )
 
     fun update() {

@@ -97,9 +97,7 @@ fun Categories(
             isAddingCategory.value = false
         }
     }
-
-
- if(!isAddingCategory.value){
+if(!isAddingCategory.value){
     Column() {
         TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categoriesWithAdder.size > 1 || isForEditing) isForEditing =
             !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)

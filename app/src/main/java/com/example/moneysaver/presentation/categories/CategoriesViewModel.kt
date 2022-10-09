@@ -149,7 +149,7 @@ class CategoriesViewModel @Inject constructor(
                 category.spent = 0.0
                 for(tr in transactions) {
                     if(tr.accountUUID == account.uuid || (account.isForGoal && account.isForDebt))
-                        if(category!=null)
+                        if(category!=null && state.accountsList.isNotEmpty())
                         if(tr.categoryUUID == category.uuid) {
                             if(state.accountsList.isNotEmpty())
                             if(tr.sum < 0){
