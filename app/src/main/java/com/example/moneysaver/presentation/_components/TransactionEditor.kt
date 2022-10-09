@@ -2,6 +2,7 @@ package com.example.moneysaver.presentation._components
 
 import java.util.*
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.graphics.ColorUtils
+import com.example.moneysaver.MoneySaver
 import com.example.moneysaver.R
 import com.example.moneysaver.data.data_base._test_data.AccountsData
 import com.example.moneysaver.data.data_base._test_data.CategoriesData
@@ -306,24 +308,40 @@ fun TransactionEditor(
 
     if(isSubmitted.value) {
         val transactionNote: String? = if (note != "") note else null
-        val transaction = if(currentTransaction.value==null) Transaction(
-            sum = (sumText.value.toDoubleOrNull() ?: 0.0) * if(category.value.isForSpendings) -1 else 1,
-            categoryUUID = category.value.uuid,
-            accountUUID = transactionAccount.value.uuid,
-            date = date.value?:Date(),
-            note = transactionNote
-        ) else Transaction(
-            uuid=currentTransaction.value!!.uuid,
-            sum = (sumText.value.toDoubleOrNull() ?: 0.0) * if(category.value.isForSpendings) -1 else 1,
-            categoryUUID = category.value.uuid,
-            accountUUID = transactionAccount.value.uuid,
-            date = date.value?:Date(),
-            note = transactionNote
-        )
-        addTransaction(transaction)
-        isSubmitted.value=false
-        sumText.value="0"
-        closeAdder()
+        isSubmitted.value = false
+        var writtenSum = (sumText.value.toDoubleOrNull() ?: 0.0)
+        if(category.value.isForSpendings && writtenSum > (transactionAccount.value.balance + transactionAccount.value.creditLimit))
+            Toast
+                .makeText(
+                    MoneySaver.applicationContext(),
+                    MoneySaver
+                        .applicationContext()
+                        .getString(R.string.lack_of_balance),
+                    Toast.LENGTH_SHORT
+                )
+                .show()
+        else {
+
+            val transaction = if (currentTransaction.value == null) Transaction(
+                sum = (sumText.value.toDoubleOrNull()
+                    ?: 0.0) * if (category.value.isForSpendings) -1 else 1,
+                categoryUUID = category.value.uuid,
+                accountUUID = transactionAccount.value.uuid,
+                date = date.value ?: Date(),
+                note = transactionNote
+            ) else Transaction(
+                uuid = currentTransaction.value!!.uuid,
+                sum = (sumText.value.toDoubleOrNull()
+                    ?: 0.0) * if (category.value.isForSpendings) -1 else 1,
+                categoryUUID = category.value.uuid,
+                accountUUID = transactionAccount.value.uuid,
+                date = date.value ?: Date(),
+                note = transactionNote
+            )
+            addTransaction(transaction)
+            sumText.value = "0"
+            closeAdder()
+        }
     }
 
     DatePickerDialog(openDialog = openPickDateDialog, startDate = date )
