@@ -360,12 +360,11 @@ private fun prepareSumStr(
     sumTextSecond: MutableState<String>?,
     isFirstFieldSelected: MutableState<Boolean>?
 ) {
-    if(isFirstFieldSelected!=null && !isFirstFieldSelected.value) {
-        if(sumText.value.last().isMathOperator())
-            sumText.value=sumText.value.dropLast(1)
-        if(sumText.value.canBeEvaluatedAsMathExpr())
-            evaluateSumValue(sumText)
-    } else {
+    if(sumText.value.last().isMathOperator())
+        sumText.value=sumText.value.dropLast(1)
+    if(sumText.value.canBeEvaluatedAsMathExpr())
+        evaluateSumValue(sumText)
+    if (isFirstFieldSelected!=null && !isFirstFieldSelected.value){
         if(sumTextSecond!!.value.last().isMathOperator())
             sumTextSecond!!.value=sumTextSecond!!.value.dropLast(1)
         if(sumTextSecond!!.value.canBeEvaluatedAsMathExpr())
