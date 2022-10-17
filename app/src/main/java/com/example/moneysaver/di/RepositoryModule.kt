@@ -36,7 +36,7 @@ object RepositoryModule {
             app,
             AccountDataBase::class.java,
             AccountDataBase.DATABASE_NAME
-        ).build()
+        ).createFromAsset("databases/accounts_default.db").build()
     }
 
     @Provides
@@ -46,7 +46,7 @@ object RepositoryModule {
             app,
             CategoryDataBase::class.java,
             CategoryDataBase.DATABASE_NAME
-        ).build()
+        ).createFromAsset("databases/categories_default.db").build()
     }
 
     @Provides
