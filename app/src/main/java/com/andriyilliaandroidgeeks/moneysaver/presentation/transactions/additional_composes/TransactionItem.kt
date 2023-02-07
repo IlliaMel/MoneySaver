@@ -67,7 +67,7 @@ fun TransactionItem(transaction: Transaction,
                         ?: "$") + " " + abs(transaction.sum)
                     if(transaction.toAccountUUID!=null)
                         sumText+=" -> "+(if(transaction.toAccountSum!!>0) "+" else "-") + (viewModel.state.accountsList.find { it.uuid == transaction.toAccountUUID }?.currencyType?.currency
-                            ?: "$") + " " + abs(transaction.toAccountSum)
+                            ?: "$") + " " + abs(transaction.toAccountSum!!)
 
                     val color =  if(transaction.categoryUUID != null) {if(transaction.sum>0) currencyColor else currencyColorSpent} else currencyColorZero
                     Text(sumText, color = color, fontSize = 15.sp , fontWeight = FontWeight.W400)

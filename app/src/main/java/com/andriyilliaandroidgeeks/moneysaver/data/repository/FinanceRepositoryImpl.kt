@@ -124,6 +124,7 @@ class FinanceRepositoryImpl(
     }
 
     override suspend fun insertAccount(account: Account) {
+        account.roundAllFields()
         return accountDao.insertAccount(account)
     }
 
@@ -142,6 +143,7 @@ class FinanceRepositoryImpl(
     }
 
     override suspend fun insertCurrencyType(currencyType: Currency){
+        currencyType.roundAllFields()
         currencyDao.insertCurrencyType(currencyType)
     }
 

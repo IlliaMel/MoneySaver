@@ -41,7 +41,7 @@ class  AlarmService(
 
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var alarmIntent: PendingIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-            PendingIntent.getBroadcast(context, 0, intent, 0)
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         }
         alarmMgr!!.cancel(alarmIntent)
     }

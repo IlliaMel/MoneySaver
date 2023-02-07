@@ -9,7 +9,7 @@ import com.andriyilliaandroidgeeks.moneysaver.domain.model.Category
 
 @Database(
     entities = [Category::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(Converters::class)
 abstract class CategoryDataBase: RoomDatabase() {

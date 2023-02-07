@@ -6,6 +6,7 @@ import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.Accounts
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.VectorImg
 import java.io.Serializable
 import java.util.*
+import kotlin.math.roundToInt
 
 
 @Entity
@@ -16,13 +17,20 @@ data class Account(
     val title: String,
     val description: String = "description",
     var balance: Double = 0.0,
-    val creditLimit: Double = 0.0,
-    val goal: Double = 0.0,
-    val debt: Double = 0.0,
+    var creditLimit: Double = 0.0,
+    var goal: Double = 0.0,
+    var debt: Double = 0.0,
     val isForGoal: Boolean = false,
     val isForDebt: Boolean = false,
     val creationDate: Date = Date()
 ) : Serializable{
+
+    fun roundAllFields(){
+        balance = (balance * 100.0).roundToInt() / 100.0
+        goal = (goal * 100.0).roundToInt() / 100.0
+        debt = (debt * 100.0).roundToInt() / 100.0
+        creditLimit = (creditLimit * 100.0).roundToInt() / 100.0
+    }
 
     override fun toString(): String {
         return "\"$uuid\", \"$accountImg\", \"$currencyType\", \"$title\", \"$description\", \"$balance\", \"$creditLimit\", \"$goal\", \"$debt\", \"$isForGoal\", \"$isForDebt\", \"${creationDate.time}\""
