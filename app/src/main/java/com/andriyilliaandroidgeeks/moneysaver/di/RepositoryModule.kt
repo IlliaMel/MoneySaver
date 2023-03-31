@@ -46,7 +46,7 @@ object RepositoryModule {
             app,
             CategoryDataBase::class.java,
             CategoryDataBase.DATABASE_NAME
-        ).createFromAsset("databases/accounts_default.db").build()
+        ).build()
     }
 
     @Provides

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.andriyilliaandroidgeeks.moneysaver.R
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.CategoriesData
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.VectorImg
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Category
@@ -217,7 +218,7 @@ fun TopBarCategoryEdit(
             .height(IntrinsicSize.Min)
     ) {
         Image(
-            painter = painterResource(com.andriyilliaandroidgeeks.moneysaver.R.drawable.bg5),
+            painter = painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize()

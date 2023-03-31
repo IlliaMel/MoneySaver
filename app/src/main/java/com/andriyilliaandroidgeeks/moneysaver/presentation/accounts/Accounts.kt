@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
 import com.andriyilliaandroidgeeks.moneysaver.presentation._components.dividerForTopBar
 import com.andriyilliaandroidgeeks.moneysaver.presentation.accounts.additional_composes.*
@@ -428,7 +429,6 @@ fun ChooseAccountCompose(
             }
         }
     }
-
 }
 
 
@@ -445,7 +445,7 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
             .height(IntrinsicSize.Min)
     ) {
         Image(
-            painter = painterResource(R.drawable.bg5),
+            painter = painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize()

@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.andriyilliaandroidgeeks.moneysaver.MoneySaver
 import com.andriyilliaandroidgeeks.moneysaver.R
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Account
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Category
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
@@ -129,6 +130,7 @@ fun Transactions(
         scaffoldState = scaffoldState,
 
         sheetContent = {
+            Divider(modifier = Modifier.background(bordersSecondaryColor))
             if(sheetContentInitClose)
                 if(selectedCategory.value==null && selectedTransaction.value==null) {
                     if(!closedBottomSheet)
@@ -185,6 +187,7 @@ fun Transactions(
                     )
 
                 }
+
         },
         sheetPeekHeight = 0.dp,
         floatingActionButton = {
@@ -192,6 +195,7 @@ fun Transactions(
             if(sheetState.isCollapsed) sheetContentInitClose = true
 //??? !sheetState.isAnimationRunning
             FloatingActionButton(
+                modifier = Modifier.padding(0.dp,0.dp,0.dp,75.dp),
                 onClick = {
                     if(viewModel.addingTransactionIsAllowed()) {
                         scope.launch {
@@ -206,13 +210,14 @@ fun Transactions(
                         }
                     } else showNoAccountOrCategoryMessage()
                 },
-                backgroundColor = if(viewModel.addingTransactionIsAllowed()) Color(0xff5c6bbf) else Color(0xFFADADAB)
+                backgroundColor = if(viewModel.addingTransactionIsAllowed()) Color(0xFF337A2F) else Color(0xFFADADAB)
             ) {
                 Icon(
                     imageVector = if(sheetState.isCollapsed && !sheetState.isAnimationRunning) Icons.Default.Add else Icons.Default.ArrowDropDown,
                     contentDescription = stringResource(R.string.add_transaction)
                 )
             }
+
         }
     ) {
         Box(modifier = Modifier
@@ -463,7 +468,7 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
         var searchText by remember { mutableStateOf("") }
 
         Image(
-            painter = painterResource(R.drawable.bg5),
+            painter = painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize()

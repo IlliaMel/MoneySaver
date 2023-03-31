@@ -37,6 +37,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.andriyilliaandroidgeeks.moneysaver.MoneySaver
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.cardBgImg
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Account
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Transaction
 import com.andriyilliaandroidgeeks.moneysaver.presentation.MainActivityViewModel
@@ -191,7 +193,7 @@ fun AccountInfo (viewModel: AccountsViewModel = hiltViewModel(),
                     contentAlignment = Alignment.Center) {
 
                     Image(
-                        painter = painterResource(R.drawable.bg5),
+                        painter = painterResource(cardBgImg),
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
                         alignment = Alignment.Center,
@@ -505,7 +507,7 @@ fun AccountInfoItem(modifier : Modifier = Modifier,lookingInfo : Boolean , isAcc
             .height(IntrinsicSize.Min)
     ){
         Image(
-            painter = painterResource(R.drawable.bg5),
+            painter = painterResource(cardBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize(),

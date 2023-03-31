@@ -252,7 +252,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
         var chosenAccountFilter =
             if (accountsViewModel.state.allAccountList != null && accountsViewModel.state.allAccountList.isNotEmpty() && chosenAccountFilterTMP.value.uuid != AccountsData.allAccountFilter.uuid)
                 accountsViewModel.state.allAccountList.find { it.uuid == chosenAccountFilterTMP.value.uuid }
-             else
+            else
                 chosenAccountFilterTMP.value
 
 
@@ -310,12 +310,12 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                 if (notificationClicked){
                     TimePicker(TimeParsed = {
                         with(sharedPref.edit()) {
-                        putInt(MINUTE_ALARM, minutesNotification.value)
-                        putInt(HOUR_ALARM, hoursNotification.value)
-                        apply()
+                            putInt(MINUTE_ALARM, minutesNotification.value)
+                            putInt(HOUR_ALARM, hoursNotification.value)
+                            apply()
 
 
-                    }
+                        }
                     }, minutesNotification,hoursNotification)
                     notificationClicked = false
                 }
@@ -336,7 +336,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                             MenuItem(number = 0 , title = stringResource(R.string.language), description = if(appLanguage.value!=null) appLanguage.value!! else stringResource(
                                 R.string.defaultStr), icon = Icons.Default.Place),
                             MenuItem(number = 1 , title = stringResource(R.string.theme), description = stringResource(
-                                                            R.string.light), icon = Icons.Default.Build),
+                                R.string.light), icon = Icons.Default.Build),
                             MenuItem(
                                 number = 2,
                                 title = stringResource(R.string.notifications),
@@ -357,9 +357,9 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                         MenuBlock(title = stringResource(R.string.data_management), items = listOf(
                             MenuItem(number = 5 , title = stringResource(R.string._import), description = stringResource(R.string.read_data_to_file), icon = Icons.Default.Edit),
                             MenuItem(number = 6 , title = stringResource(R.string._export), description = stringResource(
-                                                            R.string.write_data_from_file), icon = Icons.Default.Edit),
+                                R.string.write_data_from_file), icon = Icons.Default.Edit),
                             MenuItem(number = 7 , title = stringResource(R.string.wipe_data), description = stringResource(R.string.delete_all_information), icon = Icons.Default.Delete),
-                            )),
+                        )),
 
                         MenuBlock(title = stringResource(R.string.info), items = listOf(
                             MenuItem(number = 8 , title =  stringResource(R.string.info), description =  stringResource(R.string.info_about_us), icon = Icons.Default.Info)
@@ -435,19 +435,19 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                                     apply()}
                             }
                             4 -> {
-                                   if(it.switchIsActive){
-                                       secureSwitch = false
-                                       with(sharedPref.edit()) {
-                                           putBoolean(SECURE_ON, false)
-                                           putString(SECURE_CODE,"")
-                                           apply()}
-                                   }else{
-                                       scope.launch {
-                                           isCodeOpenFromNavBar = true
-                                           selectedTabIndex = 3
-                                           scaffoldState.drawerState.close()
-                                       }
-                                   }
+                                if(it.switchIsActive){
+                                    secureSwitch = false
+                                    with(sharedPref.edit()) {
+                                        putBoolean(SECURE_ON, false)
+                                        putString(SECURE_CODE,"")
+                                        apply()}
+                                }else{
+                                    scope.launch {
+                                        isCodeOpenFromNavBar = true
+                                        selectedTabIndex = 3
+                                        scaffoldState.drawerState.close()
+                                    }
+                                }
                                 it.switchIsActive = false
                             }
                         }
@@ -560,11 +560,9 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
 
 }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        MoneySaverTheme {
-        }
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    MoneySaverTheme {
     }
-
-
+}

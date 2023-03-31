@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.andriyilliaandroidgeeks.moneysaver.MoneySaver
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.presentation.MainActivity
 import com.andriyilliaandroidgeeks.moneysaver.presentation.utils.showBiometricPrompt
 
@@ -68,7 +69,7 @@ fun SecureCodeEntering(
         }
 
         Image(
-            painter = painterResource(R.drawable.bg5),
+            painter = painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             alignment = Alignment.BottomEnd,

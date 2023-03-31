@@ -42,6 +42,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.cardBgImg
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.CategoriesData
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.VectorImg
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Account
@@ -689,7 +691,7 @@ fun TopBarAccounts(
             .height(IntrinsicSize.Min)
     ) {
         Image(
-            painter = painterResource(R.drawable.bg5),
+            painter = painterResource(cardBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize()
@@ -790,7 +792,7 @@ fun VectorIcon(modifier: Modifier = Modifier, modifierIcn: Modifier = Modifier, 
         .clip(RoundedCornerShape(corner = CornerSize(cornerSize))),
         contentAlignment = Alignment.Center){
         Image(
-            painter = painterResource(R.drawable.bg5),
+            painter = painterResource(cardBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             alignment = Alignment.BottomEnd,

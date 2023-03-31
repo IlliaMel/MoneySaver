@@ -34,6 +34,7 @@ import androidx.compose.ui.window.Dialog
 import com.andriyilliaandroidgeeks.moneysaver.MoneySaver
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.CategoriesData
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Account
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Category
@@ -94,7 +95,7 @@ fun TransactionEditor(
                         .height(IntrinsicSize.Min)
                 ){
                     Image(
-                        painter = painterResource(R.drawable.bg5),
+                        painter = painterResource(AccountsData.cardBgImg),
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
                         modifier = Modifier.matchParentSize(),
@@ -139,7 +140,7 @@ fun TransactionEditor(
                         .height(IntrinsicSize.Min)
                 ){
                     Image(
-                        painter = painterResource(R.drawable.bg5),
+                        painter = painterResource(AccountsData.cardBgImg),
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
                         modifier = Modifier.matchParentSize(),

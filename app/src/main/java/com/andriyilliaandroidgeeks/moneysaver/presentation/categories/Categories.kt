@@ -37,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Account
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
 import com.andriyilliaandroidgeeks.moneysaver.presentation._components.*
@@ -71,7 +72,9 @@ fun Categories(
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
     )
+
     val scope = rememberCoroutineScope()
+
 
     val selectedCategory : MutableState<Category> = remember { mutableStateOf(CategoriesData.addCategory) }
 
@@ -108,7 +111,8 @@ if(!isAddingCategory.value){
             BottomSheetScaffold(
                 scaffoldState = scaffoldState,
                 sheetContent = {
-                    if(sheetContentInitClose && viewModel.state.accountsList.isNotEmpty())
+                    Divider(modifier = Modifier.background(bordersSecondaryColor))
+                    if(sheetContentInitClose && viewModel.state.accountsList.isNotEmpty() && selectedCategory.value != CategoriesData.addCategory)
                         TransactionEditor(
                             category = selectedCategory,
                             addTransaction = viewModel::addTransaction,
@@ -689,7 +693,7 @@ fun TopBarCategories(onNavigationIconClick: () -> Unit, onEditClick: () -> Unit,
             .height(IntrinsicSize.Min)
     ) {
         Image(
-            painter = painterResource(R.drawable.bg5),
+            painter = painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize()

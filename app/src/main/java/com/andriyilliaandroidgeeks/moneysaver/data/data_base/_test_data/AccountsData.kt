@@ -26,6 +26,8 @@ data class VectorImg(
 
 object AccountsData {
 
+    var accountBgImg = R.drawable.bg6
+    var cardBgImg = R.drawable.bg5
 
     val accountImges = mutableListOf(
         VectorImg(img = R.drawable.ic_account_img_1),
