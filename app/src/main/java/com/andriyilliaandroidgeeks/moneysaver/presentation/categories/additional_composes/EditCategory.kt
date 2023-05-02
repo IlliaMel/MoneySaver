@@ -1,5 +1,6 @@
 package com.andriyilliaandroidgeeks.moneysaver.presentation.categories.additional_composes
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,12 +31,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.CategoriesData
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.VectorImg
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Category
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
+import com.andriyilliaandroidgeeks.moneysaver.presentation.MainActivityViewModel
 import com.andriyilliaandroidgeeks.moneysaver.presentation.accounts.additional_composes.*
 import com.andriyilliaandroidgeeks.moneysaver.presentation.categories.CategoriesViewModel
 import com.andriyilliaandroidgeeks.moneysaver.ui.theme.*
@@ -197,6 +204,7 @@ fun TopBarCategoryEdit(
     typeOfCategory: String,
     vectorImg: VectorImg,
     onChangeImg: (VectorImg) -> Unit,
+    mainActivityViewModel: MainActivityViewModel = hiltViewModel(),
     onAddCategoryAction: (String) -> Unit,
     onCancelIconClick: () -> Unit){
     var text by rememberSaveable { mutableStateOf(title) }
@@ -218,7 +226,9 @@ fun TopBarCategoryEdit(
             .height(IntrinsicSize.Min)
     ) {
         Image(
-            painter = painterResource(accountBgImg),
+            painter = if (mainActivityViewModel.state.accountBgImgBitmap != null)
+                BitmapPainter(mainActivityViewModel.state.accountBgImgBitmap!!.asImageBitmap())
+            else painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize()

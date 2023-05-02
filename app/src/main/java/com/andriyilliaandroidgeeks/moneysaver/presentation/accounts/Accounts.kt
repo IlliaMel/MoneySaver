@@ -1,5 +1,6 @@
 package com.andriyilliaandroidgeeks.moneysaver.presentation.accounts
 
+import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
@@ -32,11 +33,19 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.platform.LocalContext
+
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
+import com.andriyilliaandroidgeeks.moneysaver.presentation.MainActivityViewModel
 import com.andriyilliaandroidgeeks.moneysaver.presentation._components.dividerForTopBar
 import com.andriyilliaandroidgeeks.moneysaver.presentation.accounts.additional_composes.*
 import com.andriyilliaandroidgeeks.moneysaver.presentation.categories.additional_composes.valueToNormalFormat
@@ -137,9 +146,9 @@ fun Accounts(
                 ) {
                     TopBarAccounts(
                         onAddAccountAction = { setSelectedAccount.value = true },
-                        onNavigationIconClick,
+                        onNavigationIconClick = onNavigationIconClick,
                         onFilterClick = { isSelectedFilterAccount.value = true },
-                        chosenAccountFilter
+                        chosenAccountFilter = chosenAccountFilter
                     )
 
                     BackHandler(enabled = sheetState.isExpanded) {
@@ -435,7 +444,7 @@ fun ChooseAccountCompose(
 
 
 @Composable
-fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> Unit, onFilterClick: () -> Unit,chosenAccountFilter: Account){
+fun TopBarAccounts(mainActivityViewModel: MainActivityViewModel = hiltViewModel(),onAddAccountAction: () -> Unit, onNavigationIconClick: () -> Unit, onFilterClick: () -> Unit,chosenAccountFilter: Account){
 
 
 
@@ -445,7 +454,9 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
             .height(IntrinsicSize.Min)
     ) {
         Image(
-            painter = painterResource(accountBgImg),
+            painter = if (mainActivityViewModel.state.accountBgImgBitmap != null)
+                            BitmapPainter(mainActivityViewModel.state.accountBgImgBitmap!!.asImageBitmap())
+                else painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize()
@@ -455,16 +466,18 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-        ){
+        ) {
 
-            Row(modifier = Modifier
-                .padding(0.dp, 30.dp, 0.dp, 0.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(),
-                horizontalArrangement = Arrangement.SpaceBetween){
+            Row(
+                modifier = Modifier
+                    .padding(0.dp, 30.dp, 0.dp, 0.dp)
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 IconButton(modifier = Modifier
                     .padding(8.dp, 24.dp, 0.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = {onNavigationIconClick()}) {
+                    .size(40.dp, 40.dp), onClick = { onNavigationIconClick() }) {
                     Icon(
                         imageVector = Icons.Default.Menu,
                         tint = whiteSurface,
@@ -472,28 +485,48 @@ fun TopBarAccounts(onAddAccountAction: () -> Unit, onNavigationIconClick: () -> 
                     )
                 }
 
-                Column(modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(8.dp)
-                    .clickable { onFilterClick() },
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(modifier = Modifier
-                        .padding(0.dp, 12.dp, 0.dp, 4.dp) ,text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.title} ▾", color = whiteSurface, fontWeight = FontWeight.W300 , fontSize = 16.sp)
-                    Text(text = ("${chosenAccountFilter.balance} ${chosenAccountFilter.currencyType.currencyName}"), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 16.sp)
-
-                    Column(modifier = Modifier
+                Column(
+                    modifier = Modifier
                         .fillMaxHeight()
-                        .padding(8.dp, 8.dp, 8.dp, 12.dp),
+                        .padding(8.dp)
+                        .clickable { onFilterClick() },
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(0.dp, 12.dp, 0.dp, 4.dp),
+                        text = "${stringResource(R.string.filter)} - ${chosenAccountFilter.title} ▾",
+                        color = whiteSurface,
+                        fontWeight = FontWeight.W300,
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = ("${chosenAccountFilter.balance} ${chosenAccountFilter.currencyType.currencyName}"),
+                        color = whiteSurface,
+                        fontWeight = FontWeight.W500,
+                        fontSize = 16.sp
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(8.dp, 8.dp, 8.dp, 12.dp),
                         verticalArrangement = Arrangement.Bottom,
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = stringResource(R.string.accounts_name_label), color = whiteSurface, fontWeight = FontWeight.W500 , fontSize = 15.sp)
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.accounts_name_label),
+                            color = whiteSurface,
+                            fontWeight = FontWeight.W500,
+                            fontSize = 15.sp
+                        )
                     }
                 }
 
                 IconButton(modifier = Modifier
                     .padding(0.dp, 24.dp, 8.dp, 0.dp)
-                    .size(40.dp, 40.dp), onClick = { onAddAccountAction ()}) {
+                    .size(40.dp, 40.dp), onClick = { onAddAccountAction() }) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         tint = whiteSurface,

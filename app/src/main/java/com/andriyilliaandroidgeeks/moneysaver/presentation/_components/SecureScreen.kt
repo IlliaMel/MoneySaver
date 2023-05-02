@@ -1,6 +1,7 @@
 package com.andriyilliaandroidgeeks.moneysaver.presentation._components
 
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -30,19 +31,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.andriyilliaandroidgeeks.moneysaver.MoneySaver
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.presentation.MainActivity
+import com.andriyilliaandroidgeeks.moneysaver.presentation.MainActivityViewModel
 import com.andriyilliaandroidgeeks.moneysaver.presentation.utils.showBiometricPrompt
 
 
@@ -53,6 +61,7 @@ fun SecureCodeEntering(
     isCorrectFunc: () -> Unit,
     inNewPassword: (String) -> Unit,
     correctCode: String,
+    mainActivityViewModel: MainActivityViewModel = hiltViewModel(),
     isCodeOpenFromNavBar: Boolean,
 ) {
     // I'm using the same duration for all animations.
@@ -69,7 +78,10 @@ fun SecureCodeEntering(
         }
 
         Image(
-            painter = painterResource(accountBgImg),
+            painter =
+            if (mainActivityViewModel.state.accountBgImgBitmap != null)
+                BitmapPainter(mainActivityViewModel.state.accountBgImgBitmap!!.asImageBitmap())
+            else painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             alignment = Alignment.BottomEnd,
@@ -127,7 +139,7 @@ fun SecureCodeEntering(
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally) {
 
-                var list = listOf("1","2","3","4","5","6","7","8","9","","0")
+                var list = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0")
 
                 LazyVerticalGrid(
                     modifier = Modifier
@@ -141,14 +153,21 @@ fun SecureCodeEntering(
                     content = {
                         list.forEach {
                             item {
-                                secureCodeButton(symbol = it, onClick = {if (it != "" && code.value.length < 6) {code.value += it ;
-                                    vibratePhone(context)
-                                } })
+                                secureCodeButton(symbol = it, onClick = {
+                                    if (it != "" && code.value.length < 6) {
+                                        code.value += it;
+                                        vibratePhone(context)
+                                    }
+                                })
                             }
                         }
 
                         item {
-                            secureCodeButton(imageVector = Icons.Filled.KeyboardArrowLeft , onClick = {code.value = code.value.dropLast(1); vibratePhone(context) })
+                            secureCodeButton(
+                                imageVector = Icons.Filled.KeyboardArrowLeft,
+                                onClick = {
+                                    code.value = code.value.dropLast(1); vibratePhone(context)
+                                })
                         }
 
                     })

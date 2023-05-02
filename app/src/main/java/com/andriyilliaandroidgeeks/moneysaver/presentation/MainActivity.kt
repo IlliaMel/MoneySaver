@@ -1,16 +1,21 @@
 package com.andriyilliaandroidgeeks.moneysaver.presentation
 
 
+import android.R.attr.data
 import android.annotation.SuppressLint
 import android.content.*
-
-
+import android.net.Uri
 import android.os.*
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -21,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,6 +34,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ErrorResult
+import coil.request.ImageRequest
 import com.andriyilliaandroidgeeks.moneysaver.MoneySaver
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData
@@ -98,8 +107,8 @@ class MainActivity : FragmentActivity() {
         val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
 
         val lang = sharedPref.getString(APP_LANGUAGE, "Default")
-        if(lang!=null) {
-            if(lang == "Default") setLanguage(Locale.getDefault().language)
+        if (lang != null) {
+            if (lang == "Default") setLanguage(Locale.getDefault().language)
             else setLanguage(Utils.languageToLanguageCode(lang))
         }
         AccountsData.update()
@@ -121,12 +130,11 @@ class MainActivity : FragmentActivity() {
         }
 
 
-
         //What to do with parsing currencies
-        if(isConnectionEnabled){
+        if (isConnectionEnabled) {
             isNeedToParseCurrency = !isParsed || parsingDate != formattedDate
-        }else{
-            if(isParsed){
+        } else {
+            if (isParsed) {
                 isNeedToParseCurrency = false
             }
         }
@@ -154,13 +162,20 @@ class MainActivity : FragmentActivity() {
             var THEME = "theme"
             var theme = sharedPref.getString(THEME, "light")
             if (theme != null) {
-                changeTheme (theme)
+                changeTheme(theme)
             }
+
+
+
+
             MoneySaverTheme {
-                if ((!isConnectionEnabled && !isParsed) ||  viewModel.isCurrencyDbEmpty()) {
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .background(lightGrayTransparent), contentAlignment = Alignment.Center) {
+
+                if ((!isConnectionEnabled && !isParsed) || viewModel.isCurrencyDbEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(lightGrayTransparent), contentAlignment = Alignment.Center
+                    ) {
                         Text(
                             text = stringResource(R.string.no_internet_message),
                             fontSize = 20.sp,
@@ -171,7 +186,13 @@ class MainActivity : FragmentActivity() {
                 } else {
                     val service = AlarmService(context = applicationContext)
 
-                    MainUI(sharedPref,service,formattedDate= formattedDate, context = MainActivity.instance)
+
+                    MainUI(
+                        sharedPref,
+                        service,
+                        formattedDate = formattedDate,
+                        context = MainActivity.instance
+                    )
                     if (viewModel.isParsingSucceeded.value) {
                         with(sharedPref.edit()) {
                             putBoolean(CURRENCY_PARSED_KEY, true)
@@ -180,6 +201,7 @@ class MainActivity : FragmentActivity() {
                         }
                     }
                 }
+
             }
         }
     }
@@ -206,14 +228,14 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
     // A surface container using the 'background' color from the theme
 
 
-    var MINUTE_ALARM = "minute_alarm"
-    var HOUR_ALARM = "hour_alarm"
-    var MAIN_CURRENCY = "main_currency"
-    var ALARM_ON = "alarm_on"
-    var SECURE_ON = "secure_on"
-    var SECURE_CODE = "secure_code"
-    var THEME = "theme"
-
+    val MINUTE_ALARM = "minute_alarm"
+    val HOUR_ALARM = "hour_alarm"
+    val MAIN_CURRENCY = "main_currency"
+    val ALARM_ON = "alarm_on"
+    val SECURE_ON = "secure_on"
+    val SECURE_CODE = "secure_code"
+    val THEME = "theme"
+    val BACKIMG = "background_img"
     /*
         with(sharedPref.edit()) {
             putString(IS_SECURE_ENABLED, formattedDate)
@@ -300,6 +322,18 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
 
         var isCodeOpenFromNavBar by remember { mutableStateOf(false) }
 
+
+        val launcher = rememberLauncherForActivityResult(
+            ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                with(sharedPref.edit()) {
+                    putString(BACKIMG, uri.toString())
+                    apply()
+                }
+                viewModel.updateAccountBackImg(context = MainActivity.instance!!,uri)
+            }
+        }
+
         Scaffold(
             scaffoldState = scaffoldState,
             backgroundColor = backgroundPrimaryColor,
@@ -350,20 +384,21 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                             ),
 
                             MenuItem(number = 3 , title = stringResource(R.string.main_currency), description = "${baseCurrency!!.description} ${baseCurrency!!.currencyName} (${baseCurrency!!.currency})", icon = Icons.Default.ShoppingCart),
-                            MenuItem(number = 4 , title = stringResource(R.string.secure_code), description = stringResource(R.string.log_in_password), icon = Icons.Default.Lock, hasSwitch = true, switchIsActive = secureSwitch )
+                            MenuItem(number = 4 , title = stringResource(R.string.secure_code), description = stringResource(R.string.log_in_password), icon = Icons.Default.Lock, hasSwitch = true, switchIsActive = secureSwitch ),
+                            MenuItem(number = 5 , title = "Change Background", description = "Background of app", icon = Icons.Default.Home)
                         )
 
-                        ),
+                        ),/*
                         MenuBlock(title = stringResource(R.string.data_management), items = listOf(
-                            MenuItem(number = 5 , title = stringResource(R.string._import), description = stringResource(R.string.read_data_to_file), icon = Icons.Default.Edit),
-                            MenuItem(number = 6 , title = stringResource(R.string._export), description = stringResource(
+                            MenuItem(number = 6 , title = stringResource(R.string._import), description = stringResource(R.string.read_data_to_file), icon = Icons.Default.Edit),
+                            MenuItem(number = 7 , title = stringResource(R.string._export), description = stringResource(
                                 R.string.write_data_from_file), icon = Icons.Default.Edit),
-                            MenuItem(number = 7 , title = stringResource(R.string.wipe_data), description = stringResource(R.string.delete_all_information), icon = Icons.Default.Delete),
+                            MenuItem(number = 8 , title = stringResource(R.string.wipe_data), description = stringResource(R.string.delete_all_information), icon = Icons.Default.Delete),
                         )),
 
                         MenuBlock(title = stringResource(R.string.info), items = listOf(
-                            MenuItem(number = 8 , title =  stringResource(R.string.info), description =  stringResource(R.string.info_about_us), icon = Icons.Default.Info)
-                        ))
+                            MenuItem(number = 9 , title =  stringResource(R.string.info), description =  stringResource(R.string.info_about_us), icon = Icons.Default.Info)
+                        ))*/
 
                     ),
                     onItemClick = {
@@ -413,10 +448,18 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
 
                             }
                             5 -> {
+                                launcher.launch(
+                                    PickVisualMediaRequest(
+                                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                                    )
+                                )
+
+                            }
+                            6 -> {
                                 scope.launch { scaffoldState.drawerState.close() }
                                 importData(viewModel)
                             }
-                            6 -> {
+                            7 -> {
                                 scope.launch { scaffoldState.drawerState.close() }
                                 exportData(viewModel)
                             }
@@ -511,7 +554,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                                     selectedTabIndex = 0
                                 },
                                 correctCode = sharedPref.getString(SECURE_CODE, "123456")!!,
-                                isCodeOpenFromNavBar,
+                                isCodeOpenFromNavBar = isCodeOpenFromNavBar,
                             )
                         }
 

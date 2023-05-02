@@ -1,5 +1,7 @@
 package com.andriyilliaandroidgeeks.moneysaver.presentation
 
+import android.graphics.Bitmap
+import androidx.compose.ui.graphics.painter.Painter
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Account
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Category
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
@@ -22,7 +24,7 @@ data class MainActivityState(
     //val categoriesList: List<Category> = emptyList(),
     //val accountsList: List<Account> = emptyList()
 
-    val isDataLoading: Boolean = false
-
+    val isDataLoading: Boolean = false,
+    var accountBgImgBitmap: Bitmap? = null
 
 )

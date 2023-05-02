@@ -1,5 +1,6 @@
 package com.andriyilliaandroidgeeks.moneysaver.presentation.categories
 
+import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState
@@ -19,8 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -37,9 +41,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Account
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
+import com.andriyilliaandroidgeeks.moneysaver.presentation.MainActivityViewModel
 import com.andriyilliaandroidgeeks.moneysaver.presentation._components.*
 import com.andriyilliaandroidgeeks.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.andriyilliaandroidgeeks.moneysaver.presentation.categories.additional_composes.EditCategory
@@ -99,7 +107,7 @@ fun Categories(
 if(!isAddingCategory.value){
     Column() {
         TopBarCategories(onNavigationIconClick = { onNavigationIconClick ()}, onEditClick = { if(categoriesWithAdder.size > 1 || isForEditing) isForEditing =
-            !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter)
+            !isForEditing; }, minDate = minDate, maxDate = maxDate,chosenAccountFilter = chosenAccountFilter)
 
         val visibleState = remember {
             MutableTransitionState(false).apply {
@@ -214,7 +222,7 @@ fun CategoryListView(
             horizontalArrangement = Arrangement.Center
         ) {
             AnimatedVisibility(visible = isForEditing) {
-                Text(modifier = Modifier.padding(8.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 16.sp, fontWeight = FontWeight.W400, text = stringResource(
+                Text(modifier = Modifier.padding(4.dp), maxLines = 1, overflow = TextOverflow.Ellipsis ,fontSize = 16.sp, fontWeight = FontWeight.W400, text = stringResource(
                     R.string.chose_category_to_edit), color = textPrimaryColor)
             }
         }
@@ -222,7 +230,7 @@ fun CategoryListView(
         Row(
             modifier = Modifier
                 .weight(1.8f)
-                .padding(0.dp, 12.dp, 0.dp, 0.dp)
+                .padding(0.dp, 8.dp, 0.dp, 0.dp)
         ) {
 
             Column(
@@ -686,14 +694,16 @@ fun ChartContainer(
 
 
 @Composable
-fun TopBarCategories(onNavigationIconClick: () -> Unit, onEditClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>,chosenAccountFilter: Account){
+fun TopBarCategories(mainActivityViewModel: MainActivityViewModel = hiltViewModel(),  onNavigationIconClick: () -> Unit, onEditClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, chosenAccountFilter: Account){
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
     ) {
         Image(
-            painter = painterResource(accountBgImg),
+            painter = if (mainActivityViewModel.state.accountBgImgBitmap != null)
+                BitmapPainter(mainActivityViewModel.state.accountBgImgBitmap!!.asImageBitmap())
+            else painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize()

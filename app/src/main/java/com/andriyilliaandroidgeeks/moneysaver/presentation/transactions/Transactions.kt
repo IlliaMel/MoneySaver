@@ -1,6 +1,7 @@
 package com.andriyilliaandroidgeeks.moneysaver.presentation.transactions
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -25,7 +26,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,6 +38,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.andriyilliaandroidgeeks.moneysaver.MoneySaver
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
@@ -234,8 +241,7 @@ fun Transactions(
                     minDate = minDate,
                     maxDate = maxDate,
                     transactionSearchText = transactionSearchText,
-                    chosenAccountFilter,
-                    viewModel
+                    chosenAccountFilter = chosenAccountFilter,
                 )
                 val visibleState = remember {
                     MutableTransitionState(false).apply {
@@ -457,7 +463,7 @@ fun filterBySearchRequest(transactions: List<Transaction>, searchRequest: String
 }
 
 @Composable
-fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, transactionSearchText: MutableState<String>,chosenAccountFilter: Account, viewModel: MainActivityViewModel) {
+fun TopBarTransactions(mainActivityViewModel: MainActivityViewModel = hiltViewModel(),onNavigationIconClick: () -> Unit, minDate: MutableState<Date?>, maxDate: MutableState<Date?>, transactionSearchText: MutableState<String>,chosenAccountFilter: Account) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -468,7 +474,9 @@ fun TopBarTransactions(onNavigationIconClick: () -> Unit, minDate: MutableState<
         var searchText by remember { mutableStateOf("") }
 
         Image(
-            painter = painterResource(accountBgImg),
+            painter = if (mainActivityViewModel.state.accountBgImgBitmap != null)
+                BitmapPainter(mainActivityViewModel.state.accountBgImgBitmap!!.asImageBitmap())
+            else painterResource(accountBgImg),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier.matchParentSize()

@@ -31,15 +31,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.andriyilliaandroidgeeks.moneysaver.MoneySaver
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData
-import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData.accountBgImg
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.CategoriesData
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Account
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Category
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Transaction
+import com.andriyilliaandroidgeeks.moneysaver.presentation.MainActivityViewModel
 import com.andriyilliaandroidgeeks.moneysaver.presentation.accounts.additional_composes.VectorIcon
 import com.andriyilliaandroidgeeks.moneysaver.ui.theme.*
 import kotlin.math.min

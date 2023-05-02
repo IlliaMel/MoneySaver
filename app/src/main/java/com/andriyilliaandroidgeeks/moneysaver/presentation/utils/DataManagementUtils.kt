@@ -64,7 +64,7 @@ fun MainActivity.exportActivityData(viewModel: MainActivityViewModel) {
         outputStream.flush()
         outputStream.close()
         Toast.makeText(
-            MoneySaver.applicationContext(), "Saved to \"Android/data/com.example.moneysaver/files/moneysaver_data.csv\"",
+            MoneySaver.applicationContext(), "Saved to \"Android/data/com.andriyilliaandroidgeeks.moneysaver/files/moneysaver_data.csv\"",
             Toast.LENGTH_SHORT
         ).show()
     } catch (e: Exception) {
