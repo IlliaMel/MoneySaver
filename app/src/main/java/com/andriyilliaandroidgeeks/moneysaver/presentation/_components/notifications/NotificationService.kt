@@ -35,6 +35,6 @@ class NotificationService(
     }
 
     companion object {
-        const val COUNTER_CHANNEL_ID = "counter_channel"
+        const val COUNTER_CHANNEL_ID = "money_saver_channel"
     }
 }

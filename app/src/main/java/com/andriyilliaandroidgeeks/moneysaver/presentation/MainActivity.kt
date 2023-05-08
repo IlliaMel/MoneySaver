@@ -1,12 +1,9 @@
 package com.andriyilliaandroidgeeks.moneysaver.presentation
 
 
-import android.R.attr.data
 import android.annotation.SuppressLint
 import android.content.*
-import android.net.Uri
 import android.os.*
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -15,7 +12,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -26,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,9 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ErrorResult
-import coil.request.ImageRequest
 import com.andriyilliaandroidgeeks.moneysaver.MoneySaver
 import com.andriyilliaandroidgeeks.moneysaver.R
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData
@@ -46,7 +38,6 @@ import com.andriyilliaandroidgeeks.moneysaver.presentation.MainActivity.Companio
 import com.andriyilliaandroidgeeks.moneysaver.presentation._components.*
 import com.andriyilliaandroidgeeks.moneysaver.presentation._components.navigation_drawer.MenuBlock
 import com.andriyilliaandroidgeeks.moneysaver.presentation._components.navigation_drawer.MenuItem
-import com.andriyilliaandroidgeeks.moneysaver.presentation._components.notifications.AlarmService
 import com.andriyilliaandroidgeeks.moneysaver.presentation._components.time_picker.TimePicker
 import com.andriyilliaandroidgeeks.moneysaver.presentation.accounts.Accounts
 import com.andriyilliaandroidgeeks.moneysaver.presentation.accounts.AccountsViewModel
@@ -184,12 +175,10 @@ class MainActivity : FragmentActivity() {
                     }
 
                 } else {
-                    val service = AlarmService(context = applicationContext)
 
 
                     MainUI(
                         sharedPref,
-                        service,
                         formattedDate = formattedDate,
                         context = MainActivity.instance
                     )
@@ -218,7 +207,7 @@ class MainActivity : FragmentActivity() {
 @OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
+fun MainUI(sharedPref: SharedPreferences,
            context: Context?,
            formattedDate : String,
            accountsViewModel: AccountsViewModel  = hiltViewModel(),
@@ -298,7 +287,7 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
         }
 
         var timeSwitch by remember {
-            mutableStateOf(sharedPref.getBoolean(ALARM_ON, true))
+            mutableStateOf(sharedPref.getBoolean(ALARM_ON, false))
         }
 
         var secureSwitch by remember {
@@ -310,12 +299,6 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
         }
 
         var mainCurrencyClicked = remember { mutableStateOf(false) }
-
-        ///*sharedPref.getString(LAST_STARTING, "") != formattedDate && */timeSwitch
-        if(timeSwitch)
-            alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
-        else
-            alarmService.cancelAlarm()
 
 
         val openSelectLanguageDialog = remember { mutableStateOf(false) }
@@ -347,10 +330,9 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                             putInt(MINUTE_ALARM, minutesNotification.value)
                             putInt(HOUR_ALARM, hoursNotification.value)
                             apply()
-
-
                         }
                     }, minutesNotification,hoursNotification)
+                    viewModel.applyNotificationsSettings(timeSwitch,Time(hoursNotification.value,minutesNotification.value))
                     notificationClicked = false
                 }
 
@@ -468,11 +450,8 @@ fun MainUI(sharedPref: SharedPreferences, alarmService: AlarmService,
                     onSwitchClick = {
                         when (it.number) {
                             2 -> {
-                                if(it.switchIsActive)
-                                    alarmService.cancelAlarm()
-                                else
-                                    alarmService.setAlarm(hoursNotification.value,minutesNotification.value)
                                 timeSwitch = !timeSwitch
+                                viewModel.applyNotificationsSettings(timeSwitch,Time(hoursNotification.value,minutesNotification.value))
                                 with(sharedPref.edit()) {
                                     putBoolean(ALARM_ON, timeSwitch)
                                     apply()}

@@ -1,21 +1,16 @@
 package com.andriyilliaandroidgeeks.moneysaver.presentation
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.widget.ImageView
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.Coil
-import coil.compose.rememberAsyncImagePainter
 import coil.imageLoader
-import coil.load
-import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.AccountsData
 import com.andriyilliaandroidgeeks.moneysaver.data.data_base._test_data.CategoriesData
@@ -26,6 +21,8 @@ import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Transaction
 import com.andriyilliaandroidgeeks.moneysaver.domain.repository.FinanceRepository
 import com.andriyilliaandroidgeeks.moneysaver.domain.util.Resource
+import com.andriyilliaandroidgeeks.moneysaver.presentation._components.notifications.NotificationReceiver
+import com.andriyilliaandroidgeeks.moneysaver.presentation.utils.Time
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,6 +67,7 @@ class MainActivityViewModel @Inject constructor(
                 }
             }
 
+
             val BACKIMG = "background_img"
             val photoUri = MainActivity.instance?.getPreferences(Context.MODE_PRIVATE)?.getString(BACKIMG, "")
             if (photoUri != "") {
@@ -79,42 +77,57 @@ class MainActivityViewModel @Inject constructor(
                     Uri.parse(photoUri),
                     takeFlags
                 );
-                /* val file = File(photoUri!!);
-                 if (!file.exists()){
-                     with(sharedPref.edit()) {
-                         putString(BACKIMG, "")
-                         apply()
-                     }
-                     viewModel.updateAccountBackImg("")
-                 } else
-                     */
                 updateAccountBackImg(context = MainActivity.instance!!, Uri.parse(photoUri))
             }
 
             loadCurrencyData()
+            loadCategories()
+            loadCategoriesData()
+            loadCurrencyData()
+            val tempDate: MutableState<Date?> = mutableStateOf(null)
+            loadTransactions(tempDate, tempDate)
+            loadAccounts()
+
             delay(400)
+            _isLoading.value = false
 
         }
 
-        loadCategories()
-        loadCategoriesData()
-        loadCurrencyData()
-        val tempDate: MutableState<Date?> = mutableStateOf(null)
-        loadTransactions(tempDate, tempDate)
-        loadAccounts()
+    }
+    private val context = MainActivity.instance!!
 
+    private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    private val alarmPendingIntent: PendingIntent = PendingIntent.getBroadcast(
+        context,
+        0,
+        Intent(context, NotificationReceiver::class.java),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+
+    fun applyNotificationsSettings(notificationsEnabled: Boolean, time: Time) {
+        cancelNotifications()
+        if (notificationsEnabled) {
+            scheduleNotifications(time)
+        }
     }
-/*
-    private fun loadCurrencyData() {
-        financeRepository.getCurrencyTypes()
-            .onEach { list ->
-                state = state.copy(
-                    currenciesList = list,
-                )
-                AccountsData.currenciesList = list
-            }.launchIn(viewModelScope)
+
+    private fun scheduleNotifications(time: Time) {
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, time.hour)
+            set(Calendar.MINUTE, time.minute)
+        }
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            alarmPendingIntent)
     }
-    */
+
+    fun cancelNotifications() {
+        alarmManager.cancel(alarmPendingIntent)
+    }
+
 
     fun returnCurrencyValue(which : String , to : String) : Double {
         var whichFound = state.currenciesList.find { it.currencyName == which }
@@ -418,82 +431,11 @@ class MainActivityViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-/*
-    fun addTransaction(transaction: Transaction) {
-        viewModelScope.launch {
-            // remove previous spending data if transaction isn't new
-            financeRepository.getTransactionByUUID(transaction.uuid)?.let {
-                val transactionAccount = financeRepository.getAccountByUUID(it.accountUUID)
-                val updatedAccount = transactionAccount!!.copy(
-                    balance = transactionAccount.balance-it.sum
-                )
-                // update account
-                financeRepository.insertAccount(updatedAccount)
-            }
 
-            // add new spending data
-            val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
-            val updatedAccount = transactionAccount!!.copy(
-                balance = transactionAccount.balance+transaction.sum
-            )
-            financeRepository.insertAccount(updatedAccount)
-
-            // add or update transaction
-            financeRepository.insertTransaction(transaction)
-        }
-    }
-    */
-
-    fun deleteTransactions() {
-        viewModelScope.launch {
-            financeRepository.deleteAllTransaction()
-        }
-    }
-/*
-    fun deleteTransaction(transaction: Transaction) {
-        viewModelScope.launch {
-            // remove spending data if transaction isn't new
-            val transactionAccount = financeRepository.getAccountByUUID(transaction.accountUUID)
-            transactionAccount?.let {
-                val updatedAccount = transactionAccount!!.copy(
-                    balance = transactionAccount.balance-transaction.sum
-                )
-                // update account
-                financeRepository.insertAccount(updatedAccount)
-            }
-
-            financeRepository.deleteTransaction(transaction)
-        }
-    }
-
-    fun loadCategories() {
-        financeRepository.getCategories()
-            .onEach { list ->
-                state = state.copy(
-                    categoriesList = list
-                )
-            }.launchIn(viewModelScope)
-    }
-
-    fun loadAccounts() {
-        financeRepository.getAllAccounts()
-            .onEach { list ->
-                state = state.copy(
-                    accountsList = list
-                )
-            }.launchIn(viewModelScope)
-    }
-*/
     fun getCategoryNameByUUIID(uuid: UUID): String? = runBlocking {
         financeRepository.getCategoryByUUID(uuid)?.title
     }
-/*
-    fun addingTransactionIsAllowed(): Boolean {
-        return state.accountsList.isNotEmpty()
-                && state.categoriesList.isNotEmpty()
-                && state.categoriesList[0].uuid!= CategoriesData.addCategory.uuid
-    }
-    */
+
 
     fun importRepository(
         accounts: List<Account>,
@@ -517,7 +459,6 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             loadedBitmap = loadImageAsBitmap(context, uri)
             state = state.copy(accountBgImgBitmap = loadedBitmap)
-            _isLoading.value = false
         }
 
     }

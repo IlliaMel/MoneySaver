@@ -6,6 +6,7 @@ import com.andriyilliaandroidgeeks.moneysaver.domain.model.Account
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Category
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Currency
 import com.andriyilliaandroidgeeks.moneysaver.domain.model.Transaction
+import com.andriyilliaandroidgeeks.moneysaver.presentation.utils.Time
 
 data class MainActivityState(
     val currenciesList: List<Currency> = emptyList(),
@@ -25,6 +26,6 @@ data class MainActivityState(
     //val accountsList: List<Account> = emptyList()
 
     val isDataLoading: Boolean = false,
-    var accountBgImgBitmap: Bitmap? = null
+    var accountBgImgBitmap: Bitmap? = null,
 
 )
